@@ -1,0 +1,49 @@
+*.db
+*.pch
+*.exe
+*.rar
+# Visual Studio相关
+.vscode/
+*.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# 编译输出
+bin/
+obj/
+debug/
+release/
+
+# NuGet相关
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# 临时文件
+*.log
+*.tmp
+*.temp
+*.pid
+*.err
+*.out
+
+# 文件系统或IDE生成的文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# 配置文件
+*.config
+*.settings
+*.db
+
+# 单元测试
+TestResults/
+
+
+
