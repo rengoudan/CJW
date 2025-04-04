@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="JwService\Dtos\GetAllForLookupTableInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwBaseDatasForExcelInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwBaseDatasInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwBeamsForExcelInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwBeamsInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwCustomerDesignTagsInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwCustomersInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwLinesInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwProjectsInput.cs" />
+    <Compile Remove="JwService\Dtos\GetAllJwProjectSubsInput.cs" />
+    <Compile Remove="JwShapeEnum.cs" />
+    <Compile Remove="JwShowItemBase.cs" />
+    <Compile Remove="JwShowPillarItem.cs" />
+    <Compile Remove="JwSingleBeam.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Flurl.Http" Version="3.2.4" />
+    <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+    <PackageReference Include="RestSharp" Version="110.2.0" />
+    <PackageReference Include="SunnyUI" Version="3.6.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JwCore\JwCore.csproj" />
+    <ProjectReference Include="..\JwwHelper\JwwHelper.vcxproj" />
+  </ItemGroup>
+
+</Project>
