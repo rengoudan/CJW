@@ -57,13 +57,28 @@ namespace JwShapeCommon
             ShapeType = DrawShapeType.None;
             if (jwSquare.GetType().Name == "JwBeam")
             {
-                ShapeType = DrawShapeType.Beam;
-                Width = jwSquare.Width;
-                Height= jwSquare.Height;
-                DirectionType=jwShape.DirectionType;
-                CenterPoint = jwShape.CenterPoint;
-                Center=jwShape.Center;
-                Jiaodu= jwSquare.Jiaodu;
+                if (hbeilv != 1.0)
+                {
+                    ShapeType = DrawShapeType.Beam;
+                    JisuanWidthHeight();
+                }
+                else
+                {
+                    ShapeType = DrawShapeType.Beam;
+                    base.Width = jwSquare.Width;
+                    base.Height = jwSquare.Height;
+                    base.DirectionType = jwShape.DirectionType;
+                    base.CenterPoint = new JWPoint(jwShape.CenterPoint.X, jwShape.CenterPoint.Y);
+                    base.Center = jwShape.Center;
+                    base.Jiaodu = jwSquare.Jiaodu;
+                }
+                //ShapeType = DrawShapeType.Beam;
+                //Width = jwSquare.Width;
+                //Height= jwSquare.Height;
+                //DirectionType=jwShape.DirectionType;
+                //CenterPoint = jwShape.CenterPoint;
+                //Center=jwShape.Center;
+                //Jiaodu= jwSquare.Jiaodu;
             }
             if (jwSquare.GetType().Name == "JwBlock")
             {
