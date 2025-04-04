@@ -56,9 +56,16 @@ namespace JwShapeCommon
         public double HeightScale { get; set; }
 
         /// <summary>
-        /// 
+        /// 水平的为Y 垂直的为X
         /// </summary>
         public double Center { get; set; }
+
+        /// <summary>
+        /// 2025年4月5日
+        /// 水平的为X 最左 垂直为Y 最上？下把 最小
+        /// 增加方法 重置hole 相对距离
+        /// </summary>
+        public double AbsolutePD { get; set; }
 
         public JWPoint CenterPoint { get; set; }
 
