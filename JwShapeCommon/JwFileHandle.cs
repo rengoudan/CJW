@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -282,9 +283,10 @@ namespace JwShapeCommon
             }
         }
 
-       
+
         /// <summary>
         /// frist 先识别beam 然后识别柱子  柱子根据梁的范围进行确认
+        /// 2025年4月6日 createBeamAbsolutePD();
         /// </summary>
         public void FollowTheStep()
         {
@@ -330,8 +332,8 @@ namespace JwShapeCommon
                 }
             }
 
-           
-           
+            //
+            createBeamAbsolutePD();
         }
 
         int nownumber = -1;
@@ -1454,6 +1456,9 @@ namespace JwShapeCommon
             
         }
 
+        /// <summary>
+        /// 2025年4月6日 对beam的绝对起点 进行赋值
+        /// </summary>
         private void CreateQieGeBeams()
         {
             var qiegebeams= _tempBeams.Where(t=>t.HasQieGe).ToList();
@@ -1491,10 +1496,29 @@ namespace JwShapeCommon
                 //GlobalEvent.GetGlobalEvent().ShowParseLogEvent(this, new ShowParseLogArgs { Msg = string.Format("Beams:{0}", Beams.Count) });
 
             }
+            //createBeamAbsolutePD();
+        }
+
+        /// <summary>
+        /// 2025年4月6日
+        /// </summary>
+        private void createBeamAbsolutePD()
+        {
+            foreach (var beam in Beams)
+            {
+                if(beam.DirectionType == BeamDirectionType.Horizontal)
+                {
+                    beam.AbsolutePD =Math.Round(beam.TopLeft.X,6);
+                }
+                if (beam.DirectionType == BeamDirectionType.Vertical) 
+                {
+                    beam.AbsolutePD=Math.Round(beam.BottomLeft.Y,6);
+                }
+            }
         }
 
 
-       
+
 
         /// <summary>
         ///  初始化画布  四个角 不一定实际存在 应该是虚拟的 且对称的 改

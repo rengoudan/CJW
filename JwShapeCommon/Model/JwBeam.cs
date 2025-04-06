@@ -582,6 +582,44 @@ namespace JwShapeCommon
             data.EndTelosType=this.EndTelosType;
             return data;
         }
+
+        /// <summary>
+        /// 2025年4月5日
+        /// 水平的为X 最左 垂直为Y 最上？下把 最小
+        /// 增加方法 重置hole 相对距离
+        /// </summary>
+        public double AbsolutePD
+        {
+            get
+            {
+                return _absolutePd;
+            }
+            set
+            {
+                _absolutePd = value;
+                holeorder();
+            }
+        }
+        private double _absolutePd;
+
+        private void holeorder()
+        {
+            if (this.Holes?.Count > 0)
+            {
+                foreach(var h in this.Holes)
+                {
+                    if (this.DirectionType == BeamDirectionType.Horizontal)
+                    {
+                        h.AbsoluteP = Math.Round(Math.Round(h.Location.X - _absolutePd, 6) * JwFileConsts.JwScale, 0);
+                        
+                    }
+                    if (this.DirectionType == BeamDirectionType.Vertical)
+                    {
+                        h.AbsoluteP = Math.Round(Math.Round(h.Location.Y - _absolutePd, 6) * JwFileConsts.JwScale, 0);
+                    }
+                }
+            }
+        }
     }
 
     public static class JwBeamExtensions
