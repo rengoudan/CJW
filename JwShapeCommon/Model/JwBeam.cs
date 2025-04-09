@@ -626,7 +626,12 @@ namespace JwShapeCommon
                 {
                     if (this.StartTelosType == KongzuType.B)
                     {
-                        
+                        var cbs = new JwBeamMarkPoint(this,true,true,false);
+                        cbs.Coordinate = bs.Coordinate + 50 / JwFileConsts.JwScale;//不用区分水平和垂直
+                        cbs.coordinated();
+                        this.jwBeamMarks.Add(cbs);
+                        cbs.PreCenterDistance = 0;//他就是中心点
+                        pr = cbs.Coordinate;
                     }
                 }
                 

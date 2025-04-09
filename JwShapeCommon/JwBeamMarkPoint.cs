@@ -14,6 +14,9 @@ namespace JwShapeCommon
     /// </summary>
     public class JwBeamMarkPoint
     {
+
+        private JwBeam _sourceBeam;
+
         /// <summary>
         /// beam 起始边际记录
         /// </summary>
@@ -22,6 +25,7 @@ namespace JwShapeCommon
         /// <param name="isbe"></param>
         public JwBeamMarkPoint(JwBeam jbeam, bool isbs=false,bool isbe=false) 
         {
+            _sourceBeam = jbeam;    
             if (jbeam.DirectionType == JwCore.BeamDirectionType.Horizontal)
             {
                 
@@ -75,8 +79,9 @@ namespace JwShapeCommon
         /// <param name="iscenter"></param>
         /// <param name="iscbs"></param>
         /// <param name="iscbe"></param>
-        public JwBeamMarkPoint(JwBeam jbeam,bool iscenter=true, bool iscbs=false,bool iscbe = false)
+        public JwBeamMarkPoint(JwBeam jbeam,bool iscenter, bool iscbs,bool iscbe)
         {
+            _sourceBeam = jbeam;
             this.IsCenter=iscenter;
             this.IsCenterStart=iscbs;
             this.IsCenterEnd=iscbe;
@@ -84,6 +89,14 @@ namespace JwShapeCommon
             
 
 
+        }
+
+        public void coordinated()
+        {
+            if (_sourceBeam?.DirectionType == JwCore.BeamDirectionType.Horizontal)
+            {
+                this.Point = new JWPoint(this.Coordinate, this._sourceBeam.Center);
+            }
         }
 
         public JwBeamMarkPoint()
