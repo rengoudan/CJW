@@ -601,6 +601,8 @@ namespace JwShapeCommon
         }
         private double _absolutePd;
 
+        public List<JwBeamMarkPoint> jwBeamMarks = new List<JwBeamMarkPoint>();
+
         /// <summary>
         /// 对holes进行排序 并生成需要计算区间的点数据
         /// 
@@ -611,12 +613,23 @@ namespace JwShapeCommon
             if (this.Holes?.Count > 0)
             {
                 double pr = 0;
+                double sb = 0;
+                //处理beam开始 结束标记点信息
+                var bs = new JwBeamMarkPoint(this, true);
+                this.jwBeamMarks.Add(bs);
+                sb = bs.Coordinate;
+
+                var firsthole = this.Holes.FirstOrDefault();
                 //仅对B段进行调整 逻辑为第一个柱子中心点距离梁边》150的话 开四个空 
                 //无论是两个还是四个，中心点都是距离边50，然后如果是两个的话，孔中心位置距离中心点为28则空中心距离边为22
-                if(this.StartTelosType== KongzuType.B)
+                if (firsthole != null)
                 {
-
+                    if (this.StartTelosType == KongzuType.B)
+                    {
+                        
+                    }
                 }
+                
                 for(int i = 0; i < this.Holes.Count; i++)
                 {
 
