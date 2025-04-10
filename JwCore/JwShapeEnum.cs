@@ -129,7 +129,11 @@ namespace JwCore
 
 
     /// <summary>
+    /// 2025年4月10日
     /// 孔组类型 0为 非两端的孔组  》0则为端部类型
+    /// 增加BC 为>=150时候B端为完整4个孔
+    /// 增加BP 为<150的时候B端为部分2个
+    /// BCBP孔组形态都为4个完整，BP 为首的时候右侧缺少垂直两个孔 为末的时候左侧缺少垂直两个孔
     /// </summary>
     public enum KongzuType
     {
@@ -137,6 +141,8 @@ namespace JwCore
         B = 1,
         J = 2,
         G = 3,
+        BC = 4,
+        BP = 5
     }
 
     public enum KongzuSuoshuMian

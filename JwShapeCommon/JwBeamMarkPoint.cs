@@ -97,6 +97,10 @@ namespace JwShapeCommon
             {
                 this.Point = new JWPoint(this.Coordinate, this._sourceBeam.Center);
             }
+            if (_sourceBeam?.DirectionType == JwCore.BeamDirectionType.Vertical)
+            {
+                this.Point=new JWPoint(this._sourceBeam.Center,this.Coordinate);
+            }
         }
 
         public JwBeamMarkPoint()
