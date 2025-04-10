@@ -631,13 +631,36 @@ namespace JwShapeCommon
                         cbs.coordinated();
                         this.jwBeamMarks.Add(cbs);
                         cbs.PreCenterDistance = 0;//他就是中心点
+                        JwHole jwHole = new JwHole(true, cbs.Point, KongzuType.BC);
+
                         pr = cbs.Coordinate;
+                       
                     }
                 }
                 
                 for(int i = 0; i < this.Holes.Count; i++)
                 {
+                    //zuobiao
+                    double cc = 0;
+                    if (this.DirectionType == BeamDirectionType.Horizontal)
+                    {
+                        cc = this.Holes[i].Location.X;
+                    }
+                    else if (this.DirectionType == BeamDirectionType.Vertical)
+                    {
+                        cc = this.Holes[i].Location.Y;
+                    }
+                    if(i== 0)
+                    {
+                        if ((cc - sb) >= 150)//完整
+                        {
 
+                        }
+                        else
+                        {
+                            
+                        }
+                    }
                 }
                 foreach(var h in this.Holes)
                 {

@@ -1,4 +1,5 @@
-﻿using JwShapeCommon.Model;
+﻿using JwCore;
+using JwShapeCommon.Model;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -101,6 +102,9 @@ namespace JwShapeCommon
             {
                 this.Point=new JWPoint(this._sourceBeam.Center,this.Coordinate);
             }
+            
+
+
         }
 
         public JwBeamMarkPoint()

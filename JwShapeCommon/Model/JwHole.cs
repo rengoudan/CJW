@@ -152,6 +152,35 @@ namespace JwShapeCommon.Model
             }
         }
 
+
+        /// <summary>
+        /// 用来指示 孔组是否有中心点（即如果num为2 isbias为true 则location为中心点，孔组需要偏离中心点56/2）
+        /// 默认为false
+        /// </summary>
+        public bool IsBias { get; set; }
+
+        /// <summary>
+        /// 用来处理BC BP的孔
+        /// </summary>
+        /// <param name="isForB"></param>
+        /// <param name="location"></param>
+        public JwHole(bool isForB,JWPoint location,KongzuType kongzuType)
+        {
+            Id = Guid.NewGuid().ToString();
+            Location = new JWPoint(location.X, location.Y);
+            //Kongzu = kongZu;
+
+            //需确认 柱的化 是创建上 还是上下中都要的孔
+            HasTop = true;
+
+            HasBottom = true;
+
+            HasCenter = true;
+
+
+        }
+
+
         /// <summary>
         /// 权重为 柱 》 g胜》链接J=败G 弃用
         /// </summary>
