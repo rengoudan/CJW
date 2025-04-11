@@ -87,11 +87,12 @@ namespace JwShapeCommon
             this.IsCenterStart=iscbs;
             this.IsCenterEnd=iscbe;
             this.HasAppend = false;
-            
-
-
         }
 
+        /// <summary>
+        /// 2025年4月12日
+        /// 根据坐标 生成中心点
+        /// </summary>
         public void coordinated()
         {
             if (_sourceBeam?.DirectionType == JwCore.BeamDirectionType.Horizontal)
@@ -116,7 +117,10 @@ namespace JwShapeCommon
 
         public bool IsBeamEnd { get; set; } 
 
-        
+        /// <summary>
+        /// 孔组中心点
+        /// </summary>
+        public bool IsHolePoint { get; set; }
 
 
         public bool IsCenterStart { get; set; }
@@ -154,6 +158,15 @@ namespace JwShapeCommon
 
         public double PreCenterDistance { get; set; }
 
+        public double PreBeamStartDistance { get; set; }
+
         public JwHole AppendHole { get; set; }
+
+
+        /// <summary>
+        /// 用来指示 孔组是否有中心点（即如果num为2 isbias为true 则location为中心点，孔组需要偏离中心点56/2）
+        /// 默认为false
+        /// </summary>
+        public bool IsBias { get; set; }
     }
 }

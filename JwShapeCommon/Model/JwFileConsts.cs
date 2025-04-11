@@ -42,6 +42,8 @@ namespace JwShapeCommon
 
         public static double Gjubian = 35;
 
+        public static double GBianjuZhongxin = 55;
+
         /// <summary>
         /// B构建 孔间距
         /// </summary>
