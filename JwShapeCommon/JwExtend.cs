@@ -315,8 +315,8 @@ namespace JwShapeCommon
                 var fh = beam.Holes.Find(t => t.Location == hole.Position);
                 if (fh == null)
                 {
-                    var hh = new JwHole(hole, createFrom);
-                    beam.Holes.Add(hh);
+                    //var hh = new JwHole(hole, createFrom);
+                    //beam.Holes.Add(hh);
                 }
                 else
                 {
@@ -352,8 +352,8 @@ namespace JwShapeCommon
             }
             else
             {
-                var hh = new JwHole(hole, createFrom);
-                beam.Holes.Add(hh);
+                //var hh = new JwHole(hole, createFrom);
+                //beam.Holes.Add(hh);
             }
         }
 

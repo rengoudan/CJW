@@ -604,44 +604,94 @@ namespace JwShapeCommon
         public List<JwBeamMarkPoint> jwBeamMarks = new List<JwBeamMarkPoint>();
 
         /// <summary>
+        /// 前提默认holes 是完整 包含首尾
         /// 对holes进行排序 并生成需要计算区间的点数据
         /// 
         /// </summary>
         private void holeorder()
         {
+            var starthole = this.Holes.Find(t => t.IsStart);
 
-            if (this.Holes?.Count > 0)
+            var endhole = this.Holes.Find(t => t.IsEnd);
+
+            var centerholes = this.Holes.Where(t=>!t.IsEnd&&!t.IsStart).ToList();
+
+            double pr = 0;
+            double sb = 0;//startbeam 起点坐标
+            //处理beam开始 结束标记点信息
+            var bs = new JwBeamMarkPoint(this, true);
+            this.jwBeamMarks.Add(bs);
+            sb = bs.Coordinate;
+
+            var cbs = new JwBeamMarkPoint(this, true, true, false);//芯起点
+
+            //处理B端
+            if (this.StartTelosType == KongzuType.B)
             {
-                double pr = 0;
-                double sb = 0;
-                //处理beam开始 结束标记点信息
-                var bs = new JwBeamMarkPoint(this, true);
-                this.jwBeamMarks.Add(bs);
-                sb = bs.Coordinate;
+                cbs.Coordinate = bs.Coordinate + 50 / JwFileConsts.JwScale;//不用区分水平和垂直
+                cbs.coordinated();
+                //this.jwBeamMarks.Add(cbs);
+                //cbs.PreCenterDistance = 0;//他就是中心点
+                //prcentercoordinate = cbs.Coordinate;
+                //JwHole jwHole = new JwHole(true, cbs.Point, KongzuType.BC);
+
+                //pr = cbs.Coordinate;
+                //jwHole.IsStart = true;以下逻辑放到 遍历中间点的集合中
+                //if ((cc - sb) >= 150)//完整 
+                //{
+                //    jwHole.KongNum = 4;
+                //}
+                //else
+                //{
+                //    jwHole.KongNum = 2;
+                //}
+            }
+            else if (this.StartTelosType == KongzuType.G)
+            {
+                //g端的逻辑需要调整
+            }
+
+
+            if (centerholes?.Count > 0)
+            {
 
                 var firsthole = this.Holes.FirstOrDefault();
                 //仅对B段进行调整 逻辑为第一个柱子中心点距离梁边》150的话 开四个空 
                 //无论是两个还是四个，中心点都是距离边50，然后如果是两个的话，孔中心位置距离中心点为28则空中心距离边为22
                 if (firsthole != null)
                 {
-                    if (this.StartTelosType == KongzuType.B)
-                    {
-                        var cbs = new JwBeamMarkPoint(this,true,true,false);
-                        cbs.Coordinate = bs.Coordinate + 50 / JwFileConsts.JwScale;//不用区分水平和垂直
-                        cbs.coordinated();
-                        this.jwBeamMarks.Add(cbs);
-                        cbs.PreCenterDistance = 0;//他就是中心点
-                        JwHole jwHole = new JwHole(true, cbs.Point, KongzuType.BC);
-
-                        pr = cbs.Coordinate;
-                       
-                    }
+                    
                 }
-                
-                for(int i = 0; i < this.Holes.Count; i++)
+                double prcentercoordinate = 0;
+                double cc = 0;
+                //前提是遍历的holes都为pillar产生及胜方
+                for (int i = 0; i < this.Holes.Count; i++)
                 {
+                    if (i == 0)
+                    {
+                        if (this.StartTelosType == KongzuType.B)
+                        {
+                            var cbs = new JwBeamMarkPoint(this, true, true, false);
+                            cbs.Coordinate = bs.Coordinate + 50 / JwFileConsts.JwScale;//不用区分水平和垂直
+                            cbs.coordinated();
+                            this.jwBeamMarks.Add(cbs);
+                            cbs.PreCenterDistance = 0;//他就是中心点
+                            prcentercoordinate=cbs.Coordinate;
+                            JwHole jwHole = new JwHole(true, cbs.Point, KongzuType.BC);
+
+                            pr = cbs.Coordinate;
+                            jwHole.IsStart = true;
+                            if ((cc - sb) >= 150)//完整
+                            {
+                                jwHole.KongNum = 4;
+                            }
+                            else
+                            {
+                                jwHole.KongNum = 2;
+                            }
+                        }
+                    }
                     //zuobiao
-                    double cc = 0;
                     if (this.DirectionType == BeamDirectionType.Horizontal)
                     {
                         cc = this.Holes[i].Location.X;
@@ -650,17 +700,10 @@ namespace JwShapeCommon
                     {
                         cc = this.Holes[i].Location.Y;
                     }
-                    if(i== 0)
-                    {
-                        if ((cc - sb) >= 150)//完整
-                        {
+                    this.Holes[i].AbsoluteP = Math.Round(cc- _absolutePd,6);
+                    this.Holes[i].RelativeP = Math.Round(cc - prcentercoordinate, 6);
 
-                        }
-                        else
-                        {
-                            
-                        }
-                    }
+                    
                 }
                 foreach(var h in this.Holes)
                 {

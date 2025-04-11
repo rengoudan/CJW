@@ -15,6 +15,11 @@ namespace JwShapeCommon.Model
         /// </summary>
         public bool IsFromBSE { get; set; }
 
+        /// <summary>
+        /// 除去首尾端默认为 都为Pillar产生的/还有一种是由胜方 HoleType为center
+        /// </summary>
+        public bool IsFromPillar { get; set; }
+
         public JWPoint Location { get; set; }
 
         public bool HasLocationCenter { get; set; }
@@ -62,6 +67,7 @@ namespace JwShapeCommon.Model
             if (!isStart && !isEnd)
             {
                 HoleType = KongzuType.Center;
+                IsFromPillar = true;
             }
             switch (firstCreateFrom)
             {
@@ -90,6 +96,11 @@ namespace JwShapeCommon.Model
             }
         }
 
+        /// <summary>
+        /// 2025年4月11日 作废
+        /// </summary>
+        /// <param name="kongZu"></param>
+        /// <param name="createFrom"></param>
         public JwHole(JwKongZu kongZu, HoleCreateFrom createFrom)
         {
             Id = Guid.NewGuid().ToString();
@@ -119,6 +130,12 @@ namespace JwShapeCommon.Model
             }
         }
 
+        /// <summary>
+        /// 2025年4月11日 暂时无用
+        /// </summary>
+        /// <param name="kongZu"></param>
+        /// <param name="createFrom"></param>
+        /// <param name="lc"></param>
         public JwHole(JwKongZu kongZu, HoleCreateFrom createFrom, JWPoint lc)
         {
             Id = Guid.NewGuid().ToString();
@@ -160,7 +177,7 @@ namespace JwShapeCommon.Model
         public bool IsBias { get; set; }
 
         /// <summary>
-        /// 用来处理BC BP的孔
+        /// 用来处理BC BP的孔  根据isstart isend 如果num 为2 可以图里出孔的
         /// </summary>
         /// <param name="isForB"></param>
         /// <param name="location"></param>
@@ -177,7 +194,9 @@ namespace JwShapeCommon.Model
 
             HasCenter = true;
 
+            IsBias = true; 
 
+            IsFromBSE = true;
         }
 
 
