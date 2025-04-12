@@ -109,6 +109,8 @@ namespace JwShapeCommon
             LinkParts = new List<JwLinkPart>();
             BeamPillars = new List<JwPillar>();
             ZhuBlocks = new List<JwBlock>();
+            StartTelosType = KongzuType.B;
+            EndTelosType = KongzuType.B;
             parseBymian(mian, isjiaodian);
             desginScale();
         }
@@ -718,7 +720,8 @@ namespace JwShapeCommon
                     cccc.PreBeamStartDistance=Math.Round(cccc.Coordinate -sb,6);
                     cccc.AppendHole=centerholes[i];
                     cccc.HasAppend = true;
-                    precb=cccc.Coordinate;//循环完即为最后一个洞坐标
+                    this.jwBeamMarks.Add(cccc);
+                    precb=cccc.Coordinate;//循环完即为最后一个洞坐标非 首位端口的洞
                     //if (i == centerholes.Count - 1)
                     //{
                     //    lastholes = cccc.Coordinate;
@@ -761,10 +764,30 @@ namespace JwShapeCommon
                 endholejmp.HasAppend= true;
                 this.jwBeamMarks.Add(endholejmp); 
             }
-
-            
-            
-
+            else
+            {
+                endx.Coordinate = this.EndCenter;
+                endx.coordinated();
+                if (endhole != null)
+                {
+                    var endholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
+                    if (this.DirectionType == BeamDirectionType.Horizontal)
+                    {
+                        endholejmp.Coordinate = endhole.Location.X;
+                    }
+                    if (this.DirectionType == BeamDirectionType.Vertical)
+                    {
+                        endholejmp.Coordinate = endhole.Location.Y;
+                    }
+                    endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate - precb, 6);
+                    endholejmp.PreBeamStartDistance=Math.Round(endholejmp.Coordinate -sb, 6);
+                    endholejmp.AppendHole = endhole;
+                    endholejmp.HasAppend= true; 
+                }
+            }
+            endx.PreBeamStartDistance=Math.Round(endx.Coordinate-sb,6);
+            endx.PreCenterDistance=Math.Round(endx.Coordinate-precb,6);
+            this.jwBeamMarks.Add(endx);
         }
     }
 
