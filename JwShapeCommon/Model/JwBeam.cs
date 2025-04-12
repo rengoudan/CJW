@@ -610,6 +610,15 @@ namespace JwShapeCommon
         /// </summary>
         private void holeorder()
         {
+            if (this.DirectionType == BeamDirectionType.Horizontal)
+            {
+                this.Holes = this.Holes.OrderBy(t => t.Location.X).ToList();
+            }
+            if (this.DirectionType == BeamDirectionType.Vertical)
+            {
+                this.Holes = this.Holes.OrderBy(t => t.Location.Y).ToList();
+            }
+            
             var starthole = this.Holes.Find(t => t.IsStart);
 
             var endhole = this.Holes.Find(t => t.IsEnd);
@@ -709,11 +718,11 @@ namespace JwShapeCommon
                     cccc.PreBeamStartDistance=Math.Round(cccc.Coordinate -sb,6);
                     cccc.AppendHole=centerholes[i];
                     cccc.HasAppend = true;
-                    precb=cccc.Coordinate;
-                    if (i == centerholes.Count - 1)
-                    {
-                        lastholes = cccc.Coordinate;
-                    }
+                    precb=cccc.Coordinate;//循环完即为最后一个洞坐标
+                    //if (i == centerholes.Count - 1)
+                    //{
+                    //    lastholes = cccc.Coordinate;
+                    //}
                 }
 
               
@@ -722,24 +731,35 @@ namespace JwShapeCommon
             //处理beam开始 结束标记点信息
             var es = new JwBeamMarkPoint(this, false, true);
             this.jwBeamMarks.Add(es);
-            var endx = new JwBeamMarkPoint(this, true,false, true);//芯起点
+            var endx = new JwBeamMarkPoint(this, true,false, true);//芯终点
 
             if (this.EndTelosType == KongzuType.B)
             {
-
+                //芯终点
                 endx.Coordinate = es.Coordinate - 50 / JwFileConsts.JwScale;//不用区分水平和垂直
                 endx.coordinated();
-                double lastce = (es.Coordinate - lastholes) * JwFileConsts.JwScale;
-                
+
+                double lastce = (es.Coordinate - precb) * JwFileConsts.JwScale;
+
+                var endholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
+                endholejmp.Coordinate = endx.Coordinate;
+                endholejmp.IsBias = true;
+                JwHole ewholeend;
                 if (lastce >= 150)
                 {
-                    endhole = new JwHole(true, endx.Point, KongzuType.BC);
-
+                    ewholeend = new JwHole(true, endx.Point, KongzuType.BC);
+                    ewholeend.KongNum = 4;
                 }
                 else
                 {
-                    endhole = new JwHole(true, endx.Point, KongzuType.BP);
+                    ewholeend = new JwHole(true, endx.Point, KongzuType.BP);
+                    ewholeend.KongNum = 2;
                 }
+                endhole = ewholeend;
+
+                endholejmp.AppendHole = ewholeend;
+                endholejmp.HasAppend= true;
+                this.jwBeamMarks.Add(endholejmp); 
             }
 
             

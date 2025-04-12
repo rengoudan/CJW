@@ -332,7 +332,8 @@ namespace JwShapeCommon
                 }
             }
 
-            //
+            //生成beam 的每个标记位置点
+
             createBeamAbsolutePD();
         }
 
