@@ -790,7 +790,11 @@ namespace JwShapeCommon
             }
             endx.PreBeamStartDistance=Math.Round(endx.Coordinate-sb,6);
             endx.PreCenterDistance=Math.Round(endx.Coordinate-precb,6);
+            var endbeam = new JwBeamMarkPoint(this, false, true);
+            double eb=endbeam.Coordinate;//梁的终点
+            this.jwBeamMarks.Add(endbeam);
             this.jwBeamMarks.Add(endx);
+            var z = this.jwBeamMarks.Count;
         }
     }
 

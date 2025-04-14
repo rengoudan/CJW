@@ -47,7 +47,15 @@ namespace RGBJWMain.Forms
                 if (jwCanvasControl1.BeamSelected)
                 {
                     var z = jwCanvasControl1.SelectedBeam;
-
+                    if (z.DirectionType == BeamDirectionType.Horizontal) 
+                    {
+                        z.AbsolutePD = z.TopLeft.X;
+                    }
+                    if (z.DirectionType == BeamDirectionType.Vertical)
+                    {
+                        z.AbsolutePD = z.BottomLeft.Y;
+                    }
+                    var q = z.jwBeamMarks;
                     if (z != null)
                     {
 
