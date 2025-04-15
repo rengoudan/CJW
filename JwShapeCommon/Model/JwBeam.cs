@@ -685,8 +685,11 @@ namespace JwShapeCommon
                 cbs.Coordinate = this.StartCenter;
                 cbs.coordinated();
             }
+            cbs.PreBeamStartDistance=Math.Round(cbs.Coordinate-sb,2);
+
             this.jwBeamMarks.Add(cbs);
             precb = cbs.Coordinate;
+            //
             if (starthole != null)
             {
                 var startholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
@@ -698,8 +701,8 @@ namespace JwShapeCommon
                 {
                     startholejmp.Coordinate = starthole.Location.Y;
                 }
-                startholejmp.PreCenterDistance = Math.Round(startholejmp.Coordinate - precb, 6);
-                startholejmp.PreBeamStartDistance=Math.Round(startholejmp.Coordinate-sb,6);
+                startholejmp.PreCenterDistance = Math.Round(startholejmp.Coordinate - precb, 2);
+                startholejmp.PreBeamStartDistance=Math.Round(startholejmp.Coordinate-sb,2);
                 precb = startholejmp.Coordinate;
             }
                 if (centerholes?.Count > 0)
@@ -717,8 +720,8 @@ namespace JwShapeCommon
                     {
                         cccc.Coordinate = centerholes[i].Location.Y;
                     }
-                    cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 6);
-                    cccc.PreBeamStartDistance=Math.Round(cccc.Coordinate -sb,6);
+                    cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 2);
+                    cccc.PreBeamStartDistance=Math.Round(cccc.Coordinate -sb,2);
                     cccc.AppendHole=centerholes[i];
                     cccc.HasAppend = true;
                     this.jwBeamMarks.Add(cccc);
@@ -760,8 +763,8 @@ namespace JwShapeCommon
                     ewholeend.KongNum = 2;
                 }
                 endhole = ewholeend;
-                endholejmp.PreBeamStartDistance = Math.Round(endholejmp.Coordinate - sb, 6);
-                endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate-precb, 6);
+                endholejmp.PreBeamStartDistance = Math.Round(endholejmp.Coordinate - sb, 2);
+                endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate-precb, 2);
                 endholejmp.AppendHole = ewholeend;
                 endholejmp.HasAppend= true;
                 this.jwBeamMarks.Add(endholejmp); 
@@ -781,15 +784,15 @@ namespace JwShapeCommon
                     {
                         endholejmp.Coordinate = endhole.Location.Y;
                     }
-                    endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate - precb, 6);
-                    endholejmp.PreBeamStartDistance=Math.Round(endholejmp.Coordinate -sb, 6);
+                    endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate - precb, 2);
+                    endholejmp.PreBeamStartDistance=Math.Round(endholejmp.Coordinate -sb, 2);
                     endholejmp.AppendHole = endhole;
                     endholejmp.HasAppend= true;
                     precb = endholejmp.Coordinate;
                 }
             }
-            endx.PreBeamStartDistance=Math.Round(endx.Coordinate-sb,6);
-            endx.PreCenterDistance=Math.Round(endx.Coordinate-precb,6);
+            endx.PreBeamStartDistance=Math.Round(endx.Coordinate-sb,2);
+            endx.PreCenterDistance=Math.Round(endx.Coordinate-precb,2);
             this.jwBeamMarks.Add(endx);
         }
     }
