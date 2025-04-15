@@ -608,7 +608,8 @@ namespace JwShapeCommon
         /// <summary>
         /// 前提默认holes 是完整 包含首尾
         /// 对holes进行排序 并生成需要计算区间的点数据
-        /// 
+        /// 2025年4月16日 由于endhole 
+        /// 统一一下起始和结束 端口 2及端口所包含的hole 
         /// </summary>
         private void holeorder()
         {
@@ -689,25 +690,29 @@ namespace JwShapeCommon
 
             this.jwBeamMarks.Add(cbs);
             precb = cbs.Coordinate;
+            
             //
             if (starthole != null)
             {
-                var startholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
-                if (this.DirectionType == BeamDirectionType.Horizontal)
-                {
-                    startholejmp.Coordinate = starthole.Location.X;
-                }
-                if (this.DirectionType == BeamDirectionType.Vertical)
-                {
-                    startholejmp.Coordinate = starthole.Location.Y;
-                }
-                startholejmp.PreCenterDistance = Math.Round(startholejmp.Coordinate - precb, 2);
-                startholejmp.PreBeamStartDistance=Math.Round(startholejmp.Coordinate-sb,2);
-                precb = startholejmp.Coordinate;
+                //hole的中心带你可以和mark的不一致  只有B是一致的
+                cbs.HasAppend = true;
+                cbs.AppendHole = starthole;
+                //var startholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
+                //if (this.DirectionType == BeamDirectionType.Horizontal)
+                //{
+                //    startholejmp.Coordinate = starthole.Location.X;
+                //}
+                //if (this.DirectionType == BeamDirectionType.Vertical)
+                //{
+                //    startholejmp.Coordinate = starthole.Location.Y;
+                //}
+                //startholejmp.PreCenterDistance = Math.Round(startholejmp.Coordinate - precb, 2);
+                //startholejmp.PreBeamStartDistance=Math.Round(startholejmp.Coordinate-sb,2);
+                //precb = startholejmp.Coordinate;
             }
                 if (centerholes?.Count > 0)
             {
-
+                //针对出了端口之外的中间的柱产生中心点， 确定之间距离是否存在各位 如果不存在保留1
                 //前提是遍历的holes都为pillar产生及胜方
                 for (int i = 0; i < centerholes.Count; i++)
                 {
@@ -720,8 +725,8 @@ namespace JwShapeCommon
                     {
                         cccc.Coordinate = centerholes[i].Location.Y;
                     }
-                    cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 2);
-                    cccc.PreBeamStartDistance=Math.Round(cccc.Coordinate -sb,2);
+                    cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 1);
+                    cccc.PreBeamStartDistance=Math.Round(cccc.Coordinate -sb,1);
                     cccc.AppendHole=centerholes[i];
                     cccc.HasAppend = true;
                     this.jwBeamMarks.Add(cccc);
@@ -737,6 +742,7 @@ namespace JwShapeCommon
 
             //处理beam开始 结束标记点信息
             var es = new JwBeamMarkPoint(this, false, true);
+            es.PreBeamStartDistance=Math.Round(es.Coordinate - sb, 2);
             this.jwBeamMarks.Add(es);
             var endx = new JwBeamMarkPoint(this, true,false, true);//芯终点
 
@@ -748,9 +754,9 @@ namespace JwShapeCommon
 
                 double lastce = (es.Coordinate - precb) * JwFileConsts.JwScale;
 
-                var endholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
-                endholejmp.Coordinate = endx.Coordinate;
-                endholejmp.IsBias = true;
+                //var endholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
+                //endholejmp.Coordinate = endx.Coordinate;
+                //endholejmp.IsBias = true;
                 JwHole ewholeend;
                 if (lastce >= 150)
                 {
@@ -763,11 +769,13 @@ namespace JwShapeCommon
                     ewholeend.KongNum = 2;
                 }
                 endhole = ewholeend;
-                endholejmp.PreBeamStartDistance = Math.Round(endholejmp.Coordinate - sb, 2);
-                endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate-precb, 2);
-                endholejmp.AppendHole = ewholeend;
-                endholejmp.HasAppend= true;
-                this.jwBeamMarks.Add(endholejmp); 
+                endx.HasAppend = true;
+                endx.AppendHole = ewholeend;
+                //endholejmp.PreBeamStartDistance = Math.Round(endholejmp.Coordinate - sb, 2);
+                //endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate-precb, 2);
+                //endholejmp.AppendHole = ewholeend;
+                //endholejmp.HasAppend= true;
+                //this.jwBeamMarks.Add(endholejmp); 
             }
             else
             {
@@ -775,20 +783,22 @@ namespace JwShapeCommon
                 endx.coordinated();
                 if (endhole != null)
                 {
-                    var endholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
-                    if (this.DirectionType == BeamDirectionType.Horizontal)
-                    {
-                        endholejmp.Coordinate = endhole.Location.X;
-                    }
-                    if (this.DirectionType == BeamDirectionType.Vertical)
-                    {
-                        endholejmp.Coordinate = endhole.Location.Y;
-                    }
-                    endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate - precb, 2);
-                    endholejmp.PreBeamStartDistance=Math.Round(endholejmp.Coordinate -sb, 2);
-                    endholejmp.AppendHole = endhole;
-                    endholejmp.HasAppend= true;
-                    precb = endholejmp.Coordinate;
+                    //var endholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
+                    //if (this.DirectionType == BeamDirectionType.Horizontal)
+                    //{
+                    //    endholejmp.Coordinate = endhole.Location.X;
+                    //}
+                    //if (this.DirectionType == BeamDirectionType.Vertical)
+                    //{
+                    //    endholejmp.Coordinate = endhole.Location.Y;
+                    //}
+                    //endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate - precb, 2);
+                    //endholejmp.PreBeamStartDistance=Math.Round(endholejmp.Coordinate -sb, 2);
+                    //endholejmp.AppendHole = endhole;
+                    //endholejmp.HasAppend= true;
+                    endx.HasAppend = true;
+                    endx.AppendHole = endhole;
+                    //precb = endholejmp.Coordinate;
                 }
             }
             endx.PreBeamStartDistance=Math.Round(endx.Coordinate-sb,2);
