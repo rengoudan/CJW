@@ -156,7 +156,32 @@ namespace JwShapeCommon
 
         public double Coordinate { get; set; }
 
-        public double PreCenterDistance { get; set; }
+        /// <summary>
+        /// 针对于0.01 默认梁之间 精确到厘米，
+        /// </summary>
+        private double _preCenterDistance;
+        public double PreCenterDistance 
+        { 
+            get 
+            {
+                return _preCenterDistance;
+            } 
+            set 
+            { 
+                _preCenterDistance = value;
+                double z = Math.Round(value, 1);
+                if (z != value)
+                {
+                    HasError = true;
+                }
+                PreCenterCorrect = z;
+            } 
+        }
+
+        /// <summary>
+        /// 修正后的值
+        /// </summary>
+        public double PreCenterCorrect { get; set; }
 
         public double PreBeamStartDistance { get; set; }
 
@@ -168,5 +193,11 @@ namespace JwShapeCommon
         /// 默认为false
         /// </summary>
         public bool IsBias { get; set; }
+
+        /// <summary>
+        /// pr 相对于前一个 是否有误差，
+        /// 
+        /// </summary>
+        public bool HasError { get; set; }
     }
 }

@@ -805,6 +805,8 @@ namespace JwShapeCommon
             endx.PreCenterDistance=Math.Round(endx.Coordinate-precb,2);
             this.jwBeamMarks.Add(endx);
             var z = this.jwBeamMarks.Count;
+            double xxlength=this.jwBeamMarks.Sum(t=>t.PreCenterDistance);
+
         }
     }
 
