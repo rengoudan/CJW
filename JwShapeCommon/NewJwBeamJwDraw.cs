@@ -2,8 +2,11 @@
 using JwShapeCommon.Model;
 using JwwHelper;
 using Microsoft.EntityFrameworkCore;
+using RGB.Jw.JW;
+using Sunny.UI;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +18,12 @@ namespace JwShapeCommon
         private JwBeam _beam;
 
         public bool CanDraw = false;
+
+        public double XXLength=0;
+
+        public double BLength=0;
+
+        private double showlength = 0;
 
         /// <summary>
         /// 统一为水平，X 从零开始（通过累加 相对距离） Y 分配固定 上面 12 中间0 下面-12 
@@ -34,15 +43,79 @@ namespace JwShapeCommon
             }
             _beam.AbsolutePD= Math.Round(beam.TopLeft.X, 6);//不用更改数据库从新生成间隔数据
 
-            var xmark=_beam.jwBeamMarks.Find(t=>t.IsCenterStart);
+           
+        }
+
+        public void CreateControlDraw(int wwidth, int wheight)
+        {
+            double bl = 0;
+            if (showlength != 0)
+            {
+                bl=Math.Min(Math.Round(wwidth/showlength,2),Math.Round(wheight/6d,2));
+                PointF pf = new PointF(10, 10);
+                var z = new RectangleF(pf, new SizeF((float)(bl * showlength), (float)(bl * 1)));
+                ControlDraw draw = new ControlDraw();
+                draw.PenColor = Color.White;
+                draw.DrawRectangleF = z;
+                draw.ShapeType = DrawShapeType.Beam;
+                //draw.JwSquareBase = jwShape;
+                ControlDraws.Add(draw);
+            }
+        }
+        private void reset()
+        {
+            XXLength=Math.Round(_beam.jwBeamMarks.Sum(t=>t.PreCenterDistance),2);
+            var xmark = _beam.jwBeamMarks.Find(t => t.IsCenterStart);
             if (xmark != null)
             {
                 CanDraw = true;
                 offsetX = -xmark.Coordinate;//芯起点默认为0 重置各类坐标  
+                xstartx = 0;
+                xendx=_beam.jwBeamMarks.Sum(t=>t.PreCenterDistance);
+
+                if (_beam.StartTelosType == KongzuType.B)
+                {
+                    BLength = XXLength + 50 / JwFileConsts.JwScale;
+                    startx = this.xstartx - 50 / JwFileConsts.JwScale;
+                }
+                if (_beam.StartTelosType == KongzuType.G)
+                {
+                    BLength = XXLength - 55 / JwFileConsts.JwScale;
+                    startx = this.xstartx + 55 / JwFileConsts.JwScale;
+                }
+                if (_beam.StartTelosType == KongzuType.J)
+                {
+                    BLength = XXLength - 3 / JwFileConsts.JwScale;
+                    startx = this.xstartx + 3 / JwFileConsts.JwScale;
+                }
+                if (_beam.EndTelosType == KongzuType.B)
+                {
+                    BLength = XXLength + 50 / JwFileConsts.JwScale;
+                    endx = xendx + 50 / JwFileConsts.JwScale;
+                }
+                if (_beam.EndTelosType != KongzuType.G)
+                {
+                    BLength = XXLength - 55 / JwFileConsts.JwScale;
+                    endx = this.xendx +55/JwFileConsts.JwScale;
+                }
+                if (_beam.EndTelosType == KongzuType.J)
+                {
+                    BLength = XXLength - 3 / JwFileConsts.JwScale;
+                    endx = xendx - 3 / JwFileConsts.JwScale;
+                }
+                //startx=
+                showlength = Math.Max(XXLength, BLength);
+
+
+
+
+
             }
             //默认芯起点为00 则可以直接使用predistance来生成孔组位置
             //这种情况下offset就为 负 芯起点 
         }
+
+        public List<ControlDraw> ControlDraws { get; set; }
 
         public List<JwwData> Datas=new List<JwwData>();
 
@@ -84,6 +157,7 @@ namespace JwShapeCommon
         {
             if(_beam!=null)
             {
+                ControlDraws=new List<ControlDraw>();
                 banjing = JwFileConsts.EllipseDiameter / (2*JwFileConsts.JwScale);
                 offsetX = -_beam.CenterPoint.X;
                 offsetY = -_beam.CenterPoint.Y;
@@ -131,6 +205,8 @@ namespace JwShapeCommon
                 Datas.AddRange(this.Mojis);
             }
         }
+
+       
 
         private void CreateBeam(double offsetx,double offsety,KongzuSuoshuMian iscenter)
         {
