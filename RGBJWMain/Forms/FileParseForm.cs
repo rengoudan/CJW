@@ -135,11 +135,13 @@ namespace RGBJWMain.Forms
 
                 if (z != null)
                 {
-                    JwSingleBeamForm jsForm = new JwSingleBeamForm(z);
+                    //JwSingleBeamForm jsForm = new JwSingleBeamForm(z);
 
-                    //jsForm.ShowBeam = js;
-                    //jsForm.sha
-                    jsForm.ShowDialog();
+                    ////jsForm.ShowBeam = js;
+                    ////jsForm.sha
+                    //jsForm.ShowDialog();
+                    NewJwBeamForm j=new NewJwBeamForm(z);
+                    j.ShowDialog();
                 }
             }
         }

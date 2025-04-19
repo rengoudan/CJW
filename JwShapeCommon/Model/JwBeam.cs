@@ -613,6 +613,7 @@ namespace JwShapeCommon
         /// </summary>
         private void holeorder()
         {
+            this.jwBeamMarks = new List<JwBeamMarkPoint>();
             if (this.DirectionType == BeamDirectionType.Horizontal)
             {
                 this.Holes = this.Holes.OrderBy(t => t.Location.X).ToList();

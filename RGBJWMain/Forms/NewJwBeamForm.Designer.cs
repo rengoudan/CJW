@@ -28,12 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "NewJwBeamForm";
+            newSingleBeamControl1 = new Controls.NewSingleBeamControl();
+            SuspendLayout();
+            // 
+            // newSingleBeamControl1
+            // 
+            newSingleBeamControl1.BackColor = Color.Black;
+            newSingleBeamControl1.Dock = DockStyle.Fill;
+            newSingleBeamControl1.Location = new Point(0, 0);
+            newSingleBeamControl1.Name = "newSingleBeamControl1";
+            newSingleBeamControl1.ShowBeam = null;
+            newSingleBeamControl1.Size = new Size(1679, 669);
+            newSingleBeamControl1.TabIndex = 0;
+            newSingleBeamControl1.Text = "newSingleBeamControl1";
+            // 
+            // NewJwBeamForm
+            // 
+            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1679, 669);
+            Controls.Add(newSingleBeamControl1);
+            Name = "NewJwBeamForm";
+            Text = "NewJwBeamForm";
+            Shown += NewJwBeamForm_Shown;
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private Controls.NewSingleBeamControl newSingleBeamControl1;
     }
 }

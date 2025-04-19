@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JwShapeCommon;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +13,27 @@ namespace RGBJWMain.Forms
 {
     public partial class NewJwBeamForm : Form
     {
+        private JwBeam _jwbeam;
+
+
         public NewJwBeamForm()
         {
             InitializeComponent();
+        }
+
+        public NewJwBeamForm(JwBeam jwbeam)
+        {
+            this._jwbeam = jwbeam;
+            InitializeComponent();
+        }
+
+        private void NewJwBeamForm_Shown(object sender, EventArgs e)
+        {
+            if (this._jwbeam != null)
+            {
+                this.newSingleBeamControl1.ShowBeam = this._jwbeam;
+            }
+            
         }
     }
 }
