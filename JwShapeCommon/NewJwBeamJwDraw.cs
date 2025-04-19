@@ -25,6 +25,10 @@ namespace JwShapeCommon
 
         private double showlength = 0;
 
+        private List<double> _xlst=new List<double>();
+
+        private List<double> _ylst=new List<double>();
+
         /// <summary>
         /// 统一为水平，X 从零开始（通过累加 相对距离） Y 分配固定 上面 12 中间0 下面-12 
         /// </summary>
@@ -42,24 +46,50 @@ namespace JwShapeCommon
                 //    controls.AddRange(beamsp.Change(_minbeilv, axisX, axisY));
             }
             _beam.AbsolutePD= Math.Round(beam.TopLeft.X, 6);//不用更改数据库从新生成间隔数据
-
-           
         }
 
+        /// <summary>
+        /// 绘制核心方法
+        /// </summary>
+        /// <param name="wwidth"></param>
+        /// <param name="wheight"></param>
         public void CreateControlDraw(int wwidth, int wheight)
-        {
+        { 
             double bl = 0;
             if (showlength != 0)
             {
                 bl=Math.Min(Math.Round(wwidth/showlength,2),Math.Round(wheight/6d,2));
-                PointF pf = new PointF(10, 10);
-                var z = new RectangleF(pf, new SizeF((float)(bl * showlength), (float)(bl * 1)));
+                _xlst.Add(-2);
+                _xlst.Add(showlength + 2);
+                _ylst.Add(6);
+                PointF pftop = new PointF(0, 5);
+                //var z = new RectangleF(pf, new SizeF((float)(bl * showlength), (float)(bl * 1)));
+                var topbeam = new RectangleF(pftop, new SizeF((float)(showlength), (float)(1)));
                 ControlDraw draw = new ControlDraw();
                 draw.PenColor = Color.White;
-                draw.DrawRectangleF = z;
+                draw.DrawRectangleF = topbeam;
                 draw.ShapeType = DrawShapeType.Beam;
                 //draw.JwSquareBase = jwShape;
                 ControlDraws.Add(draw);
+                //宽度为1 2 ，间隔5试一下
+                _ylst.Add(0);
+                PointF pfcenter=new PointF(0, 0);
+                var  centerbeam=new RectangleF(pfcenter, new SizeF((float)(showlength), (float)(2)));
+                ControlDraw centerdraw = new ControlDraw();
+                centerdraw.PenColor = Color.White;
+                centerdraw.DrawRectangleF = topbeam;
+                centerdraw.ShapeType = DrawShapeType.Beam;
+                ControlDraws.Add(centerdraw);
+
+                PointF pfbottom=new PointF(0, -5);
+                _ylst.Add(-8);
+                var bottombeam=new RectangleF(pfbottom, new SizeF((float)(showlength), (float)(1)));
+                ControlDraw bottomdraw = new ControlDraw();
+                bottomdraw.PenColor = Color.White;
+                bottomdraw.DrawRectangleF = topbeam;
+                bottomdraw.ShapeType = DrawShapeType.Beam;
+                ControlDraws.Add(bottomdraw);
+
             }
         }
         private void reset()
