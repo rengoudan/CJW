@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 namespace JwShapeCommon
 {
+    /// <summary>
+    /// Y坐标从低到高
+    /// </summary>
     public class NewJwBeamJwDraw
     {
         private JwBeam _beam;
@@ -31,6 +34,8 @@ namespace JwShapeCommon
         private List<double> _ylst=new List<double>();
 
         private double _jiangeY = 0;
+
+        private double _starty = 0;
 
         /// <summary>
         /// 统一为水平，X 从零开始（通过累加 相对距离） Y 分配固定 上面 12 中间0 下面-12 
@@ -128,8 +133,9 @@ namespace JwShapeCommon
                 bl =Math.Min(Math.Round(wwidth/showlength,2),Math.Round(wheight/6d,2));
                 _xlst.Add(-2);
                 _xlst.Add(showlength + 2);
-                _ylst.Add(_jiangeY);
-                PointF pftop = new PointF(0, (float)_jiangeY);
+                _ylst.Add(0);
+                
+                PointF pftop = new PointF((float)startx, (float)0);
                 //var z = new RectangleF(pf, new SizeF((float)(bl * showlength), (float)(bl * 1)));
                 var topbeam = new RectangleF(pftop, new SizeF((float)(showlength), (float)(1)));
                 ControlDraw draw = new ControlDraw();
@@ -139,8 +145,8 @@ namespace JwShapeCommon
                 //draw.JwSquareBase = jwShape;
                 ControlDraws.Add(draw);
                 //宽度为1 2 ，间隔5试一下
-                _ylst.Add(0);
-                PointF pfcenter=new PointF(0, 0);
+                _ylst.Add(_jiangeY);
+                PointF pfcenter=new PointF((float)startx, (float)_jiangeY);
                 var  centerbeam=new RectangleF(pfcenter, new SizeF((float)(showlength), (float)(2)));
                 ControlDraw centerdraw = new ControlDraw();
                 centerdraw.PenColor = Color.White;
@@ -148,8 +154,8 @@ namespace JwShapeCommon
                 centerdraw.ShapeType = DrawShapeType.Beam;
                 ControlDraws.Add(centerdraw);
 
-                PointF pfbottom=new PointF(0, -(float)_jiangeY);
-                _ylst.Add(-_jiangeY);
+                PointF pfbottom=new PointF((float)startx, (float)_jiangeY*2);
+                _ylst.Add(_jiangeY*2);
                 var bottombeam=new RectangleF(pfbottom, new SizeF((float)(showlength), (float)(1)));
                 ControlDraw bottomdraw = new ControlDraw();
                 bottomdraw.PenColor = Color.White;
@@ -175,27 +181,30 @@ namespace JwShapeCommon
                                 drawhole(m.AppendHole, m.IsBias, true);
                             }
                         }
-                        if (m.IsCenterEnd)
+                        else if (m.IsCenterEnd)
                         {
                             if (m.HasAppend)
                             {
                                 drawhole(m.AppendHole, m.IsBias, false,true);
                             }
                         }
-                        drawhole(m.AppendHole,false);
+                        else
+                        {
+                            drawhole(m.AppendHole, false);
+                        }
+                        
                     }
                 }
             }
         }
 
-
-        private void drawhole(JwHole h, bool isbis, bool istart = false, bool isend = false)
+        private void drawhole(JwHole h,double x, bool isbis, bool istart = false, bool isend = false)
         {
-            double tcy = _jiangeY - 0.5;
+            double tcy = _starty + 0.5;
 
-            double ccy = -1;
+            double ccy = _jiangeY + 1;
 
-            double bcy = -_jiangeY - 0.5;
+            double bcy = _jiangeY * 2 + 0.5;
             double halfbj = JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale);
             double kzhijing = JwFileConsts.EllipseDiameter / JwFileConsts.JwScale;
             double locationx = Math.Round(h.Location.X, 6) + offsetX;
@@ -245,7 +254,7 @@ namespace JwShapeCommon
 
                 }
             }
-            if (isend)
+            else if (isend)
             {
                 if (_beam.EndTelosType == KongzuType.B)
                 {
@@ -289,37 +298,169 @@ namespace JwShapeCommon
                     _createsinglehole(hx, (float)bcy, true);
                 }
             }
+            else
+            {
+                var chx = (float)(locationx - halfbj - kzhijing / 2);
+                var chyx = (float)(locationx + halfbj - kzhijing / 2);
+                if (h.HasTop)
+                {
+                    _createsinglehole(chx, (float)tcy);
+                    _createsinglehole(chx, (float)tcy, true);
+                    _createsinglehole(chyx, (float)tcy);
+                    _createsinglehole(chyx, (float)tcy, true);
+                }
+                if (h.HasCenter)
+                {
+                    _createsinglehole(chx, (float)ccy);
+                    _createsinglehole(chx, (float)ccy, true);
+                    _createsinglehole(chyx, (float)ccy);
+                    _createsinglehole(chyx, (float)ccy, true);
+                }
+                if (h.HasBottom)
+                {
+                    _createsinglehole(chx, (float)bcy);
+                    _createsinglehole(chx, (float)bcy, true);
+                    _createsinglehole(chyx, (float)bcy);
+                    _createsinglehole(chyx, (float)bcy, true);
+                }
+            }
 
-            var chx = (float)(locationx - halfbj - kzhijing / 2);
-            var chyx = (float)(locationx + halfbj - kzhijing / 2);
-            if (h.HasTop)
+        }
+
+        private void drawhole(JwHole h, bool isbis, bool istart = false, bool isend = false)
+        {
+            double tcy = _starty + 0.5;
+
+            double ccy = _jiangeY+1;
+
+            double bcy = _jiangeY*2 + 0.5;
+            double halfbj = JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale);
+            double kzhijing = JwFileConsts.EllipseDiameter / JwFileConsts.JwScale;
+            double locationx = Math.Round(h.Location.X, 6) + offsetX;
+            var sz = new SizeF((float)kzhijing, (float)kzhijing);
+            if (istart)
             {
-                _createsinglehole(chx, (float)tcy);
-                _createsinglehole(chx, (float)tcy, true);
-                _createsinglehole(chyx, (float)tcy);
-                _createsinglehole(chyx, (float)tcy, true);
+                if (_beam.StartTelosType == KongzuType.B)
+                {
+                    if (isbis)
+                    {
+                        var hx = (float)(locationx - halfbj - kzhijing / 2);
+                        _createsinglehole(hx, (float)tcy);
+                        _createsinglehole(hx, (float)tcy, true);
+                        _createsinglehole(hx, (float)ccy);
+                        _createsinglehole(hx, (float)ccy, true);
+                        _createsinglehole(hx, (float)bcy);
+                        _createsinglehole(hx, (float)bcy, true);
+                    }
+                    else
+                    {
+                        var hx = (float)(locationx - halfbj - kzhijing / 2);
+                        var hyx = (float)(locationx + halfbj - kzhijing / 2);
+                        _createsinglehole(hx, (float)tcy);
+                        _createsinglehole(hx, (float)tcy, true);
+                        _createsinglehole(hx, (float)ccy);
+                        _createsinglehole(hx, (float)ccy, true);
+                        _createsinglehole(hx, (float)bcy);
+                        _createsinglehole(hx, (float)bcy, true);
+
+                        _createsinglehole(hyx, (float)tcy);
+                        _createsinglehole(hyx, (float)tcy, true);
+                        _createsinglehole(hyx, (float)ccy);
+                        _createsinglehole(hyx, (float)ccy, true);
+                        _createsinglehole(hyx, (float)bcy);
+                        _createsinglehole(hyx, (float)bcy, true);
+                    }
+                }
+                else
+                {
+                    var hx = (float)(locationx);
+                    _createsinglehole(hx, (float)tcy);
+                    _createsinglehole(hx, (float)tcy, true);
+                    _createsinglehole(hx, (float)ccy);
+                    _createsinglehole(hx, (float)ccy, true);
+                    _createsinglehole(hx, (float)bcy);
+                    _createsinglehole(hx, (float)bcy, true);
+
+                }
             }
-            if (h.HasCenter)
+            else if (isend)
             {
-                _createsinglehole(chx, (float)ccy);
-                _createsinglehole(chx, (float)ccy, true);
-                _createsinglehole(chyx, (float)ccy);
-                _createsinglehole(chyx, (float)ccy, true);
+                if (_beam.EndTelosType == KongzuType.B)
+                {
+                    if (isbis)
+                    {
+                        var hx = (float)(locationx + halfbj - kzhijing / 2);
+                        _createsinglehole(hx, (float)tcy);
+                        _createsinglehole(hx, (float)tcy, true);
+                        _createsinglehole(hx, (float)ccy);
+                        _createsinglehole(hx, (float)ccy, true);
+                        _createsinglehole(hx, (float)bcy);
+                        _createsinglehole(hx, (float)bcy, true);
+                    }
+                    else
+                    {
+                        var hx = (float)(locationx - halfbj - kzhijing / 2);
+                        var hyx = (float)(locationx + halfbj - kzhijing / 2);
+                        _createsinglehole(hx, (float)tcy);
+                        _createsinglehole(hx, (float)tcy, true);
+                        _createsinglehole(hx, (float)ccy);
+                        _createsinglehole(hx, (float)ccy, true);
+                        _createsinglehole(hx, (float)bcy);
+                        _createsinglehole(hx, (float)bcy, true);
+
+                        _createsinglehole(hyx, (float)tcy);
+                        _createsinglehole(hyx, (float)tcy, true);
+                        _createsinglehole(hyx, (float)ccy);
+                        _createsinglehole(hyx, (float)ccy, true);
+                        _createsinglehole(hyx, (float)bcy);
+                        _createsinglehole(hyx, (float)bcy, true);
+                    }
+                }
+                else
+                {
+                    var hx = (float)(locationx);
+                    _createsinglehole(hx, (float)tcy);
+                    _createsinglehole(hx, (float)tcy, true);
+                    _createsinglehole(hx, (float)ccy);
+                    _createsinglehole(hx, (float)ccy, true);
+                    _createsinglehole(hx, (float)bcy);
+                    _createsinglehole(hx, (float)bcy, true);
+                }
             }
-            if (h.HasBottom)
+            else
             {
-                _createsinglehole(chx, (float)bcy);
-                _createsinglehole(chx, (float)bcy, true);
-                _createsinglehole(chyx, (float)bcy);
-                _createsinglehole(chyx, (float)bcy, true);
+                var chx = (float)(locationx - halfbj - kzhijing / 2);
+                var chyx = (float)(locationx + halfbj - kzhijing / 2);
+                if (h.HasTop)
+                {
+                    _createsinglehole(chx, (float)tcy);
+                    _createsinglehole(chx, (float)tcy, true);
+                    _createsinglehole(chyx, (float)tcy);
+                    _createsinglehole(chyx, (float)tcy, true);
+                }
+                if (h.HasCenter)
+                {
+                    _createsinglehole(chx, (float)ccy);
+                    _createsinglehole(chx, (float)ccy, true);
+                    _createsinglehole(chyx, (float)ccy);
+                    _createsinglehole(chyx, (float)ccy, true);
+                }
+                if (h.HasBottom)
+                {
+                    _createsinglehole(chx, (float)bcy);
+                    _createsinglehole(chx, (float)bcy, true);
+                    _createsinglehole(chyx, (float)bcy);
+                    _createsinglehole(chyx, (float)bcy, true);
+                }
             }
+            
         }
 
         private void _createsinglehole(float x,float y,bool istop=false)
         {
             double kzhijing = JwFileConsts.EllipseDiameter / JwFileConsts.JwScale;
             double halfbj = JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale);
-            var hy =istop? (float)(y + halfbj + kzhijing / 2): (float)(y - halfbj + kzhijing / 2);
+            var hy =istop? (float)(y - halfbj - kzhijing / 2): (float)(y + halfbj - kzhijing / 2);
             
             var sz = new SizeF((float)kzhijing, (float)kzhijing);
             var z = new PointF(x, hy);

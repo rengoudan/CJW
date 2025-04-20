@@ -91,16 +91,17 @@ namespace RGBJWMain.Controls
                     {
                         var yw=this._jwDrawShape.Maxx-_jwDrawShape.Minx;
 
-                        var yh=this._jwDrawShape.Maxy-_jwDrawShape.Miny;
+                        var yh=this._jwDrawShape.Maxy-_jwDrawShape.Miny+5;
                         var wscale = Convert.ToSingle((this.Width - 20) / yw);
                         var hscale = Convert.ToSingle((this.Height - 20) / yh);
                         var scale = Math.Min(wscale, hscale);
-                        Matrix myMatrix = new Matrix(1, 0, 0, -1, 0, 0);
+                        //Matrix myMatrix = new Matrix(1, 0, 0, -1, 0, 0);
+                        Matrix myMatrix = new Matrix();
                         myMatrix.Scale(scale, scale);
-                        //float flx = Convert.ToSingle(_jwDrawShape.Minx) * scale - 20;
-                        //float fly = Convert.ToSingle(_jwDrawShape.Maxy) * scale + 50;
                         float flx = Convert.ToSingle(_jwDrawShape.Minx) * scale ;
-                        float fly = Convert.ToSingle(_jwDrawShape.Maxy) * scale ;
+                        float fly = 20 ;
+                        //float flx = Convert.ToSingle(_jwDrawShape.Minx) * scale ;
+                        //float fly = Convert.ToSingle(_jwDrawShape.Maxy) * scale ;
                         var z = pe.Graphics;
                         using (z)
                         {
@@ -111,11 +112,15 @@ namespace RGBJWMain.Controls
                                 
                                 Pen pnn = new Pen(new SolidBrush(Color.White), 1/scale);//线条的粗细
                                 if (cd.ShapeType == JwCore.DrawShapeType.Beam)
-                                {
-                                    pe.Graphics.DrawRectangle(pnn, cd.DrawRectangleF.Location.X, cd.DrawRectangleF.Location.Y, cd.DrawRectangleF.Width, cd.DrawRectangleF.Height);
+                                 {
+                                    z.DrawRectangle(pnn, cd.DrawRectangleF.Location.X, cd.DrawRectangleF.Location.Y, cd.DrawRectangleF.Width, cd.DrawRectangleF.Height);
+
+                                    z.DrawLine(pnn, -10, (float)(cd.DrawRectangleF.Location.Y+0.5), (float)(cd.DrawRectangleF.Width+20), (float)(cd.DrawRectangleF.Location.Y + 0.5));//箭头 s 点和 pr点
+
+
                                 }
-                                if (cd.ShapeType == JwCore.DrawShapeType.Hole){
-                                    pe.Graphics.DrawEllipse(pnn, cd.DrawRectangleF.Location.X, cd.DrawRectangleF.Location.Y, cd.DrawRectangleF.Width, cd.DrawRectangleF.Height);
+                                 if (cd.ShapeType == JwCore.DrawShapeType.Hole){
+                                    z.DrawEllipse(pnn, cd.DrawRectangleF.Location.X, cd.DrawRectangleF.Location.Y, cd.DrawRectangleF.Width, cd.DrawRectangleF.Height);
                                 }
                                 
                              }

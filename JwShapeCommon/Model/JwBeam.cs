@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NetTopologySuite.Geometries;
 using Sunny.UI;
+using static System.Windows.Forms.AxHost;
 
 namespace JwShapeCommon
 {
@@ -673,6 +674,7 @@ namespace JwShapeCommon
                     else
                     {
                         starthole.KongNum = 2;
+                        cbs.IsBias = true;
                     }
                 }
             }
