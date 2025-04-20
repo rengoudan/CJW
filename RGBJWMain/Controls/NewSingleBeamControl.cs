@@ -115,7 +115,7 @@ namespace RGBJWMain.Controls
                                  {
                                     z.DrawRectangle(pnn, cd.DrawRectangleF.Location.X, cd.DrawRectangleF.Location.Y, cd.DrawRectangleF.Width, cd.DrawRectangleF.Height);
 
-                                    z.DrawLine(pnn, -10, (float)(cd.DrawRectangleF.Location.Y+0.5), (float)(cd.DrawRectangleF.Width+20), (float)(cd.DrawRectangleF.Location.Y + 0.5));//箭头 s 点和 pr点
+                                   // z.DrawLine(pnn, -10, (float)(cd.DrawRectangleF.Location.Y+0.5), (float)(cd.DrawRectangleF.Width+20), (float)(cd.DrawRectangleF.Location.Y + 0.5));//箭头 s 点和 pr点
 
 
                                 }
