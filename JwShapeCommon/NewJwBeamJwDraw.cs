@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace JwShapeCommon
 {
@@ -170,12 +171,22 @@ namespace JwShapeCommon
 
                 double prex = 0;
 
+                Lines = new List<ControlLine>();
+
+                ControlLine startl = new ControlLine();
+
+                float sx = 0, ex = 0;
+
+                bool iadd = false;
                 foreach (var m in _beam.jwBeamMarks)
                 {
                     if (m.IsCenter)
                     {
                         if (m.IsCenterStart)
                         {
+                            startl.DrawStart = new PointF((float)prex, 3);
+                            sx = (float)prex;
+                            iadd = true;
                             if (m.HasAppend)
                             {
                                 drawhole(m.AppendHole, m.IsBias, true);
@@ -183,6 +194,7 @@ namespace JwShapeCommon
                         }
                         else if (m.IsCenterEnd)
                         {
+                            drawline(sx, (float)XXLength, (float)(_jiangeY + 4));
                             if (m.HasAppend)
                             {
                                 drawhole(m.AppendHole, m.IsBias, false,true);
@@ -193,7 +205,18 @@ namespace JwShapeCommon
                             double zb = prex + (m.HasError ? m.PreCenterCorrect : m.PreCenterDistance);
 
                             prex= zb;
-
+                            if (iadd)
+                            {
+                                ex= (float)prex;
+                                
+                                drawline(sx, ex, (float)(_jiangeY + 4));
+                                sx= (float)prex;
+                            }
+                            else
+                            {
+                                iadd = true;
+                                sx= (float)prex;
+                            }
                             drawhole(m.AppendHole, zb);
 
                         }
@@ -201,6 +224,16 @@ namespace JwShapeCommon
                     }
                 }
             }
+        }
+
+        private void drawline(float sx,float ex,float y)
+        {
+            ControlLine l = new ControlLine();
+            l.DrawStart=new PointF(sx,y);
+            l.DrawEnd=new PointF(ex,y);
+            l.Distance = Math.Round(ex - sx, 2) * JwFileConsts.JwScale;
+            l.Title = string.Format("{0}mm", l.Distance);
+            this.Lines.Add(l);
         }
 
         private void drawhole(JwHole h,double x)
@@ -477,6 +510,8 @@ namespace JwShapeCommon
         }
 
         public List<ControlDraw> ControlDraws { get; set; }
+
+        public List<ControlLine> Lines { get; set; }
 
         public List<JwwData> Datas=new List<JwwData>();
 

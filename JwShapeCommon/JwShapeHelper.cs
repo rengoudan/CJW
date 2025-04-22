@@ -31,6 +31,8 @@ namespace JwShapeCommon
                 jwBeam.HasStartSide = beam.HasStartSide;
                 jwBeam.StartTelosType= beam.StartTelosType;
                 jwBeam.EndTelosType= beam.EndTelosType;
+                jwBeam.StartCenter = beam.StartCenter;
+                jwBeam.EndCenter = beam.EndCenter;
 
                 foreach(var p in beam.ZhuBlocks)
                 {

@@ -156,11 +156,16 @@ namespace JwShapeCommon
             parenbeam.IsParentBeam = true;
             List<JWPoint> qglst = new List<JWPoint>();
 
+            bool isdengyustart = false;
+            bool isdengyuend = false;
             if (parenbeam.DirectionType == BeamDirectionType.Horizontal)
             {
-                if(qiegestart)
-                {
 
+
+               
+                if (qiegestart)
+                {
+                    isdengyuend=true;
                     TopLeft = new JWPoint(start.X+3/JwFileConsts.JwScale,start.Y);
                     
                     BottomLeft = new JWPoint(TopLeft.X, parenbeam.BottomLeft.Y);
@@ -196,6 +201,7 @@ namespace JwShapeCommon
                 }
                 if(qiegeend)
                 {
+                    isdengyuend = true;
                     TopRight = new JWPoint(end.X - 3 / JwFileConsts.JwScale, end.Y);
                     BottomRight = new JWPoint(TopRight.X, BottomLeft.Y);
                     qglst.Add(new JWPoint(end.X, parenbeam.CenterPoint.Y));
@@ -227,9 +233,14 @@ namespace JwShapeCommon
                         Holes.Add(lasth);
                     }
                 }
+
+                
+
             }
             else
             {
+                var hls = parenbeam.Holes.Where(t => t.Location.Y >= start.Y && t.Location.Y <= end.Y).ToList();
+                this.Holes.AddRange(hls);
                 if (qiegeend)
                 {
                     TopLeft = new JWPoint(end.X, end.Y - 3 / JwFileConsts.JwScale);

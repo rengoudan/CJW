@@ -64,7 +64,7 @@ namespace RGBJWMain.Controls
         Font biaozhuFont;
         Font subdataFont;
         Font labelFont;
-        Brush bushred = new SolidBrush(Color.Red);
+        Brush bushred = new SolidBrush(Color.White);
         Brush bushwhite = new SolidBrush(Color.White);
         private void initdraw()
         {
@@ -105,6 +105,10 @@ namespace RGBJWMain.Controls
                         var z = pe.Graphics;
                         using (z)
                         {
+                            Pen penjt = new Pen(new SolidBrush(Color.White), 1 / scale);//线条的粗细
+                            penjt.DashStyle = DashStyle.Dot;//线条的线型
+                            penjt.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                            penjt.StartCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                             z.Transform = myMatrix;
                             z.TranslateTransform(-flx, fly, MatrixOrder.Append);
                             foreach (var cd in _jwDrawShape.ControlDraws) 
@@ -124,6 +128,17 @@ namespace RGBJWMain.Controls
                                 }
                                 
                              }
+                            int i = 0;
+                            foreach(var l in _jwDrawShape.Lines)
+                            {
+                                biaozhuFont = new Font(Control.DefaultFont.SystemFontName, fontSize/scale, FontStyle.Regular);
+                                z.DrawLine(penjt, l.DrawStart, l.DrawEnd);
+                                StringFormat sf = new StringFormat();
+                                sf.FormatFlags = StringFormatFlags.DirectionVertical;
+                                var swz = new PointF(l.DrawStart.X, l.DrawStart.Y+3+i);
+                                i=i+1;
+                                z.DrawString(l.Title, biaozhuFont, bushred, swz);
+                            }
                         }
                             
                     }

@@ -1688,7 +1688,7 @@ namespace JwShapeCommon
                                         //    Sourec = KongzuSuoshuMian.Center
                                         //};
                                         //l.AddHole(sfkongzu);
-                                        var sflocation = new JWPoint(c.Center, q.Key);
+                                        var sflocation = new JWPoint(c.Center, l.Center);
                                         //2025年4月12日 修改中心点位置计算逻辑
                                         var pflocation = new JWPoint(c.Center, c.StartCenter + (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale);
                                         //var pflocation = new JWPoint(c.Center, c.BottomLeft.Y + JwFileConsts.Gjubian / JwFileConsts.JwScale);
@@ -1799,7 +1799,7 @@ namespace JwShapeCommon
 
                                         //胜方
 
-                                        var sflocation = new JWPoint(c.Center, q.Key);
+                                        var sflocation = new JWPoint(c.Center, l.Center);
                                         var pfloaction = new JWPoint(c.Center, c.EndCenter - (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale);
                                         //var pfloaction = new JWPoint(c.Center, c.TopLeft.Y - JwFileConsts.Gjubian / JwFileConsts.JwScale);
                                         //c.Kongzus.Add(bfkongzu);
@@ -1913,7 +1913,7 @@ namespace JwShapeCommon
 
                                         //处理端部孔组信息  JwKongZu类
                                         //胜方
-                                        var sflocaiton = new JWPoint(q.Key, r.Center);
+                                        var sflocaiton = new JWPoint(l.Center, r.Center);
                                         var bflocation = new JWPoint(r.EndCenter - (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale, r.Center);
                                         //var bflocation = new JWPoint(r.TopRight!.X - JwFileConsts.Gjubian / JwFileConsts.JwScale, r.Center);
                                         l.AddAnyHole(sflocaiton, HoleCreateFrom.JieChu);
@@ -2008,7 +2008,7 @@ namespace JwShapeCommon
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
-                                        var sflocation = new JWPoint(q.Key, r.Center);
+                                        var sflocation = new JWPoint(l.Center, r.Center);
                                         var bfloaction = new JWPoint(r.StartCenter + (JwFileConsts.Gjubian+JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale, r.Center);
                                         //                                        var bfloaction = new JWPoint(r.TopLeft.X + JwFileConsts.Gjubian / JwFileConsts.JwScale, r.Center);
 

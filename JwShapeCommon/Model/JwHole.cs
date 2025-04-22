@@ -62,6 +62,7 @@ namespace JwShapeCommon.Model
             Location = location;
             LocationCenter = locationCenter;
             FirstCreateFrom = firstCreateFrom;
+            ChangeFrom = firstCreateFrom;
             IsStart = isStart;
             IsEnd = isEnd;
             if (!isStart && !isEnd)
@@ -240,6 +241,12 @@ namespace JwShapeCommon.Model
                         HasBottom = true;
 
                     }
+                    break;
+                case HoleCreateFrom.FengeJ:
+                    HasTop = true;
+                    HasCenter=true;
+                    HasBottom=true;
+                    KongNum = 2;
                     break;
 
             }

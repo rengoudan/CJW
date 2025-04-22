@@ -293,7 +293,8 @@ namespace JwShapeCommon
                     if (createFrom == HoleCreateFrom.FengeJ)
                     {
                         var hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
-                        beam.Holes.Add(hh);
+                        //beam.Holes.Add(hh);
+                        fh.changeByOther(HoleCreateFrom.FengeJ);
                     }
                     else
                     {
