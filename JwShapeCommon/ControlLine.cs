@@ -23,6 +23,10 @@ namespace JwShapeCommon
 
         public float HeightLine { get;set; }
 
+        public bool HasMsg { get; set; }
+
+        public bool IsXX { get; set; }
+
         //public DashStyle DashStyle { get; set; }
     }
 }

@@ -158,11 +158,12 @@ namespace JwShapeCommon
 
             bool isdengyustart = false;
             bool isdengyuend = false;
+            List<JwHole> yhs;
             if (parenbeam.DirectionType == BeamDirectionType.Horizontal)
             {
+                yhs = parenbeam.Holes.Where(t => t.Location.X > start.X && t.Location.X < end.X && !t.IsStart && !t.IsEnd).ToList();
 
-
-               
+                this.Holes.AddRange(yhs);
                 if (qiegestart)
                 {
                     isdengyuend=true;
@@ -193,7 +194,8 @@ namespace JwShapeCommon
                     StartTelosType = parenbeam.StartTelosType;
                     StartCenter = parenbeam.StartCenter;//和父保持一致
                     var z = parenbeam.Holes.Find(t => t.IsStart);
-                    if (z != null)
+                    var nfsh = Holes.Find(t => t.IsStart);
+                    if (z != null && nfsh == null)
                     {
                         Holes.Add(z);
                     }
@@ -228,7 +230,9 @@ namespace JwShapeCommon
                     EndTelosType = parenbeam.EndTelosType;
                     EndCenter = parenbeam.EndCenter;//和父保持一致
                     var lasth = parenbeam.Holes.Find(t => t.IsEnd);
-                    if (lasth != null)
+                    var nfsh = Holes.Find(t => t.IsEnd);
+
+                    if (lasth != null && nfsh == null)
                     {
                         Holes.Add(lasth);
                     }
@@ -239,8 +243,11 @@ namespace JwShapeCommon
             }
             else
             {
-                var hls = parenbeam.Holes.Where(t => t.Location.Y >= start.Y && t.Location.Y <= end.Y).ToList();
-                this.Holes.AddRange(hls);
+                yhs = parenbeam.Holes.Where(t => t.Location.Y > start.Y && t.Location.Y < end.Y && !t.IsStart && !t.IsEnd).ToList();
+
+                this.Holes.AddRange(yhs);
+                //var hls = parenbeam.Holes.Where(t => t.Location.Y >= start.Y && t.Location.Y <= end.Y).ToList();
+                //this.Holes.AddRange(hls);
                 if (qiegeend)
                 {
                     TopLeft = new JWPoint(end.X, end.Y - 3 / JwFileConsts.JwScale);
@@ -267,7 +274,9 @@ namespace JwShapeCommon
                     EndTelosType = parenbeam.EndTelosType;
                     EndCenter = parenbeam.EndCenter;
                     var lasth = parenbeam.Holes.Find(t => t.IsEnd);
-                    if (lasth != null)
+                    var nfsh=Holes.Find(t=>t.IsEnd);
+
+                    if (lasth != null&& nfsh==null)
                     {
                         Holes.Add(lasth);
                     }
@@ -299,7 +308,8 @@ namespace JwShapeCommon
                     StartTelosType = parenbeam.StartTelosType;
                     StartCenter = parenbeam.StartCenter;
                     var z = parenbeam.Holes.Find(t => t.IsStart);
-                    if (z != null)
+                    var nfsh = Holes.Find(t => t.IsStart);
+                    if (z != null&&nfsh==null)
                     {
                         Holes.Add(z);
                     }

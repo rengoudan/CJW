@@ -55,7 +55,7 @@ namespace JwShapeCommon
                 //    controls.AddRange(beamsp.Change(_minbeilv, axisX, axisY));
             }
             _beam.AbsolutePD= Math.Round(beam.TopLeft.X, 6);//不用更改数据库从新生成间隔数据
-            this._jiangeY = 12;
+            this._jiangeY = 4;
             this.reset();
         }
 
@@ -173,7 +173,9 @@ namespace JwShapeCommon
 
                 Lines = new List<ControlLine>();
 
-                ControlLine startl = new ControlLine();
+               
+
+
 
                 float sx = 0, ex = 0;
 
@@ -184,32 +186,39 @@ namespace JwShapeCommon
                     {
                         if (m.IsCenterStart)
                         {
-                            startl.DrawStart = new PointF((float)prex, 3);
+                            
                             sx = (float)prex;
                             iadd = true;
                             if (m.HasAppend)
                             {
                                 drawhole(m.AppendHole, m.IsBias, true);
                             }
+                            drawfzline(sx, (float)_jiangeY);
+
+                            drawline((float)startx, sx, (float)(2*_jiangeY + 2));
                         }
                         else if (m.IsCenterEnd)
                         {
-                            drawline(sx, (float)XXLength, (float)(_jiangeY + 4));
+                            drawline(sx, (float)XXLength, (float)(2 * _jiangeY + 2));
                             if (m.HasAppend)
                             {
                                 drawhole(m.AppendHole, m.IsBias, false,true);
                             }
+                            drawfzline((float)XXLength, (float)_jiangeY);
+
+                            drawline((float)endx, (float)XXLength, (float)(2*_jiangeY + 2));
                         }
                         else
                         {
                             double zb = prex + (m.HasError ? m.PreCenterCorrect : m.PreCenterDistance);
 
                             prex= zb;
+                            drawfzline((float)prex, (float)_jiangeY);
                             if (iadd)
                             {
                                 ex= (float)prex;
                                 
-                                drawline(sx, ex, (float)(_jiangeY + 4));
+                                drawline(sx, ex, (float)(2 * _jiangeY + 2));
                                 sx= (float)prex;
                             }
                             else
@@ -223,16 +232,33 @@ namespace JwShapeCommon
                         
                     }
                 }
+
+                drawline(0, (float)XXLength, (float)(_jiangeY - 1),true);
             }
         }
 
-        private void drawline(float sx,float ex,float y)
+        private void drawfzline(float x,float sy)
+        {
+            ControlLine l = new ControlLine();
+            l.DrawStart = new PointF(x, sy);
+            l.DrawEnd = new PointF(x, sy);
+            l.HasMsg = false;
+            this.Lines.Add(l);
+        }
+
+        private void drawline(float sx,float ex,float y,bool isxx=false)
         {
             ControlLine l = new ControlLine();
             l.DrawStart=new PointF(sx,y);
             l.DrawEnd=new PointF(ex,y);
-            l.Distance = Math.Round(ex - sx, 2) * JwFileConsts.JwScale;
+            l.Distance = Math.Abs(Math.Round(ex - sx, 2)) * JwFileConsts.JwScale;
             l.Title = string.Format("{0}mm", l.Distance);
+            l.HasMsg = true;
+            l.IsXX = isxx;
+            if (l.IsXX)
+            {
+                l.Title = string.Format("コア距離:{0}mm", l.Distance);
+            }
             this.Lines.Add(l);
         }
 

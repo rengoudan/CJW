@@ -131,13 +131,47 @@ namespace RGBJWMain.Controls
                             int i = 0;
                             foreach(var l in _jwDrawShape.Lines)
                             {
-                                biaozhuFont = new Font(Control.DefaultFont.SystemFontName, fontSize/scale, FontStyle.Regular);
-                                z.DrawLine(penjt, l.DrawStart, l.DrawEnd);
-                                StringFormat sf = new StringFormat();
-                                sf.FormatFlags = StringFormatFlags.DirectionVertical;
-                                var swz = new PointF(l.DrawStart.X, l.DrawStart.Y+3+i);
-                                i=i+1;
-                                z.DrawString(l.Title, biaozhuFont, bushred, swz);
+                                if (l.HasMsg)
+                                {
+
+                              
+                                    if (l.IsXX)
+                                    {
+                                        biaozhuFont = new Font(Control.DefaultFont.SystemFontName, fontSize / scale, FontStyle.Regular);
+                                        z.DrawLine(penjt, l.DrawStart, l.DrawEnd);
+                                        StringFormat sf = new StringFormat();
+                                        sf.FormatFlags = StringFormatFlags.DirectionVertical;
+                                        var swz = new PointF((l.DrawStart.X + l.DrawEnd.X) / 2, l.DrawStart.Y);
+                                        z.DrawString(l.Title, biaozhuFont, bushred, swz);
+                                    }
+                                    else
+                                    {
+                                        biaozhuFont = new Font(Control.DefaultFont.SystemFontName, fontSize / scale, FontStyle.Regular);
+                                        z.DrawLine(penjt, l.DrawStart, l.DrawEnd);
+                                        StringFormat sf = new StringFormat();
+                                        sf.FormatFlags = StringFormatFlags.DirectionVertical;
+                                        var swz = new PointF(l.DrawStart.X, l.DrawStart.Y + i);
+                                        i = i + 1;
+                                        z.DrawString(l.Title, biaozhuFont, bushred, swz);
+                                    }
+                                }
+                               
+                            }
+                            Pen pnjt = new Pen(new SolidBrush(Color.DarkRed), 1 / scale);//线条的粗细
+                            pnjt.DashStyle = DashStyle.Solid;//线条的线型
+                            
+                            foreach (var l in _jwDrawShape.Lines)
+                            {
+                                if (!l.HasMsg)
+                                {
+                                    
+                                    z.DrawLine(pnjt, (float)l.DrawStart.X, 0, (float)l.DrawStart.X, (float)l.DrawStart.Y + 3 + i);
+                                    //StringFormat sf = new StringFormat();
+                                    //sf.FormatFlags = StringFormatFlags.DirectionVertical;
+                                    //var swz = new PointF(l.DrawStart.X, l.DrawStart.Y + 3 + i);
+                                    //i = i + 1;
+                                    //z.DrawString(l.Title, biaozhuFont, bushred, swz);
+                                }
                             }
                         }
                             
