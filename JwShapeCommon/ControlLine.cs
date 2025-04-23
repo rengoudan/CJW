@@ -27,6 +27,8 @@ namespace JwShapeCommon
 
         public bool IsXX { get; set; }
 
+        public bool IsBeaml { get; set; }
+
         //public DashStyle DashStyle { get; set; }
     }
 }

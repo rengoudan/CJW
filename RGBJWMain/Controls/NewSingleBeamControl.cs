@@ -78,6 +78,10 @@ namespace RGBJWMain.Controls
             penjt.StartCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
         }
 
+        /// <summary>
+        /// 控件绘制
+        /// </summary>
+        /// <param name="pe"></param>
         private void _drawall(PaintEventArgs pe)
         {
             int w = this.Width;
@@ -135,7 +139,7 @@ namespace RGBJWMain.Controls
                                 {
 
                               
-                                    if (l.IsXX)
+                                    if (l.IsXX|| l.IsBeaml)
                                     {
                                         biaozhuFont = new Font(Control.DefaultFont.SystemFontName, fontSize / scale, FontStyle.Regular);
                                         z.DrawLine(penjt, l.DrawStart, l.DrawEnd);
@@ -144,6 +148,16 @@ namespace RGBJWMain.Controls
                                         var swz = new PointF((l.DrawStart.X + l.DrawEnd.X) / 2, l.DrawStart.Y);
                                         z.DrawString(l.Title, biaozhuFont, bushred, swz);
                                     }
+                                    //else if(l.IsBeaml)
+                                    //{
+                                    //    biaozhuFont = new Font(Control.DefaultFont.SystemFontName, fontSize / scale, FontStyle.Regular);
+                                    //    z.DrawLine(penjt, l.DrawStart, l.DrawEnd);
+                                    //    StringFormat sf = new StringFormat();
+                                    //    sf.FormatFlags = StringFormatFlags.DirectionVertical;
+                                    //    var swz = new PointF((l.DrawStart.X + l.DrawEnd.X) / 2, l.DrawStart.Y);
+                                        
+                                    //    z.DrawString(l.Title, biaozhuFont, bushred, swz);
+                                    //}
                                     else
                                     {
                                         biaozhuFont = new Font(Control.DefaultFont.SystemFontName, fontSize / scale, FontStyle.Regular);
