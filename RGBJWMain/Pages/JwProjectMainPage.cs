@@ -496,8 +496,9 @@ namespace RGBJWMain.Pages
                                 sl = b.ToList().Count.ToString();
                             }
                             string wjm = string.Format("{0}{1}.jww", b.Key, sl);
-                            JwBeamJwDraw jwDraw = new JwBeamJwDraw(bm);
-                            jwDraw.Draw();
+                            //JwBeamJwDraw jwDraw = new JwBeamJwDraw(bm);
+                            NewJwBeamJwDraw jwDraw = new NewJwBeamJwDraw(bm);
+                            jwDraw.CreateBeam();
                             if (jwDraw.Sens.Count > 0)
                             {
                                 using var a = new JwwHelper.JwwWriter();
@@ -601,8 +602,8 @@ namespace RGBJWMain.Pages
                             sl = "(" + b.ToList().Count.ToString() + ")";
                         }
                         string wjm = string.Format("{0}{1}.jww", b.Key, sl);
-                        JwBeamJwDraw jwDraw = new JwBeamJwDraw(bm);
-                        jwDraw.Draw();
+                        NewJwBeamJwDraw jwDraw = new NewJwBeamJwDraw(bm);
+                        jwDraw.CreateBeam();
                         if (jwDraw.Sens.Count > 0)
                         {
                             using var a = new JwwHelper.JwwWriter();

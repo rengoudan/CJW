@@ -38,6 +38,8 @@ namespace JwShapeCommon
 
         private double _starty = 0;
 
+        private double _fuzhuY = 0;
+
         /// <summary>
         /// 统一为水平，X 从零开始（通过累加 相对距离） Y 分配固定 上面 12 中间0 下面-12 
         /// </summary>
@@ -56,6 +58,8 @@ namespace JwShapeCommon
             }
             _beam.AbsolutePD = Math.Round(beam.TopLeft.X, 6);//不用更改数据库从新生成间隔数据
             this._jiangeY = 4;
+            this._fuzhuY = -this._jiangeY-0.4;
+            this.banjing = JwFileConsts.EllipseDiameter / (2*JwFileConsts.JwScale);
             this.reset();
         }
 
@@ -664,7 +668,7 @@ namespace JwShapeCommon
             double prex = 0;
 
             Lines = new List<ControlLine>();
-
+            //cretaeFuzhu();
 
 
 
@@ -672,10 +676,14 @@ namespace JwShapeCommon
             float sx = 0, ex = 0;
 
             bool iadd = false;
+            fuzhuxian(startx);
+            fuzhuxian(endx);
+            fuzhuxian(XXLength);
             foreach (var m in _beam.jwBeamMarks)
             {
                 if (m.IsCenter)
                 {
+                    fuzhuxian(prex);
                     if (m.IsCenterStart)
                     {
 
@@ -688,6 +696,7 @@ namespace JwShapeCommon
                         drawfzline(sx, (float)_jiangeY);
 
                         drawline((float)startx, sx, (float)(2 * _jiangeY + 2));
+                        showprexindistance(startx, sx,true);//梁 边距离中心起始点的标注
                     }
                     else if (m.IsCenterEnd)
                     {
@@ -699,6 +708,7 @@ namespace JwShapeCommon
                         drawfzline((float)XXLength, (float)_jiangeY);
 
                         drawline((float)endx, (float)XXLength, (float)(2 * _jiangeY + 2));
+                        showprexindistance(endx, XXLength,true);//梁结束距离中心点的标注
                     }
                     else
                     {
@@ -709,7 +719,7 @@ namespace JwShapeCommon
                         if (iadd)
                         {
                             ex = (float)prex;
-
+                            showprexindistance(sx, ex);
                             drawline(sx, ex, (float)(2 * _jiangeY + 2));
                             sx = (float)prex;
                         }
@@ -725,9 +735,9 @@ namespace JwShapeCommon
                 }
             }
 
-
-
-
+            showprexindistance(prex, XXLength);
+            showxx();
+            showbeamlength();
             Datas.AddRange(this.Sens);
             Datas.AddRange(this.Biaozhu);
             Datas.AddRange(this.Tens);
@@ -737,11 +747,18 @@ namespace JwShapeCommon
 
         private void jwdrawhole(JwHole h, bool isbis, bool istart = false, bool isend = false,double pre=0)
         {
-            double tcy = _jiangeY + 0.5;
 
-            double ccy = 0 + 1;
+            double tpy = _jiangeY + 2;
 
-            double bcy = _jiangeY - 0.5;
+            double cpy = 0;
+
+            double bpy = -_jiangeY - 2;
+
+            double tcy = tpy - 0.5;
+
+            double ccy = 0 - 1;
+
+            double bcy = bpy - 0.5;
             double halfbj = JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale);
             double kzhijing = JwFileConsts.EllipseDiameter / JwFileConsts.JwScale;
             double locationx = Math.Round(h.Location.X, 6) + offsetX;
@@ -854,22 +871,22 @@ namespace JwShapeCommon
                 else if (_beam.EndTelosType == KongzuType.G)
                 {
                     var hx = (float)(endzb - 90 / JwFileConsts.JwScale);
-                    createhole(hx, tcy);
-                    createhole(hx, tcy);
-                    createhole(hx, ccy);
-                    createhole(hx, ccy);
-                    createhole(hx, bcy);
-                    createhole(hx, bcy);
+                    createhole(hx, tcy + halfbj);
+                    createhole(hx, tcy - halfbj);
+                    createhole(hx, ccy + halfbj);
+                    createhole(hx, ccy - halfbj);
+                    createhole(hx, bcy + halfbj);
+                    createhole(hx, bcy - halfbj);
                 }
                 else
                 {
                     var hx = (float)(endzb - 28 / JwFileConsts.JwScale);
-                    createhole(hx, tcy);
-                    createhole(hx, tcy);
-                    createhole(hx, ccy);
-                    createhole(hx, ccy);
-                    createhole(hx, bcy);
-                    createhole(hx, bcy);
+                    createhole(hx, tcy + halfbj);
+                    createhole(hx, tcy - halfbj);
+                    createhole(hx, ccy + halfbj);
+                    createhole(hx, ccy - halfbj);
+                    createhole(hx, bcy + halfbj);
+                    createhole(hx, bcy - halfbj);
                 }
             }
             else
@@ -902,71 +919,18 @@ namespace JwShapeCommon
         }
 
 
-        private void CreateBeam(double offsetx, double offsety, KongzuSuoshuMian iscenter)
+        private void fuzhuxian(double x)
         {
-            var hodu = JwFileConsts.Lianghoudu / JwFileConsts.JwScale;
-            double ctys = _beam.CenterPoint.Y + hodu / 2 + offsety;
-            double ctyx = _beam.CenterPoint.Y - hodu / 2 + offsety;
-            if (iscenter == KongzuSuoshuMian.Center)
-            {
-                JwwSen leftline = CreateSen(_beam.TopLeft.X + offsetx, 2 * (_beam.TopLeft.Y + offsety), _beam.BottomLeft.X + offsetx, 2 * (_beam.BottomLeft.Y + offsety));
-                Sens.Add(leftline);
-                JwwSen rightline = CreateSen(_beam.TopRight.X + offsetx, 2 * (_beam.TopRight.Y + offsety), _beam.BottomRight.X + offsetx, 2 * (_beam.BottomRight.Y + offsety));
-                Sens.Add(rightline);
-                JwwSen topline = CreateSen(_beam.TopLeft.X + offsetx, 2 * (_beam.TopLeft.Y + offsety), _beam.TopRight.X + offsetx, 2 * (_beam.TopRight.Y + offsety));
-                Sens.Add(topline);
-                JwwSen bottomline = CreateSen(_beam.BottomRight.X + offsetx, 2 * (_beam.BottomRight.Y + offsety), _beam.BottomLeft.X + offsetx, 2 * (_beam.BottomLeft.Y + offsety));
-                Sens.Add(bottomline);
-                JwwSen topfz = CreateSen(topline.m_start_x, topline.m_start_y - hodu, topline.m_end_x, topline.m_end_y - hodu, true);
-                Sens.Add(topfz);
-                JwwSen bottomfz = CreateSen(bottomline.m_start_x, bottomline.m_start_y + hodu, bottomline.m_end_x, bottomline.m_end_y + hodu, true);
-                Sens.Add(bottomfz);
-                CreateMsgAndHole(offsetx, offsety, leftline.m_start_y + offsetMsg, iscenter);
-                double shumsgx = leftline.m_start_x - 100 / JwFileConsts.JwScale;
-                double shumsgxe = leftline.m_start_x - 50 / JwFileConsts.JwScale;
-                createsinglemsg(shumsgx, shumsgxe, leftline.m_start_y, leftline.m_end_y, false);
-                JwwMoji duan = new JwwMoji();
-                duan.m_start_x = shumsgx - 200 / JwFileConsts.JwScale;
-                duan.m_start_y = (leftline.m_start_y + leftline.m_end_y) * 3 / 4;
-                duan.m_string = _beam.HasStartSide ? _beam.StartTelosType.ToString() : "B";
-                duan.m_dSizeX = 200 / JwFileConsts.JwScale;
-                duan.m_dSizeY = 200 / JwFileConsts.JwScale;
-                Mojis.Add(duan);
-                double endduanx = topline.m_end_x + 300 / JwFileConsts.JwScale;
-                JwwMoji duanend = new JwwMoji();
-                duanend.m_start_x = endduanx;
-                duanend.m_start_y = (leftline.m_start_y + leftline.m_end_y) * 3 / 4;
-                duanend.m_string = _beam.HasEndSide ? _beam.EndTelosType.ToString() : "B";
-                duanend.m_dSizeX = 200 / JwFileConsts.JwScale;
-                duanend.m_dSizeY = 200 / JwFileConsts.JwScale;
-                Mojis.Add(duanend);
-
-            }
-            else
-            {
-                JwwSen leftline = CreateSen(_beam.TopLeft.X + offsetx, _beam.TopLeft.Y + offsety, _beam.BottomLeft.X + offsetx, _beam.BottomLeft.Y + offsety);
-                Sens.Add(leftline);
-                JwwSen rightline = CreateSen(_beam.TopRight.X + offsetx, _beam.TopRight.Y + offsety, _beam.BottomRight.X + offsetx, _beam.BottomRight.Y + offsety);
-                Sens.Add(rightline);
-                JwwSen topline = CreateSen(_beam.TopLeft.X + offsetx, _beam.TopLeft.Y + offsety, _beam.TopRight.X + offsetx, _beam.TopRight.Y + offsety);
-                Sens.Add(topline);
-                JwwSen bottomline = CreateSen(_beam.BottomRight.X + offsetx, _beam.BottomRight.Y + offsety, _beam.BottomLeft.X + offsetx, _beam.BottomLeft.Y + offsety);
-                Sens.Add(bottomline);
-                JwwSen fushang = CreateSen(_beam.TopLeft.X + offsetx, ctys, _beam.TopRight.X + offsetx, ctys, true);
-                Sens.Add(fushang);
-                JwwSen fuxia = CreateSen(_beam.TopLeft.X + offsetx, ctyx, _beam.TopRight.X + offsetx, ctyx, true);
-                Sens.Add(fuxia);
-                CreateMsgAndHole(offsetx, offsety, leftline.m_start_y + offsetMsg, iscenter);
-            }
-            if (iscenter == KongzuSuoshuMian.Bottom)
-            {
-                //梁长度 标识
-                createsinglemsg(_beam.BottomLeft.X + offsetx, _beam.BottomRight.X + offsetx, _beam.BottomRight.Y - offsetMsg + offsety, _beam.CenterPoint.Y + offsety);
-                //中心线长度
-                createsinglemsg(xstartx, xendx, _beam.BottomRight.Y - offsetMsg * 3 / 2 + offsety, _beam.CenterPoint.Y + offsety);
-            }
-
+            JwwSen sen1 = new JwwSen();
+            sen1.m_nPenStyle = 2;
+            sen1.m_nPenColor = 4;
+            sen1.m_start_x = x;
+            sen1.m_start_y = _jiangeY+2;
+            sen1.m_end_x = x;
+            sen1.m_end_y = -_jiangeY-2;
+            Sens.Add(sen1);
         }
+
 
         private void CreateMsgAndHole(double offsetx, double offsety, double msgy, KongzuSuoshuMian mian)
         {
@@ -1055,6 +1019,147 @@ namespace JwShapeCommon
             }
         }
 
+        private void showxx()
+        {
+            JwwSunpou sunpou = new JwwSunpou();
+            //sunpou.m_nPenColor = 2;
+            //sunpou.m_nPenStyle = 1;
+            double sy = 1;
+           
+            sunpou.m_Sen.m_nPenColor = 5;
+            sunpou.m_Sen.m_nPenStyle = 2;
+            sunpou.m_Sen.m_start_x = 0;
+            sunpou.m_Sen.m_start_y = sy;
+            sunpou.m_Sen.m_end_y = sy;
+            sunpou.m_Sen.m_end_x = XXLength;
+
+            sunpou.m_Moji.m_string = string.Format("{0}", Math.Round(XXLength * JwFileConsts.JwScale, 0));
+            double mjsx = 0;
+            
+                mjsx = XXLength / 2;
+            
+            sunpou.m_Moji.m_start_x = mjsx;
+            sunpou.m_Moji.m_start_y = sy;
+            sunpou.m_Moji.m_dSizeX = 0.5;
+            sunpou.m_Moji.m_dSizeY = 0.5;
+            Biaozhu.Add(sunpou);
+            JwwTen ten = new JwwTen();
+            ten.m_start_x = 0;
+            ten.m_start_y = sy;
+            Tens.Add(ten);
+            JwwTen ten1 = new JwwTen();
+            ten1.m_start_x = XXLength;
+            ten1.m_start_y = sy;
+            Tens.Add(ten1);
+        }
+
+        private void showbeamlength()
+        {
+            JwwSunpou sunpou = new JwwSunpou();
+            //sunpou.m_nPenColor = 2;
+            //sunpou.m_nPenStyle = 1;
+            double sy = 1+0.5;
+
+            sunpou.m_Sen.m_nPenColor = 6;
+            sunpou.m_Sen.m_nPenStyle = 2;
+            sunpou.m_Sen.m_start_x = startx;
+            sunpou.m_Sen.m_start_y = sy;
+            sunpou.m_Sen.m_end_y = sy;
+            sunpou.m_Sen.m_end_x = endx;
+
+            sunpou.m_Moji.m_string = string.Format("{0}", Math.Round(BLength * JwFileConsts.JwScale, 0));
+            double mjsx = 0;
+
+            mjsx = BLength / 2;
+
+            sunpou.m_Moji.m_start_x = mjsx;
+            sunpou.m_Moji.m_start_y = sy;
+            sunpou.m_Moji.m_dSizeX = 0.5;
+            sunpou.m_Moji.m_dSizeY = 0.5;
+            Biaozhu.Add(sunpou);
+            JwwTen ten = new JwwTen();
+            ten.m_start_x = startx;
+            ten.m_start_y = sy;
+            Tens.Add(ten);
+            JwwTen ten1 = new JwwTen();
+            ten1.m_start_x = endx;
+            ten1.m_start_y = sy;
+            Tens.Add(ten1);
+        }
+
+
+        private void showprexindistance(double num1 ,double num2,bool isbe=false)
+        {
+            JwwSunpou sunpou = new JwwSunpou();
+            //sunpou.m_nPenColor = 2;
+            //sunpou.m_nPenStyle = 1;
+            double sy = 0;
+            if (isbe)
+            {
+                sy = _fuzhuY - 0.5;
+            }
+            else
+            {
+                sy = _fuzhuY;
+            }
+            sunpou.m_Sen.m_nPenColor = (short)(isbe ? 4 : 2);
+            sunpou.m_Sen.m_nPenStyle = 2;
+            sunpou.m_Sen.m_start_x = num1;
+            sunpou.m_Sen.m_start_y = sy;
+            sunpou.m_Sen.m_end_y = sy;
+            sunpou.m_Sen.m_end_x = num2;
+
+            sunpou.m_Moji.m_string = string.Format("{0}", Math.Round(Math.Abs(num2 - num1) * JwFileConsts.JwScale, 0));
+            double mjsx = 0;
+            var z = Math.Abs(num2 - num1);
+            if (z >= 2)
+            {
+                mjsx = (num2 + num1) / 2;
+            }
+            else
+            {
+                mjsx = num1;
+            }
+            sunpou.m_Moji.m_start_x = mjsx;
+            sunpou.m_Moji.m_start_y = sy;
+            sunpou.m_Moji.m_dSizeX = 0.5;
+            sunpou.m_Moji.m_dSizeY = 0.5;
+            Biaozhu.Add(sunpou);
+            JwwTen ten = new JwwTen();
+            ten.m_start_x = num1;
+            ten.m_start_y = sy;
+            Tens.Add(ten);
+            JwwTen ten1 = new JwwTen();
+            ten1.m_start_x = num2;
+            ten1.m_start_y = sy;
+            Tens.Add(ten1);
+        }
+
+        private void cretaeFuzhu(double num1,double num2,double fznum1,double fznum2,bool showx=true)
+        {
+            if (showx)
+            {
+                JwwSen sen1 = new JwwSen();
+                sen1.m_nPenStyle = 2;
+                sen1.m_nPenColor = 4;
+                sen1.m_start_x = num1;
+                sen1.m_start_y = fznum1;
+                sen1.m_end_x = num1;
+                sen1.m_end_y = fznum2;
+                Sens.Add(sen1);
+
+                JwwSen sen2 = new JwwSen();
+                sen1.m_nPenStyle = 2;
+                sen1.m_nPenColor = 4;
+                sen1.m_start_x = num1;
+                sen1.m_start_y = fznum1;
+                sen1.m_end_x = num1;
+                sen1.m_end_y = fznum2;
+                Sens.Add(sen1);
+
+            }
+            
+        }
 
         private void createsinglemsg(double x1, double x2, double y, double sy, bool showx = true)
         {
