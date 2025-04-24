@@ -2,6 +2,7 @@
 using JwShapeCommon.Model;
 using JwwHelper;
 using Microsoft.VisualBasic;
+using NetTopologySuite.Algorithm;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
 using NetTopologySuite.Triangulate;
@@ -21,6 +22,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Reflection.Metadata.BlobBuilder;
+using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace JwShapeCommon
@@ -334,7 +336,9 @@ namespace JwShapeCommon
 
             //生成beam 的每个标记位置点
 
-            createBeamAbsolutePD();
+            //createBeamAbsolutePD();
+
+            Revision();
         }
 
         int nownumber = -1;
@@ -2717,6 +2721,89 @@ namespace JwShapeCommon
 
 
 
+        }
+
+
+        private void Revision()
+        {
+            foreach (var b in Beams)
+            {
+                if (b.DirectionType == BeamDirectionType.Horizontal)
+                {
+                    b.AbsolutePD = Math.Round(b.TopLeft.X, 6);//不用更改数据库从新生成间隔数据
+                }
+                else if(b.DirectionType==BeamDirectionType.Vertical)
+                {
+                    b.AbsolutePD = Math.Round(b.BottomLeft.Y, 6);//不用更改数据库从新生成间隔数据
+                }
+                double xcd = 0;
+                foreach(var c in b.jwBeamMarks)
+                {
+                    xcd= xcd+(c.HasError ? c.PreCenterCorrect : c.PreCenterDistance);
+                }
+
+                var s = b.StartTelosType == KongzuType.Center ? "B" : b.StartTelosType.ToString();
+               var e = b.EndTelosType == KongzuType.Center ? "B" : b.EndTelosType.ToString();
+                b.XXLength =Math.Round( Math.Round(xcd, 2) * JwFileConsts.JwScale,0);
+                double bml = b.XXLength;
+                if (b.StartTelosType == KongzuType.B)
+                {
+                    bml = bml + 50 ;
+                    
+                }
+                if (b.StartTelosType == KongzuType.G)
+                {
+
+                    bml = bml - 55;
+                    //startx = this.xstartx + 55 / JwFileConsts.JwScale;
+                }
+                if (b.StartTelosType == KongzuType.J)
+                {
+                    bml = bml - 3 ;
+                    //startx = this.xstartx + 3 / JwFileConsts.JwScale;
+                }
+                if (b.EndTelosType == KongzuType.B)
+                {
+                    bml = bml + 50;
+                    //endx = xendx + 50 / JwFileConsts.JwScale;
+                }
+                if (b.EndTelosType == KongzuType.G)
+                {
+                    bml = bml - 55;
+                    //endx = this.xendx - 55 / JwFileConsts.JwScale;
+                }
+                if (b.EndTelosType == KongzuType.J)
+                {
+                    bml = bml - 3 ;
+                    //endx = xendx - 3 / JwFileConsts.JwScale;
+                }
+                b.WidthScale = bml;
+                if (b.DirectionType == BeamDirectionType.Horizontal)
+                {
+                    b.Width = Math.Round(bml / JwFileConsts.JwScale, 2);
+                }
+                if (b.DirectionType == BeamDirectionType.Vertical)
+                {
+                    b.Height = Math.Round(bml / JwFileConsts.JwScale, 2);
+                }
+                int mkkk = 900;
+                if (MarkBeam.HasValue)
+                {
+                    mkkk = MarkBeam.Value;
+                }
+                var mkkkk = mkkk / 2;
+                double y = b.XXLength % mkkkk;
+
+                int q = (int)b.XXLength / mkkkk;
+                if (y == 0)
+                {
+                    b.BeamCode = string.Format("{0}{1}{2}", s, e, q);
+                }
+                else
+                {
+                    b.BeamCode = string.Format("{0}{1}{2}+{3}", s, e, q, Math.Round(y, 0));
+                }
+            }
         }
 
         List<JwDownPillarMark> tempmarks;

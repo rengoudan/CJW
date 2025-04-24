@@ -183,6 +183,8 @@ namespace JwShapeCommon
                     jwbm.HasEndSide = bm.HasEndSide;
                     jwbm.StartTelosType = bm.StartTelosType;
                     jwbm.EndTelosType = bm.EndTelosType;
+                    jwbm.StartCenter = bm.StartCenter;
+                    jwbm.EndCenter = bm.EndCenter;
                     //jwbm.HasEndSide=bm.has
                     if (bm.JwHoles.Count > 0)
                     {

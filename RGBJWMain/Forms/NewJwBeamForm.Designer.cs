@@ -39,7 +39,7 @@
             newSingleBeamControl1.BackColor = Color.Black;
             newSingleBeamControl1.Dock = DockStyle.Bottom;
             newSingleBeamControl1.Location = new Point(0, 57);
-            newSingleBeamControl1.Margin = new Padding(2, 2, 2, 2);
+            newSingleBeamControl1.Margin = new Padding(2);
             newSingleBeamControl1.Name = "newSingleBeamControl1";
             newSingleBeamControl1.ShowBeam = null;
             newSingleBeamControl1.Size = new Size(1374, 501);
@@ -58,13 +58,13 @@
             // uiSymbolButton1
             // 
             uiSymbolButton1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiSymbolButton1.Location = new Point(95, 13);
+            uiSymbolButton1.Location = new Point(12, 12);
             uiSymbolButton1.MinimumSize = new Size(1, 1);
             uiSymbolButton1.Name = "uiSymbolButton1";
-            uiSymbolButton1.Size = new Size(100, 35);
+            uiSymbolButton1.Size = new Size(165, 35);
+            uiSymbolButton1.Symbol = 558052;
             uiSymbolButton1.TabIndex = 0;
-            uiSymbolButton1.Text = "uiSymbolButton1";
-            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton1.Text = "輸出JWW";
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // NewJwBeamForm
@@ -74,7 +74,7 @@
             ClientSize = new Size(1374, 558);
             Controls.Add(panel1);
             Controls.Add(newSingleBeamControl1);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             Name = "NewJwBeamForm";
             Text = "NewJwBeamForm";
             Shown += NewJwBeamForm_Shown;

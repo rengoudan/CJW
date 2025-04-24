@@ -603,6 +603,8 @@ namespace JwShapeCommon
             data.HasStartSide=this.HasStartSide;
             data.StartTelosType=this.StartTelosType;
             data.EndTelosType=this.EndTelosType;
+            data.StartCenter=this.StartCenter;
+            data.EndCenter=this.EndCenter;
             return data;
         }
 
@@ -620,7 +622,11 @@ namespace JwShapeCommon
             set
             {
                 _absolutePd = value;
-                holeorder();
+                if (this.DirectionType == BeamDirectionType.Horizontal || this.DirectionType == BeamDirectionType.Vertical)
+                {
+                    holeorder();
+                }
+                
             }
         }
         private double _absolutePd;
@@ -784,17 +790,17 @@ namespace JwShapeCommon
                 JwHole ewholeend;
                 if (lastce >= 150)
                 {
-                    ewholeend = new JwHole(true, endx.Point, KongzuType.BC);
-                    ewholeend.KongNum = 4;
+                    endhole = new JwHole(true, endx.Point, KongzuType.BC);
+                    endhole.KongNum = 4;
                 }
                 else
                 {
-                    ewholeend = new JwHole(true, endx.Point, KongzuType.BP);
-                    ewholeend.KongNum = 2;
+                    endhole = new JwHole(true, endx.Point, KongzuType.BP);
+                    endhole.KongNum = 2;
                 }
-                endhole = ewholeend;
+                //endhole = ewholeend;
                 endx.HasAppend = true;
-                endx.AppendHole = ewholeend;
+                endx.AppendHole = endhole;
                 //endholejmp.PreBeamStartDistance = Math.Round(endholejmp.Coordinate - sb, 2);
                 //endholejmp.PreCenterDistance = Math.Round(endholejmp.Coordinate-precb, 2);
                 //endholejmp.AppendHole = ewholeend;

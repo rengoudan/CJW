@@ -47,6 +47,13 @@ namespace JwCore
 
         public virtual string BeamXHName { get; set; } = string.Empty;
 
+        public double StartCenter { get; set; }
+
+        /// <summary>
+        /// 中心终点
+        /// </summary>
+        public double EndCenter { get; set; }
+
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
 
         public ObservableCollectionListSource<JwHoleData> JwHoles { get; } = new();

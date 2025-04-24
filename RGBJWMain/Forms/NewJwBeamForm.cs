@@ -25,7 +25,10 @@ namespace RGBJWMain.Forms
         public NewJwBeamForm(JwBeam jwbeam)
         {
             this._jwbeam = jwbeam;
+            
+            //this.Name = this._jwbeam.BeamCode;
             InitializeComponent();
+            this.Text = this._jwbeam.BeamCode;
         }
 
         private void NewJwBeamForm_Shown(object sender, EventArgs e)

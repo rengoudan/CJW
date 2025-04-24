@@ -263,7 +263,7 @@ namespace JwShapeCommon
             ControlLine l = new ControlLine();
             l.DrawStart = new PointF(sx, y);
             l.DrawEnd = new PointF(ex, y);
-            l.Distance = Math.Abs(Math.Round(ex - sx, 2)) * JwFileConsts.JwScale;
+            l.Distance = Math.Round(Math.Abs(Math.Round(ex - sx, 2)) * JwFileConsts.JwScale, 0);
             l.Title = string.Format("{0}mm", l.Distance);
             l.HasMsg = true;
             l.IsXX = isxx;
@@ -500,14 +500,19 @@ namespace JwShapeCommon
 
         private void reset()
         {
-            XXLength = Math.Round(_beam.jwBeamMarks.Sum(t => t.PreCenterDistance), 2);
+            foreach (var z in _beam.jwBeamMarks)
+            {
+                XXLength=XXLength+(z.HasError?z.PreCenterCorrect:z.PreCenterDistance);
+            }
+            XXLength = Math.Round(XXLength, 2);
+            //XXLength = Math.Round(_beam.jwBeamMarks.Sum(t => t.PreCenterDistance), 2);
             var xmark = _beam.jwBeamMarks.Find(t => t.IsCenterStart);
             if (xmark != null)
             {
                 CanDraw = true;
                 offsetX = -xmark.Coordinate;//芯起点默认为0 重置各类坐标  
                 xstartx = 0;
-                xendx = _beam.jwBeamMarks.Sum(t => t.PreCenterDistance);
+                xendx = XXLength;
                 BLength = XXLength;
                 if (_beam.StartTelosType == KongzuType.B)
                 {

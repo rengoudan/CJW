@@ -68,7 +68,7 @@ namespace JwShapeCommon
                 {
                     this.Point = new JWPoint(jbeam.Center, jbeam.TopLeft.Y);
                 }
-                this.Coordinate = Math.Round(this.Point.X, 6);
+                this.Coordinate = Math.Round(this.Point.Y, 6);
             }
 
         }
