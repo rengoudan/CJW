@@ -49,6 +49,23 @@ namespace JwShapeCommon.Model
 
         public int KongNum { get; set; }
 
+        /// <summary>
+        /// 胜方G
+        /// </summary>
+        public bool HasSG { get; set; } 
+
+        /// <summary>
+        /// 拥有前 的链接洞
+        /// </summary>
+        public bool HasPreLinkHole { get; set; }
+
+        public bool HasBhLinkHole { get; set; }
+
+        /// <summary>
+        /// 水平的 存X 垂直的存Y
+        /// </summary>
+        public double HoleCenter { get; set; }
+
         //public JwKongZu? BottomKongzu { get; set;}
 
         public JwHole()
@@ -91,6 +108,7 @@ namespace JwShapeCommon.Model
                     KongNum = 2;
                     break;
                 case HoleCreateFrom.JieChu:
+                    HasSG = true;
                     HasCenter = true;
                     KongNum = 4;
                     break;

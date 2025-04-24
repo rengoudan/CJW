@@ -32,5 +32,14 @@ namespace JwShapeCommon.Model
         /// 坐标
         /// </summary>
         public JWPoint PositionPoint { get;set; }
+
+        /// <summary>
+        /// 记录拜访中心点方便排序使用
+        /// </summary>
+        public double Center { get; set; }
+
+        public bool HasPre { get; set; }
+
+        public bool HasLast { get; set; }
     }
 }

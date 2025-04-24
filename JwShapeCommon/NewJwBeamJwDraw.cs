@@ -802,6 +802,12 @@ namespace JwShapeCommon
                         createhole(hyx,bcy + halfbj);
                         createhole(hyx,bcy - halfbj);
                     }
+                    if (h.HasBhLinkHole)
+                    {
+                        double hx = -halfbj + JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                        createhole(hx, bcy - halfbj);
+                        createhole(hx, bcy + halfbj);
+                    }
                 }
                 else if (_beam.StartTelosType == KongzuType.G)
                 {
@@ -812,6 +818,12 @@ namespace JwShapeCommon
                     createhole(hx,ccy - halfbj);
                     createhole(hx,bcy + halfbj);
                     createhole(hx,bcy - halfbj);
+                    if (h.HasBhLinkHole)
+                    {
+                        double hxf = hx + JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                        createhole(hxf, bcy - halfbj);
+                        createhole(hxf, bcy + halfbj);
+                    }
                 }
                 else
                 {
@@ -822,7 +834,13 @@ namespace JwShapeCommon
                     createhole(hx, ccy - halfbj);
                     createhole(hx, bcy + halfbj);
                     createhole(hx, bcy - halfbj);
-                    
+                    if (h.HasBhLinkHole)
+                    {
+                        double hxf = hx + JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                        createhole(hxf, bcy - halfbj);
+                        createhole(hxf, bcy + halfbj);
+                    }
+
                 }
 
 
@@ -871,6 +889,12 @@ namespace JwShapeCommon
                         createhole(hyx,ccy - halfbj);
                         createhole(hyx,bcy + halfbj);
                         createhole(hyx,bcy - halfbj);
+                        if (h.HasPreLinkHole)
+                        {
+                            double hxf = hx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                            createhole(hxf, bcy - halfbj);
+                            createhole(hxf, bcy + halfbj);
+                        }
                     }
                 }
                 else if (_beam.EndTelosType == KongzuType.G)
@@ -882,6 +906,12 @@ namespace JwShapeCommon
                     createhole(hx, ccy - halfbj);
                     createhole(hx, bcy + halfbj);
                     createhole(hx, bcy - halfbj);
+                    if (h.HasPreLinkHole)
+                    {
+                        double hxf = hx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                        createhole(hxf, bcy - halfbj);
+                        createhole(hxf, bcy + halfbj);
+                    }
                 }
                 else
                 {
@@ -892,6 +922,12 @@ namespace JwShapeCommon
                     createhole(hx, ccy - halfbj);
                     createhole(hx, bcy + halfbj);
                     createhole(hx, bcy - halfbj);
+                    if (h.HasPreLinkHole)
+                    {
+                        double hxf = hx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                        createhole(hxf, bcy - halfbj);
+                        createhole(hxf, bcy + halfbj);
+                    }
                 }
             }
             else
@@ -918,6 +954,19 @@ namespace JwShapeCommon
                     createhole(chx, bcy - halfbj);
                     createhole(chyx, bcy + halfbj);
                     createhole(chyx, bcy - halfbj);
+                }
+                if (h.HasPreLinkHole)
+                {
+                    double hxf = chx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    double hxf1 = chyx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    createhole(hxf, bcy - halfbj);
+                    createhole(hxf, bcy + halfbj);
+                }
+                if (h.HasBhLinkHole)
+                {
+                    double hxf1 = chyx + JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    createhole(hxf1, bcy - halfbj);
+                    createhole(hxf1, bcy + halfbj);
                 }
             }
 

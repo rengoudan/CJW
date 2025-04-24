@@ -1676,7 +1676,8 @@ namespace JwShapeCommon
                                         {
                                             Position = TaggDirect.Up,
                                             PositionPoint = new JWPoint(c.Center, q.Key),
-                                            VerticalBeam = c
+                                            VerticalBeam = c,
+                                            Center = c.Center
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
 

@@ -282,19 +282,36 @@ namespace JwShapeCommon
 
         public static void AddAnyHole(this JwBeam beam, JWPoint location, HoleCreateFrom createFrom, JWPoint? locationcenter = null, bool isStart = false, bool isEnd = false)
         {
+            JwHole hh;
             if (beam.Holes.Count > 0)
             {
                 var fh = beam.Holes.Find(t => t.Location == location);
                 if (fh == null)
                 {
-                    var hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                     hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                    if (beam.DirectionType == BeamDirectionType.Horizontal)
+                    {
+                        hh.HoleCenter = location.X; 
+                    }
+                    if (beam.DirectionType == BeamDirectionType.Vertical)
+                    {
+                        hh.HoleCenter = location.Y;
+                    }
                     beam.Holes.Add(hh);
                 }
                 else
                 {
                     if (createFrom == HoleCreateFrom.FengeJ)
                     {
-                        var hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                         hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                        if (beam.DirectionType == BeamDirectionType.Horizontal)
+                        {
+                            hh.HoleCenter = location.X;
+                        }
+                        if (beam.DirectionType == BeamDirectionType.Vertical)
+                        {
+                            hh.HoleCenter = location.Y;
+                        }
                         //beam.Holes.Add(hh);
                         fh.changeByOther(HoleCreateFrom.FengeJ);
                     }
@@ -306,9 +323,25 @@ namespace JwShapeCommon
             }
             else
             {
-                var hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                if (beam.DirectionType == BeamDirectionType.Horizontal)
+                {
+                    hh.HoleCenter = location.X;
+                }
+                if (beam.DirectionType == BeamDirectionType.Vertical)
+                {
+                    hh.HoleCenter = location.Y;
+                }
                 beam.Holes.Add(hh);
             }
+            //if (createFrom == HoleCreateFrom.JieChu)
+            //{
+            //    if (hh != null)
+            //    {
+            //        hh.HasSG = true;
+            //    }
+                
+            //}
         }
 
         public static void AddAnyHole(this JwBeam beam, JwKongZu hole, HoleCreateFrom createFrom)
