@@ -110,6 +110,8 @@ namespace JwShapeCommon.Model
                 case HoleCreateFrom.JieChu:
                     HasSG = true;
                     HasCenter = true;
+
+                    HasBottom = true;   
                     KongNum = 4;
                     break;
             }

@@ -344,6 +344,71 @@ namespace JwShapeCommon
             //}
         }
 
+        /// <summary>
+        /// 2025年4月25日 针对J 记录偏差位置 方便查询下方打连接孔
+        /// </summary>
+        /// <param name="beam"></param>
+        /// <param name="location"></param>
+        /// <param name="createFrom"></param>
+        /// <param name="locationcenter"></param>
+        /// <param name="isStart"></param>
+        /// <param name="isEnd"></param>
+        public static void AddAnyHole(this JwBeam beam, JWPoint location, double pccenter = 0, bool isStart = false, bool isEnd = false)
+        {
+            JwHole hh;
+            if (beam.Holes.Count > 0)
+            {
+                var fh = beam.Holes.Find(t => t.Location == location);
+                if (fh == null)
+                {
+                    hh = new JwHole(location, HoleCreateFrom.FengeJ, location, isStart, isEnd);
+                    //if (beam.DirectionType == BeamDirectionType.Horizontal)
+                    //{
+                    //    hh.HoleCenter = location.X;
+                    //}
+                    //if (beam.DirectionType == BeamDirectionType.Vertical)
+                    //{
+                    //    hh.HoleCenter = location.Y;
+                    //}
+                    hh.HoleCenter = pccenter;
+                    beam.Holes.Add(hh);
+                }
+                else
+                {
+
+                    hh = new JwHole(location, HoleCreateFrom.FengeJ, location, isStart, isEnd);
+                    //if (beam.DirectionType == BeamDirectionType.Horizontal)
+                    //{
+                    //    hh.HoleCenter = location.X;
+                    //}
+                    //if (beam.DirectionType == BeamDirectionType.Vertical)
+                    //{
+                    //    hh.HoleCenter = location.Y;
+                    //}
+                    hh.HoleCenter = pccenter;
+                    //beam.Holes.Add(hh);
+                    fh.changeByOther(HoleCreateFrom.FengeJ);
+
+                }
+            }
+            else
+            {
+                hh = new JwHole(location, HoleCreateFrom.FengeJ, location, isStart, isEnd);
+                //if (beam.DirectionType == BeamDirectionType.Horizontal)
+                //{
+                //    hh.HoleCenter = location.X;
+                //}
+                //if (beam.DirectionType == BeamDirectionType.Vertical)
+                //{
+                //    hh.HoleCenter = location.Y;
+                //}
+                hh.HoleCenter = pccenter;
+                beam.Holes.Add(hh);
+            }
+
+        }
+
+
         public static void AddAnyHole(this JwBeam beam, JwKongZu hole, HoleCreateFrom createFrom)
         {
             if (beam.Holes.Count > 0)

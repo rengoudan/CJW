@@ -177,7 +177,7 @@ namespace JwShapeCommon
                     StartXinPoint = new JWPoint(start.X, parenbeam.Center);
                     JWPoint kongzucenter = new JWPoint(start.X + JwFileConsts.Kongjing / (2*JwFileConsts.JwScale), parenbeam.CenterPoint.Y);
                     //this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ,StartXinPoint,true,false);
-                    this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ, kongzucenter, true, false);
+                    this.AddAnyHole(kongzucenter, start.X, true, false);
                     this.HasQiegeStart = true;
                     this.StartSide = new JwBeamSide
                     {
@@ -211,7 +211,7 @@ namespace JwShapeCommon
                     HasEndSide = true;
                     EndXinPoint = new JWPoint( parenbeam.CenterPoint.X,end.Y);
                     JWPoint kongzucenter = new JWPoint(end.X - JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale), parenbeam.Center);
-                    this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ, kongzucenter, false, true);
+                    this.AddAnyHole(kongzucenter, end.X, false, true);
                     //this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ,EndXinPoint,false,true);
                     this.HasQiegeEnd = true;
                     this.EndSide = new JwBeamSide
@@ -257,7 +257,7 @@ namespace JwShapeCommon
                     EndXinPoint = new JWPoint(parenbeam.Center, end.Y);
                     JWPoint kongzucenter = new JWPoint(parenbeam.Center, end.Y - JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale));
 
-                    this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ, kongzucenter, false,true);
+                    this.AddAnyHole(kongzucenter, end.Y, false,true);
                     this.HasEndSide = true;
                     this.EndSide = new JwBeamSide
                     {
@@ -291,7 +291,7 @@ namespace JwShapeCommon
                     StartXinPoint = new JWPoint(parenbeam.CenterPoint.X, start.Y);
                     JWPoint kongzucenter = new JWPoint(parenbeam.CenterPoint.X, start.Y + JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale));
                     //this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ,StartXinPoint,true,false);
-                    this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ, kongzucenter, true, false);
+                    this.AddAnyHole(kongzucenter, start.Y, true, false);
                     this.HasStartSide = true;
                     this.StartSide = new JwBeamSide
                     {

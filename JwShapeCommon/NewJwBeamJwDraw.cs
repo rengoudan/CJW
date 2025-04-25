@@ -53,10 +53,11 @@ namespace JwShapeCommon
             else
             {
                 _beam = JwShapeHelper.VerticalToHorizontal(beam);
+                _beam.AbsolutePD = _beam.TopLeft.X;
                 //    JwDrawShape beamsp = new JwDrawShape(verticalbeam);
                 //    controls.AddRange(beamsp.Change(_minbeilv, axisX, axisY));
             }
-            _beam.AbsolutePD = Math.Round(beam.TopLeft.X, 6);//不用更改数据库从新生成间隔数据
+            //_beam.AbsolutePD = Math.Round(beam.TopLeft.X, 6);//不用更改数据库从新生成间隔数据
             this._jiangeY = 4;
             this._fuzhuY = -this._jiangeY-0.4;
             this.banjing = JwFileConsts.EllipseDiameter / (2*JwFileConsts.JwScale);
@@ -313,6 +314,21 @@ namespace JwShapeCommon
                 _createsinglehole(chx, (float)bcy, true);
                 _createsinglehole(chyx, (float)bcy);
                 _createsinglehole(chyx, (float)bcy, true);
+
+                if (h.HasBhLinkHole)
+                {
+                    double hxf = chyx + JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    _createsinglehole((float)hxf, (float)bcy);
+                    _createsinglehole((float)hxf, (float)bcy,true);
+                    //createhole(hxf, bcy - halfbj);
+                    //createhole(hxf, bcy + halfbj);
+                }
+                if (h.HasPreLinkHole)
+                {
+                    double hxf = chx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    _createsinglehole((float)hxf, (float)bcy);
+                    _createsinglehole((float)hxf, (float)bcy, true);
+                }
             }
 
 
@@ -381,6 +397,22 @@ namespace JwShapeCommon
                     _createsinglehole(hx, (float)ccy, true);
                     _createsinglehole(hx, (float)bcy);
                     _createsinglehole(hx, (float)bcy, true);
+
+                    if (h.HasBhLinkHole)
+                    {
+                        double hxf = hx + JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                        _createsinglehole((float)hxf, (float)bcy);
+                        _createsinglehole((float)hxf, (float)bcy, true);
+                        //createhole(hxf, bcy - halfbj);
+                        //createhole(hxf, bcy + halfbj);
+                    }
+                    //if (h.HasPreLinkHole)
+                    //{
+                    //    double hxf = hx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    //    _createsinglehole((float)hxf, (float)bcy);
+                    //    _createsinglehole((float)hxf, (float)bcy, true);
+                    //}
+
                 }
 
 
@@ -450,6 +482,21 @@ namespace JwShapeCommon
                     _createsinglehole(hx, (float)ccy, true);
                     _createsinglehole(hx, (float)bcy);
                     _createsinglehole(hx, (float)bcy, true);
+
+                    //if (h.HasBhLinkHole)
+                    //{
+                    //    double hxf = hx + JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    //    _createsinglehole((float)hxf, (float)bcy);
+                    //    _createsinglehole((float)hxf, (float)bcy, true);
+                    //    //createhole(hxf, bcy - halfbj);
+                    //    //createhole(hxf, bcy + halfbj);
+                    //}
+                    if (h.HasPreLinkHole)
+                    {
+                        double hxf = hx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                        _createsinglehole((float)hxf, (float)bcy);
+                        _createsinglehole((float)hxf, (float)bcy, true);
+                    }
                 }
             }
             else
@@ -477,8 +524,22 @@ namespace JwShapeCommon
                     _createsinglehole(chyx, (float)bcy);
                     _createsinglehole(chyx, (float)bcy, true);
                 }
-            }
 
+                if (h.HasBhLinkHole)
+                {
+                    double hxf = chyx + JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    _createsinglehole((float)hxf, (float)bcy);
+                    _createsinglehole((float)hxf, (float)bcy, true);
+                    //createhole(hxf, bcy - halfbj);
+                    //createhole(hxf, bcy + halfbj);
+                }
+                if (h.HasPreLinkHole)
+                {
+                    double hxf = chx - JwFileConsts.Kongjing / JwFileConsts.JwScale;
+                    _createsinglehole((float)hxf, (float)bcy);
+                    _createsinglehole((float)hxf, (float)bcy, true);
+                }
+            }
         }
 
         private void _createsinglehole(float x, float y, bool istop = false)
@@ -503,7 +564,27 @@ namespace JwShapeCommon
             foreach (var z in _beam.jwBeamMarks)
             {
                 XXLength=XXLength+(z.HasError?z.PreCenterCorrect:z.PreCenterDistance);
+                if (z.HasAppend)
+                {
+                    var q = _beam.Baifangs.Find(t => t.Center == z.AppendHole.HoleCenter);
+                    if (q != null)
+                    {
+                        z.AppendHole.HasBhLinkHole = q.HasLast;
+                        z.AppendHole.HasPreLinkHole = q.HasPre;
+                    }
+                }
             }
+            //foreach(var hhhh in _beam.Holes)
+            //{
+                
+            //        var q = _beam.Baifangs.Find(t => t.Center == hhhh.HoleCenter);
+            //        if (q != null)
+            //        {
+            //        hhhh.HasBhLinkHole = q.HasLast;
+            //        hhhh.HasPreLinkHole = q.HasPre;
+            //        }
+               
+            //}
             XXLength = Math.Round(XXLength, 2);
             //XXLength = Math.Round(_beam.jwBeamMarks.Sum(t => t.PreCenterDistance), 2);
             var xmark = _beam.jwBeamMarks.Find(t => t.IsCenterStart);
@@ -547,11 +628,6 @@ namespace JwShapeCommon
                 }
                 //startx=
                 showlength = Math.Max(XXLength, BLength);
-
-
-
-
-
             }
             //默认芯起点为00 则可以直接使用predistance来生成孔组位置
             //这种情况下offset就为 负 芯起点 

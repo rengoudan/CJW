@@ -1796,7 +1796,8 @@ namespace JwShapeCommon
                                         {
                                             Position = TaggDirect.Down,
                                             PositionPoint = new JWPoint(c.Center, q.Key),
-                                            VerticalBeam = c
+                                            VerticalBeam = c,
+                                            Center=c.Center
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
 
@@ -1912,7 +1913,8 @@ namespace JwShapeCommon
                                         {
                                             Position = TaggDirect.Left,
                                             PositionPoint = new JWPoint(q.Key, r.Center),
-                                            VerticalBeam = r
+                                            VerticalBeam = r,
+                                            Center = r.Center
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
 
@@ -2006,7 +2008,8 @@ namespace JwShapeCommon
                                         {
                                             Position = TaggDirect.Right,
                                             PositionPoint = new JWPoint(q.Key, r.Center),
-                                            VerticalBeam = r
+                                            VerticalBeam = r,
+                                            Center = r.Center
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
 
