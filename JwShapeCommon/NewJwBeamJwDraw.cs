@@ -49,6 +49,7 @@ namespace JwShapeCommon
             if (beam.DirectionType == BeamDirectionType.Horizontal)
             {
                 _beam = beam;
+                _beam.AbsolutePD = _beam.TopLeft.X;
             }
             else
             {

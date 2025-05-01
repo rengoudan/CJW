@@ -484,6 +484,10 @@ namespace RGBJWMain.Pages
                     }
                     //this.dbContext.Entry(sub).Collection(e => e.jwho).Load();
                     JwCanvas jwCanvas = sub.DataToCanvas();
+                    //foreach(var bj in jwCanvas.Beams)
+                    //{
+                        
+                    //}
                     if (jwCanvas.Beams.Count > 0)
                     {
                         var gbeams = jwCanvas.Beams.GroupBy(t => t.BeamCode).ToList();
