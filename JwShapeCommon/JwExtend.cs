@@ -83,6 +83,20 @@ namespace JwShapeCommon
             return reobj;
         }
 
+        public static JwBeamVertical DataToJw(this JwBeamVerticalData data)
+        {
+            JwBeamVertical vertical = new JwBeamVertical
+            {
+                ParentBeamId = data.ParentBeamId,
+                BaiBeamId = data.BaiBeamId,
+                Center = data.Center,
+                HasLast = data.HasLast,
+                HasPre = data.HasPre
+            };
+            return vertical;
+
+        }
+
         public static JwHole DataToHole(this JwHoleData data)
         {
             JwHole hole = new JwHole

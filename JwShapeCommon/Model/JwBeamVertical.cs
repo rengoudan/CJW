@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace JwShapeCommon.Model
 {
@@ -41,5 +42,19 @@ namespace JwShapeCommon.Model
         public bool HasPre { get; set; }
 
         public bool HasLast { get; set; }
+
+        public JwBeamVerticalData ToData()
+        {
+            JwBeamVerticalData r = new JwBeamVerticalData
+            {
+                ParentBeamId = ParentBeamId,
+                BaiBeamId = BaiBeamId,
+                Position=Position,
+                Center = Center,
+                HasPre = HasPre,
+                HasLast = HasLast
+            };
+            return r;
+        }
     }
 }

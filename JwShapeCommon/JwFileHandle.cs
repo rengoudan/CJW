@@ -1552,6 +1552,8 @@ namespace JwShapeCommon
 
         public List<JwHoleData> _holeDatas = new List<JwHoleData>();
 
+        public List<JwBeamVerticalData> _jwbvdatas = new List<JwBeamVerticalData>();
+
         public async void CreateData()
         {
             _subData = new JwProjectSubData();
@@ -1591,6 +1593,16 @@ namespace JwShapeCommon
                             JwHoleData jhd = hd.ToData();
                             jhd.JwBeamDataId = beamData.Id;
                             _holeDatas.Add(jhd);
+                        }
+                    }
+                    if(bm.Baifangs?.Count>0)
+                    {
+                        //记录败方数据
+                        foreach(var bd in bm.Baifangs)
+                        {
+                            JwBeamVerticalData verticalData = bd.ToData();
+                            bd.ParentBeamId = beamData.Id;
+                            _jwbvdatas.Add(verticalData);
                         }
                     }
                     _beamdatas.Add(beamData);
@@ -1677,7 +1689,8 @@ namespace JwShapeCommon
                                             Position = TaggDirect.Up,
                                             PositionPoint = new JWPoint(c.Center, q.Key),
                                             VerticalBeam = c,
-                                            Center = c.Center
+                                            Center = c.Center,
+                                            ParentBeamId = l.Id
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
 
@@ -1797,7 +1810,8 @@ namespace JwShapeCommon
                                             Position = TaggDirect.Down,
                                             PositionPoint = new JWPoint(c.Center, q.Key),
                                             VerticalBeam = c,
-                                            Center=c.Center
+                                            Center = c.Center,
+                                            ParentBeamId = l.Id
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
 
@@ -1914,7 +1928,8 @@ namespace JwShapeCommon
                                             Position = TaggDirect.Left,
                                             PositionPoint = new JWPoint(q.Key, r.Center),
                                             VerticalBeam = r,
-                                            Center = r.Center
+                                            Center = r.Center,
+                                            ParentBeamId = l.Id
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
 
@@ -2009,7 +2024,8 @@ namespace JwShapeCommon
                                             Position = TaggDirect.Right,
                                             PositionPoint = new JWPoint(q.Key, r.Center),
                                             VerticalBeam = r,
-                                            Center = r.Center
+                                            Center = r.Center,
+                                            ParentBeamId = l.Id
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
 

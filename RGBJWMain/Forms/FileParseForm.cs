@@ -185,6 +185,7 @@ namespace RGBJWMain.Forms
                             pl.BeamXHId = jwProjectPathModel.MaterialData.Id;
                             pl.BeamXHName = jwProjectPathModel.MaterialData.GeneralTitle;
                             dbContext?.JwBeamDatas.Add(pl);
+                            
                         }
                     }
                     if (_jwFileHandle._holeDatas.Count > 0)
