@@ -47,8 +47,6 @@ namespace JwShapeCommon.Model
         {
             JwBeamVerticalData r = new JwBeamVerticalData
             {
-                ParentBeamId = ParentBeamId,
-                BaiBeamId = BaiBeamId,
                 Position=Position,
                 Center = Center,
                 HasPre = HasPre,

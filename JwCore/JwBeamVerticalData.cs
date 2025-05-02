@@ -11,28 +11,28 @@ namespace JwCore
     /// </summary>
     public class JwBeamVerticalData: BaseGuidEntityData
     {
-        public string ParentBeamId { get; set; }
+       
+        //孔径和 孔间距存在 projectsub 里
+        public virtual string JwBeamDataId { get; set; }
 
-        public string BaiBeamId { get; set; }
+        public virtual JwBeamData JwBeamData { get; set; } = null!;
+
+        
 
         /// <summary>
         /// 相对的位置
         /// </summary>
-        public TaggDirect Position { get; set; }
+        public virtual TaggDirect Position { get; set; }
 
-        /// <summary>
-        /// 败方
-        /// </summary>
-        public JwBeamData VerticalBeam { get; set; }
 
         /// <summary>
         /// 记录拜访中心点方便排序使用
         /// </summary>
-        public double Center { get; set; }
+        public virtual double Center { get; set; }
 
-        public bool HasPre { get; set; }
+        public virtual bool HasPre { get; set; } = false;
 
-        public bool HasLast { get; set; }
+        public virtual bool HasLast { get; set; }=false;
 
         
     }

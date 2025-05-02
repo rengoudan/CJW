@@ -188,6 +188,13 @@ namespace RGBJWMain.Forms
                             
                         }
                     }
+                    if(_jwFileHandle._jwbvdatas.Count > 0)
+                    {
+                        foreach(var bv in _jwFileHandle._jwbvdatas)
+                        {
+                            dbContext?.JwBeamVerticalDatas.Add(bv);
+                        }
+                    }
                     if (_jwFileHandle._holeDatas.Count > 0)
                     {
                         foreach (var hd in _jwFileHandle._holeDatas)

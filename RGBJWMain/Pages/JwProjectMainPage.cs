@@ -193,11 +193,13 @@ namespace RGBJWMain.Pages
                     this.dbContext.Entry(z).Collection(e => e.JwBeamDatas).Load();
                     this.dbContext.Entry(z).Collection(e => e.JwPillarDatas).Load();
                     this.dbContext.Entry(z).Collection(e => e.JwLinkPartDatas).Load();
+                    
                     if (z.JwBeamDatas.Count > 0)
                     {
                         foreach (var bd in z.JwBeamDatas)
                         {
                             this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                            this.dbContext.Entry(bd).Collection(e=>e.JwBeamVerticalDatas).Load();
                         }
                     }
                     //MessageBox.Show(z.CompanyName);

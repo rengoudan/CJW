@@ -1046,7 +1046,6 @@ namespace JwShapeCommon
                     createhole(hxf1, bcy + halfbj);
                 }
             }
-
         }
 
 

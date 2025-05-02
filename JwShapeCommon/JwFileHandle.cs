@@ -1592,6 +1592,7 @@ namespace JwShapeCommon
                         {
                             JwHoleData jhd = hd.ToData();
                             jhd.JwBeamDataId = beamData.Id;
+                           
                             _holeDatas.Add(jhd);
                         }
                     }
@@ -1601,7 +1602,8 @@ namespace JwShapeCommon
                         foreach(var bd in bm.Baifangs)
                         {
                             JwBeamVerticalData verticalData = bd.ToData();
-                            bd.ParentBeamId = beamData.Id;
+                            //bd.ParentBeamId = beamData.Id;
+                            verticalData.JwBeamDataId= beamData.Id;
                             _jwbvdatas.Add(verticalData);
                         }
                     }

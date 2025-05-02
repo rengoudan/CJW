@@ -3,6 +3,7 @@ using System;
 using JwData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -11,9 +12,10 @@ using NetTopologySuite.Geometries;
 namespace JwData.Migrations
 {
     [DbContext(typeof(JwDataContext))]
-    partial class JwDataContextModelSnapshot : ModelSnapshot
+    [Migration("20250502094543_addv")]
+    partial class addv
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.30");
@@ -113,6 +115,10 @@ namespace JwData.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("BaiBeamId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("Center")
                         .HasColumnType("REAL");
 
@@ -126,6 +132,10 @@ namespace JwData.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("JwBeamDataId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParentBeamId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

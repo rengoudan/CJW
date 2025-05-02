@@ -87,8 +87,7 @@ namespace JwShapeCommon
         {
             JwBeamVertical vertical = new JwBeamVertical
             {
-                ParentBeamId = data.ParentBeamId,
-                BaiBeamId = data.BaiBeamId,
+                ParentBeamId=data.JwBeamDataId,
                 Center = data.Center,
                 HasLast = data.HasLast,
                 HasPre = data.HasPre
@@ -205,6 +204,13 @@ namespace JwShapeCommon
                         foreach (var hb in bm.JwHoles)
                         {
                             jwbm.Holes.Add(hb.DataToHole());
+                        }
+                    }
+                    if(bm.JwBeamVerticalDatas.Count> 0)
+                    {
+                        foreach(var  vb in bm.JwBeamVerticalDatas)
+                        {
+                            jwbm.Baifangs.Add(vb.DataToJw());
                         }
                     }
 

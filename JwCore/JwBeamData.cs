@@ -57,5 +57,7 @@ namespace JwCore
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
 
         public ObservableCollectionListSource<JwHoleData> JwHoles { get; } = new();
+
+        public ObservableCollectionListSource<JwBeamVerticalData> JwBeamVerticalDatas { get; } = new();
     }
 }

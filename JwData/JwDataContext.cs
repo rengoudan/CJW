@@ -13,6 +13,8 @@ namespace JwData
     {
         public string DbPath { get; set; }
 
+        public DbSet<JwBeamVerticalData> JwBeamVerticalDatas { get; set; }
+
         public DbSet<JwMaterialTypeData> JwMaterialTypeDatas { get; set; }
 
         public DbSet<JwOperateLogData> JwOperateLogDatas { get; set; }
