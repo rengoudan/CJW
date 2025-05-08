@@ -2931,6 +2931,7 @@ namespace JwShapeCommon
 
                 if (AllLinkPart.Where(t => t.BjCenterPoint.IsEqualsWithError(jbb.BjCenterPoint)).Count() == 0)
                 {
+                    beam.OwerBeam.AddAnyHole(beam.CenterPoint, HoleCreateFrom.Pillar, null, false, false);
                     beam.OwerBeam.LinkParts.Add(jbb);
                     AllLinkPart.Add(jbb);
                     JwLinkPart jb1 = new JwLinkPart();
