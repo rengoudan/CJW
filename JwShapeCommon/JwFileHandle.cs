@@ -209,6 +209,8 @@ namespace JwShapeCommon
 
         public List<JwLinkPart> IndependentLinkPart = new List<JwLinkPart>();
 
+        public List<JwBeam> _baifanglianjie = new List<JwBeam>();
+
         public int GouJianZongshu { get; set; }
         #endregion
 

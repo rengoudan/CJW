@@ -256,6 +256,10 @@ namespace RGBJWMain.Forms
             uiComboBox1.DisplayMember = "JwPenStyleName";
             uiComboBox1.ValueMember = "StyleNumber";
 
+            uiComboBox4.DataSource = ls;
+            uiComboBox4.DisplayMember = "JwColorName";
+            uiComboBox4.ValueMember = "ColorNumber";
+
 
             if (JwCustomer != null)
             {
