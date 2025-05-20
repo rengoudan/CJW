@@ -123,6 +123,9 @@ namespace RGBJWMain.Forms
                     data.NearSpliteMax = uiNearSpliteMax.Value;
                     var  z6=uidownpillarcolor.SelectedItem as JwColor;
                     data.DownPillarColorNumber = z6.ColorNumber;
+
+                    var z7 = uiComboBox4.SelectedItem as JwColor;
+                    jwCustDesignConstData.LianjieColorNumber = z7.ColorNumber;
                     if (JwCustomer != null)
                     {
                         data.JwCustomerDataId = JwCustomer.Id;
@@ -147,6 +150,10 @@ namespace RGBJWMain.Forms
 
                     var z6 = uidownpillarcolor.SelectedItem as JwColor;
                     jwCustDesignConstData.DownPillarColorNumber = z6.ColorNumber;
+
+
+                    var z7 = uiComboBox4.SelectedItem as JwColor;
+                    jwCustDesignConstData.LianjieColorNumber = z7.ColorNumber;
                     if (JwCustomer != null)
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
@@ -175,6 +182,11 @@ namespace RGBJWMain.Forms
 
                     var z6 = uidownpillarcolor.SelectedItem as JwColor;
                     jwCustDesignConstData.DownPillarColorNumber = z6.ColorNumber;
+
+                    var z7 = uiComboBox4.SelectedItem as JwColor;
+                    jwCustDesignConstData.LianjieColorNumber = z7.ColorNumber;
+
+
                     if (JwCustomer != null)
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
@@ -212,6 +224,13 @@ namespace RGBJWMain.Forms
                 var qq= uidownpillarcolor.SelectedItem as JwColor;
                 JwFileConsts.BRParseColore = qq.ColorNumber;
             }
+            if ((int)uiComboBox4.SelectedValue != -1)
+            {
+                
+                JwFileConsts.LianjieParseColor = uiComboBox4.SelectedItem as JwColor;
+            }
+            
+
             JwFileConsts.NearSpliteMax = uiNearSpliteMax.Value;
             propn.FloorName = uiTextBox1.Text;
             propn.MaterialData = uiComboBox3.SelectedItem as JwMaterialData;
@@ -275,6 +294,7 @@ namespace RGBJWMain.Forms
                     uiComboBox1.SelectedValue = z.SplitPenStyle;
                     uiNearSpliteMax.Value = z.NearSpliteMax;
                     uidownpillarcolor.SelectedValue = z.DownPillarColorNumber;
+                    uiComboBox4.SelectedValue = z.LianjieColorNumber;
                 }
             }
             if (isloadbyparse)

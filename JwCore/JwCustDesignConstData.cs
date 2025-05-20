@@ -48,7 +48,7 @@ namespace JwCore
 
         //public int BRParseStyle { get; set; }
 
-        public int LinkColorNumber { get; set; }
+        public int LianjieColorNumber { get; set; }
 
         public long? JwCustomerDataId { get; set; }
         public virtual JwCustomerData? JwCustomerData { get; set; } = null!;

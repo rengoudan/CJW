@@ -70,6 +70,11 @@ namespace JwShapeCommon
         /// </summary>
         public List<JwwSen> BRSenLst = new List<JwwSen>();
 
+        /// <summary>
+        /// 连接线集合
+        /// </summary>
+        public List<JwwSen> LianjieLst = new List<JwwSen>();
+
         public List<JwwSolid> SolidLst = new List<JwwSolid>();
 
         public List<JwwBlock> JWWBlockLst = new List<JwwBlock>();
@@ -393,7 +398,13 @@ namespace JwShapeCommon
                 ParseSenLst = SenLst.Where(t => t.m_nPenColor == JwFileConsts.BeamParseColor.ColorNumber).ToList();
                 //BRSenLst = SenLst.Where(t => t.m_nPenColor == JwFileConsts.BRParseColore && t.m_nPenStyle == JwFileConsts.BRParseStyle).ToList();
                 BRSenLst = SenLst.Where(t => t.m_nPenColor == JwFileConsts.BRParseColore).ToList();
+
+                //2025年5月20日
+                LianjieLst = SenLst.Where(t => t.m_nPenColor == JwFileConsts.LianjieParseColor.ColorNumber).ToList();
+
+
             }
+
             if(SolidLst.Count > 0)
             {
                 ParseSolidLst = SolidLst;
@@ -3022,6 +3033,93 @@ namespace JwShapeCommon
                     }
                 }
             }
+        }
+
+        List<JwXian> Lianjies;
+
+        private void lianjiexianByJwwsen()
+        {
+            Lianjies = new List<JwXian>();
+            if (LianjieLst.Count > 0)
+            {
+                foreach (var sen in BRSenLst)
+                {
+                    JWPoint ps = new JWPoint(sen.m_start_x, sen.m_start_y);
+                    JWPoint pe = new JWPoint(sen.m_end_x, sen.m_end_y);
+                    JwXian j = new JwXian(ps, pe);
+                    Lianjies.Add(j);
+                }
+            }
+        }
+
+        private void parsenLianjie()
+        {
+            lianjiexianByJwwsen();
+
+            tempmarks = new List<JwDownPillarMark>();
+
+            if (Lianjies.Count > 0)
+            {
+                
+                for (int i = 0; i < Lianjies.Count; i++)
+                {
+                    var nowxian = brXians[i];
+                    if (!nowxian.IsSelected)
+                    {
+                        for (int j = i + 1; j < brXians.Count; j++)
+                        {
+                            JwLineIntersector lineIntersector = new JwLineIntersector();
+                            var erxian = brXians[j];
+                            if (!nowxian.IsSelected && !erxian.IsSelected)
+                            {
+                                if (lineIntersector.ComputeIntersect(nowxian, brXians[j]) == 1)
+                                {
+                                    nowxian.IsSelected = true;
+                                    erxian.IsSelected = true;
+                                    JwDownPillarMark pillarMark = new JwDownPillarMark();
+                                    pillarMark.Id = Guid.NewGuid().ToString();
+                                    pillarMark.CenterPoint = lineIntersector.IntersectionPoint;
+                                    pillarMark.Line1 = nowxian;
+                                    pillarMark.Line2 = erxian;
+                                    tempmarks.Add(pillarMark);
+                                    break;
+                                }
+                            }
+
+                        }
+                        nowxian.IsSelected = true;
+                    }
+                }
+            }
+
+        }
+
+        private List<string> _lianjiebeamids = new List<string>();
+
+        private List<JwPointBeam> findBeam(JwXian xian)
+        {
+            foreach(var b in Beams)
+            {
+                if (!_lianjiebeamids.Contains(b.Id))
+                {
+                    if (b.Contains(xian.Pone))
+                    {
+                        if (b.DirectionType == BeamDirectionType.Horizontal)
+                        {
+                            if (xian.Pone.X > b.CenterPoint.X)
+                            {
+                                // isend
+                            }
+                            //isstart
+                        }
+                        else
+                        {
+                            //同上
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
     }

@@ -118,6 +118,11 @@ namespace JwShapeCommon
         public static JwPenStyle SplitPenStyle;
 
         /// <summary>
+        /// 施工链接部件
+        /// </summary>
+        public static JwColor LianjieParseColor;
+
+        /// <summary>
         /// 识别梁旁边的类型 文字颜色编号
         /// </summary>
         public static int BeamSymbolTextColorNumber = 0;
