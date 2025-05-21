@@ -1651,10 +1651,11 @@ namespace JwShapeCommon
             }
         }
 
-
+        public List<JwTouch> Touchs = new List<JwTouch>();
 
         /// <summary>
         /// 对beam 遍历 查询 垂直接触的梁
+        /// 2025年5月21日修改JwBeamVertical 增加端类型等 用来适配链接线的识别
         /// </summary>
         public void JudgmentJieChu()
         {
@@ -1682,6 +1683,7 @@ namespace JwShapeCommon
                     {
                         var groupbottomy = q.Max(t => t.BottomLeft.Y);
                         var grouptopy = q.Max(t => t.TopLeft.Y);
+                        //2025年5月21日下面找败方为水平梁的败方（垂直）且是 水平梁的上方，即接触端为起始 
                         var chuizhishang = VerticalBeams.Where(t => t.BottomLeft.Y > q.Key && t.BottomLeft.Y < (grouptopy + jxpd)).ToList();
                         //double shuiymax = VerticalBeams.Select(t => t.BottomLeft.Y).Max();
                         if (chuizhishang.Count > 0)//该组需要往上找，
@@ -1697,6 +1699,7 @@ namespace JwShapeCommon
 
                                         //修改败方 中心起点 同时修改
                                         c.StartCenter = l.Center;
+                                        double sy = c.BottomLeft.Y;//记录未修正之前的 设计图内 的 用来比较连接线
                                         c.ChangeStartCenter();
 
                                         JwBeamVertical vertical = new JwBeamVertical
@@ -1705,10 +1708,12 @@ namespace JwShapeCommon
                                             PositionPoint = new JWPoint(c.Center, q.Key),
                                             VerticalBeam = c,
                                             Center = c.Center,
-                                            ParentBeamId = l.Id
+                                            ParentBeamId = l.Id,
+                                            LoserPortType = PortType.Start,
+                                            InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-
+                                        Touchs.Add(new JwTouch { WinnerBeam=l, JwBeamVertical=vertical}); ;
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -1818,6 +1823,7 @@ namespace JwShapeCommon
                                     {
                                         //修改终点中心
                                         c.EndCenter = l.Center;
+                                        double sy = c.TopLeft.Y;//记录未修正之前的 设计图内 的 用来比较连接线
                                         c.ChangeEndCenter();
 
                                         JwBeamVertical vertical = new JwBeamVertical
@@ -1826,10 +1832,12 @@ namespace JwShapeCommon
                                             PositionPoint = new JWPoint(c.Center, q.Key),
                                             VerticalBeam = c,
                                             Center = c.Center,
-                                            ParentBeamId = l.Id
+                                            ParentBeamId = l.Id,
+                                            LoserPortType = PortType.End,
+                                            InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-
+                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical }); ;
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -1921,6 +1929,7 @@ namespace JwShapeCommon
                     {
                         var groupleft = q.Min(t => t.BottomLeft.X);
                         var grouprightx = q.Max(t => t.BottomRight.X);
+                        //胜方为垂直梁，寻找左侧，接触为败方的end
                         var shuipingleft = HorizontalBeams.Where(t => t.TopRight.X < groupleft && t.TopRight.X > (groupleft - jxpd)).ToList();
                         if (shuipingleft.Count > 0)
                         {
@@ -1936,6 +1945,7 @@ namespace JwShapeCommon
 
                                         //相对垂直的 左边的 败方的终点
                                         r.EndCenter = l.Center;
+                                        double xjc = r.TopRight.X;
                                         r.ChangeEndCenter();
 
                                         JwBeamVertical vertical = new JwBeamVertical
@@ -1944,10 +1954,12 @@ namespace JwShapeCommon
                                             PositionPoint = new JWPoint(q.Key, r.Center),
                                             VerticalBeam = r,
                                             Center = r.Center,
-                                            ParentBeamId = l.Id
+                                            ParentBeamId = l.Id,
+                                            InitialLoser = xjc,
+                                            LoserPortType = PortType.End
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-
+                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical }); ;
                                         //处理端部孔组信息  JwKongZu类
                                         //胜方
                                         var sflocaiton = new JWPoint(l.Center, r.Center);
@@ -2032,6 +2044,7 @@ namespace JwShapeCommon
                                     {
                                         //败方在垂直梁的右边  败方的起点
                                         r.StartCenter = l.Center;
+                                        double xys = r.TopLeft.X;
                                         r.ChangeStartCenter();
 
                                         JwBeamVertical vertical = new JwBeamVertical
@@ -2040,10 +2053,11 @@ namespace JwShapeCommon
                                             PositionPoint = new JWPoint(q.Key, r.Center),
                                             VerticalBeam = r,
                                             Center = r.Center,
-                                            ParentBeamId = l.Id
+                                            ParentBeamId = l.Id,
+                                            LoserPortType = PortType.Start
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-
+                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical }); ;
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方

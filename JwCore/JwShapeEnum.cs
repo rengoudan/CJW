@@ -169,4 +169,13 @@ namespace JwCore
         FengeJ = 2,
         JieChu=3//指 胜方 打孔
     }
+
+    /// <summary>
+    /// 梁端类型
+    /// </summary>
+    public enum PortType
+    {
+        Start = 0,
+        End = 1
+    }
 }

@@ -43,6 +43,14 @@ namespace JwShapeCommon.Model
 
         public bool HasLast { get; set; }
 
+        /// <summary>
+        /// 初始未经合理计算的 败方接触端 的值  水平为X  垂直为Y
+        /// 用来和链接先做比较使用
+        /// </summary>
+        public double InitialLoser { get; set; }
+
+        public PortType LoserPortType { get; set; }
+
         public JwBeamVerticalData ToData()
         {
             JwBeamVerticalData r = new JwBeamVerticalData
