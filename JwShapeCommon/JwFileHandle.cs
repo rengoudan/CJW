@@ -3066,6 +3066,12 @@ namespace JwShapeCommon
             }
         }
 
+        private List<JwChengduiXian> _tempchengduixians = new List<JwChengduiXian>();
+
+
+        /// <summary>
+        /// 先判断成对出现的线条
+        /// </summary>
         private void parsenLianjie()
         {
             lianjiexianByJwwsen();
@@ -3090,6 +3096,14 @@ namespace JwShapeCommon
                                 {
                                     nowxian.IsSelected = true;
                                     erxian.IsSelected = true;
+                                    JwChengduiXian z = new JwChengduiXian
+                                    {
+                                        XianOne = brXians[j],
+                                        XianTwo = nowxian
+                                    };
+                                    z.Xians = new List<JwXian> { nowxian, brXians[i] };
+                                    _tempchengduixians.Add(z);
+
                                     JwDownPillarMark pillarMark = new JwDownPillarMark();
                                     pillarMark.Id = Guid.NewGuid().ToString();
                                     pillarMark.CenterPoint = lineIntersector.IntersectionPoint;
@@ -3110,28 +3124,27 @@ namespace JwShapeCommon
 
         private List<string> _lianjiebeamids = new List<string>();
 
+        /// <summary>
+        /// 对成对的 交叉线进一步筛选
+        /// </summary>
+        private void findlianjie()
+        {
+            foreach(var p in _tempchengduixians)
+            {
+                //判断 duixian 是否是链接交叉 符合这些特性
+
+            }
+        }
+
         private List<JwPointBeam> findBeam(JwXian xian)
         {
-            foreach(var b in Beams)
+            foreach(var b in Touchs)
             {
-                if (!_lianjiebeamids.Contains(b.Id))
-                {
-                    if (b.Contains(xian.Pone))
-                    {
-                        if (b.DirectionType == BeamDirectionType.Horizontal)
-                        {
-                            if (xian.Pone.X > b.CenterPoint.X)
-                            {
-                                // isend
-                            }
-                            //isstart
-                        }
-                        else
-                        {
-                            //同上
-                        }
-                    }
-                }
+                //xian.Pone  
+                //b.LoserBeam
+                //判断  败方是否
+                b.LoserBeam.Contains(xian.Pone);
+
             }
             return null;
         }
