@@ -50,9 +50,10 @@ namespace JwShapeCommon.Model
         public double InitialLoser { get; set; }
 
         /// <summary>
-        /// true 为水平 false 垂直
+        /// true 为水平 false 垂直 
+        /// 用来指示败方
         /// </summary>
-        public bool IsShuiping { get; set; }
+        public bool IsShuipingLoser { get; set; }
 
         public PortType LoserPortType { get; set; }
 

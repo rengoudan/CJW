@@ -178,4 +178,13 @@ namespace JwCore
         Start = 0,
         End = 1
     }
+
+    /// <summary>
+    /// 用来取代  链接 上下左右
+    /// </summary>
+    public enum ZhengfuType
+    {
+        Reduce = -1,
+        Add = 1
+    }
 }

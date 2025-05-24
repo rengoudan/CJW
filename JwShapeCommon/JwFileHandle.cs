@@ -1710,7 +1710,7 @@ namespace JwShapeCommon
                                             Center = c.Center,
                                             ParentBeamId = l.Id,
                                             LoserPortType = PortType.Start,
-                                            IsShuiping = false,
+                                            IsShuipingLoser = false,
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
@@ -1835,7 +1835,7 @@ namespace JwShapeCommon
                                             Center = c.Center,
                                             ParentBeamId = l.Id,
                                             LoserPortType = PortType.End,
-                                            IsShuiping = false,
+                                            IsShuipingLoser = false,
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
@@ -1958,7 +1958,7 @@ namespace JwShapeCommon
                                             Center = r.Center,
                                             ParentBeamId = l.Id,
                                             InitialLoser = xjc,
-                                            IsShuiping = true,
+                                            IsShuipingLoser = true,
                                             LoserPortType = PortType.End
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
@@ -2056,7 +2056,7 @@ namespace JwShapeCommon
                                             PositionPoint = new JWPoint(q.Key, r.Center),
                                             VerticalBeam = r,
                                             Center = r.Center,
-                                            IsShuiping = true,
+                                            IsShuipingLoser = true,
                                             ParentBeamId = l.Id,
                                             LoserPortType = PortType.Start
                                         };
@@ -3152,9 +3152,9 @@ namespace JwShapeCommon
         /// <returns></returns>
         private List<JwPointBeam> findBeam(JwXian xian)
         {
-            Dictionary<JWPoint,JwTouch> findtouchs = new Dictionary<JWPoint, JwTouch>();
+            Dictionary<JWPoint, JwTouch> findtouchs = new Dictionary<JWPoint, JwTouch>();
             bool islosershuiping = false;
-            foreach(var b in Touchs)
+            foreach (var b in Touchs)
             {
                 //xian.Pone  
                 //b.LoserBeam
@@ -3162,8 +3162,8 @@ namespace JwShapeCommon
                 if (b.LoserBeam.Contains(xian.Pone))
                 {
                     //增加一层过滤 区分start 和end端
-                    var bb = b.JwBeamVertical.IsShuiping ? xian.Pone.X : xian.Pone.Y;
-                    islosershuiping =  b.JwBeamVertical.IsShuiping;
+                    var bb = b.JwBeamVertical.IsShuipingLoser ? xian.Pone.X : xian.Pone.Y;
+                    islosershuiping = b.JwBeamVertical.IsShuipingLoser;
                     if (bb == b.JwBeamVertical.InitialLoser)
                     {
                         findtouchs.Add(xian.Pone, b);
@@ -3171,8 +3171,8 @@ namespace JwShapeCommon
                 }
                 else if (b.LoserBeam.Contains(xian.Ptwo))
                 {
-                    var bb = b.JwBeamVertical.IsShuiping ? xian.Ptwo.X : xian.Ptwo.Y;
-                    islosershuiping = b.JwBeamVertical.IsShuiping;
+                    var bb = b.JwBeamVertical.IsShuipingLoser ? xian.Ptwo.X : xian.Ptwo.Y;
+                    islosershuiping = b.JwBeamVertical.IsShuipingLoser;
                     if (bb == b.JwBeamVertical.InitialLoser)
                     {
                         findtouchs.Add(xian.Ptwo, b);
@@ -3181,21 +3181,58 @@ namespace JwShapeCommon
             }
             if (findtouchs.Count == 2)
             {
+                BeamDirectionType lianjiewindirect = BeamDirectionType.Horizontal;
                 if (islosershuiping)
                 {
+                    lianjiewindirect = BeamDirectionType.Vertical;
                     findtouchs = findtouchs.OrderBy(t => t.Key.Y).ToDictionary(o => o.Key, o => o.Value);
                 }
                 else
                 {
-                    findtouchs = findtouchs.OrderBy(t => t.Key.Y).ToDictionary(o => o.Key, o => o.Value);
+                    lianjiewindirect = BeamDirectionType.Horizontal;
+                    findtouchs = findtouchs.OrderBy(t => t.Key.X).ToDictionary(o => o.Key, o => o.Value);
                 }
                 var z = findtouchs.First();
-                var l=findtouchs.Last();
-                JwPointBeam start =new JwPointBeam(z.Key, z.Value);
-                JwPointBeam end=new JwPointBeam(l.Key, l.Value);
+                var l = findtouchs.Last();
+                //起始点的方位， 如果败方垂直 则比较水平梁的 高低，此时如果起点Y大于终点Y 则起点位于梁的下方 反之位于上方
+                //             如果败方水平 则比较垂直梁的 左右 如果起点的X 大于总店X 则起点位于梁的左边 反之在左侧
+                ZhengfuType startdirect = ZhengfuType.Add;
+
+                ZhengfuType enddirect = ZhengfuType.Add;
+
+                if (islosershuiping)
+                {
+                    if (z.Key.X > l.Key.X)
+                    {
+                        startdirect = ZhengfuType.Reduce;
+                        enddirect = ZhengfuType.Add;
+                    }
+                    else
+                    {
+                        startdirect = ZhengfuType.Add;
+                        enddirect = ZhengfuType.Reduce;
+                    }
+                }
+                else
+                {
+                    if (z.Key.Y > l.Key.Y)
+                    {
+                        startdirect = ZhengfuType.Reduce;
+                        enddirect = ZhengfuType.Add;
+
+                    }
+                    else
+                    {
+                        startdirect = ZhengfuType.Add;
+                        enddirect = ZhengfuType.Reduce;
+                    }
+
+                    JwPointBeam start = new JwPointBeam(z.Key, z.Value, true, startdirect);
+                    JwPointBeam end = new JwPointBeam(l.Key, l.Value, false, enddirect);
+                }
+                
             }
             return null;
         }
-
     }
 }
