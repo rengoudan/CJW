@@ -8,6 +8,7 @@ using NetTopologySuite.Index.Strtree;
 using NetTopologySuite.Triangulate;
 using Newtonsoft.Json.Linq;
 using Sunny.UI;
+using Sunny.UI.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -346,6 +347,8 @@ namespace JwShapeCommon
             //createBeamAbsolutePD();
 
             Revision();
+
+            parsenLianjie();//寻找连接线
         }
 
         int nownumber = -1;
@@ -3107,13 +3110,6 @@ namespace JwShapeCommon
                                     };
                                     z.Xians = new List<JwXian> { nowxian, brXians[i] };
                                     _tempchengduixians.Add(z);
-
-                                    JwDownPillarMark pillarMark = new JwDownPillarMark();
-                                    pillarMark.Id = Guid.NewGuid().ToString();
-                                    pillarMark.CenterPoint = lineIntersector.IntersectionPoint;
-                                    pillarMark.Line1 = nowxian;
-                                    pillarMark.Line2 = erxian;
-                                    tempmarks.Add(pillarMark);
                                     break;
                                 }
                             }
@@ -3122,6 +3118,10 @@ namespace JwShapeCommon
                         nowxian.IsSelected = true;
                     }
                 }
+            }
+            if (_tempchengduixians.Count > 0)
+            {
+                findlianjie();
             }
 
         }
@@ -3136,13 +3136,25 @@ namespace JwShapeCommon
             foreach(var p in _tempchengduixians)
             {
                 //判断 duixian 是否是链接交叉 符合这些特性
-
+                processChengduiXian(p);
             }
         }
 
+        public List<JwLianjieSingle> LianjieSingles = new List<JwLianjieSingle>();
+
+
         private void processChengduiXian(JwChengduiXian jwChengduiXian)
         {
-
+            JwLianjieSingle jwLianjie = findBeam(jwChengduiXian.XianOne);
+            if (jwLianjie.IsCreateSuccess)
+            {
+                LianjieSingles.Add(jwLianjie);
+            }
+            JwLianjieSingle jwLianjies = findBeam(jwChengduiXian.XianTwo);
+            if (jwLianjies.IsCreateSuccess)
+            {
+                LianjieSingles.Add(jwLianjies);
+            }
         }
 
         /// <summary>
@@ -3150,8 +3162,10 @@ namespace JwShapeCommon
         /// </summary>
         /// <param name="xian"></param>
         /// <returns></returns>
-        private List<JwPointBeam> findBeam(JwXian xian)
+        private JwLianjieSingle findBeam(JwXian xian)
         {
+            JwLianjieSingle jwLianjieSingle = new JwLianjieSingle();
+            jwLianjieSingle.IsCreateSuccess = false;
             Dictionary<JWPoint, JwTouch> findtouchs = new Dictionary<JWPoint, JwTouch>();
             bool islosershuiping = false;
             foreach (var b in Touchs)
@@ -3226,11 +3240,15 @@ namespace JwShapeCommon
                         startdirect = ZhengfuType.Add;
                         enddirect = ZhengfuType.Reduce;
                     }
-
-                    JwPointBeam start = new JwPointBeam(z.Key, z.Value, true, startdirect);
-                    JwPointBeam end = new JwPointBeam(l.Key, l.Value, false, enddirect);
                 }
+                JwPointBeam start = new JwPointBeam(z.Key, z.Value, true, startdirect);
+                JwPointBeam end = new JwPointBeam(l.Key, l.Value, false, enddirect);
+
                 
+                jwLianjieSingle.Start = start;
+                jwLianjieSingle.End = end;
+                jwLianjieSingle.DirectionType = lianjiewindirect;
+                jwLianjieSingle.IsCreateSuccess = true;
             }
             return null;
         }

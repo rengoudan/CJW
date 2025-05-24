@@ -16,6 +16,11 @@ namespace JwShapeCommon.Model
     {
         public JwXian Xian { get; set; }
 
+        public JwLianjieSingle()
+        {
+
+        }
+
         public JwLianjieSingle(JwXian jwXian)
         {
 
@@ -34,7 +39,7 @@ namespace JwShapeCommon.Model
 
         public JwPointBeam End { get; set; }
 
-        
+        public bool IsCreateSuccess { get; set; }
     }
 
     /// <summary>
