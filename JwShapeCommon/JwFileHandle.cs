@@ -1710,6 +1710,7 @@ namespace JwShapeCommon
                                             Center = c.Center,
                                             ParentBeamId = l.Id,
                                             LoserPortType = PortType.Start,
+                                            IsShuiping = false,
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
@@ -1834,6 +1835,7 @@ namespace JwShapeCommon
                                             Center = c.Center,
                                             ParentBeamId = l.Id,
                                             LoserPortType = PortType.End,
+                                            IsShuiping = false,
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
@@ -1956,6 +1958,7 @@ namespace JwShapeCommon
                                             Center = r.Center,
                                             ParentBeamId = l.Id,
                                             InitialLoser = xjc,
+                                            IsShuiping = true,
                                             LoserPortType = PortType.End
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
@@ -2053,6 +2056,7 @@ namespace JwShapeCommon
                                             PositionPoint = new JWPoint(q.Key, r.Center),
                                             VerticalBeam = r,
                                             Center = r.Center,
+                                            IsShuiping = true,
                                             ParentBeamId = l.Id,
                                             LoserPortType = PortType.Start
                                         };
@@ -3136,15 +3140,59 @@ namespace JwShapeCommon
             }
         }
 
+        private void processChengduiXian(JwChengduiXian jwChengduiXian)
+        {
+
+        }
+
+        /// <summary>
+        /// 线的的两个点  使用字典存放 点 和 jwtouch  如果是两个 说明为链接线
+        /// </summary>
+        /// <param name="xian"></param>
+        /// <returns></returns>
         private List<JwPointBeam> findBeam(JwXian xian)
         {
+            Dictionary<JWPoint,JwTouch> findtouchs = new Dictionary<JWPoint, JwTouch>();
+            bool islosershuiping = false;
             foreach(var b in Touchs)
             {
                 //xian.Pone  
                 //b.LoserBeam
                 //判断  败方是否
-                b.LoserBeam.Contains(xian.Pone);
-
+                if (b.LoserBeam.Contains(xian.Pone))
+                {
+                    //增加一层过滤 区分start 和end端
+                    var bb = b.JwBeamVertical.IsShuiping ? xian.Pone.X : xian.Pone.Y;
+                    islosershuiping =  b.JwBeamVertical.IsShuiping;
+                    if (bb == b.JwBeamVertical.InitialLoser)
+                    {
+                        findtouchs.Add(xian.Pone, b);
+                    }
+                }
+                else if (b.LoserBeam.Contains(xian.Ptwo))
+                {
+                    var bb = b.JwBeamVertical.IsShuiping ? xian.Ptwo.X : xian.Ptwo.Y;
+                    islosershuiping = b.JwBeamVertical.IsShuiping;
+                    if (bb == b.JwBeamVertical.InitialLoser)
+                    {
+                        findtouchs.Add(xian.Ptwo, b);
+                    }
+                }
+            }
+            if (findtouchs.Count == 2)
+            {
+                if (islosershuiping)
+                {
+                    findtouchs = findtouchs.OrderBy(t => t.Key.Y).ToDictionary(o => o.Key, o => o.Value);
+                }
+                else
+                {
+                    findtouchs = findtouchs.OrderBy(t => t.Key.Y).ToDictionary(o => o.Key, o => o.Value);
+                }
+                var z = findtouchs.First();
+                var l=findtouchs.Last();
+                JwPointBeam start =new JwPointBeam(z.Key, z.Value);
+                JwPointBeam end=new JwPointBeam(l.Key, l.Value);
             }
             return null;
         }

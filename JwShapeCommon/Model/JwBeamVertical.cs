@@ -49,6 +49,11 @@ namespace JwShapeCommon.Model
         /// </summary>
         public double InitialLoser { get; set; }
 
+        /// <summary>
+        /// true 为水平 false 垂直
+        /// </summary>
+        public bool IsShuiping { get; set; }
+
         public PortType LoserPortType { get; set; }
 
         public JwBeamVerticalData ToData()
