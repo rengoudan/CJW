@@ -1717,7 +1717,7 @@ namespace JwShapeCommon
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        Touchs.Add(new JwTouch { WinnerBeam=l, JwBeamVertical=vertical}); ;
+                                        Touchs.Add(new JwTouch { WinnerBeam=l, JwBeamVertical=vertical,LoserBeam=c}); 
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -1842,7 +1842,7 @@ namespace JwShapeCommon
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical }); ;
+                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c }); ;
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -1965,7 +1965,7 @@ namespace JwShapeCommon
                                             LoserPortType = PortType.End
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical }); ;
+                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r}); ;
                                         //处理端部孔组信息  JwKongZu类
                                         //胜方
                                         var sflocaiton = new JWPoint(l.Center, r.Center);
@@ -2064,7 +2064,7 @@ namespace JwShapeCommon
                                             LoserPortType = PortType.Start
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical }); ;
+                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r }); ;
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -3063,7 +3063,7 @@ namespace JwShapeCommon
             Lianjies = new List<JwXian>();
             if (LianjieLst.Count > 0)
             {
-                foreach (var sen in BRSenLst)
+                foreach (var sen in LianjieLst)
                 {
                     JWPoint ps = new JWPoint(sen.m_start_x, sen.m_start_y);
                     JWPoint pe = new JWPoint(sen.m_end_x, sen.m_end_y);
@@ -3090,25 +3090,25 @@ namespace JwShapeCommon
                 
                 for (int i = 0; i < Lianjies.Count; i++)
                 {
-                    var nowxian = brXians[i];
+                    var nowxian = Lianjies[i];
                     if (!nowxian.IsSelected)
                     {
-                        for (int j = i + 1; j < brXians.Count; j++)
+                        for (int j = i + 1; j < Lianjies.Count; j++)
                         {
                             JwLineIntersector lineIntersector = new JwLineIntersector();
-                            var erxian = brXians[j];
+                            var erxian = Lianjies[j];
                             if (!nowxian.IsSelected && !erxian.IsSelected)
                             {
-                                if (lineIntersector.ComputeIntersect(nowxian, brXians[j]) == 1)
+                                if (lineIntersector.ComputeIntersect(nowxian, erxian) == 1)
                                 {
                                     nowxian.IsSelected = true;
                                     erxian.IsSelected = true;
                                     JwChengduiXian z = new JwChengduiXian
                                     {
-                                        XianOne = brXians[j],
-                                        XianTwo = nowxian
+                                        XianOne = nowxian,
+                                        XianTwo = erxian
                                     };
-                                    z.Xians = new List<JwXian> { nowxian, brXians[i] };
+                                    z.Xians = new List<JwXian> { nowxian, erxian };
                                     _tempchengduixians.Add(z);
                                     break;
                                 }
@@ -3143,6 +3143,10 @@ namespace JwShapeCommon
         public List<JwLianjieSingle> LianjieSingles = new List<JwLianjieSingle>();
 
 
+        /// <summary>
+        /// 2025年6月5日 暂时走不下去
+        /// </summary>
+        /// <param name="jwChengduiXian"></param>
         private void processChengduiXian(JwChengduiXian jwChengduiXian)
         {
             JwLianjieSingle jwLianjie = findBeam(jwChengduiXian.XianOne);
@@ -3168,28 +3172,32 @@ namespace JwShapeCommon
             jwLianjieSingle.IsCreateSuccess = false;
             Dictionary<JWPoint, JwTouch> findtouchs = new Dictionary<JWPoint, JwTouch>();
             bool islosershuiping = false;
+            bool fone = false;
+            bool ftwo = false;
             foreach (var b in Touchs)
             {
                 //xian.Pone  
                 //b.LoserBeam
                 //判断  败方是否
-                if (b.LoserBeam.Contains(xian.Pone))
+                if (b.LoserBeam.ContainShenglue(xian.Pone)&&!fone)
                 {
                     //增加一层过滤 区分start 和end端
-                    var bb = b.JwBeamVertical.IsShuipingLoser ? xian.Pone.X : xian.Pone.Y;
+                    var bb = Math.Round(b.JwBeamVertical.IsShuipingLoser ? xian.Pone.X : xian.Pone.Y,2);
                     islosershuiping = b.JwBeamVertical.IsShuipingLoser;
                     if (bb == b.JwBeamVertical.InitialLoser)
                     {
                         findtouchs.Add(xian.Pone, b);
+                        fone = true;
                     }
                 }
-                else if (b.LoserBeam.Contains(xian.Ptwo))
+                else if (b.LoserBeam.ContainShenglue(xian.Ptwo)&&!ftwo)
                 {
-                    var bb = b.JwBeamVertical.IsShuipingLoser ? xian.Ptwo.X : xian.Ptwo.Y;
+                    var bb = Math.Round(b.JwBeamVertical.IsShuipingLoser ? xian.Ptwo.X : xian.Ptwo.Y,2);
                     islosershuiping = b.JwBeamVertical.IsShuipingLoser;
                     if (bb == b.JwBeamVertical.InitialLoser)
                     {
                         findtouchs.Add(xian.Ptwo, b);
+                        ftwo = true;
                     }
                 }
             }
@@ -3250,7 +3258,8 @@ namespace JwShapeCommon
                 jwLianjieSingle.DirectionType = lianjiewindirect;
                 jwLianjieSingle.IsCreateSuccess = true;
             }
-            return null;
+            
+            return jwLianjieSingle;
         }
     }
 }

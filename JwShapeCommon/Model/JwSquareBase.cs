@@ -102,6 +102,11 @@ namespace JwShapeCommon
 
         public bool Contains(JWPoint pt) => Contains(pt.X, pt.Y);
 
+        public bool ContainShenglue(JWPoint pt)
+        {
+            return Contains(Math.Round(pt.X, 2), Math.Round(pt.Y, 2));
+        }
+
         public bool WuchaContains(double x, double y) => TopLeft.X- JwFileConsts.NearSpliteMax / JwFileConsts.JwScale <= x && x <= TopLeft.X + Width+ JwFileConsts.NearSpliteMax / JwFileConsts.JwScale && TopLeft.Y+ JwFileConsts.NearSpliteMax / JwFileConsts.JwScale >= y && y >= TopLeft.Y - Height- JwFileConsts.NearSpliteMax / JwFileConsts.JwScale;
 
         public bool WuchaContains(JWPoint pt) => WuchaContains(pt.X, pt.Y);
