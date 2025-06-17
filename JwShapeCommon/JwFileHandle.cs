@@ -3122,6 +3122,9 @@ namespace JwShapeCommon
             if (_tempchengduixians.Count > 0)
             {
                 findlianjie();
+
+
+                var zq = LianjieSingles.Count;
             }
 
         }
@@ -3163,6 +3166,8 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 线的的两个点  使用字典存放 点 和 jwtouch  如果是两个 说明为链接线
+        /// 
+        /// 存在链接相互垂直的连接线
         /// </summary>
         /// <param name="xian"></param>
         /// <returns></returns>
