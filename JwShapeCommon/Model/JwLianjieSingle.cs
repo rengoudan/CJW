@@ -59,6 +59,8 @@ namespace JwShapeCommon.Model
             this.NearPoint = point;
             this.IsStart = istart;
             this.IsEnd = !istart;
+            this.NearPoint = point;
+            this.LianjieType = touch.WinnerBeam.DirectionType;
         }
 
         /// <summary>

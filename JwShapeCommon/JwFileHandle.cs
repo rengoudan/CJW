@@ -3175,9 +3175,6 @@ namespace JwShapeCommon
         private JwLianjieSingle findBeam(JwXian xian)
         {
             JwLianjieSingle jwLianjieSingle = new JwLianjieSingle();
-
-            
-
             jwLianjieSingle.IsCreateSuccess = false;
             var xianpoints = xian.OrderByX();
             var fist = xianpoints.First();
@@ -3269,16 +3266,15 @@ namespace JwShapeCommon
                         enddirect = ZhengfuType.Reduce;
                     }
                 }
-                JwPointBeam start = new JwPointBeam(z.Key, z.Value, true, startdirect);
-                JwPointBeam end = new JwPointBeam(l.Key, l.Value, false, enddirect);
+                //JwPointBeam start = new JwPointBeam(z.Key, z.Value, true, startdirect);
+                JwPointBeam start = jwPointBeams.FirstOrDefault(t => t.IsStart);
+                JwPointBeam end = jwPointBeams.FirstOrDefault(t => t.IsEnd);
 
-                
                 jwLianjieSingle.Start = start;
                 jwLianjieSingle.End = end;
                 jwLianjieSingle.DirectionType = lianjiewindirect;
                 jwLianjieSingle.IsCreateSuccess = true;
             }
-            
             return jwLianjieSingle;
         }
 
