@@ -554,6 +554,24 @@ namespace JwShapeCommon
             return new JwXian(p1, p2);
         }
 
+        public  List<JWPoint> OrderByX()
+        {
+            List<JWPoint> relst=new List<JWPoint>();
+
+            relst.Add(this.Pone);
+            relst.Add(this.Ptwo);
+            return relst.OrderBy(t => t.X).ToList();
+        }
+
+        public List<JWPoint> OrderByY()
+        {
+            List<JWPoint> relst = new List<JWPoint>();
+
+            relst.Add(this.Pone);
+            relst.Add(this.Ptwo);
+            return relst.OrderBy(t => t.Y).ToList();
+        }
+
     }
     public class JwXianComparint : IEqualityComparer<JwXian>
     {

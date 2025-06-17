@@ -27,7 +27,8 @@ namespace JwShapeCommon.Model
         }
 
         /// <summary>
-        /// 指示连接线用来链接 垂直 还是水平的胜方梁
+        /// 指示连接线用来链接 垂直 还是水平的胜方梁 没什么意义 存在相互垂直的
+        /// 
         /// </summary>
         public BeamDirectionType DirectionType { get; set; }
 
@@ -52,9 +53,12 @@ namespace JwShapeCommon.Model
         /// </summary>
         /// <param name="point"></param>
         /// <param name="touch"></param>
-        public JwPointBeam(JWPoint point,JwTouch touch)
+        public JwPointBeam(JWPoint point,JwTouch touch,bool istart)
         {
-
+            this.Touch = touch;
+            this.NearPoint = point;
+            this.IsStart = istart;
+            this.IsEnd = !istart;
         }
 
         /// <summary>
@@ -153,5 +157,12 @@ namespace JwShapeCommon.Model
         public ZhengfuType Direct { get; set; }
     }
 
+    public class TouchType
+    {
+        public bool IsStart { get; set; }
 
+        public JWPoint JWPoint { get; set; }
+
+        public JwTouch JwTouch { get; set; }
+    }
 }

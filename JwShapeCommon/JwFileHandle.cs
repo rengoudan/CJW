@@ -3168,45 +3168,60 @@ namespace JwShapeCommon
         /// 线的的两个点  使用字典存放 点 和 jwtouch  如果是两个 说明为链接线
         /// 
         /// 存在链接相互垂直的连接线
+        /// 2025年6月17日 修改逻辑  起点为左 重点为右  不考虑Y坐标
         /// </summary>
         /// <param name="xian"></param>
         /// <returns></returns>
         private JwLianjieSingle findBeam(JwXian xian)
         {
             JwLianjieSingle jwLianjieSingle = new JwLianjieSingle();
+
+            
+
             jwLianjieSingle.IsCreateSuccess = false;
+            var xianpoints = xian.OrderByX();
+            var fist = xianpoints.First();
+            var last = xianpoints.Last();
             Dictionary<JWPoint, JwTouch> findtouchs = new Dictionary<JWPoint, JwTouch>();
+            List<TouchType> fintouches = new List<TouchType>();
+            List<JwPointBeam> jwPointBeams = new List<JwPointBeam>();
             bool islosershuiping = false;
             bool fone = false;
+            bool isfirstlosershuiping = false;
+            bool islastlosershuiping = false;
             bool ftwo = false;
             foreach (var b in Touchs)
             {
                 //xian.Pone  
                 //b.LoserBeam
                 //判断  败方是否
-                if (b.LoserBeam.ContainShenglue(xian.Pone)&&!fone)
+                if (b.LoserBeam.ContainShenglue(fist) &&!fone)
                 {
                     //增加一层过滤 区分start 和end端
-                    var bb = Math.Round(b.JwBeamVertical.IsShuipingLoser ? xian.Pone.X : xian.Pone.Y,2);
+                    var bb = Math.Round(b.JwBeamVertical.IsShuipingLoser ? fist.X : fist.Y,2);
                     islosershuiping = b.JwBeamVertical.IsShuipingLoser;
+                    isfirstlosershuiping= b.JwBeamVertical.IsShuipingLoser;
+
                     if (bb == b.JwBeamVertical.InitialLoser)
                     {
-                        findtouchs.Add(xian.Pone, b);
+                        jwPointBeams.Add(touchHandle(b, fist, true));
+                        //findtouchs.Add(xian.Pone, b);
                         fone = true;
                     }
                 }
-                else if (b.LoserBeam.ContainShenglue(xian.Ptwo)&&!ftwo)
+                else if (b.LoserBeam.ContainShenglue(last) &&!ftwo)
                 {
-                    var bb = Math.Round(b.JwBeamVertical.IsShuipingLoser ? xian.Ptwo.X : xian.Ptwo.Y,2);
+                    var bb = Math.Round(b.JwBeamVertical.IsShuipingLoser ? last.X : last.Y,2);
                     islosershuiping = b.JwBeamVertical.IsShuipingLoser;
                     if (bb == b.JwBeamVertical.InitialLoser)
                     {
-                        findtouchs.Add(xian.Ptwo, b);
+                        jwPointBeams.Add(touchHandle(b, last, false));
                         ftwo = true;
                     }
                 }
             }
-            if (findtouchs.Count == 2)
+            // 起始点已经判断完毕
+            if (jwPointBeams.Count == 2)
             {
                 BeamDirectionType lianjiewindirect = BeamDirectionType.Horizontal;
                 if (islosershuiping)
@@ -3265,6 +3280,39 @@ namespace JwShapeCommon
             }
             
             return jwLianjieSingle;
+        }
+
+        public JwPointBeam touchHandle(JwTouch touch,JWPoint point,bool isstart)
+        {
+            JwPointBeam jwPointBeam=new JwPointBeam(point,touch,isstart);
+
+            //增加一层过滤 区分start 和end端
+            var bb = Math.Round(touch.JwBeamVertical.IsShuipingLoser ? point.X : point.Y, 2);
+
+            if (touch.LoserBeam.DirectionType == BeamDirectionType.Horizontal)
+            {
+                if (point.Y < touch.LoserBeam.Center)
+                {
+                    jwPointBeam.Direct = ZhengfuType.Reduce;
+                }
+                else
+                {
+                    jwPointBeam.Direct = ZhengfuType.Add;
+                }
+            }
+            else
+            {
+                if (point.X < touch.LoserBeam.Center)
+                {
+                    jwPointBeam.Direct = ZhengfuType.Reduce;
+                }
+                else
+                {
+                    jwPointBeam.Direct = ZhengfuType.Add;
+                }
+            }
+
+            return jwPointBeam;
         }
     }
 }
