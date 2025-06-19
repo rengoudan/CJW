@@ -61,6 +61,7 @@ namespace JwShapeCommon.Model
             this.IsEnd = !istart;
             this.NearPoint = point;
             this.LianjieType = touch.WinnerBeam.DirectionType;
+            this.calculate();
         }
 
         /// <summary>
@@ -83,19 +84,40 @@ namespace JwShapeCommon.Model
         {
             if (this.LianjieType == BeamDirectionType.Horizontal)
             {
-                double pinayix = this.IsStart ? 50 : -50;
+                double pinayix = (int)this.Direct;
+                double realy = 0;
+                if (Touch.JwBeamVertical.Position== TaggDirect.Down)
+                {
+                    realy = Touch.WinnerBeam.Center - 50 / JwFileConsts.JwScale;
+                }
+                if(Touch.JwBeamVertical.Position == TaggDirect.Down)
+                {
+                    realy = Touch.WinnerBeam.Center +  50/JwFileConsts.JwScale;
+                }
 
-                double realy = Touch.WinnerBeam.Center + ((int)Direct) * 50;
+                //double realy = Touch.WinnerBeam.Center + ((int)Direct) * 50;
 
-                double realx = Touch.LoserBeam.Center + pinayix;
+                double realx = Touch.LoserBeam.Center + pinayix * (50 / JwFileConsts.JwScale);
                 this.RealPoint=new JWPoint(realx, realy);
             }
             else
             {
-                double pinayix = this.IsStart ? 50 : -50;
-                double realx = Touch.WinnerBeam.Center + ((int)Direct) * 50;
+                double realx = 0;// = this.IsStart ? 50 : -50;
+                double realy = 0;
+                if (Touch.JwBeamVertical.Position == TaggDirect.Right)
+                {
+                    realx = Touch.WinnerBeam.Center + 50 / JwFileConsts.JwScale;
+                }
+                if (Touch.JwBeamVertical.Position == TaggDirect.Left)
+                {
+                    realx = Touch.WinnerBeam.Center - 50 / JwFileConsts.JwScale;
+                }
+                double pinayix = (int)this.Direct;
+                //realx = Touch.WinnerBeam.Center + ((int)Direct) * 50;
 
-                double realy= Touch.LoserBeam.Center + pinayix;
+                realy= Touch.LoserBeam.Center + pinayix * (50 / JwFileConsts.JwScale);
+
+                this.RealPoint = new JWPoint(realx, realy);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwShapeCommon.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,9 @@ namespace JwShapeCommon
 
         public List<JwBeam> HorizontalBeams { get; set; }
 
-        public List<JwBeam> VerticalBeams { get; set; } 
+        public List<JwBeam> VerticalBeams { get; set; }
+
+        public List<JwLianjieSingle> LianjieSingles = new List<JwLianjieSingle>();
 
         public JwCanvas() { }
 

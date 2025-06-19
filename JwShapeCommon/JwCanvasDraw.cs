@@ -26,6 +26,8 @@ namespace JwShapeCommon
 
         public List<ControlText> Texts = new List<ControlText>();
 
+        public List<ControlLine> LianjieLines = new List<ControlLine>();
+
         public void Draw(int wwidth, int wheight, int xoffset, int yoffset)
         {
 
@@ -107,6 +109,20 @@ namespace JwShapeCommon
 
                             links.Add(lkdraw.Change(_minbeilv, axisX, axisY));
                         }
+                    }
+                }
+                if (jwCanvas.LianjieSingles != null && jwCanvas.LianjieSingles.Count > 0)
+                {
+                    foreach(var zlianjie in jwCanvas.LianjieSingles)
+                    {
+                        //生成controlline
+                        ControlLine cline = new ControlLine();
+
+                        cline.DrawStart=zlianjie.Start.RealPoint.ToPointF();
+
+                        cline.DrawEnd = zlianjie.End.RealPoint.ToPointF();
+                        
+                        LianjieLines.Add(cline);
                     }
                 }
                 

@@ -1562,6 +1562,7 @@ namespace JwShapeCommon
             HasCanvas=true;
             jwCanvas = new JwCanvas(TopLeft, TopRight, BottomLeft, BottomRight, Beams, JwAllPoints,Width,Height,Pillars,ParentQieGeBeam);
             jwCanvas.LinkParts = AllLinkPart;
+            jwCanvas.LianjieSingles=this.LianjieSingles;
             return jwCanvas;
         }
 
@@ -1700,7 +1701,7 @@ namespace JwShapeCommon
                                     if (c.Center > l.TopLeft.X && c.Center < l.TopRight.X)
                                     {
 
-                                        //修改败方 中心起点 同时修改
+                                        //修改败方中心起点同时修改
                                         c.StartCenter = l.Center;
                                         double sy = c.BottomLeft.Y;//记录未修正之前的 设计图内 的 用来比较连接线
                                         c.ChangeStartCenter();
@@ -3220,59 +3221,59 @@ namespace JwShapeCommon
             // 起始点已经判断完毕
             if (jwPointBeams.Count == 2)
             {
-                BeamDirectionType lianjiewindirect = BeamDirectionType.Horizontal;
-                if (islosershuiping)
-                {
-                    lianjiewindirect = BeamDirectionType.Vertical;
-                    findtouchs = findtouchs.OrderBy(t => t.Key.Y).ToDictionary(o => o.Key, o => o.Value);
-                }
-                else
-                {
-                    lianjiewindirect = BeamDirectionType.Horizontal;
-                    findtouchs = findtouchs.OrderBy(t => t.Key.X).ToDictionary(o => o.Key, o => o.Value);
-                }
-                var z = findtouchs.First();
-                var l = findtouchs.Last();
-                //起始点的方位， 如果败方垂直 则比较水平梁的 高低，此时如果起点Y大于终点Y 则起点位于梁的下方 反之位于上方
-                //             如果败方水平 则比较垂直梁的 左右 如果起点的X 大于总店X 则起点位于梁的左边 反之在左侧
-                ZhengfuType startdirect = ZhengfuType.Add;
+                //BeamDirectionType lianjiewindirect = BeamDirectionType.Horizontal;
+                //if (islosershuiping)
+                //{
+                //    lianjiewindirect = BeamDirectionType.Vertical;
+                //    findtouchs = findtouchs.OrderBy(t => t.Key.Y).ToDictionary(o => o.Key, o => o.Value);
+                //}
+                //else
+                //{
+                //    lianjiewindirect = BeamDirectionType.Horizontal;
+                //    findtouchs = findtouchs.OrderBy(t => t.Key.X).ToDictionary(o => o.Key, o => o.Value);
+                //}
+                //var z = findtouchs.First();
+                //var l = findtouchs.Last();
+                ////起始点的方位， 如果败方垂直 则比较水平梁的 高低，此时如果起点Y大于终点Y 则起点位于梁的下方 反之位于上方
+                ////             如果败方水平 则比较垂直梁的 左右 如果起点的X 大于总店X 则起点位于梁的左边 反之在左侧
+                //ZhengfuType startdirect = ZhengfuType.Add;
 
-                ZhengfuType enddirect = ZhengfuType.Add;
+                //ZhengfuType enddirect = ZhengfuType.Add;
 
-                if (islosershuiping)
-                {
-                    if (z.Key.X > l.Key.X)
-                    {
-                        startdirect = ZhengfuType.Reduce;
-                        enddirect = ZhengfuType.Add;
-                    }
-                    else
-                    {
-                        startdirect = ZhengfuType.Add;
-                        enddirect = ZhengfuType.Reduce;
-                    }
-                }
-                else
-                {
-                    if (z.Key.Y > l.Key.Y)
-                    {
-                        startdirect = ZhengfuType.Reduce;
-                        enddirect = ZhengfuType.Add;
+                //if (islosershuiping)
+                //{
+                //    if (z.Key.X > l.Key.X)
+                //    {
+                //        startdirect = ZhengfuType.Reduce;
+                //        enddirect = ZhengfuType.Add;
+                //    }
+                //    else
+                //    {
+                //        startdirect = ZhengfuType.Add;
+                //        enddirect = ZhengfuType.Reduce;
+                //    }
+                //}
+                //else
+                //{
+                //    if (z.Key.Y > l.Key.Y)
+                //    {
+                //        startdirect = ZhengfuType.Reduce;
+                //        enddirect = ZhengfuType.Add;
 
-                    }
-                    else
-                    {
-                        startdirect = ZhengfuType.Add;
-                        enddirect = ZhengfuType.Reduce;
-                    }
-                }
+                //    }
+                //    else
+                //    {
+                //        startdirect = ZhengfuType.Add;
+                //        enddirect = ZhengfuType.Reduce;
+                //    }
+                //}
                 //JwPointBeam start = new JwPointBeam(z.Key, z.Value, true, startdirect);
                 JwPointBeam start = jwPointBeams.FirstOrDefault(t => t.IsStart);
                 JwPointBeam end = jwPointBeams.FirstOrDefault(t => t.IsEnd);
 
                 jwLianjieSingle.Start = start;
                 jwLianjieSingle.End = end;
-                jwLianjieSingle.DirectionType = lianjiewindirect;
+                //jwLianjieSingle.DirectionType = lianjiewindirect;
                 jwLianjieSingle.IsCreateSuccess = true;
             }
             return jwLianjieSingle;

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NetTopologySuite.Geometries;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace JwShapeCommon
 {
@@ -118,6 +120,12 @@ namespace JwShapeCommon
         public Point ToPoint()
         {
             Point p=new Point(this.X,this.Y);
+            return p;
+        }
+
+        public PointF ToPointF()
+        {
+            PointF p = new PointF((float)this.X,(float)this.Y);
             return p;
         }
 
