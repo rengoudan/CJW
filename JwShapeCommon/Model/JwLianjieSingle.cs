@@ -61,7 +61,7 @@ namespace JwShapeCommon.Model
             this.IsEnd = !istart;
             this.NearPoint = point;
             this.LianjieType = touch.WinnerBeam.DirectionType;
-            this.calculate();
+            //this.calculate();
         }
 
         /// <summary>
@@ -80,24 +80,25 @@ namespace JwShapeCommon.Model
             this.Direct= direct;
             calculate();
         }
-        private void calculate()
+        public void calculate()
         {
+            double banjing = JwFileConsts.EllipseSpacing / (2 * JwFileConsts.JwScale);
             if (this.LianjieType == BeamDirectionType.Horizontal)
             {
                 double pinayix = (int)this.Direct;
                 double realy = 0;
                 if (Touch.JwBeamVertical.Position== TaggDirect.Down)
                 {
-                    realy = Touch.WinnerBeam.Center - 50 / JwFileConsts.JwScale;
+                    realy = Touch.WinnerBeam.Center - banjing;
                 }
-                if(Touch.JwBeamVertical.Position == TaggDirect.Down)
+                if(Touch.JwBeamVertical.Position == TaggDirect.Up)
                 {
-                    realy = Touch.WinnerBeam.Center +  50/JwFileConsts.JwScale;
+                    realy = Touch.WinnerBeam.Center + banjing;
                 }
 
                 //double realy = Touch.WinnerBeam.Center + ((int)Direct) * 50;
 
-                double realx = Touch.LoserBeam.Center + pinayix * (50 / JwFileConsts.JwScale);
+                double realx = Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
                 this.RealPoint=new JWPoint(realx, realy);
             }
             else
@@ -106,16 +107,16 @@ namespace JwShapeCommon.Model
                 double realy = 0;
                 if (Touch.JwBeamVertical.Position == TaggDirect.Right)
                 {
-                    realx = Touch.WinnerBeam.Center + 50 / JwFileConsts.JwScale;
+                    realx = Touch.WinnerBeam.Center + banjing;
                 }
                 if (Touch.JwBeamVertical.Position == TaggDirect.Left)
                 {
-                    realx = Touch.WinnerBeam.Center - 50 / JwFileConsts.JwScale;
+                    realx = Touch.WinnerBeam.Center - banjing;
                 }
                 double pinayix = (int)this.Direct;
                 //realx = Touch.WinnerBeam.Center + ((int)Direct) * 50;
 
-                realy= Touch.LoserBeam.Center + pinayix * (50 / JwFileConsts.JwScale);
+                realy= Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
 
                 this.RealPoint = new JWPoint(realx, realy);
             }
@@ -175,10 +176,12 @@ namespace JwShapeCommon.Model
         /// </summary>
         public BeamDirectionType LianjieType { get; set; }
 
+        private ZhengfuType _direct;
         /// <summary>
         /// 
         /// </summary>
-        public ZhengfuType Direct { get; set; }
+        public ZhengfuType Direct 
+        { get { return _direct; } set { _direct = value;this.calculate(); } }
     }
 
     public class TouchType

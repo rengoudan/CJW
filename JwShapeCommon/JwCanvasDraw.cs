@@ -118,9 +118,14 @@ namespace JwShapeCommon
                         //生成controlline
                         ControlLine cline = new ControlLine();
 
-                        cline.DrawStart=zlianjie.Start.RealPoint.ToPointF();
-
-                        cline.DrawEnd = zlianjie.End.RealPoint.ToPointF();
+                        JWPoint jpstart = new JWPoint(zlianjie.Start.RealPoint.X, zlianjie.Start.RealPoint.Y);
+                        jpstart.Zoom(_minbeilv);
+                        jpstart.ChangeAxis(axisX,axisY);
+                        cline.DrawStart= jpstart.ToPointF();
+                        JWPoint jpend = new JWPoint(zlianjie.End.RealPoint.X, zlianjie.End.RealPoint.Y);
+                        jpend.Zoom(_minbeilv);
+                        jpend.ChangeAxis(axisX, axisY);
+                        cline.DrawEnd = jpend.ToPointF();
                         
                         LianjieLines.Add(cline);
                     }

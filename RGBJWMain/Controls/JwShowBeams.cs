@@ -189,6 +189,8 @@ namespace RGBJWMain.Controls
 
         Pen penx = new Pen(new SolidBrush(Color.Gray), 0.5f);//线条的粗细
 
+        Pen penlj = new Pen(new SolidBrush(Color.Yellow), 0.5f);//线条的粗细
+
         Pen penjt = new Pen(new SolidBrush(Color.Green), 0.5f);//线条的粗细
 
         int fontSize = 8;
@@ -350,6 +352,13 @@ namespace RGBJWMain.Controls
                             }
                             // pe.Graphics.FillPolygon(bush, link.Polygon.ToArray());//箭头 s 点和 pr点
                         }
+                    }
+                }
+                if(CanvasDraw.LianjieLines.Count > 0)
+                {
+                    foreach(var ljl in CanvasDraw.LianjieLines)
+                    {
+                        pe.Graphics.DrawLine(penlj, ljl.DrawStart, ljl.DrawEnd);
                     }
                 }
                 
