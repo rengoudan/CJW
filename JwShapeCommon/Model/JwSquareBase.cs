@@ -102,9 +102,22 @@ namespace JwShapeCommon
 
         public bool Contains(JWPoint pt) => Contains(pt.X, pt.Y);
 
+        /// <summary>
+        /// 可以扩大范围
+        /// 2025年6月21日
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <returns></returns>
         public bool ContainShenglue(JWPoint pt)
         {
-            return Contains(Math.Round(pt.X, 2), Math.Round(pt.Y, 2));
+            //return Contains(Math.Round(pt.X, 2), Math.Round(pt.Y, 2));
+
+            var slx = Math.Round(pt.X, 2);
+            var sly = Math.Round(pt.Y, 2);
+            double wc = 0.05;
+            return TopLeft.X-wc <= slx && slx <= TopLeft.X + Width+wc && TopLeft.Y+wc >= sly && sly >= TopLeft.Y - Height-wc;
+
+
         }
 
         public bool WuchaContains(double x, double y) => TopLeft.X- JwFileConsts.NearSpliteMax / JwFileConsts.JwScale <= x && x <= TopLeft.X + Width+ JwFileConsts.NearSpliteMax / JwFileConsts.JwScale && TopLeft.Y+ JwFileConsts.NearSpliteMax / JwFileConsts.JwScale >= y && y >= TopLeft.Y - Height- JwFileConsts.NearSpliteMax / JwFileConsts.JwScale;

@@ -14,6 +14,7 @@ namespace JwShapeCommon.Model
     /// </summary>
     public class JwBeamVertical
     {
+        public string Id { get; set; }
 
         public string ParentBeamId { get; set; }    
 

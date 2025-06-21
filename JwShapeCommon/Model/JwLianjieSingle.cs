@@ -80,7 +80,7 @@ namespace JwShapeCommon.Model
             this.Direct= direct;
             calculate();
         }
-        public void calculate()
+        private void calculate()
         {
             double banjing = JwFileConsts.EllipseSpacing / (2 * JwFileConsts.JwScale);
             if (this.LianjieType == BeamDirectionType.Horizontal)

@@ -189,7 +189,7 @@ namespace RGBJWMain.Controls
 
         Pen penx = new Pen(new SolidBrush(Color.Gray), 0.5f);//线条的粗细
 
-        Pen penlj = new Pen(new SolidBrush(Color.Yellow), 0.5f);//线条的粗细
+        Pen penlj = new Pen(new SolidBrush(Color.Purple), 0.5f);//线条的粗细
 
         Pen penjt = new Pen(new SolidBrush(Color.Green), 0.5f);//线条的粗细
 

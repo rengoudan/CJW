@@ -1708,6 +1708,7 @@ namespace JwShapeCommon
 
                                         JwBeamVertical vertical = new JwBeamVertical
                                         {
+                                            Id=Guid.NewGuid().ToString(),
                                             Position = TaggDirect.Up,
                                             PositionPoint = new JWPoint(c.Center, q.Key),
                                             VerticalBeam = c,
@@ -1833,6 +1834,7 @@ namespace JwShapeCommon
 
                                         JwBeamVertical vertical = new JwBeamVertical
                                         {
+                                            Id = Guid.NewGuid().ToString(),
                                             Position = TaggDirect.Down,
                                             PositionPoint = new JWPoint(c.Center, q.Key),
                                             VerticalBeam = c,
@@ -1956,6 +1958,7 @@ namespace JwShapeCommon
 
                                         JwBeamVertical vertical = new JwBeamVertical
                                         {
+                                            Id = Guid.NewGuid().ToString(),
                                             Position = TaggDirect.Left,
                                             PositionPoint = new JWPoint(q.Key, r.Center),
                                             VerticalBeam = r,
@@ -2056,11 +2059,13 @@ namespace JwShapeCommon
 
                                         JwBeamVertical vertical = new JwBeamVertical
                                         {
+                                            Id = Guid.NewGuid().ToString(),
                                             Position = TaggDirect.Right,
                                             PositionPoint = new JWPoint(q.Key, r.Center),
                                             VerticalBeam = r,
                                             Center = r.Center,
                                             IsShuipingLoser = true,
+                                            InitialLoser = xys,
                                             ParentBeamId = l.Id,
                                             LoserPortType = PortType.Start
                                         };
@@ -3200,7 +3205,11 @@ namespace JwShapeCommon
                     islosershuiping = b.JwBeamVertical.IsShuipingLoser;
                     isfirstlosershuiping= b.JwBeamVertical.IsShuipingLoser;
 
-                    if (bb == b.JwBeamVertical.InitialLoser)
+                    //2025年6月21日增加精度处理
+                    double jdcha = Math.Abs(b.JwBeamVertical.InitialLoser - bb);
+
+
+                    if (jdcha<=0.05)
                     {
                         jwPointBeams.Add(touchHandle(b, fist, true));
                         //findtouchs.Add(xian.Pone, b);
@@ -3211,7 +3220,10 @@ namespace JwShapeCommon
                 {
                     var bb = Math.Round(b.JwBeamVertical.IsShuipingLoser ? last.X : last.Y,2);
                     islosershuiping = b.JwBeamVertical.IsShuipingLoser;
-                    if (bb == b.JwBeamVertical.InitialLoser)
+                    double jdcha = Math.Abs(b.JwBeamVertical.InitialLoser - bb);
+
+
+                    if (jdcha <= 0.05)
                     {
                         jwPointBeams.Add(touchHandle(b, last, false));
                         ftwo = true;
