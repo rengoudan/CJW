@@ -1660,6 +1660,7 @@ namespace JwShapeCommon
         /// <summary>
         /// 对beam 遍历 查询 垂直接触的梁
         /// 2025年5月21日修改JwBeamVertical 增加端类型等 用来适配链接线的识别
+        /// 2025年6月22日 针对识别连接线  修改孔组措施
         /// </summary>
         public void JudgmentJieChu()
         {
