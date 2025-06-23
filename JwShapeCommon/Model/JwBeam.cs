@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using NetTopologySuite.Geometries;
 using Sunny.UI;
 using static System.Windows.Forms.AxHost;
+using System.Runtime.CompilerServices;
 
 namespace JwShapeCommon
 {
@@ -672,23 +673,23 @@ namespace JwShapeCommon
 
             var cbs = new JwBeamMarkPoint(this, true, true, false);//芯起点
 
-            this.Baifangs = this.Baifangs.OrderBy(t => t.Center).ToList();
-            for(int i=0; i < this.Baifangs.Count; i++)
-            {
-                if (i == 0)
-                {
-                    this.Baifangs[i].HasLast = true;
-                }
-                else if(i==this.Baifangs.Count-1)
-                {
-                    this.Baifangs[i].HasPre = true;
-                }
-                else
-                {
-                    this.Baifangs[i].HasPre = true;
-                    this.Baifangs[i].HasLast = true;
-                }
-            }
+            //this.Baifangs = this.Baifangs.OrderBy(t => t.Center).ToList();
+            //for(int i=0; i < this.Baifangs.Count; i++)
+            //{
+            //    if (i == 0)
+            //    {
+            //        this.Baifangs[i].HasLast = true;
+            //    }
+            //    else if(i==this.Baifangs.Count-1)
+            //    {
+            //        this.Baifangs[i].HasPre = true;
+            //    }
+            //    else
+            //    {
+            //        this.Baifangs[i].HasPre = true;
+            //        this.Baifangs[i].HasLast = true;
+            //    }
+            //}
 
             //处理B端
             if (this.StartTelosType == KongzuType.B)
@@ -749,12 +750,12 @@ namespace JwShapeCommon
             {
                 //hole的中心带你可以和mark的不一致  只有B是一致的
                 cbs.HasAppend = true;
-                var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
-                if (kshibf != null)
-                {
-                    starthole.HasBhLinkHole = kshibf.HasLast;
-                    starthole.HasPreLinkHole= kshibf.HasPre;
-                }
+                //var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
+                //if (kshibf != null)
+                //{
+                //    starthole.HasBhLinkHole = kshibf.HasLast;
+                //    starthole.HasPreLinkHole= kshibf.HasPre;
+                //}
                 cbs.AppendHole = starthole;
                 
 
@@ -788,13 +789,13 @@ namespace JwShapeCommon
                         cccc.Coordinate = centerholes[i].Location.Y;
                     }
 
-                    var fbf = this.Baifangs.Find(t => t.Center == cccc.Coordinate);
+                    //var fbf = this.Baifangs.Find(t => t.Center == cccc.Coordinate);
 
-                    if(fbf != null)
-                    {
-                        centerholes[i].HasPreLinkHole = fbf.HasPre;
-                        centerholes[i].HasBhLinkHole = fbf.HasLast;
-                    }
+                    //if(fbf != null)
+                    //{
+                    //    centerholes[i].HasPreLinkHole = fbf.HasPre;
+                    //    centerholes[i].HasBhLinkHole = fbf.HasLast;
+                    //}
 
                     cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 1);
                     cccc.PreBeamStartDistance=Math.Round(cccc.Coordinate -sb,1);
@@ -838,12 +839,12 @@ namespace JwShapeCommon
                 }
                 //endhole = ewholeend;
                 endx.HasAppend = true;
-                var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
-                if (kshibf != null)
-                {
-                    endhole.HasBhLinkHole = kshibf.HasLast;
-                    endhole.HasPreLinkHole = kshibf.HasPre;
-                }
+                //var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
+                //if (kshibf != null)
+                //{
+                //    endhole.HasBhLinkHole = kshibf.HasLast;
+                //    endhole.HasPreLinkHole = kshibf.HasPre;
+                //}
                 endx.AppendHole = endhole;
                 
             }
@@ -854,12 +855,12 @@ namespace JwShapeCommon
                 if (endhole != null)
                 {
                     endx.HasAppend = true;
-                    var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
-                    if (kshibf != null)
-                    {
-                        endhole.HasBhLinkHole = kshibf.HasLast;
-                        endhole.HasPreLinkHole = kshibf.HasPre;
-                    }
+                    //var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
+                    //if (kshibf != null)
+                    //{
+                    //    endhole.HasBhLinkHole = kshibf.HasLast;
+                    //    endhole.HasPreLinkHole = kshibf.HasPre;
+                    //}
                     endx.AppendHole = endhole;
                     //precb = endholejmp.Coordinate;
                 }
@@ -871,6 +872,8 @@ namespace JwShapeCommon
             double xxlength=this.jwBeamMarks.Sum(t=>t.PreCenterDistance);
 
         }
+
+        public List<JwQiegeZu> jwQiegeZus = new List<JwQiegeZu>();
     }
 
     public static class JwBeamExtensions
@@ -892,6 +895,13 @@ namespace JwShapeCommon
                         qieges.Add(beam.QieGePoints[i].X);
                         JWPoint endp = new JWPoint(beam.QieGePoints[i].X, beam.TopLeft.Y);
                         var nb = new JwBeam(beam, startp, endp, qieges.Contains(startp.X), qieges.Contains(endp.X));
+                        JwQiegeZu qiegeZu = new JwQiegeZu { Qiegezb = endp.X, RJwBeam = nb };
+                        var pre = beam.jwQiegeZus.Last();
+                        if (pre != null)
+                        {
+                            pre.AJwBeam = nb;
+                        }
+                        beam.jwQiegeZus.Add(qiegeZu);
                         int t = i + 1;
                         nb.BeamCode = beam.BeamCode + "-" + t.ToString();
                         relst.Add(nb);
@@ -899,6 +909,11 @@ namespace JwShapeCommon
                     }
                     JWPoint enddp = beam.TopRight;
                     var edp = new JwBeam(beam, startp, enddp, true, false);
+                    var pres = beam.jwQiegeZus.Last();
+                    if (pres != null)
+                    {
+                        pres.AJwBeam = edp;
+                    }
                     edp.BeamCode = beam.BeamCode + "-" + (beam.QieGePoints.Count + 1).ToString();
                     relst.Add(edp);
                 }
@@ -918,6 +933,13 @@ namespace JwShapeCommon
                         var nb = new JwBeam(beam, startp, endp, qieges.Contains(startp.Y), qieges.Contains(endp.Y));
                         int t = i + 1;
                         nb.BeamCode = beam.BeamCode + "-" + t.ToString();
+                        JwQiegeZu qiegeZu = new JwQiegeZu { Qiegezb = endp.X, RJwBeam = nb };
+                        var pre = beam.jwQiegeZus.Last();
+                        if (pre != null)
+                        {
+                            pre.AJwBeam = nb;
+                        }
+                        beam.jwQiegeZus.Add(qiegeZu);
                         relst.Add(nb);
 
                         startp = endp;
@@ -925,6 +947,12 @@ namespace JwShapeCommon
                     JWPoint enddp = beam.TopLeft;
                     var endbeam = new JwBeam(beam, startp, enddp, true, false);
                     endbeam.BeamCode = beam.BeamCode + "-" + (beam.QieGePoints.Count + 1).ToString();
+                    var pres = beam.jwQiegeZus.Last();
+                    if (pres != null)
+                    {
+                        pres.AJwBeam = endbeam;
+                    }
+                    
                     relst.Add(endbeam);
                 }
                 //linkpart

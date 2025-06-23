@@ -365,6 +365,73 @@ namespace JwShapeCommon
         }
 
         /// <summary>
+        /// 2025年6月24日 返回jwhole 
+        /// </summary>
+        /// <param name="beam"></param>
+        /// <param name="location"></param>
+        /// <param name="createFrom"></param>
+        /// <param name="locationcenter"></param>
+        /// <param name="isStart"></param>
+        /// <param name="isEnd"></param>
+        public static JwHole AddAnyHoleReturn(this JwBeam beam, JWPoint location, HoleCreateFrom createFrom, JWPoint? locationcenter = null, bool isStart = false, bool isEnd = false)
+        {
+            JwHole hh=new JwHole();
+            if (beam.Holes.Count > 0)
+            {
+                var fh = beam.Holes.Find(t => t.Location == location);
+                if (fh == null)
+                {
+                    hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                    if (beam.DirectionType == BeamDirectionType.Horizontal)
+                    {
+                        hh.HoleCenter = location.X;
+                    }
+                    if (beam.DirectionType == BeamDirectionType.Vertical)
+                    {
+                        hh.HoleCenter = location.Y;
+                    }
+                    beam.Holes.Add(hh);
+                }
+                else
+                {
+                    if (createFrom == HoleCreateFrom.FengeJ)
+                    {
+                        hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                        if (beam.DirectionType == BeamDirectionType.Horizontal)
+                        {
+                            hh.HoleCenter = location.X;
+                        }
+                        if (beam.DirectionType == BeamDirectionType.Vertical)
+                        {
+                            hh.HoleCenter = location.Y;
+                        }
+                        //beam.Holes.Add(hh);
+                        fh.changeByOther(HoleCreateFrom.FengeJ);
+                    }
+                    else
+                    {
+                        fh.changeByOther(HoleCreateFrom.Pillar);
+                    }
+                }
+            }
+            else
+            {
+                hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                if (beam.DirectionType == BeamDirectionType.Horizontal)
+                {
+                    hh.HoleCenter = location.X;
+                }
+                if (beam.DirectionType == BeamDirectionType.Vertical)
+                {
+                    hh.HoleCenter = location.Y;
+                }
+                beam.Holes.Add(hh);
+            }
+            return hh;
+        }
+
+
+        /// <summary>
         /// 2025年4月25日 针对J 记录偏差位置 方便查询下方打连接孔
         /// </summary>
         /// <param name="beam"></param>
@@ -390,7 +457,7 @@ namespace JwShapeCommon
                     //{
                     //    hh.HoleCenter = location.Y;
                     //}
-                    hh.HoleCenter = pccenter;
+                    hh.HoleCenter = pccenter;//2025年6月24日 根据此判断
                     beam.Holes.Add(hh);
                 }
                 else

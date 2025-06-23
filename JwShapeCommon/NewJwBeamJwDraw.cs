@@ -565,15 +565,15 @@ namespace JwShapeCommon
             foreach (var z in _beam.jwBeamMarks)
             {
                 XXLength=XXLength+(z.HasError?z.PreCenterCorrect:z.PreCenterDistance);
-                if (z.HasAppend)
-                {
-                    var q = _beam.Baifangs.Find(t => t.Center == z.AppendHole.HoleCenter);
-                    if (q != null)
-                    {
-                        z.AppendHole.HasBhLinkHole = q.HasLast;
-                        z.AppendHole.HasPreLinkHole = q.HasPre;
-                    }
-                }
+                //if (z.HasAppend)
+                //{
+                //    var q = _beam.Baifangs.Find(t => t.Center == z.AppendHole.HoleCenter);
+                //    if (q != null)
+                //    {
+                //        z.AppendHole.HasBhLinkHole = q.HasLast;
+                //        z.AppendHole.HasPreLinkHole = q.HasPre;
+                //    }
+                //}
             }
             //foreach(var hhhh in _beam.Holes)
             //{

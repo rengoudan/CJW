@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace JwShapeCommon
 {
+ 
+    /// <summary>
+    /// 2025年6月24日 增加hole方便处理
+    /// </summary>
     public class JwTouch
     {
         /// <summary>
@@ -25,6 +29,13 @@ namespace JwShapeCommon
         /// 接触点  
         /// </summary>
         public JWPoint JieChuPoint { get; set; }
+
+        /// <summary>
+        /// 胜方的孔
+        /// </summary>
+        public JwHole JwHoleG { get; set; }
+
+        public double BFCenter { get; set; }
     }
 
     /// <summary>
@@ -40,5 +51,14 @@ namespace JwShapeCommon
 
         public bool IsLianjie { get; set; }
 
+    }
+
+    public class JwQiegeZu
+    {
+        public double Qiegezb { get; set; }
+
+        public JwBeam RJwBeam { get; set; }
+
+        public JwBeam AJwBeam { get; set; }
     }
 }

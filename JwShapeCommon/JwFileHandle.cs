@@ -687,7 +687,6 @@ namespace JwShapeCommon
             return true;
         }
 
-
         private JWPoint? GetIntersection(JwXian seg1, JwXian seg2)
         {
             // 计算两条线段的交点
@@ -725,9 +724,6 @@ namespace JwShapeCommon
 
             return null; // 交点不在线段上
         }
-
-
-
 
         /// <summary>
         /// 暂时合并一轮 测试情况
@@ -1658,6 +1654,11 @@ namespace JwShapeCommon
         public List<JwTouch> Touchs = new List<JwTouch>();
 
         /// <summary>
+        /// 2025年6月24日 增加记录 胜败
+        /// </summary>
+        public List<JwBeamVertical> JwBeamVerticalLst = new List<JwBeamVertical>();
+
+        /// <summary>
         /// 对beam 遍历 查询 垂直接触的梁
         /// 2025年5月21日修改JwBeamVertical 增加端类型等 用来适配链接线的识别
         /// 2025年6月22日 针对识别连接线  修改孔组措施
@@ -1720,7 +1721,8 @@ namespace JwShapeCommon
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        Touchs.Add(new JwTouch { WinnerBeam=l, JwBeamVertical=vertical,LoserBeam=c}); 
+                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c };
+                                        Touchs.Add(jwt); 
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -1748,7 +1750,9 @@ namespace JwShapeCommon
                                         //};
                                         ////.c.Kongzus.Add(bfkongzu);
                                         //c.AddHole(bfkongzu);
-                                        l.AddAnyHole(sflocation, HoleCreateFrom.JieChu);
+                                        var shengfangjw=l.AddAnyHoleReturn(sflocation, HoleCreateFrom.JieChu);
+
+                                        jwt.JwHoleG = shengfangjw;
                                         c.AddAnyHole(pflocation, HoleCreateFrom.JieChuG, null, true, false);
                                         c.HasStartSide = true;
                                         c.StartTelosType = KongzuType.G;
@@ -1846,7 +1850,8 @@ namespace JwShapeCommon
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c }); ;
+                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c };
+                                        Touchs.Add(jwt); ;
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -1856,7 +1861,8 @@ namespace JwShapeCommon
                                         //var pfloaction = new JWPoint(c.Center, c.TopLeft.Y - JwFileConsts.Gjubian / JwFileConsts.JwScale);
                                         //c.Kongzus.Add(bfkongzu);
 
-                                        l.AddAnyHole(sflocation, HoleCreateFrom.JieChu);
+                                        var shengfangjw = l.AddAnyHoleReturn(sflocation, HoleCreateFrom.JieChu);
+                                        jwt.JwHoleG = shengfangjw;
                                         c.AddAnyHole(pfloaction, HoleCreateFrom.JieChuG, null, false, true);
                                         c.HasEndSide = true;
                                         c.EndTelosType = KongzuType.G;
@@ -1970,13 +1976,15 @@ namespace JwShapeCommon
                                             LoserPortType = PortType.End
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r}); ;
+                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r };
+                                        Touchs.Add(jwt) ;
                                         //处理端部孔组信息  JwKongZu类
                                         //胜方
                                         var sflocaiton = new JWPoint(l.Center, r.Center);
                                         var bflocation = new JWPoint(r.EndCenter - (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale, r.Center);
                                         //var bflocation = new JWPoint(r.TopRight!.X - JwFileConsts.Gjubian / JwFileConsts.JwScale, r.Center);
-                                        l.AddAnyHole(sflocaiton, HoleCreateFrom.JieChu);
+                                        var shengfangjw=l.AddAnyHoleReturn(sflocaiton, HoleCreateFrom.JieChu);
+                                        jwt.JwHoleG = shengfangjw;
                                         r.AddAnyHole(bflocation, HoleCreateFrom.JieChuG, null, false, true);
                                         r.HasEndSide = true;
                                         r.EndTelosType = KongzuType.G;
@@ -2071,7 +2079,8 @@ namespace JwShapeCommon
                                             LoserPortType = PortType.Start
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        Touchs.Add(new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r }); ;
+                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r };
+                                        Touchs.Add(jwt) ;
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -2079,7 +2088,8 @@ namespace JwShapeCommon
                                         var bfloaction = new JWPoint(r.StartCenter + (JwFileConsts.Gjubian+JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale, r.Center);
                                         //                                        var bfloaction = new JWPoint(r.TopLeft.X + JwFileConsts.Gjubian / JwFileConsts.JwScale, r.Center);
 
-                                        l.AddAnyHole(sflocation, HoleCreateFrom.JieChu);
+                                        var shengfangjw=l.AddAnyHoleReturn(sflocation, HoleCreateFrom.JieChu);
+                                        jwt.JwHoleG = shengfangjw;
                                         r.AddAnyHole(bfloaction, HoleCreateFrom.JieChuG, null, true, false);
                                         r.HasStartSide = true;
                                         r.StartTelosType = KongzuType.G;
@@ -3299,15 +3309,35 @@ namespace JwShapeCommon
             //增加一层过滤 区分start 和end端
             var bb = Math.Round(touch.JwBeamVertical.IsShuipingLoser ? point.X : point.Y, 2);
 
+            var bfc = Math.Round(touch.JwBeamVertical.Center, 2);
+
             if (touch.LoserBeam.DirectionType == BeamDirectionType.Horizontal)
             {
                 if (point.Y < touch.LoserBeam.Center)
                 {
                     jwPointBeam.Direct = ZhengfuType.Reduce;
+                    touch.JwHoleG.HasPreLinkHole = true;
+                    if (touch.WinnerBeam.HasQieGe)
+                    {
+                        var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
+                        if (f!=null)
+                        {
+                            f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                        }
+                    }
                 }
                 else
                 {
                     jwPointBeam.Direct = ZhengfuType.Add;
+                    touch.JwHoleG.HasBhLinkHole = true;
+                    if (touch.WinnerBeam.HasQieGe)
+                    {
+                        var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
+                        if (f != null)
+                        {
+                            f.AJwBeam.EndSide.KongZu.HasBhLinkHole = true;
+                        }
+                    }
                 }
             }
             else
@@ -3315,12 +3345,31 @@ namespace JwShapeCommon
                 if (point.X < touch.LoserBeam.Center)
                 {
                     jwPointBeam.Direct = ZhengfuType.Reduce;
+                    touch.JwHoleG.HasPreLinkHole = true;
+                    if (touch.WinnerBeam.HasQieGe)
+                    {
+                        var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
+                        if (f != null)
+                        {
+                            f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                        }
+                    }
                 }
                 else
                 {
                     jwPointBeam.Direct = ZhengfuType.Add;
+                    touch.JwHoleG.HasBhLinkHole = true;
+                    if (touch.WinnerBeam.HasQieGe)
+                    {
+                        var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
+                        if (f != null)
+                        {
+                            f.RJwBeam.EndSide.KongZu.HasBhLinkHole = true;
+                        }
+                    }
                 }
             }
+            //处理
 
             return jwPointBeam;
         }
