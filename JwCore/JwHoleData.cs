@@ -30,5 +30,12 @@ namespace JwCore
         public virtual string JwBeamDataId { get; set; }
 
         public virtual JwBeamData JwBeamData { get; set; } = null!;
+
+        /// <summary>
+        /// 拥有前 的链接洞
+        /// </summary>
+        public bool HasPreLinkHole { get; set; }
+
+        public bool HasBhLinkHole { get; set; }
     }
 }

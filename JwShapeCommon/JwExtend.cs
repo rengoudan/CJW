@@ -107,12 +107,18 @@ namespace JwShapeCommon
                 FirstCreateFrom = data.FirstCreateFrom,
                 ChangeFrom = data.ChangeFrom,
                 IsEnd = data.IsEnd,
+                HasPreLinkHole = data.HasPreLinkHole,
+                HasBhLinkHole = data.HasBhLinkHole,
                 IsStart = data.IsStart,
                 HoleType = data.HoleType,
                 Id = data.Id,
                 KongNum = data.KongNum,
                 Location = new JWPoint(data.Location.X, data.Location.Y)
             };
+            if (data.HasBhLinkHole)
+            {
+                int i = 0;
+            }
             return hole;
         }
 

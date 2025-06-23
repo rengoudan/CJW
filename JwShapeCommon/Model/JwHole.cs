@@ -291,6 +291,10 @@ namespace JwShapeCommon.Model
 
         public JwHoleData ToData()
         {
+            if (HasBhLinkHole)
+            {
+                int z = 1;
+            }
 
             JwHoleData holeData = new JwHoleData
             {
@@ -299,6 +303,8 @@ namespace JwShapeCommon.Model
                 IsStart = IsStart,
                 ChangeFrom = ChangeFrom,
                 FirstCreateFrom = FirstCreateFrom,
+                HasBhLinkHole = HasBhLinkHole,
+                HasPreLinkHole = HasPreLinkHole,
                 HasBottom = HasBottom,
                 HasCenter = HasCenter,
                 HasTop = HasTop,
