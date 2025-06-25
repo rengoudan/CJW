@@ -3335,7 +3335,7 @@ namespace JwShapeCommon
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
-                            f.AJwBeam.EndSide.KongZu.HasBhLinkHole = true;
+                            f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
                         }
                     }
                 }
@@ -3364,7 +3364,7 @@ namespace JwShapeCommon
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
-                            f.RJwBeam.EndSide.KongZu.HasBhLinkHole = true;
+                            f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
                         }
                     }
                 }
