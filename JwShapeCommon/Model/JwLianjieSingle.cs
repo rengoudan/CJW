@@ -41,6 +41,18 @@ namespace JwShapeCommon.Model
         public JwPointBeam End { get; set; }
 
         public bool IsCreateSuccess { get; set; }
+
+        public JwLianjieData ToDbData()
+        {
+            JwLianjieData lianjieData = new JwLianjieData();
+            lianjieData.Start=new System.Drawing.Point(0,0);
+            lianjieData.End = new System.Drawing.Point(0, 0);
+            lianjieData.Id=Guid.NewGuid().ToString();
+            lianjieData.Length = 12;
+
+
+            return lianjieData;
+        }
     }
 
     /// <summary>
