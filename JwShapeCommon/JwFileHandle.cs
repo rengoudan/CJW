@@ -1649,6 +1649,16 @@ namespace JwShapeCommon
                     //JwLinkPartData partData=
                 }
             }
+            if (LianjieSingles.Count > 0)
+            {
+                foreach(var lj in LianjieSingles)
+                {
+                    JwLianjieData lianjieData = lj.ToDbData();
+                    lianjieData.JwProjectSubDataId = _subData.Id;
+                    lianjieData.ProjectSubName = _subData.FloorName;
+
+                }
+            }
         }
 
         public List<JwTouch> Touchs = new List<JwTouch>();

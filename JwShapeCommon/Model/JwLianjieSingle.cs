@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NetTopologySuite.Geometries;
 
 namespace JwShapeCommon.Model
 {
@@ -45,11 +46,13 @@ namespace JwShapeCommon.Model
         public JwLianjieData ToDbData()
         {
             JwLianjieData lianjieData = new JwLianjieData();
-            lianjieData.Start=new System.Drawing.Point(0,0);
-            lianjieData.End = new System.Drawing.Point(0, 0);
+            
+            lianjieData.Start=new Point(Start.RealPoint.X, Start.RealPoint.Y);
+            lianjieData.End = new Point(End.RealPoint.X, End.RealPoint.Y);
             lianjieData.Id=Guid.NewGuid().ToString();
-            lianjieData.Length = 12;
-
+            // = 12;
+            var dl = JwExtend.Distance(Start.RealPoint, End.RealPoint)*JwFileConsts.JwScale;
+            lianjieData.Length = (decimal)Math.Round(dl, 0);
 
             return lianjieData;
         }
