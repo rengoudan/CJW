@@ -193,6 +193,8 @@ namespace RGBJWMain.Pages
                     this.dbContext.Entry(z).Collection(e => e.JwBeamDatas).Load();
                     this.dbContext.Entry(z).Collection(e => e.JwPillarDatas).Load();
                     this.dbContext.Entry(z).Collection(e => e.JwLinkPartDatas).Load();
+                    this.dbContext.Entry(z).Collection(e => e.JwLianjieDatas).Load();
+
                     
                     if (z.JwBeamDatas.Count > 0)
                     {

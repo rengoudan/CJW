@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwShapeCommon.Model;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -111,7 +112,7 @@ namespace JwShapeCommon
                         }
                     }
                 }
-                if (jwCanvas.LianjieSingles != null && jwCanvas.LianjieSingles.Count > 0)
+                if (!jwCanvas.IsFromData&& jwCanvas.LianjieSingles != null && jwCanvas.LianjieSingles.Count > 0)
                 {
                     foreach(var zlianjie in jwCanvas.LianjieSingles)
                     {
@@ -130,7 +131,26 @@ namespace JwShapeCommon
                         LianjieLines.Add(cline);
                     }
                 }
-                
+                if (jwCanvas.IsFromData)
+                {
+                    if(jwCanvas.LianjieLsts.Count > 0)
+                    {
+                        foreach(var jlj in jwCanvas.LianjieLsts)
+                        {
+                            //生成controlline
+                            ControlLine cline = new ControlLine();
+                            JWPoint jpstart = new JWPoint(jlj.Start.X, jlj.Start.Y);
+                            jpstart.Zoom(_minbeilv);
+                            jpstart.ChangeAxis(axisX, axisY);
+                            cline.DrawStart = jpstart.ToPointF();
+                            JWPoint jpend = new JWPoint(jlj.End.X, jlj.End.Y);
+                            jpend.Zoom(_minbeilv);
+                            jpend.ChangeAxis(axisX, axisY);
+                            cline.DrawEnd = jpend.ToPointF();
+                            LianjieLines.Add(cline);
+                        }
+                    }
+                }
             }
         }
     }

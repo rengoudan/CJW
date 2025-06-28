@@ -3,6 +3,7 @@ using System;
 using JwData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -11,9 +12,10 @@ using NetTopologySuite.Geometries;
 namespace JwData.Migrations
 {
     [DbContext(typeof(JwDataContext))]
-    partial class JwDataContextModelSnapshot : ModelSnapshot
+    [Migration("20250628072856_lianjie-add")]
+    partial class lianjieadd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.30");

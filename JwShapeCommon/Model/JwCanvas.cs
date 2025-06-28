@@ -75,6 +75,10 @@ namespace JwShapeCommon
 
         public List<JwLianjieSingle> LianjieSingles = new List<JwLianjieSingle>();
 
+        public List<JwLianjie> LianjieLsts = new List<JwLianjie>();
+
+        public bool IsFromData = false;
+
         public JwCanvas() { }
 
         public JwCanvas(JWPoint? topLeft,JWPoint? topRight,JWPoint? bottomLeft,JWPoint? bottomRight, List<JwBeam> _beams, List<JWPoint> _points,double? width,double? height,List<JwPillar> pillars,List<JwBeam> _parentbeams) 

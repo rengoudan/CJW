@@ -58,6 +58,23 @@ namespace JwShapeCommon.Model
         }
     }
 
+    public class JwLianjie
+    {
+        public JWPoint Start { get; set; }
+
+        public JWPoint End { get; set; }
+
+        /// <summary>
+        /// 实际的长度单位mM
+        /// </summary>
+        public decimal Length { get; set; }
+
+        public string ProjectSubName { get; set; }
+
+        public string Id { get; set; }
+        public string JwProjectSubDataId { get; set; }
+    }
+
     /// <summary>
     /// 连接线的 端点  
     /// </summary>

@@ -216,6 +216,13 @@ namespace RGBJWMain.Forms
                             dbContext?.JwLinkPartDatas.Add(lp);
                         }
                     }
+                    if(_jwFileHandle._lianjieDatas.Count > 0)
+                    {
+                        foreach(var jlj in _jwFileHandle._lianjieDatas)
+                        {
+                            dbContext?.JwLianjieDatas.Add(jlj);
+                        }
+                    }
                     var md = dbContext.JwProjectMainDatas.Find(jwProjectPathModel.MainData.Id);
                     md.BCount += _jwFileHandle._subData.BCount;
                     md.BGCount += _jwFileHandle._subData.BGCount;

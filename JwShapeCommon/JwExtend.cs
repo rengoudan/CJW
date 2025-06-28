@@ -8,6 +8,7 @@ using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -94,6 +95,17 @@ namespace JwShapeCommon
             };
             return vertical;
 
+        }
+
+        public static JwLianjie DataToLianjie(this JwLianjieData data)
+        {
+            JwLianjie lianjie = new JwLianjie();
+            lianjie.Start=new JWPoint(data.Start.X, data.Start.Y);
+            lianjie.End=new JWPoint(data.End.X, data.End.Y);
+            lianjie.Length = data.Length;
+            lianjie.Id=data.Id;
+            //lianjie.
+            return lianjie;
         }
 
         public static JwHole DataToHole(this JwHoleData data)
@@ -268,6 +280,16 @@ namespace JwShapeCommon
                     reobj.LinkParts.Add(jwLink);
                 }
             }
+            
+            if(data.JwLianjieDatas.Count > 0)
+            {
+                foreach(var lianjie in data.JwLianjieDatas)
+                {
+                    JwLianjie jlj = lianjie.DataToLianjie();
+                    reobj.LianjieLsts.Add(jlj);
+                }
+            }
+            reobj.IsFromData= true;
             return reobj;
         }
 

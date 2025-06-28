@@ -211,6 +211,8 @@ namespace JwShapeCommon
 
         public List<JwLinkPartData> _linkPartDatas = new List<JwLinkPartData>();
 
+        public List<JwLianjieData> _lianjieDatas = new List<JwLianjieData>();
+
         public List<JwLinkPart> AllLinkPart = new List<JwLinkPart>();
 
         public List<JwLinkPart> IndependentLinkPart = new List<JwLinkPart>();
@@ -1649,13 +1651,17 @@ namespace JwShapeCommon
                     //JwLinkPartData partData=
                 }
             }
+
+            //连接线保存
             if (LianjieSingles.Count > 0)
             {
                 foreach(var lj in LianjieSingles)
                 {
+
                     JwLianjieData lianjieData = lj.ToDbData();
                     lianjieData.JwProjectSubDataId = _subData.Id;
                     lianjieData.ProjectSubName = _subData.FloorName;
+                    _lianjieDatas.Add(lianjieData);
 
                 }
             }
