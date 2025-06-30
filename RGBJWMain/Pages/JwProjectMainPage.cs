@@ -195,13 +195,13 @@ namespace RGBJWMain.Pages
                     this.dbContext.Entry(z).Collection(e => e.JwLinkPartDatas).Load();
                     this.dbContext.Entry(z).Collection(e => e.JwLianjieDatas).Load();
 
-                    
+
                     if (z.JwBeamDatas.Count > 0)
                     {
                         foreach (var bd in z.JwBeamDatas)
                         {
                             this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
-                            this.dbContext.Entry(bd).Collection(e=>e.JwBeamVerticalDatas).Load();
+                            this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
                         }
                     }
                     //MessageBox.Show(z.CompanyName);
@@ -490,7 +490,7 @@ namespace RGBJWMain.Pages
                     JwCanvas jwCanvas = sub.DataToCanvas();
                     //foreach(var bj in jwCanvas.Beams)
                     //{
-                        
+
                     //}
                     if (jwCanvas.Beams.Count > 0)
                     {
@@ -944,6 +944,38 @@ namespace RGBJWMain.Pages
             if (deleteitem != null)
             {
                 hasdeleted = true;
+            }
+        }
+
+        private void uiDataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1)
+            {
+                if (!uiDataGridView2.Rows[e.RowIndex].IsNewRow)
+                {
+                    var z = uiDataGridView1.Rows[e.RowIndex].DataBoundItem as JwProjectMainData;
+                    this.dbContext.Entry(z).Collection(e => e.JwProjectSubDatas).Load();
+                    if (z.JwProjectSubDatas.Count > 0)
+                    {
+                        foreach (var sub in z.JwProjectSubDatas)
+                        {
+                            this.dbContext.Entry(sub).Collection(e => e.JwBeamDatas).Load();
+                            this.dbContext.Entry(sub).Collection(e => e.JwPillarDatas).Load();
+                            this.dbContext.Entry(sub).Collection(e => e.JwLinkPartDatas).Load();
+                            this.dbContext.Entry(sub).Collection(e => e.JwLianjieDatas).Load();
+                            if (sub.JwBeamDatas.Count > 0)
+                            {
+                                foreach (var bd in sub.JwBeamDatas)
+                                {
+                                    this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                                    this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
+                                }
+                            }
+                        }
+                        ProjectDetail detail = new ProjectDetail(z);
+                        detail.ShowDialog();
+                    }
+                }
             }
         }
     }

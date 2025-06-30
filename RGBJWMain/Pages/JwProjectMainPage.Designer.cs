@@ -162,6 +162,7 @@
             dataGridViewCellStyle9.SelectionForeColor = Color.White;
             dataGridViewCellStyle9.WrapMode = DataGridViewTriState.True;
             uiDataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            uiDataGridView1.RowHeadersWidth = 62;
             dataGridViewCellStyle10.BackColor = Color.White;
             dataGridViewCellStyle10.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiDataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle10;
@@ -171,6 +172,7 @@
             uiDataGridView1.Size = new Size(1176, 400);
             uiDataGridView1.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView1.TabIndex = 0;
+            uiDataGridView1.CellDoubleClick += uiDataGridView1_CellDoubleClick;
             uiDataGridView1.CellMouseDown += uiDataGridView1_CellMouseDown;
             uiDataGridView1.RowHeaderMouseClick += uiDataGridView1_RowHeaderMouseClick;
             uiDataGridView1.RowStateChanged += uiDataGridView1_RowStateChanged;
@@ -179,6 +181,7 @@
             // 
             projectNameDataGridViewTextBoxColumn.DataPropertyName = "ProjectName";
             projectNameDataGridViewTextBoxColumn.HeaderText = "工事名";
+            projectNameDataGridViewTextBoxColumn.MinimumWidth = 8;
             projectNameDataGridViewTextBoxColumn.Name = "projectNameDataGridViewTextBoxColumn";
             projectNameDataGridViewTextBoxColumn.Width = 180;
             // 
@@ -186,49 +189,65 @@
             // 
             biaochiDataGridViewTextBoxColumn.DataPropertyName = "Biaochi";
             biaochiDataGridViewTextBoxColumn.HeaderText = "縮尺";
+            biaochiDataGridViewTextBoxColumn.MinimumWidth = 8;
             biaochiDataGridViewTextBoxColumn.Name = "biaochiDataGridViewTextBoxColumn";
+            biaochiDataGridViewTextBoxColumn.Width = 150;
             // 
             // beamsNumberDataGridViewTextBoxColumn
             // 
             beamsNumberDataGridViewTextBoxColumn.DataPropertyName = "BeamsNumber";
             beamsNumberDataGridViewTextBoxColumn.HeaderText = "梁数";
+            beamsNumberDataGridViewTextBoxColumn.MinimumWidth = 8;
             beamsNumberDataGridViewTextBoxColumn.Name = "beamsNumberDataGridViewTextBoxColumn";
+            beamsNumberDataGridViewTextBoxColumn.Width = 150;
             // 
             // kPillarCountDataGridViewTextBoxColumn
             // 
             kPillarCountDataGridViewTextBoxColumn.DataPropertyName = "KPillarCount";
             kPillarCountDataGridViewTextBoxColumn.HeaderText = "K 柱 トータル";
+            kPillarCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             kPillarCountDataGridViewTextBoxColumn.Name = "kPillarCountDataGridViewTextBoxColumn";
+            kPillarCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // singlePillarCountDataGridViewTextBoxColumn
             // 
             singlePillarCountDataGridViewTextBoxColumn.DataPropertyName = "SinglePillarCount";
             singlePillarCountDataGridViewTextBoxColumn.HeaderText = "単柱";
+            singlePillarCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             singlePillarCountDataGridViewTextBoxColumn.Name = "singlePillarCountDataGridViewTextBoxColumn";
+            singlePillarCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // bCountDataGridViewTextBoxColumn
             // 
             bCountDataGridViewTextBoxColumn.DataPropertyName = "BCount";
             bCountDataGridViewTextBoxColumn.HeaderText = "B";
+            bCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             bCountDataGridViewTextBoxColumn.Name = "bCountDataGridViewTextBoxColumn";
+            bCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // bGCountDataGridViewTextBoxColumn
             // 
             bGCountDataGridViewTextBoxColumn.DataPropertyName = "BGCount";
             bGCountDataGridViewTextBoxColumn.HeaderText = "BG";
+            bGCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             bGCountDataGridViewTextBoxColumn.Name = "bGCountDataGridViewTextBoxColumn";
+            bGCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // floorQuantityDataGridViewTextBoxColumn
             // 
             floorQuantityDataGridViewTextBoxColumn.DataPropertyName = "FloorQuantity";
             floorQuantityDataGridViewTextBoxColumn.HeaderText = "階数";
+            floorQuantityDataGridViewTextBoxColumn.MinimumWidth = 8;
             floorQuantityDataGridViewTextBoxColumn.Name = "floorQuantityDataGridViewTextBoxColumn";
+            floorQuantityDataGridViewTextBoxColumn.Width = 150;
             // 
             // parsedQuantityDataGridViewTextBoxColumn
             // 
             parsedQuantityDataGridViewTextBoxColumn.DataPropertyName = "ParsedQuantity";
             parsedQuantityDataGridViewTextBoxColumn.HeaderText = "解析数";
+            parsedQuantityDataGridViewTextBoxColumn.MinimumWidth = 8;
             parsedQuantityDataGridViewTextBoxColumn.Name = "parsedQuantityDataGridViewTextBoxColumn";
+            parsedQuantityDataGridViewTextBoxColumn.Width = 150;
             // 
             // jwCustomerDataIdDataGridViewTextBoxColumn
             // 
@@ -236,11 +255,13 @@
             jwCustomerDataIdDataGridViewTextBoxColumn.DataSource = jwCustomerDataBindingSource;
             jwCustomerDataIdDataGridViewTextBoxColumn.DisplayMember = "CompanyName";
             jwCustomerDataIdDataGridViewTextBoxColumn.HeaderText = "JwCustomerDataId";
+            jwCustomerDataIdDataGridViewTextBoxColumn.MinimumWidth = 8;
             jwCustomerDataIdDataGridViewTextBoxColumn.Name = "jwCustomerDataIdDataGridViewTextBoxColumn";
             jwCustomerDataIdDataGridViewTextBoxColumn.Resizable = DataGridViewTriState.True;
             jwCustomerDataIdDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.Automatic;
             jwCustomerDataIdDataGridViewTextBoxColumn.ValueMember = "Id";
             jwCustomerDataIdDataGridViewTextBoxColumn.Visible = false;
+            jwCustomerDataIdDataGridViewTextBoxColumn.Width = 150;
             // 
             // jwCustomerDataBindingSource
             // 
@@ -250,22 +271,28 @@
             // 
             jwCustomerDataDataGridViewTextBoxColumn.DataPropertyName = "JwCustomerData";
             jwCustomerDataDataGridViewTextBoxColumn.HeaderText = "JwCustomerData";
+            jwCustomerDataDataGridViewTextBoxColumn.MinimumWidth = 8;
             jwCustomerDataDataGridViewTextBoxColumn.Name = "jwCustomerDataDataGridViewTextBoxColumn";
             jwCustomerDataDataGridViewTextBoxColumn.Visible = false;
+            jwCustomerDataDataGridViewTextBoxColumn.Width = 150;
             // 
             // idDataGridViewTextBoxColumn
             // 
             idDataGridViewTextBoxColumn.DataPropertyName = "Id";
             idDataGridViewTextBoxColumn.HeaderText = "Id";
+            idDataGridViewTextBoxColumn.MinimumWidth = 8;
             idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
             idDataGridViewTextBoxColumn.ReadOnly = true;
             idDataGridViewTextBoxColumn.Visible = false;
+            idDataGridViewTextBoxColumn.Width = 150;
             // 
             // creationTimeDataGridViewTextBoxColumn
             // 
             creationTimeDataGridViewTextBoxColumn.DataPropertyName = "CreationTime";
             creationTimeDataGridViewTextBoxColumn.HeaderText = "作成時間";
+            creationTimeDataGridViewTextBoxColumn.MinimumWidth = 8;
             creationTimeDataGridViewTextBoxColumn.Name = "creationTimeDataGridViewTextBoxColumn";
+            creationTimeDataGridViewTextBoxColumn.Width = 150;
             // 
             // jwProjectMainDataBindingSource
             // 
@@ -314,6 +341,7 @@
             dataGridViewCellStyle4.SelectionForeColor = Color.White;
             dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
             uiDataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            uiDataGridView2.RowHeadersWidth = 62;
             dataGridViewCellStyle5.BackColor = Color.White;
             dataGridViewCellStyle5.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiDataGridView2.RowsDefaultCellStyle = dataGridViewCellStyle5;
@@ -331,85 +359,109 @@
             // 
             floorNameDataGridViewTextBoxColumn.DataPropertyName = "FloorName";
             floorNameDataGridViewTextBoxColumn.HeaderText = "階";
+            floorNameDataGridViewTextBoxColumn.MinimumWidth = 8;
             floorNameDataGridViewTextBoxColumn.Name = "floorNameDataGridViewTextBoxColumn";
             floorNameDataGridViewTextBoxColumn.ReadOnly = true;
+            floorNameDataGridViewTextBoxColumn.Width = 150;
             // 
             // biaochiDataGridViewTextBoxColumn1
             // 
             biaochiDataGridViewTextBoxColumn1.DataPropertyName = "Biaochi";
             biaochiDataGridViewTextBoxColumn1.HeaderText = "縮尺";
+            biaochiDataGridViewTextBoxColumn1.MinimumWidth = 8;
             biaochiDataGridViewTextBoxColumn1.Name = "biaochiDataGridViewTextBoxColumn1";
             biaochiDataGridViewTextBoxColumn1.ReadOnly = true;
+            biaochiDataGridViewTextBoxColumn1.Width = 150;
             // 
             // MarkBeam
             // 
             MarkBeam.DataPropertyName = "MarkBeam";
             MarkBeam.HeaderText = "符号";
+            MarkBeam.MinimumWidth = 8;
             MarkBeam.Name = "MarkBeam";
             MarkBeam.ReadOnly = true;
+            MarkBeam.Width = 150;
             // 
             // beamCountDataGridViewTextBoxColumn
             // 
             beamCountDataGridViewTextBoxColumn.DataPropertyName = "BeamCount";
             beamCountDataGridViewTextBoxColumn.HeaderText = "梁数";
+            beamCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             beamCountDataGridViewTextBoxColumn.Name = "beamCountDataGridViewTextBoxColumn";
             beamCountDataGridViewTextBoxColumn.ReadOnly = true;
+            beamCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // horizontalBeamsCountDataGridViewTextBoxColumn
             // 
             horizontalBeamsCountDataGridViewTextBoxColumn.DataPropertyName = "HorizontalBeamsCount";
             horizontalBeamsCountDataGridViewTextBoxColumn.HeaderText = "水平梁数";
+            horizontalBeamsCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             horizontalBeamsCountDataGridViewTextBoxColumn.Name = "horizontalBeamsCountDataGridViewTextBoxColumn";
             horizontalBeamsCountDataGridViewTextBoxColumn.ReadOnly = true;
+            horizontalBeamsCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // verticalBeamsCountDataGridViewTextBoxColumn
             // 
             verticalBeamsCountDataGridViewTextBoxColumn.DataPropertyName = "VerticalBeamsCount";
             verticalBeamsCountDataGridViewTextBoxColumn.HeaderText = "垂直梁数";
+            verticalBeamsCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             verticalBeamsCountDataGridViewTextBoxColumn.Name = "verticalBeamsCountDataGridViewTextBoxColumn";
             verticalBeamsCountDataGridViewTextBoxColumn.ReadOnly = true;
+            verticalBeamsCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // kPillarCountDataGridViewTextBoxColumn1
             // 
             kPillarCountDataGridViewTextBoxColumn1.DataPropertyName = "KPillarCount";
             kPillarCountDataGridViewTextBoxColumn1.HeaderText = "K";
+            kPillarCountDataGridViewTextBoxColumn1.MinimumWidth = 8;
             kPillarCountDataGridViewTextBoxColumn1.Name = "kPillarCountDataGridViewTextBoxColumn1";
             kPillarCountDataGridViewTextBoxColumn1.ReadOnly = true;
+            kPillarCountDataGridViewTextBoxColumn1.Width = 150;
             // 
             // singlePillarCountDataGridViewTextBoxColumn1
             // 
             singlePillarCountDataGridViewTextBoxColumn1.DataPropertyName = "SinglePillarCount";
             singlePillarCountDataGridViewTextBoxColumn1.HeaderText = "単柱";
+            singlePillarCountDataGridViewTextBoxColumn1.MinimumWidth = 8;
             singlePillarCountDataGridViewTextBoxColumn1.Name = "singlePillarCountDataGridViewTextBoxColumn1";
             singlePillarCountDataGridViewTextBoxColumn1.ReadOnly = true;
+            singlePillarCountDataGridViewTextBoxColumn1.Width = 150;
             // 
             // bCountDataGridViewTextBoxColumn1
             // 
             bCountDataGridViewTextBoxColumn1.DataPropertyName = "BCount";
             bCountDataGridViewTextBoxColumn1.HeaderText = "Ｂ金物";
+            bCountDataGridViewTextBoxColumn1.MinimumWidth = 8;
             bCountDataGridViewTextBoxColumn1.Name = "bCountDataGridViewTextBoxColumn1";
             bCountDataGridViewTextBoxColumn1.ReadOnly = true;
+            bCountDataGridViewTextBoxColumn1.Width = 150;
             // 
             // bGCountDataGridViewTextBoxColumn1
             // 
             bGCountDataGridViewTextBoxColumn1.DataPropertyName = "BGCount";
             bGCountDataGridViewTextBoxColumn1.HeaderText = "ＢＧ金物";
+            bGCountDataGridViewTextBoxColumn1.MinimumWidth = 8;
             bGCountDataGridViewTextBoxColumn1.Name = "bGCountDataGridViewTextBoxColumn1";
             bGCountDataGridViewTextBoxColumn1.ReadOnly = true;
+            bGCountDataGridViewTextBoxColumn1.Width = 150;
             // 
             // idDataGridViewTextBoxColumn1
             // 
             idDataGridViewTextBoxColumn1.DataPropertyName = "Id";
             idDataGridViewTextBoxColumn1.HeaderText = "Id";
+            idDataGridViewTextBoxColumn1.MinimumWidth = 8;
             idDataGridViewTextBoxColumn1.Name = "idDataGridViewTextBoxColumn1";
             idDataGridViewTextBoxColumn1.ReadOnly = true;
+            idDataGridViewTextBoxColumn1.Width = 150;
             // 
             // creationTimeDataGridViewTextBoxColumn1
             // 
             creationTimeDataGridViewTextBoxColumn1.DataPropertyName = "CreationTime";
             creationTimeDataGridViewTextBoxColumn1.HeaderText = "CreationTime";
+            creationTimeDataGridViewTextBoxColumn1.MinimumWidth = 8;
             creationTimeDataGridViewTextBoxColumn1.Name = "creationTimeDataGridViewTextBoxColumn1";
             creationTimeDataGridViewTextBoxColumn1.ReadOnly = true;
+            creationTimeDataGridViewTextBoxColumn1.Width = 150;
             // 
             // jwProjectSubDatasBindingSource
             // 
@@ -461,7 +513,6 @@
             uiSymbolButton1.Symbol = 61587;
             uiSymbolButton1.TabIndex = 1;
             uiSymbolButton1.Text = "アップロード";
-            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // uiSymbolButton2
@@ -474,19 +525,19 @@
             uiSymbolButton2.Symbol = 300043;
             uiSymbolButton2.TabIndex = 3;
             uiSymbolButton2.Text = "增";
-            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // contextMenuStrip1
             // 
+            contextMenuStrip1.ImageScalingSize = new Size(24, 24);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(169, 28);
+            contextMenuStrip1.Size = new Size(189, 34);
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(168, 24);
+            toolStripMenuItem1.Size = new Size(188, 30);
             toolStripMenuItem1.Text = "輸出梁設計図";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
@@ -514,6 +565,7 @@
             uiSymbolButton3.Symbol = 61587;
             uiSymbolButton3.TabIndex = 28;
             uiSymbolButton3.Text = "テストカラー";
+            uiSymbolButton3.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton3.Click += uiSymbolButton3_Click;
             // 
             // JwProjectMainPage
