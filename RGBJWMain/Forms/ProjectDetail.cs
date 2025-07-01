@@ -40,7 +40,7 @@ namespace RGBJWMain.Forms
                 if (_mainData.JwProjectSubDatas.Count>0)
                 {
                     
-                    AddPage(new ProjectOverview(), 1000);
+                    AddPage(new ProjectOverview(_mainData), 1000);
                     Aside.CreateNode("プロジェクト概要", 1000);
                     int pageIndex = 1001;
                     foreach (var item in _mainData.JwProjectSubDatas)

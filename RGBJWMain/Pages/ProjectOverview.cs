@@ -1,4 +1,5 @@
-﻿using Sunny.UI;
+﻿using JwCore;
+using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,24 @@ namespace RGBJWMain.Pages
         public ProjectOverview()
         {
             InitializeComponent();
+        }
+
+        private JwProjectMainData _projectMainData; 
+
+        public ProjectOverview(JwProjectMainData projectMainData)
+        {
+            InitializeComponent();
+            _projectMainData = projectMainData;
+            init();
+        }
+
+        private void init()
+        {
+            if (_projectMainData != null)
+            {
+                this.uiLine1.Text = _projectMainData.ProjectName;
+                this.uiMarkLabel2.Text=_projectMainData.JwProjectSubDatas.Count.ToString();
+            }
         }
     }
 }
