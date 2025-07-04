@@ -14,7 +14,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RGBJWMain.Forms
 {
-    public partial class ProjectDetail : UIAsideHeaderMainFrame
+    public partial class ProjectDetail : UIAsideMainFrame
     {
         public ProjectDetail()
         {
