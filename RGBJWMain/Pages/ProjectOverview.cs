@@ -1,6 +1,7 @@
 ﻿using JwCore;
 using JwData;
 using JwShapeCommon;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace RGBJWMain.Pages
             if (_projectMainData != null)
             {
                 //this.uiLine1.Text = _projectMainData.ProjectName;
-                this.Text =string.Format("{0} -プロジェクトの詳細", _projectMainData.ProjectName);
+                this.Text = string.Format("{0} -プロジェクトの詳細", _projectMainData.ProjectName);
                 this.uiMarkLabel2.Text = _projectMainData.JwProjectSubDatas.Count.ToString();
             }
         }
@@ -49,7 +50,8 @@ namespace RGBJWMain.Pages
         /// <param name="e"></param>
         private void uiSymbolButton1_Click(object sender, EventArgs e)
         {
-            if (_projectMainData != null) {
+            if (_projectMainData != null)
+            {
                 SaveBeams(_projectMainData);
             }
         }
@@ -182,5 +184,47 @@ namespace RGBJWMain.Pages
                 }
             }
         }
+
+        private void ProjectOverview_Load(object sender, EventArgs e)
+        {
+            if (_projectMainData!=null)
+            {
+                this.jwProjectSubDataBindingSource.DataSource = _projectMainData.JwProjectSubDatas;
+                //this.jwBeamDatasBindingSource.DataSource = _projectMainData.JwProjectSubDatas;
+                ObservableCollectionListSource<JwBeamData> beamDatas = new ObservableCollectionListSource<JwBeamData>();
+                ObservableCollectionListSource<JwPillarData> pillarDatas = new ObservableCollectionListSource<JwPillarData>();
+                ObservableCollectionListSource<JwLinkPartData> linkDatas = new ObservableCollectionListSource<JwLinkPartData>();
+                foreach (var sub in _projectMainData.JwProjectSubDatas)
+                {
+                    if (sub.JwBeamDatas != null && sub.JwBeamDatas.Count > 0)
+                    {
+                        foreach (var bd in sub.JwBeamDatas)
+                        {
+                            beamDatas.Add(bd);
+                        }
+                    }
+                    if (sub.JwPillarDatas != null && sub.JwPillarDatas.Count > 0)
+                    {
+                        foreach (var pd in sub.JwPillarDatas)
+                        {
+                            pillarDatas.Add(pd);
+                        }
+                    }
+                    if (sub.JwLinkPartDatas != null && sub.JwLinkPartDatas.Count > 0)
+                    {
+                        foreach (var ld in sub.JwLinkPartDatas)
+                        {
+                            linkDatas.Add(ld);
+                        }
+                    }
+                }
+                this.jwBeamDatasBindingSource.DataSource= beamDatas;
+                this.jwPillarDatasBindingSource.DataSource = pillarDatas;
+                this.jwLianjieDatasBindingSource.DataSource = linkDatas;
+                //this.uiDataGridView4.DataSource = beamDatas;
+            }
+        }
+
+
     }
 }
