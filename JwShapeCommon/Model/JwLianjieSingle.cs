@@ -52,7 +52,7 @@ namespace JwShapeCommon.Model
             lianjieData.Id=Guid.NewGuid().ToString();
             // = 12;
             var dl = JwExtend.Distance(Start.RealPoint, End.RealPoint)*JwFileConsts.JwScale;
-            lianjieData.Length = (decimal)Math.Round(dl, 0);
+            lianjieData.Length = Math.Round(dl, 0);
 
             return lianjieData;
         }
@@ -67,7 +67,7 @@ namespace JwShapeCommon.Model
         /// <summary>
         /// 实际的长度单位mM
         /// </summary>
-        public decimal Length { get; set; }
+        public double Length { get; set; }
 
         public string ProjectSubName { get; set; }
 

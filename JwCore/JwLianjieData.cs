@@ -17,7 +17,7 @@ namespace JwCore
         /// <summary>
         /// 实际的长度单位mM
         /// </summary>
-        public decimal Length { get; set; }
+        public double Length { get; set; }
 
         public string ProjectSubName { get; set; }
 
@@ -25,5 +25,14 @@ namespace JwCore
         public string JwProjectSubDataId { get; set; }
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
     }
+
+    //public class JwLianjieGroupData
+    //{
+    //    public decimal Length { get; set; }
+
+    //    public int Num { get; set; }
+
+    //    public string ProjectSubName { get; set; }
+    //}
 
 }
