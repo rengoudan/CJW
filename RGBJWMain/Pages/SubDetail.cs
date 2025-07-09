@@ -84,9 +84,6 @@ namespace RGBJWMain.Pages
 
         private void ExcelExporter(JwBudgetMainData mainData)
         {
-
-           
-
             var materdatas = dbContext.JwMaterialDatas.Include(t => t.JwMaterialTypeData).ToList();
             FileStream file = new FileStream(@"lianjietemplate.xlsx", FileMode.Open, FileAccess.Read);
             XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
@@ -131,10 +128,6 @@ namespace RGBJWMain.Pages
                     onerow.GetCell(11).SetCellValue(alllength.ToString());
 
                     var zl = Math.Round(alllength / 1000 * 1.15, 0);
-
-
-
-
                 }
             }
             foreach (var z in subss)

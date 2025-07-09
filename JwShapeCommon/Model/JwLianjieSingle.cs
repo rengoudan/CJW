@@ -105,7 +105,7 @@ namespace JwShapeCommon.Model
         public JwPointBeam(JWPoint point,JwTouch touch,bool istart, ZhengfuType direct)
         {
             this.Touch = touch;
-            this.LianjieType=touch.WinnerBeam.DirectionType;
+            this.LianjieType=touch.WinnerBeam.DirectionType;    
             this.IsStart=istart;
             this.IsEnd=!istart;
             NearPoint = point;
