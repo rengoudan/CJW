@@ -12,8 +12,8 @@ using NetTopologySuite.Geometries;
 namespace JwData.Migrations
 {
     [DbContext(typeof(JwDataContext))]
-    [Migration("20250628072856_lianjie-add")]
-    partial class lianjieadd
+    [Migration("20250710075415_changgelianjn")]
+    partial class changgelianjn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -383,8 +383,8 @@ namespace JwData.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Length")
-                        .HasColumnType("TEXT");
+                    b.Property<double>("Length")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("ProjectSubName")
                         .IsRequired()

@@ -5,7 +5,7 @@ using NetTopologySuite.Geometries;
 
 namespace JwData.Migrations
 {
-    public partial class lianjieadd : Migration
+    public partial class changgelianjn : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace JwData.Migrations
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     Start = table.Column<Point>(type: "POINT", nullable: false),
                     End = table.Column<Point>(type: "POINT", nullable: false),
-                    Length = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Length = table.Column<double>(type: "REAL", nullable: false),
                     ProjectSubName = table.Column<string>(type: "TEXT", nullable: false),
                     JwProjectSubDataId = table.Column<string>(type: "TEXT", nullable: false)
                 },
