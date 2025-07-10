@@ -122,6 +122,7 @@
             // 
             // uiDataGridView1
             // 
+            uiDataGridView1.AllowUserToAddRows = false;
             dataGridViewCellStyle6.BackColor = Color.FromArgb(235, 243, 255);
             uiDataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             uiDataGridView1.AutoGenerateColumns = false;
@@ -154,6 +155,7 @@
             uiDataGridView1.Location = new Point(0, 0);
             uiDataGridView1.MultiSelect = false;
             uiDataGridView1.Name = "uiDataGridView1";
+            uiDataGridView1.ReadOnly = true;
             dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle9.BackColor = Color.FromArgb(235, 243, 255);
             dataGridViewCellStyle9.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
@@ -183,6 +185,7 @@
             projectNameDataGridViewTextBoxColumn.HeaderText = "工事名";
             projectNameDataGridViewTextBoxColumn.MinimumWidth = 8;
             projectNameDataGridViewTextBoxColumn.Name = "projectNameDataGridViewTextBoxColumn";
+            projectNameDataGridViewTextBoxColumn.ReadOnly = true;
             projectNameDataGridViewTextBoxColumn.Width = 180;
             // 
             // biaochiDataGridViewTextBoxColumn
@@ -191,6 +194,7 @@
             biaochiDataGridViewTextBoxColumn.HeaderText = "縮尺";
             biaochiDataGridViewTextBoxColumn.MinimumWidth = 8;
             biaochiDataGridViewTextBoxColumn.Name = "biaochiDataGridViewTextBoxColumn";
+            biaochiDataGridViewTextBoxColumn.ReadOnly = true;
             biaochiDataGridViewTextBoxColumn.Width = 150;
             // 
             // beamsNumberDataGridViewTextBoxColumn
@@ -199,6 +203,7 @@
             beamsNumberDataGridViewTextBoxColumn.HeaderText = "梁数";
             beamsNumberDataGridViewTextBoxColumn.MinimumWidth = 8;
             beamsNumberDataGridViewTextBoxColumn.Name = "beamsNumberDataGridViewTextBoxColumn";
+            beamsNumberDataGridViewTextBoxColumn.ReadOnly = true;
             beamsNumberDataGridViewTextBoxColumn.Width = 150;
             // 
             // kPillarCountDataGridViewTextBoxColumn
@@ -207,6 +212,7 @@
             kPillarCountDataGridViewTextBoxColumn.HeaderText = "K 柱 トータル";
             kPillarCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             kPillarCountDataGridViewTextBoxColumn.Name = "kPillarCountDataGridViewTextBoxColumn";
+            kPillarCountDataGridViewTextBoxColumn.ReadOnly = true;
             kPillarCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // singlePillarCountDataGridViewTextBoxColumn
@@ -215,6 +221,7 @@
             singlePillarCountDataGridViewTextBoxColumn.HeaderText = "単柱";
             singlePillarCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             singlePillarCountDataGridViewTextBoxColumn.Name = "singlePillarCountDataGridViewTextBoxColumn";
+            singlePillarCountDataGridViewTextBoxColumn.ReadOnly = true;
             singlePillarCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // bCountDataGridViewTextBoxColumn
@@ -223,6 +230,7 @@
             bCountDataGridViewTextBoxColumn.HeaderText = "B";
             bCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             bCountDataGridViewTextBoxColumn.Name = "bCountDataGridViewTextBoxColumn";
+            bCountDataGridViewTextBoxColumn.ReadOnly = true;
             bCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // bGCountDataGridViewTextBoxColumn
@@ -231,6 +239,7 @@
             bGCountDataGridViewTextBoxColumn.HeaderText = "BG";
             bGCountDataGridViewTextBoxColumn.MinimumWidth = 8;
             bGCountDataGridViewTextBoxColumn.Name = "bGCountDataGridViewTextBoxColumn";
+            bGCountDataGridViewTextBoxColumn.ReadOnly = true;
             bGCountDataGridViewTextBoxColumn.Width = 150;
             // 
             // floorQuantityDataGridViewTextBoxColumn
@@ -239,6 +248,7 @@
             floorQuantityDataGridViewTextBoxColumn.HeaderText = "階数";
             floorQuantityDataGridViewTextBoxColumn.MinimumWidth = 8;
             floorQuantityDataGridViewTextBoxColumn.Name = "floorQuantityDataGridViewTextBoxColumn";
+            floorQuantityDataGridViewTextBoxColumn.ReadOnly = true;
             floorQuantityDataGridViewTextBoxColumn.Width = 150;
             // 
             // parsedQuantityDataGridViewTextBoxColumn
@@ -247,6 +257,7 @@
             parsedQuantityDataGridViewTextBoxColumn.HeaderText = "解析数";
             parsedQuantityDataGridViewTextBoxColumn.MinimumWidth = 8;
             parsedQuantityDataGridViewTextBoxColumn.Name = "parsedQuantityDataGridViewTextBoxColumn";
+            parsedQuantityDataGridViewTextBoxColumn.ReadOnly = true;
             parsedQuantityDataGridViewTextBoxColumn.Width = 150;
             // 
             // jwCustomerDataIdDataGridViewTextBoxColumn
@@ -257,6 +268,7 @@
             jwCustomerDataIdDataGridViewTextBoxColumn.HeaderText = "JwCustomerDataId";
             jwCustomerDataIdDataGridViewTextBoxColumn.MinimumWidth = 8;
             jwCustomerDataIdDataGridViewTextBoxColumn.Name = "jwCustomerDataIdDataGridViewTextBoxColumn";
+            jwCustomerDataIdDataGridViewTextBoxColumn.ReadOnly = true;
             jwCustomerDataIdDataGridViewTextBoxColumn.Resizable = DataGridViewTriState.True;
             jwCustomerDataIdDataGridViewTextBoxColumn.SortMode = DataGridViewColumnSortMode.Automatic;
             jwCustomerDataIdDataGridViewTextBoxColumn.ValueMember = "Id";
@@ -273,6 +285,7 @@
             jwCustomerDataDataGridViewTextBoxColumn.HeaderText = "JwCustomerData";
             jwCustomerDataDataGridViewTextBoxColumn.MinimumWidth = 8;
             jwCustomerDataDataGridViewTextBoxColumn.Name = "jwCustomerDataDataGridViewTextBoxColumn";
+            jwCustomerDataDataGridViewTextBoxColumn.ReadOnly = true;
             jwCustomerDataDataGridViewTextBoxColumn.Visible = false;
             jwCustomerDataDataGridViewTextBoxColumn.Width = 150;
             // 
@@ -292,6 +305,7 @@
             creationTimeDataGridViewTextBoxColumn.HeaderText = "作成時間";
             creationTimeDataGridViewTextBoxColumn.MinimumWidth = 8;
             creationTimeDataGridViewTextBoxColumn.Name = "creationTimeDataGridViewTextBoxColumn";
+            creationTimeDataGridViewTextBoxColumn.ReadOnly = true;
             creationTimeDataGridViewTextBoxColumn.Width = 150;
             // 
             // jwProjectMainDataBindingSource
@@ -513,6 +527,7 @@
             uiSymbolButton1.Symbol = 61587;
             uiSymbolButton1.TabIndex = 1;
             uiSymbolButton1.Text = "アップロード";
+            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // uiSymbolButton2
@@ -525,6 +540,7 @@
             uiSymbolButton2.Symbol = 300043;
             uiSymbolButton2.TabIndex = 3;
             uiSymbolButton2.Text = "增";
+            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // contextMenuStrip1
@@ -565,7 +581,6 @@
             uiSymbolButton3.Symbol = 61587;
             uiSymbolButton3.TabIndex = 28;
             uiSymbolButton3.Text = "テストカラー";
-            uiSymbolButton3.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton3.Click += uiSymbolButton3_Click;
             // 
             // JwProjectMainPage

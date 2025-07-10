@@ -315,6 +315,7 @@
             uiSymbolButton3.Symbol = 563560;
             uiSymbolButton3.TabIndex = 2;
             uiSymbolButton3.Text = "増加";
+            uiSymbolButton3.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton3.Click += uiSymbolButton3_Click;
             // 
             // uiSymbolButton2
@@ -327,6 +328,7 @@
             uiSymbolButton2.Symbol = 61891;
             uiSymbolButton2.TabIndex = 1;
             uiSymbolButton2.Text = "輸出リンクEXCEL";
+            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // uiSymbolButton1
@@ -339,6 +341,7 @@
             uiSymbolButton1.Symbol = 358486;
             uiSymbolButton1.TabIndex = 0;
             uiSymbolButton1.Text = "輸出全て梁";
+            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // panel1
@@ -379,7 +382,6 @@
             uiTabControl1.SizeMode = TabSizeMode.Fixed;
             uiTabControl1.TabIndex = 0;
             uiTabControl1.TabUnSelectedForeColor = Color.FromArgb(240, 240, 240);
-            uiTabControl1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             // 
             // tabPage5
             // 

@@ -49,7 +49,7 @@ namespace JwShapeCommon.Model
             
             lianjieData.Start=new Point(Start.RealPoint.X, Start.RealPoint.Y);
             lianjieData.End = new Point(End.RealPoint.X, End.RealPoint.Y);
-            lianjieData.Id=Guid.NewGuid().ToString();
+            //lianjieData.Id=Guid.NewGuid().ToString();
             // = 12;
             var dl = JwExtend.Distance(Start.RealPoint, End.RealPoint)*JwFileConsts.JwScale;
             lianjieData.Length = Math.Round(dl, 0);

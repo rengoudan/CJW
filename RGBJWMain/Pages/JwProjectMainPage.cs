@@ -951,7 +951,7 @@ namespace RGBJWMain.Pages
         {
             if (e.RowIndex > -1)
             {
-                if (!uiDataGridView2.Rows[e.RowIndex].IsNewRow)
+                if (!uiDataGridView1.Rows[e.RowIndex].IsNewRow)
                 {
                     var z = uiDataGridView1.Rows[e.RowIndex].DataBoundItem as JwProjectMainData;
                     this.dbContext.Entry(z).Collection(e => e.JwProjectSubDatas).Load();

@@ -220,7 +220,7 @@ namespace RGBJWMain.Forms
                     {
                         foreach(var jlj in _jwFileHandle._lianjieDatas)
                         {
-                            //dbContext?.JwLianjieDatas.Add(jlj);
+                            dbContext?.JwLianjieDatas.Add(jlj);
                         }
                     }
                     var md = dbContext.JwProjectMainDatas.Find(jwProjectPathModel.MainData.Id);

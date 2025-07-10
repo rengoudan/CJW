@@ -7,8 +7,22 @@ using System.Threading.Tasks;
 
 namespace JwCore
 {
-    public class JwLianjieData
+    public class JwLianjieData: IHasCreateFrom
     {
+        public JwLianjieData()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
+        public JwLianjieData(bool f)
+        {
+            Id = Guid.NewGuid().ToString();
+            Start = new Point(0, 0);
+            End = new Point(0, 0);
+            //Length = 0;
+            //ProjectSubName = string.Empty;
+            //JwProjectSubDataId = string.Empty;
+        }
 
         public Point Start { get; set; }
 
@@ -24,6 +38,7 @@ namespace JwCore
         public string Id { get; set; }
         public string JwProjectSubDataId { get; set; }
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
+        public CreateFromType CreateFrom { get; set; }
     }
 
     //public class JwLianjieGroupData

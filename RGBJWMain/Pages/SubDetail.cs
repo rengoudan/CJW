@@ -68,7 +68,52 @@ namespace RGBJWMain.Pages
         /// <param name="e"></param>
         private void uiSymbolButton2_Click(object sender, EventArgs e)
         {
+            UIEditOption option = new UIEditOption();
+            option.AutoLabelWidth = true;
+            option.Text = "認識されません。手動で追加してください";
+            option.AddDouble("Length", "長さ", 0, true);
+            
+            UIEditForm frm = new UIEditForm(option);
+            frm.Render();
+            frm.CheckedData += Frm_CheckedData;//校验
+            frm.ShowDialog();
+            if (frm.IsOK)
+            {
+                JwLianjieData lianjieData = new JwLianjieData(true);
+                lianjieData.Length = Convert.ToDouble(frm["Length"].ToString());
+                lianjieData.JwProjectSubDataId = _subData.Id;
+                lianjieData.ProjectSubName = _subData.FloorName;
+                lianjieData.CreateFrom = CreateFromType.ManuallyAdd;
+                //lianjieData.Id = Guid.NewGuid().ToString();
+                
+                this.dbContext.JwLianjieDatas.Add(lianjieData);
+                this.dbContext.SaveChanges();
+            }
+        }
 
+        private bool Frm_CheckedData(object sender, UIEditForm.EditFormEventArgs e)
+        {
+            var dl=Convert.ToDouble(e.Form["Length"]);
+            if(dl <= 0)
+            {
+                e.Form.SetEditorFocus("Length");
+                ShowWarningTip("長さはゼロ以下にすることはできません");
+                return false;
+            }
+            //if (string.IsNullOrEmpty(e.Form["Length"].ToString()))
+            //{
+            //    e.Form.SetEditorFocus("ProjectName");
+            //    ShowWarningTip("プロジェクトを空にすることはできません");
+            //    return false;
+            //}
+            //if (Convert.ToDouble(e.Form["UnitPrice"]) == 0)
+            //{
+            //    e.Form.SetEditorFocus("単価");
+            //    ShowWarningTip("単価をゼロにすることはできません");
+            //    return false;
+            //}
+
+            return true;
         }
 
         /// <summary>
