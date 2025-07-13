@@ -9,6 +9,7 @@ namespace JwShapeCommon
 {
     public class ControlLine
     {
+        public string Id { get; set; }
         public JWPoint Start { get; set; }
 
         public PointF DrawStart { get; set; }
@@ -28,6 +29,8 @@ namespace JwShapeCommon
         public bool IsXX { get; set; }
 
         public bool IsBeaml { get; set; }
+
+        public bool IsSelected { get; set; }
 
         //public DashStyle DashStyle { get; set; }
     }

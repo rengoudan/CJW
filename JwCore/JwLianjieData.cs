@@ -11,7 +11,7 @@ namespace JwCore
     {
         public JwLianjieData()
         {
-            Id = Guid.NewGuid().ToString();
+            //Id = Guid.NewGuid().ToString();
         }
 
         public JwLianjieData(bool f)

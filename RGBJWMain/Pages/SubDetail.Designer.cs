@@ -213,7 +213,6 @@
             uiTabControl1.SizeMode = TabSizeMode.Fixed;
             uiTabControl1.TabIndex = 0;
             uiTabControl1.TabUnSelectedForeColor = Color.FromArgb(240, 240, 240);
-            uiTabControl1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             // 
             // tabPage1
             // 
@@ -539,7 +538,7 @@
             tabPage2.Controls.Add(uiDataGridView3);
             tabPage2.Location = new Point(0, 40);
             tabPage2.Name = "tabPage2";
-            tabPage2.Size = new Size(1704, 341);
+            tabPage2.Size = new Size(200, 60);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "柱";
             tabPage2.UseVisualStyleBackColor = true;
@@ -591,7 +590,7 @@
             uiDataGridView3.RowsDefaultCellStyle = dataGridViewCellStyle10;
             uiDataGridView3.RowTemplate.Height = 32;
             uiDataGridView3.SelectedIndex = -1;
-            uiDataGridView3.Size = new Size(1704, 341);
+            uiDataGridView3.Size = new Size(200, 60);
             uiDataGridView3.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView3.TabIndex = 0;
             // 
@@ -781,7 +780,7 @@
             tabPage3.Controls.Add(uiDataGridView4);
             tabPage3.Location = new Point(0, 40);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(200, 60);
+            tabPage3.Size = new Size(1704, 341);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "金物";
             tabPage3.UseVisualStyleBackColor = true;
@@ -834,7 +833,7 @@
             uiDataGridView4.RowsDefaultCellStyle = dataGridViewCellStyle15;
             uiDataGridView4.RowTemplate.Height = 32;
             uiDataGridView4.SelectedIndex = -1;
-            uiDataGridView4.Size = new Size(200, 60);
+            uiDataGridView4.Size = new Size(1704, 341);
             uiDataGridView4.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView4.TabIndex = 0;
             // 
@@ -1037,6 +1036,7 @@
             uiDataGridView1.Size = new Size(200, 6);
             uiDataGridView1.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView1.TabIndex = 1;
+            uiDataGridView1.CellClick += uiDataGridView1_CellClick;
             // 
             // startDataGridViewTextBoxColumn
             // 
@@ -1135,7 +1135,6 @@
             uiSymbolButton2.Symbol = 557669;
             uiSymbolButton2.TabIndex = 2;
             uiSymbolButton2.Text = "手動増加";
-            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // uiSymbolButton1
@@ -1148,7 +1147,6 @@
             uiSymbolButton1.Symbol = 61891;
             uiSymbolButton1.TabIndex = 1;
             uiSymbolButton1.Text = "輸出";
-            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // panel2

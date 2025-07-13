@@ -84,6 +84,8 @@ namespace JwShapeCommon
         public string Id { get; set; }
 
         public DrawShapeType DrawShapeType { get; set; }
+
+        public bool IsLianjie { get; set; }
     }
 
     public class OperateLogArgs : EventArgs

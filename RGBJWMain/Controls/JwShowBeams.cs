@@ -27,25 +27,57 @@ namespace RGBJWMain.Controls
         
         private void controlSelectedEvent(object sender, ControlSelectedSquareArgs e)
         {
-            if(HasCreated&&_bounds!=null)
+            if (e.IsLianjie)
             {
-                if(_bounds.Count(t=>t.ShapeType==e.DrawShapeType) > 0)
+                if(CanvasDraw != null && CanvasDraw.LianjieLines != null)
                 {
-                    var fwlst=_bounds.Where(t=>t.ShapeType==e.DrawShapeType).ToList();
-                    foreach(var t in fwlst)
+                    var lianjies = CanvasDraw.LianjieLines;
+                    if (lianjies.Count > 0)
                     {
-                        if (t.JwSquareBase.Id == e.Id&&t.IsSelected)
+                        foreach (var lj in lianjies)
                         {
-                            
-                        }
-                        else
-                        {
-                            t.IsSelected = false;
-                            if (t.JwSquareBase.Id==e.Id)
+                            if(lj.Id == e.Id&&lj.IsSelected)
                             {
-                                t.IsSelected = true;
+                                
                             }
-                            Invalidate();
+                            else
+                            {
+                                lj.IsSelected = false;
+                                if (lj.Id==e.Id)
+                                {
+                                    lj.IsSelected = true;
+                                }
+                                Invalidate();
+                            }
+                        }
+                        //Invalidate();
+                    }
+                    
+                }
+                
+            }
+            else
+            {
+                if (HasCreated && _bounds != null)
+                {
+                    if (_bounds.Count(t => t.ShapeType == e.DrawShapeType) > 0)
+                    {
+                        var fwlst = _bounds.Where(t => t.ShapeType == e.DrawShapeType).ToList();
+                        foreach (var t in fwlst)
+                        {
+                            if (t.JwSquareBase.Id == e.Id && t.IsSelected)
+                            {
+
+                            }
+                            else
+                            {
+                                t.IsSelected = false;
+                                if (t.JwSquareBase.Id == e.Id)
+                                {
+                                    t.IsSelected = true;
+                                }
+                                Invalidate();
+                            }
                         }
                     }
                 }
@@ -190,6 +222,8 @@ namespace RGBJWMain.Controls
         Pen penx = new Pen(new SolidBrush(Color.Gray), 0.5f);//线条的粗细
 
         Pen penlj = new Pen(new SolidBrush(Color.Purple), 0.5f);//线条的粗细
+
+        Pen penljselected = new Pen(new SolidBrush(Color.White), 1f);//线条的粗细
 
         Pen penjt = new Pen(new SolidBrush(Color.Green), 0.5f);//线条的粗细
 
@@ -358,7 +392,14 @@ namespace RGBJWMain.Controls
                 {
                     foreach(var ljl in CanvasDraw.LianjieLines)
                     {
-                        pe.Graphics.DrawLine(penlj, ljl.DrawStart, ljl.DrawEnd);
+                        if (ljl.IsSelected)
+                        {
+                                pe.Graphics.DrawLine(penljselected, ljl.DrawStart, ljl.DrawEnd);
+                        }
+                        else
+                        {
+                            pe.Graphics.DrawLine(penlj, ljl.DrawStart, ljl.DrawEnd);
+                        }
                     }
                 }
                 

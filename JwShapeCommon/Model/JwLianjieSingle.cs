@@ -15,11 +15,12 @@ namespace JwShapeCommon.Model
     /// </summary>
     public class JwLianjieSingle
     {
+        public string Id { get; set; }
         public JwXian Xian { get; set; }
 
         public JwLianjieSingle()
         {
-
+            Id= Guid.NewGuid().ToString();
         }
 
         public JwLianjieSingle(JwXian jwXian)
@@ -46,7 +47,7 @@ namespace JwShapeCommon.Model
         public JwLianjieData ToDbData()
         {
             JwLianjieData lianjieData = new JwLianjieData();
-            
+            lianjieData.Id = Id;
             lianjieData.Start=new Point(Start.RealPoint.X, Start.RealPoint.Y);
             lianjieData.End = new Point(End.RealPoint.X, End.RealPoint.Y);
             //lianjieData.Id=Guid.NewGuid().ToString();

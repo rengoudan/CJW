@@ -122,6 +122,7 @@ namespace JwShapeCommon
                         JWPoint jpstart = new JWPoint(zlianjie.Start.RealPoint.X, zlianjie.Start.RealPoint.Y);
                         jpstart.Zoom(_minbeilv);
                         jpstart.ChangeAxis(axisX,axisY);
+                        cline.Id = zlianjie.Id;
                         cline.DrawStart= jpstart.ToPointF();
                         JWPoint jpend = new JWPoint(zlianjie.End.RealPoint.X, zlianjie.End.RealPoint.Y);
                         jpend.Zoom(_minbeilv);
@@ -142,6 +143,7 @@ namespace JwShapeCommon
                             JWPoint jpstart = new JWPoint(jlj.Start.X, jlj.Start.Y);
                             jpstart.Zoom(_minbeilv);
                             jpstart.ChangeAxis(axisX, axisY);
+                            cline.Id = jlj.Id;
                             cline.DrawStart = jpstart.ToPointF();
                             JWPoint jpend = new JWPoint(jlj.End.X, jlj.End.Y);
                             jpend.Zoom(_minbeilv);

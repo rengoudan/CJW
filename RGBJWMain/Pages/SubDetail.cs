@@ -72,7 +72,7 @@ namespace RGBJWMain.Pages
             option.AutoLabelWidth = true;
             option.Text = "認識されません。手動で追加してください";
             option.AddDouble("Length", "長さ", 0, true);
-            
+
             UIEditForm frm = new UIEditForm(option);
             frm.Render();
             frm.CheckedData += Frm_CheckedData;//校验
@@ -85,7 +85,7 @@ namespace RGBJWMain.Pages
                 lianjieData.ProjectSubName = _subData.FloorName;
                 lianjieData.CreateFrom = CreateFromType.ManuallyAdd;
                 //lianjieData.Id = Guid.NewGuid().ToString();
-                
+
                 this.dbContext.JwLianjieDatas.Add(lianjieData);
                 this.dbContext.SaveChanges();
             }
@@ -93,8 +93,8 @@ namespace RGBJWMain.Pages
 
         private bool Frm_CheckedData(object sender, UIEditForm.EditFormEventArgs e)
         {
-            var dl=Convert.ToDouble(e.Form["Length"]);
-            if(dl <= 0)
+            var dl = Convert.ToDouble(e.Form["Length"]);
+            if (dl <= 0)
             {
                 e.Form.SetEditorFocus("Length");
                 ShowWarningTip("長さはゼロ以下にすることはできません");
@@ -123,11 +123,11 @@ namespace RGBJWMain.Pages
         /// <param name="e"></param>
         private void uiSymbolButton1_Click(object sender, EventArgs e)
         {
-
+            ExcelExporter();
         }
 
 
-        private void ExcelExporter(JwBudgetMainData mainData)
+        private void ExcelExporter()
         {
             var materdatas = dbContext.JwMaterialDatas.Include(t => t.JwMaterialTypeData).ToList();
             FileStream file = new FileStream(@"lianjietemplate.xlsx", FileMode.Open, FileAccess.Read);
@@ -140,11 +140,11 @@ namespace RGBJWMain.Pages
             //create a entry of SummaryInformation
             SummaryInformation si = PropertySetFactory.CreateSummaryInformation();
             si.Subject = "Quotation";
-            string filename = string.Format("{0}.xlsx", mainData.ProjectName);
+            string filename = string.Format("{0}.xlsx", _subData.FloorName);
             //FileDto files = new FileDto(filename, MimeTypeNames.ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet);
             //var workbook = new XSSFWorkbook();
             int i = 1;
-            var subss = mainData.JwBudgetSubDatas.OrderBy(t => t.MaterialType).ToList();
+            //var subss = mainData.JwBudgetSubDatas.OrderBy(t => t.MaterialType).ToList();
             if (_subData != null)
             {
                 if (_subData.JwLianjieDatas.Count > 0)
@@ -166,6 +166,7 @@ namespace RGBJWMain.Pages
                         c.GetCell(8).SetCellValue(alslc.ToString());
                         alllength = alllength + alslc;
                         allnum += sl;
+                        i++;
                     }
 
                     IRow onerow = XSSFSheet.GetRow(8);
@@ -173,100 +174,156 @@ namespace RGBJWMain.Pages
                     onerow.GetCell(11).SetCellValue(alllength.ToString());
 
                     var zl = Math.Round(alllength / 1000 * 1.15, 0);
-                }
-            }
-            foreach (var z in subss)
-            {
-                IRow c = XSSFSheet.CopyRow(10, 10 + i);
-                if (z.MaterialType == MaterialType.柱)
-                {
-                    var tdata = materdatas.Find(t => t.Id == z.JwMaterialDataId);
-                    if (tdata != null)
-                    {
-                        c.GetCell(0).SetCellValue(tdata.JwMaterialTypeData.MaterialTypeName);
-                    }
+                    IRow c1 = XSSFSheet.CopyRow(8, 8 + i+1);
+                    c1.GetCell(11).SetCellValue(zl.ToString());
 
-                    c.GetCell(1).SetCellValue(z.BudgetItemName);
                 }
-                else
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
+                saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", "-", _subData.FloorName);
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (!string.IsNullOrEmpty(z.BudgetItemName))
+                    using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
                     {
-                        c.GetCell(0).SetCellValue(z.BudgetItemName);
-                        XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(10 + i, 10 + i, 0, 3));
+                        hssfworkbook.Write(stream);
+                        //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
                     }
                 }
-
-                if (!string.IsNullOrEmpty(z.ModelParm))
-                {
-                    c.GetCell(4).SetCellValue(z.ModelParm);
-                }
-                if (!string.IsNullOrEmpty(z.Number.ToString()))
-                {
-                    c.GetCell(6).SetCellValue(z.Number.ToString());
-                }
-                if (!string.IsNullOrEmpty(z.UnitName))
-                {
-                    c.GetCell(8).SetCellValue(z.UnitName);
-                }
-                if (!string.IsNullOrEmpty(z.UnitPrice.ToString()))
-                {
-                    c.GetCell(9).SetCellValue(z.UnitPrice.ToString());
-                }
-                c.GetCell(10).SetCellValue(z.Amount.ToString());
-                i++;
+                UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
             }
-            ICell cc = XSSFSheet.GetRow(0).GetCell(0);
-            string yu = cc.StringCellValue;
-            cc.SetCellValue(yu + mainData.ProjectName);
-            //15
-            ICell cdate = XSSFSheet.GetRow(1).GetCell(14);
-            cdate.SetCellType(CellType.String);
-            cdate.SetCellValue(mainData.CreationTime.ToShortDateString());
+            //foreach (var z in subss)
+            //{
+            //    IRow c = XSSFSheet.CopyRow(10, 10 + i);
+            //    if (z.MaterialType == MaterialType.柱)
+            //    {
+            //        var tdata = materdatas.Find(t => t.Id == z.JwMaterialDataId);
+            //        if (tdata != null)
+            //        {
+            //            c.GetCell(0).SetCellValue(tdata.JwMaterialTypeData.MaterialTypeName);
+            //        }
 
-            IRow xiaoji = XSSFSheet.CopyRow(10, 10 + i);
+            //        c.GetCell(1).SetCellValue(z.BudgetItemName);
+            //    }
+            //    else
+            //    {
+            //        if (!string.IsNullOrEmpty(z.BudgetItemName))
+            //        {
+            //            c.GetCell(0).SetCellValue(z.BudgetItemName);
+            //            XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(10 + i, 10 + i, 0, 3));
+            //        }
+            //    }
 
-            xiaoji.GetCell(0).SetCellValue("小  計");
-            XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(10 + i, 10 + i, 0, 3));
-            double hj = Convert.ToDouble(mainData.JwBudgetSubDatas.Sum(t => t.Amount));
-            xiaoji.GetCell(10).SetCellValue(hj);
-            IRow heji = XSSFSheet.CopyRow(10, 11 + i);
-            heji.GetCell(0).SetCellValue("合  計");
-            XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(11 + i, 11 + i, 0, 3));
+            //    if (!string.IsNullOrEmpty(z.ModelParm))
+            //    {
+            //        c.GetCell(4).SetCellValue(z.ModelParm);
+            //    }
+            //    if (!string.IsNullOrEmpty(z.Number.ToString()))
+            //    {
+            //        c.GetCell(6).SetCellValue(z.Number.ToString());
+            //    }
+            //    if (!string.IsNullOrEmpty(z.UnitName))
+            //    {
+            //        c.GetCell(8).SetCellValue(z.UnitName);
+            //    }
+            //    if (!string.IsNullOrEmpty(z.UnitPrice.ToString()))
+            //    {
+            //        c.GetCell(9).SetCellValue(z.UnitPrice.ToString());
+            //    }
+            //    c.GetCell(10).SetCellValue(z.Amount.ToString());
+            //    i++;
+            //}
+            //ICell cc = XSSFSheet.GetRow(0).GetCell(0);
+            //string yu = cc.StringCellValue;
+            //cc.SetCellValue(yu + mainData.ProjectName);
+            ////15
+            //ICell cdate = XSSFSheet.GetRow(1).GetCell(14);
+            //cdate.SetCellType(CellType.String);
+            //cdate.SetCellValue(mainData.CreationTime.ToShortDateString());
 
-            heji.GetCell(10).SetCellValue(hj);
+            //IRow xiaoji = XSSFSheet.CopyRow(10, 10 + i);
 
-            IRow xiaofeishui = XSSFSheet.CopyRow(10, 12 + i);
-            xiaofeishui.GetCell(0).SetCellValue("消費税");
-            XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(12 + i, 12 + i, 0, 3));
-            xiaofeishui.GetCell(6).SetCellValue("10");
-            xiaofeishui.GetCell(8).SetCellValue("%");
+            //xiaoji.GetCell(0).SetCellValue("小  計");
+            //XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(10 + i, 10 + i, 0, 3));
+            //double hj = Convert.ToDouble(mainData.JwBudgetSubDatas.Sum(t => t.Amount));
+            //xiaoji.GetCell(10).SetCellValue(hj);
+            //IRow heji = XSSFSheet.CopyRow(10, 11 + i);
+            //heji.GetCell(0).SetCellValue("合  計");
+            //XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(11 + i, 11 + i, 0, 3));
 
-            double zhj = hj * 0.1;
-            xiaofeishui.GetCell(10).SetCellValue(zhj);
+            //heji.GetCell(10).SetCellValue(hj);
 
-            IRow zheji = XSSFSheet.CopyRow(10, 13 + i);
-            zheji.GetCell(0).SetCellValue("総  合  計");
-            XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(13 + i, 13 + i, 0, 3));
-            zheji.GetCell(10).SetCellValue(hj + zhj);
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
-            saveFileDialog.FileName = string.Format("{0}見積書.xlsx", mainData.ProjectName);
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
-                {
-                    hssfworkbook.Write(stream);
-                    //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
-                }
-            }
-            UIMessageBox.ShowSuccess("見積が正常にエクスポートされました");
+            //IRow xiaofeishui = XSSFSheet.CopyRow(10, 12 + i);
+            //xiaofeishui.GetCell(0).SetCellValue("消費税");
+            //XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(12 + i, 12 + i, 0, 3));
+            //xiaofeishui.GetCell(6).SetCellValue("10");
+            //xiaofeishui.GetCell(8).SetCellValue("%");
+
+            //double zhj = hj * 0.1;
+            //xiaofeishui.GetCell(10).SetCellValue(zhj);
+
+            //IRow zheji = XSSFSheet.CopyRow(10, 13 + i);
+            //zheji.GetCell(0).SetCellValue("総  合  計");
+            //XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(13 + i, 13 + i, 0, 3));
+            //zheji.GetCell(10).SetCellValue(hj + zhj);
+            //SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
+            //saveFileDialog.FileName = string.Format("{0}見積書.xlsx", mainData.ProjectName);
+            //if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
+            //    {
+            //        hssfworkbook.Write(stream);
+            //        //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
+            //    }
+            //}
+            //UIMessageBox.ShowSuccess("見積が正常にエクスポートされました");
 
             //return _jwProjectsExcelExporter.ExportToFile(jwProjectListDtos);
 
         }
 
-
+        /// <summary>
+        /// 双击链接cell
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void uiDataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex != -1)
+            {
+                var ljl = uiDataGridView1.Rows[e.RowIndex].DataBoundItem as JwLianjieData;
+                if (ljl != null)
+                {
+                    if(ljl.CreateFrom== CreateFromType.ManuallyAdd)
+                    {
+                        ShowErrorNotifier("手作業で作成したものは設計図に記入できない");
+                    }
+                    else
+                    {
+                        if (GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent != null)
+                        {
+                            GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent(this, new ControlSelectedSquareArgs
+                            {
+                                Id = ljl.Id,
+                                IsLianjie = true
+                            });
+                        }
+                    }
+                    
+                }
+                //if (beam != null)
+                //{
+                //    if (GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent != null)
+                //    {
+                //        GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent(this, new ControlSelectedSquareArgs
+                //        {
+                //            Id = beam.Id,
+                //            DrawShapeType = JwCore.DrawShapeType.Beam
+                //        });
+                //    }
+                //}
+            }
+        }
     }
 }
 
