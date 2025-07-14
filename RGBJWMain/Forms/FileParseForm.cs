@@ -154,14 +154,14 @@ namespace RGBJWMain.Forms
                 if (_jwFileHandle._subData != null)
                 {
                     string fn = _jwFileHandle._subData.FloorName;
-                    var sbd = dbContext?.JwProjectSubDatas.ToList().Find(t => t.FloorName == fn);
+                    var sbd = dbContext?.JwProjectSubDatas.ToList().Find(t => t.FloorName == fn&&t.JwProjectMainDataId== jwProjectPathModel.MainData.Id);
                     if (sbd == null)
                     {
                         SaveData();
                     }
                     else
                     {
-
+                        UIMessageBox.ShowError("このフロアは識別されアップロードされました");
                     }
                 }
             }
@@ -172,9 +172,7 @@ namespace RGBJWMain.Forms
         {
             if (_jwFileHandle._subData != null)
             {
-                var flst = dbContext.JwProjectSubDatas.Where(t => t.FloorName == _jwFileHandle._subData.FloorName).ToList();
-                if (flst.Count() == 0)
-                {
+              
                     _jwFileHandle._subData.DefaultBeamXHId = jwProjectPathModel.MaterialData.Id;
                     _jwFileHandle._subData.DefaultBeamXHName = jwProjectPathModel.MaterialData.GeneralTitle;
                     dbContext?.JwProjectSubDatas.Add(_jwFileHandle._subData);
@@ -240,11 +238,6 @@ namespace RGBJWMain.Forms
                     md.SinglePillarCount += _jwFileHandle._subData.SinglePillarCount;
                     md.ParsedQuantity += 1;
                     dbContext?.SaveChanges();
-                }
-                else
-                {
-                    UIMessageBox.ShowError("このフロアは識別されアップロードされました");
-                }
             }
 
 

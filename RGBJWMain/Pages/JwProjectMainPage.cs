@@ -311,6 +311,7 @@ namespace RGBJWMain.Pages
             option.AutoLabelWidth = true;
             option.Text = "追加";
             option.AddText("ProjectName", "プロジェクト", null, true);
+            option.AddText("SiteAddress", "建設現場住所", null, true);
             option.AddInteger("FloorQuantity", "階数", 0);
             //option.AddText("JwCustomerDataId", "顧客", null, false);
             //option.AddText("Telephone", "電話", null, false);
@@ -330,6 +331,7 @@ namespace RGBJWMain.Pages
             {
                 JwProjectMainData customerdata = new JwProjectMainData();
                 customerdata.ProjectName = frm["ProjectName"].ToString();
+                customerdata.SiteAddress = frm["SiteAddress"].ToString();
                 customerdata.FloorQuantity = Convert.ToInt32(frm["FloorQuantity"].ToString());
                 customerdata.Biaochi = "";
                 customerdata.JwCustomerDataId = Convert.ToInt64(frm["JwCustomerDataId"].ToString());

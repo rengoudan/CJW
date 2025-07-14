@@ -34,6 +34,7 @@ namespace RGBJWMain.Pages
             InitializeComponent();
             _subData = subData;
             uiLine1.Text = _subData.FloorName;
+            
             dbContext = ContextFactory.GetContext();
         }
 
@@ -163,24 +164,42 @@ namespace RGBJWMain.Pages
                         c.GetCell(5).SetCellValue(sl.ToString());
                         c.GetCell(6).SetCellValue(sl.ToString());
                         double alslc = lj.Key * sl;
-                        c.GetCell(8).SetCellValue(alslc.ToString());
+                        c.GetCell(9).SetCellValue(alslc.ToString());
                         alllength = alllength + alslc;
                         allnum += sl;
                         i++;
                     }
 
                     IRow onerow = XSSFSheet.GetRow(8);
-                    onerow.GetCell(10).SetCellValue(allnum);
-                    onerow.GetCell(11).SetCellValue(alllength.ToString());
+                    onerow.GetCell(11).SetCellValue(allnum);
+                    onerow.GetCell(12).SetCellValue(alllength.ToString());
 
                     var zl = Math.Round(alllength / 1000 * 1.15, 0);
-                    IRow c1 = XSSFSheet.CopyRow(8, 8 + i+1);
-                    c1.GetCell(11).SetCellValue(zl.ToString());
-
+                    IRow c1 = XSSFSheet.GetRow(8 + i+1);
+                    string zls = string.Format("{0}KG", zl);
+                    c1.GetCell(12).SetCellValue(zls);
+                    IRow c2 = XSSFSheet.GetRow(8 + i + 1);
+                    c2.GetCell(5).SetCellValue(allnum);
+                    c2.GetCell(6).SetCellValue(allnum);
+                    c2.GetCell(12).SetCellValue(zls);
+                    IRow c3 = XSSFSheet.GetRow(8 + i + 2);
+                    c3.GetCell(4).SetCellValue(alllength);
+                    
                 }
+
+                string compname = _subData.JwProjectMainData.JwCustomerData?.CompanyName;
+                IRow c0 = XSSFSheet.GetRow(0);
+                c0.GetCell(0).SetCellValue(compname);
+                c0.GetCell(5).SetCellValue(DateTime.Now.ToShortDateString());
+                string siteadr = _subData.JwProjectMainData.SiteAddress;
+                if (!string.IsNullOrEmpty(siteadr))
+                {
+                    XSSFSheet.GetRow(4).GetCell(0).SetCellValue(siteadr);
+                }
+
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
-                saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", "-", _subData.FloorName);
+                saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", _subData.JwProjectMainData.ProjectName, _subData.FloorName);
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
@@ -191,6 +210,10 @@ namespace RGBJWMain.Pages
                 }
                 UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
             }
+
+        
+
+
             //foreach (var z in subss)
             //{
             //    IRow c = XSSFSheet.CopyRow(10, 10 + i);

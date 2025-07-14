@@ -48,6 +48,11 @@ namespace JwCore
 
         public ProjectStatus ProjectStatus { get; set; }
 
+        /// <summary>
+        /// 工事地址
+        /// </summary>
+        public string SiteAddress { get; set; }
+
         public long? JwCustomerDataId { get; set; }
         public virtual JwCustomerData? JwCustomerData { get; set; } = null!;
         public virtual ObservableCollectionListSource<JwProjectSubData> JwProjectSubDatas { get;  } = new();
