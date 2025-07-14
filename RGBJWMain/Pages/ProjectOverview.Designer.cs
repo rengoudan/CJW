@@ -315,7 +315,7 @@
             uiSymbolButton3.Symbol = 563560;
             uiSymbolButton3.TabIndex = 2;
             uiSymbolButton3.Text = "増加";
-            uiSymbolButton3.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton3.Visible = false;
             uiSymbolButton3.Click += uiSymbolButton3_Click;
             // 
             // uiSymbolButton2
@@ -328,7 +328,6 @@
             uiSymbolButton2.Symbol = 61891;
             uiSymbolButton2.TabIndex = 1;
             uiSymbolButton2.Text = "輸出リンクEXCEL";
-            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // uiSymbolButton1
@@ -341,7 +340,6 @@
             uiSymbolButton1.Symbol = 358486;
             uiSymbolButton1.TabIndex = 0;
             uiSymbolButton1.Text = "輸出全て梁";
-            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // panel1
@@ -382,6 +380,7 @@
             uiTabControl1.SizeMode = TabSizeMode.Fixed;
             uiTabControl1.TabIndex = 0;
             uiTabControl1.TabUnSelectedForeColor = Color.FromArgb(240, 240, 240);
+            uiTabControl1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             // 
             // tabPage5
             // 
@@ -650,7 +649,7 @@
             tabPage1.Controls.Add(uiDataGridView4);
             tabPage1.Location = new Point(0, 40);
             tabPage1.Name = "tabPage1";
-            tabPage1.Size = new Size(1254, 387);
+            tabPage1.Size = new Size(200, 60);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "梁";
             tabPage1.UseVisualStyleBackColor = true;
@@ -702,7 +701,7 @@
             uiDataGridView4.RowsDefaultCellStyle = dataGridViewCellStyle10;
             uiDataGridView4.RowTemplate.Height = 32;
             uiDataGridView4.SelectedIndex = -1;
-            uiDataGridView4.Size = new Size(1254, 387);
+            uiDataGridView4.Size = new Size(200, 60);
             uiDataGridView4.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView4.TabIndex = 0;
             // 
@@ -1424,7 +1423,7 @@
             tabPage4.Controls.Add(uiDataGridView2);
             tabPage4.Location = new Point(0, 40);
             tabPage4.Name = "tabPage4";
-            tabPage4.Size = new Size(200, 60);
+            tabPage4.Size = new Size(1254, 387);
             tabPage4.TabIndex = 3;
             tabPage4.Text = "接続部品";
             tabPage4.UseVisualStyleBackColor = true;
@@ -1476,7 +1475,7 @@
             uiDataGridView7.RowsDefaultCellStyle = dataGridViewCellStyle30;
             uiDataGridView7.RowTemplate.Height = 32;
             uiDataGridView7.SelectedIndex = -1;
-            uiDataGridView7.Size = new Size(200, 60);
+            uiDataGridView7.Size = new Size(1254, 387);
             uiDataGridView7.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView7.TabIndex = 1;
             // 
@@ -1584,7 +1583,7 @@
             uiDataGridView2.RowsDefaultCellStyle = dataGridViewCellStyle35;
             uiDataGridView2.RowTemplate.Height = 29;
             uiDataGridView2.SelectedIndex = -1;
-            uiDataGridView2.Size = new Size(200, 60);
+            uiDataGridView2.Size = new Size(1254, 387);
             uiDataGridView2.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView2.TabIndex = 0;
             // 

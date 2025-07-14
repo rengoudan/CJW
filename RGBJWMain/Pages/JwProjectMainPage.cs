@@ -980,5 +980,49 @@ namespace RGBJWMain.Pages
                 }
             }
         }
+
+        private void 改訂ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            JwMainEdit edit = new JwMainEdit();
+            edit.jwCustomerDatas = dbContext.JwCustomerDatas.ToList();
+            edit.Render();
+            edit.JwProjectMainData = _selecteddata;
+            edit.ShowDialog();
+            if (edit.IsOK)
+            {
+                dbContext.JwProjectMainDatas.Update(edit.JwProjectMainData);
+                this.uiDataGridView1.Refresh();
+                //this.ShowSuccessDialog(frm.Person.ToString());
+            }
+            edit.Dispose();
+        }
+
+        private void 詳細ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_selecteddata != null) {
+                this.dbContext.Entry(_selecteddata).Collection(e => e.JwProjectSubDatas).Load();
+                if (_selecteddata.JwProjectSubDatas.Count > 0)
+                {
+                    foreach (var sub in _selecteddata.JwProjectSubDatas)
+                    {
+                        this.dbContext.Entry(sub).Collection(e => e.JwBeamDatas).Load();
+                        this.dbContext.Entry(sub).Collection(e => e.JwPillarDatas).Load();
+                        this.dbContext.Entry(sub).Collection(e => e.JwLinkPartDatas).Load();
+                        this.dbContext.Entry(sub).Collection(e => e.JwLianjieDatas).Load();
+                        if (sub.JwBeamDatas.Count > 0)
+                        {
+                            foreach (var bd in sub.JwBeamDatas)
+                            {
+                                this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                                this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
+                            }
+                        }
+                    }
+                    ProjectDetail detail = new ProjectDetail(_selecteddata);
+                    detail.ShowDialog();
+                }
+            }
+           
+        }
     }
 }

@@ -77,6 +77,8 @@
             uiSymbolButton2 = new Sunny.UI.UISymbolButton();
             contextMenuStrip1 = new ContextMenuStrip(components);
             toolStripMenuItem1 = new ToolStripMenuItem();
+            改訂ToolStripMenuItem = new ToolStripMenuItem();
+            詳細ToolStripMenuItem = new ToolStripMenuItem();
             uiMarkLabel1 = new Sunny.UI.UIMarkLabel();
             uiSymbolButton3 = new Sunny.UI.UISymbolButton();
             panel1.SuspendLayout();
@@ -546,9 +548,9 @@
             // contextMenuStrip1
             // 
             contextMenuStrip1.ImageScalingSize = new Size(24, 24);
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, 改訂ToolStripMenuItem, 詳細ToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(189, 34);
+            contextMenuStrip1.Size = new Size(189, 94);
             // 
             // toolStripMenuItem1
             // 
@@ -556,6 +558,20 @@
             toolStripMenuItem1.Size = new Size(188, 30);
             toolStripMenuItem1.Text = "輸出梁設計図";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
+            // 
+            // 改訂ToolStripMenuItem
+            // 
+            改訂ToolStripMenuItem.Name = "改訂ToolStripMenuItem";
+            改訂ToolStripMenuItem.Size = new Size(188, 30);
+            改訂ToolStripMenuItem.Text = "改訂";
+            改訂ToolStripMenuItem.Click += 改訂ToolStripMenuItem_Click;
+            // 
+            // 詳細ToolStripMenuItem
+            // 
+            詳細ToolStripMenuItem.Name = "詳細ToolStripMenuItem";
+            詳細ToolStripMenuItem.Size = new Size(188, 30);
+            詳細ToolStripMenuItem.Text = "詳細";
+            詳細ToolStripMenuItem.Click += 詳細ToolStripMenuItem_Click;
             // 
             // uiMarkLabel1
             // 
@@ -650,5 +666,7 @@
         private DataGridViewTextBoxColumn bGCountDataGridViewTextBoxColumn1;
         private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn1;
         private DataGridViewTextBoxColumn creationTimeDataGridViewTextBoxColumn1;
+        private ToolStripMenuItem 改訂ToolStripMenuItem;
+        private ToolStripMenuItem 詳細ToolStripMenuItem;
     }
 }

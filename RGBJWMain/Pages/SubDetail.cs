@@ -173,7 +173,7 @@ namespace RGBJWMain.Pages
                     IRow onerow = XSSFSheet.GetRow(8);
                     onerow.GetCell(11).SetCellValue(allnum);
                     onerow.GetCell(12).SetCellValue(alllength.ToString());
-
+                    XSSFSheet.GetRow(9).GetCell(0).SetCellValue(_subData.FloorName);
                     var zl = Math.Round(alllength / 1000 * 1.15, 0);
                     IRow c1 = XSSFSheet.GetRow(8 + i+1);
                     string zls = string.Format("{0}KG", zl);
@@ -196,6 +196,9 @@ namespace RGBJWMain.Pages
                 {
                     XSSFSheet.GetRow(4).GetCell(0).SetCellValue(siteadr);
                 }
+
+                XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(9, 8 + i - 1, 0, 0));
+
 
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";

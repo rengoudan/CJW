@@ -53,6 +53,7 @@ namespace JwShapeCommon.Model
             //lianjieData.Id=Guid.NewGuid().ToString();
             // = 12;
             var dl = JwExtend.Distance(Start.RealPoint, End.RealPoint)*JwFileConsts.JwScale;
+            dl = dl - 220;//减部件长度
             lianjieData.Length = Math.Round(dl, 0);
 
             return lianjieData;
