@@ -81,6 +81,7 @@
             詳細ToolStripMenuItem = new ToolStripMenuItem();
             uiMarkLabel1 = new Sunny.UI.UIMarkLabel();
             uiSymbolButton3 = new Sunny.UI.UISymbolButton();
+            uiButton2 = new Sunny.UI.UIButton();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)uiDataGridView1).BeginInit();
@@ -100,6 +101,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(uiButton2);
             panel1.Controls.Add(uiSymbolButton3);
             panel1.Controls.Add(uiMarkLabel1);
             panel1.Controls.Add(uiSymbolButton2);
@@ -110,6 +112,7 @@
             panel1.Controls.SetChildIndex(uiSymbolButton2, 0);
             panel1.Controls.SetChildIndex(uiMarkLabel1, 0);
             panel1.Controls.SetChildIndex(uiSymbolButton3, 0);
+            panel1.Controls.SetChildIndex(uiButton2, 0);
             // 
             // uiButton1
             // 
@@ -176,6 +179,7 @@
             uiDataGridView1.Size = new Size(1176, 400);
             uiDataGridView1.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView1.TabIndex = 0;
+            uiDataGridView1.SelectIndexChange += uiDataGridView1_SelectIndexChange_1;
             uiDataGridView1.CellDoubleClick += uiDataGridView1_CellDoubleClick;
             uiDataGridView1.CellMouseDown += uiDataGridView1_CellMouseDown;
             uiDataGridView1.RowHeaderMouseClick += uiDataGridView1_RowHeaderMouseClick;
@@ -522,14 +526,13 @@
             // 
             uiSymbolButton1.FillColor = Color.Red;
             uiSymbolButton1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiSymbolButton1.Location = new Point(261, 5);
+            uiSymbolButton1.Location = new Point(361, 5);
             uiSymbolButton1.MinimumSize = new Size(1, 1);
             uiSymbolButton1.Name = "uiSymbolButton1";
             uiSymbolButton1.Size = new Size(166, 35);
             uiSymbolButton1.Symbol = 61587;
             uiSymbolButton1.TabIndex = 1;
             uiSymbolButton1.Text = "アップロード";
-            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // uiSymbolButton2
@@ -542,7 +545,6 @@
             uiSymbolButton2.Symbol = 300043;
             uiSymbolButton2.TabIndex = 3;
             uiSymbolButton2.Text = "增";
-            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // contextMenuStrip1
@@ -550,26 +552,26 @@
             contextMenuStrip1.ImageScalingSize = new Size(24, 24);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, 改訂ToolStripMenuItem, 詳細ToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(189, 94);
+            contextMenuStrip1.Size = new Size(169, 76);
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(188, 30);
+            toolStripMenuItem1.Size = new Size(168, 24);
             toolStripMenuItem1.Text = "輸出梁設計図";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
             // 改訂ToolStripMenuItem
             // 
             改訂ToolStripMenuItem.Name = "改訂ToolStripMenuItem";
-            改訂ToolStripMenuItem.Size = new Size(188, 30);
+            改訂ToolStripMenuItem.Size = new Size(168, 24);
             改訂ToolStripMenuItem.Text = "改訂";
             改訂ToolStripMenuItem.Click += 改訂ToolStripMenuItem_Click;
             // 
             // 詳細ToolStripMenuItem
             // 
             詳細ToolStripMenuItem.Name = "詳細ToolStripMenuItem";
-            詳細ToolStripMenuItem.Size = new Size(188, 30);
+            詳細ToolStripMenuItem.Size = new Size(168, 24);
             詳細ToolStripMenuItem.Text = "詳細";
             詳細ToolStripMenuItem.Click += 詳細ToolStripMenuItem_Click;
             // 
@@ -578,10 +580,10 @@
             uiMarkLabel1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             uiMarkLabel1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel1.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel1.Location = new Point(605, 5);
+            uiMarkLabel1.Location = new Point(705, 5);
             uiMarkLabel1.Name = "uiMarkLabel1";
             uiMarkLabel1.Padding = new Padding(5, 0, 0, 0);
-            uiMarkLabel1.Size = new Size(568, 35);
+            uiMarkLabel1.Size = new Size(468, 35);
             uiMarkLabel1.TabIndex = 27;
             uiMarkLabel1.Text = "シングルクリックで選択してアップロード；エクスポートするには行データを右クリック";
             uiMarkLabel1.TextAlign = ContentAlignment.MiddleLeft;
@@ -590,14 +592,28 @@
             // 
             uiSymbolButton3.FillColor = Color.Red;
             uiSymbolButton3.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiSymbolButton3.Location = new Point(433, 6);
+            uiSymbolButton3.Location = new Point(533, 6);
             uiSymbolButton3.MinimumSize = new Size(1, 1);
             uiSymbolButton3.Name = "uiSymbolButton3";
             uiSymbolButton3.Size = new Size(166, 35);
             uiSymbolButton3.Symbol = 61587;
             uiSymbolButton3.TabIndex = 28;
             uiSymbolButton3.Text = "テストカラー";
+            uiSymbolButton3.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton3.Click += uiSymbolButton3_Click;
+            // 
+            // uiButton2
+            // 
+            uiButton2.Enabled = false;
+            uiButton2.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiButton2.Location = new Point(252, 5);
+            uiButton2.MinimumSize = new Size(1, 1);
+            uiButton2.Name = "uiButton2";
+            uiButton2.Size = new Size(84, 35);
+            uiButton2.TabIndex = 29;
+            uiButton2.Text = "詳細";
+            uiButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            uiButton2.Click += uiButton2_Click_1;
             // 
             // JwProjectMainPage
             // 
@@ -668,5 +684,6 @@
         private DataGridViewTextBoxColumn creationTimeDataGridViewTextBoxColumn1;
         private ToolStripMenuItem 改訂ToolStripMenuItem;
         private ToolStripMenuItem 詳細ToolStripMenuItem;
+        private Sunny.UI.UIButton uiButton2;
     }
 }

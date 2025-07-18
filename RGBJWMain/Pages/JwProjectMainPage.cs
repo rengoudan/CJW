@@ -293,6 +293,7 @@ namespace RGBJWMain.Pages
                             }
                         }
                     }
+                    uiButton2.Enabled = true;
                 }
             }
 
@@ -999,7 +1000,8 @@ namespace RGBJWMain.Pages
 
         private void 詳細ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_selecteddata != null) {
+            if (_selecteddata != null)
+            {
                 this.dbContext.Entry(_selecteddata).Collection(e => e.JwProjectSubDatas).Load();
                 if (_selecteddata.JwProjectSubDatas.Count > 0)
                 {
@@ -1022,7 +1024,57 @@ namespace RGBJWMain.Pages
                     detail.ShowDialog();
                 }
             }
-           
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void uiButton2_Click_1(object sender, EventArgs e)
+        {
+            var qmain = this.uiDataGridView1.Rows[this.uiDataGridView1.SelectedIndex].DataBoundItem as JwProjectMainData;
+            if (qmain != null)
+            {
+                this.dbContext.Entry(qmain).Collection(e => e.JwProjectSubDatas).Load();
+                if (qmain.JwProjectSubDatas.Count > 0)
+                {
+                    foreach (var sub in qmain.JwProjectSubDatas)
+                    {
+                        this.dbContext.Entry(sub).Collection(e => e.JwBeamDatas).Load();
+                        this.dbContext.Entry(sub).Collection(e => e.JwPillarDatas).Load();
+                        this.dbContext.Entry(sub).Collection(e => e.JwLinkPartDatas).Load();
+                        this.dbContext.Entry(sub).Collection(e => e.JwLianjieDatas).Load();
+                        if (sub.JwBeamDatas.Count > 0)
+                        {
+                            foreach (var bd in sub.JwBeamDatas)
+                            {
+                                this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                                this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
+                            }
+                        }
+                    }
+                    ProjectDetail detail = new ProjectDetail(qmain);
+                    detail.ShowDialog();
+                }
+            }
+        }
+
+        private void uiDataGridView1_SelectIndexChange_1(object sender, int index)
+        {
+            if (!IsClose)
+            {
+                if (this.uiDataGridView1.SelectedIndex != -1)
+                {
+                    this.uiButton2.Enabled = true;
+                }
+                else
+                {
+                    this.uiButton2.Enabled = false;
+                }
+
+            }
         }
     }
 }
