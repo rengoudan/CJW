@@ -79,6 +79,7 @@
             toolStripMenuItem1 = new ToolStripMenuItem();
             改訂ToolStripMenuItem = new ToolStripMenuItem();
             詳細ToolStripMenuItem = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
             uiMarkLabel1 = new Sunny.UI.UIMarkLabel();
             uiSymbolButton3 = new Sunny.UI.UISymbolButton();
             uiButton2 = new Sunny.UI.UIButton();
@@ -550,30 +551,37 @@
             // contextMenuStrip1
             // 
             contextMenuStrip1.ImageScalingSize = new Size(24, 24);
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, 改訂ToolStripMenuItem, 詳細ToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, 改訂ToolStripMenuItem, 詳細ToolStripMenuItem, deleteToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(169, 76);
+            contextMenuStrip1.Size = new Size(181, 122);
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(168, 24);
+            toolStripMenuItem1.Size = new Size(180, 24);
             toolStripMenuItem1.Text = "輸出梁設計図";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
             // 改訂ToolStripMenuItem
             // 
             改訂ToolStripMenuItem.Name = "改訂ToolStripMenuItem";
-            改訂ToolStripMenuItem.Size = new Size(168, 24);
+            改訂ToolStripMenuItem.Size = new Size(180, 24);
             改訂ToolStripMenuItem.Text = "改訂";
             改訂ToolStripMenuItem.Click += 改訂ToolStripMenuItem_Click;
             // 
             // 詳細ToolStripMenuItem
             // 
             詳細ToolStripMenuItem.Name = "詳細ToolStripMenuItem";
-            詳細ToolStripMenuItem.Size = new Size(168, 24);
+            詳細ToolStripMenuItem.Size = new Size(180, 24);
             詳細ToolStripMenuItem.Text = "詳細";
             詳細ToolStripMenuItem.Click += 詳細ToolStripMenuItem_Click;
+            // 
+            // deleteToolStripMenuItem
+            // 
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(180, 24);
+            deleteToolStripMenuItem.Text = "消去";
+            deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
             // uiMarkLabel1
             // 
@@ -685,5 +693,6 @@
         private ToolStripMenuItem 改訂ToolStripMenuItem;
         private ToolStripMenuItem 詳細ToolStripMenuItem;
         private Sunny.UI.UIButton uiButton2;
+        private ToolStripMenuItem deleteToolStripMenuItem;
     }
 }

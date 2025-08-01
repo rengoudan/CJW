@@ -1076,5 +1076,18 @@ namespace RGBJWMain.Pages
 
             }
         }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ShowAskDialog("本当に削除しますか?"))
+            {
+
+            }
+        }
     }
 }
