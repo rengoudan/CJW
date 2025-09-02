@@ -52,7 +52,9 @@ namespace JwShapeCommon.Model
             lianjieData.End = new Point(End.RealPoint.X, End.RealPoint.Y);
             //lianjieData.Id=Guid.NewGuid().ToString();
             // = 12;
-            var dl = JwExtend.Distance(Start.RealPoint, End.RealPoint)*JwFileConsts.JwScale;
+            var slq = JwExtend.Distance(Start.RealPoint, End.RealPoint);
+            
+            var dl = Math.Round(slq, 1) * JwFileConsts.JwScale;
             dl = dl - 220;//减部件长度
             lianjieData.Length = Math.Round(dl, 0);
 
@@ -132,7 +134,8 @@ namespace JwShapeCommon.Model
 
                 //double realy = Touch.WinnerBeam.Center + ((int)Direct) * 50;
 
-                double realx = Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
+                //double realx = Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
+                double realx = Touch.LoserBeam.Center + pinayix * (84 / JwFileConsts.JwScale);
                 this.RealPoint=new JWPoint(realx, realy);
             }
             else
@@ -150,7 +153,8 @@ namespace JwShapeCommon.Model
                 double pinayix = (int)this.Direct;
                 //realx = Touch.WinnerBeam.Center + ((int)Direct) * 50;
 
-                realy= Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
+                //realy= Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
+                realy = Touch.LoserBeam.Center + pinayix * (84 / JwFileConsts.JwScale);
 
                 this.RealPoint = new JWPoint(realx, realy);
             }
