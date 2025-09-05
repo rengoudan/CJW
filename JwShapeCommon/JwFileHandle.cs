@@ -2976,9 +2976,10 @@ namespace JwShapeCommon
                 }
             }
 
-
+            //条件一 必须是在梁内，
             var centermarks = tempmarks.Where(t => t.IsInBeamCenter).ToList();
-
+            //条件二 判断是否有上柱，待增加 柱类增加 是否有下柱标识
+            //遍历所有柱，进行判断
 
             foreach (var beam in centermarks) {
 
