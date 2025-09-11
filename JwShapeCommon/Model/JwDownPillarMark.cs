@@ -22,6 +22,11 @@ namespace JwShapeCommon.Model
 
         public bool IsInBeamCenter { get; set; }
 
+        /// <summary>
+        /// 判断交叉中心点是否再pillar里
+        /// </summary>
+        public bool HasPillar { get; set; }
+
 
         public string GetXianString()
         {

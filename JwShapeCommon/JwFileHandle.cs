@@ -2980,8 +2980,31 @@ namespace JwShapeCommon
             var centermarks = tempmarks.Where(t => t.IsInBeamCenter).ToList();
             //条件二 判断是否有上柱，待增加 柱类增加 是否有下柱标识
             //遍历所有柱，进行判断
+            var blocks = Pillars.Select(t => t.Blocks).ToList();//所有pillar 的block
+            List<JwBlock> alb= new List<JwBlock>();
 
-            foreach (var beam in centermarks) {
+            foreach(var p in Pillars)
+            {
+                alb.AddRange(p.Blocks);
+            }
+            if (alb.Count > 0)
+            {
+                foreach (var downitem in centermarks)
+                {
+                    //blocks.Where(t=>t.)
+                    var z = alb.Count(t => t.Contains(downitem.CenterPoint));
+                    if (z > 0)
+                    {
+                        downitem.HasPillar = true;
+                    }
+
+                }
+            }
+
+            var nopillarcentermarks=centermarks.Where(t=>!t.HasPillar).ToList();
+
+
+            foreach (var beam in nopillarcentermarks) {
 
                 JwLinkPart jbb = new JwLinkPart();
                 jbb.Directed = beam.OwerBeam.DirectionType == BeamDirectionType.Horizontal ? TaggDirect.Up : TaggDirect.Left;
