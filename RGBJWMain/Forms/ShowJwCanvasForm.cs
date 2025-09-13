@@ -42,12 +42,12 @@ namespace RGBJWMain.Forms
         }
         private void JwCanvas_Click(object? sender, EventArgs e)
         {
-            if(jwCanvas != null)
+            if (jwCanvas != null)
             {
                 if (jwCanvasControl1.BeamSelected)
                 {
                     var z = jwCanvasControl1.SelectedBeam;
-                    
+
                     if (z != null)
                     {
                         if (z.DirectionType == BeamDirectionType.Horizontal)
@@ -123,7 +123,26 @@ namespace RGBJWMain.Forms
                     jwCanvasControl1.jwToPng(saveFileDialog1.FileName);
                 }
             }
-            
+
+        }
+
+        private void dataGridView3_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1)
+            {
+                var beam = dataGridView3.Rows[e.RowIndex].DataBoundItem as JwLinkPartData;
+                if (beam != null)
+                {
+                    if (GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent != null)
+                    {
+                        GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent(this, new ControlSelectedSquareArgs
+                        {
+                            Id = beam.Id,
+                            DrawShapeType = JwCore.DrawShapeType.LinkPart
+                        });
+                    }
+                }
+            }
         }
     }
 }

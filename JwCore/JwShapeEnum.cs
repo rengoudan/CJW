@@ -56,7 +56,8 @@ namespace JwCore
         Beam = 1,
         Block = 2,
         Pillar = 3,
-        Hole = 4
+        Hole = 4,
+        LinkPart= 5
     }
 
     /// <summary>

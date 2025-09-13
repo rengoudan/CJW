@@ -1016,6 +1016,7 @@ namespace JwShapeCommon
             }
 
             RectangleBlocks = RectangleBlocks.Where(t => t.ShapeType == JwBlockShapeType.Square).ToList();
+            RectangleBlocks= RectangleBlocks.Distinct(new JwBlockComparint()).ToList();
             //List<JwBlock> tempjbs = new List<JwBlock>();
             //foreach (var t in RectangleBlocks)
             //{

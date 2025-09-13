@@ -323,9 +323,36 @@ namespace JwShapeCommon
                 }
                 else
                 {
-                    return false;
+                    if (x.HasCenter && y.HasCenter)
+                    {
+                        return isnear(x,y);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    
                 }
             }
+        }
+
+        private bool isnear(JwBlock x,JwBlock y)
+        {
+            var z=Distance(x.CenterPoint,y.CenterPoint);
+            if (Math.Abs(z) <= (5d / 100))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        private double Distance(JWPoint p1, JWPoint p2)
+        {
+            return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
         }
 
         public int GetHashCode(JwBlock obj)

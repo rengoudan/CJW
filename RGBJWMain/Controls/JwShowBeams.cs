@@ -58,29 +58,59 @@ namespace RGBJWMain.Controls
             }
             else
             {
-                if (HasCreated && _bounds != null)
+                if (e.DrawShapeType == DrawShapeType.LinkPart)
                 {
-                    if (_bounds.Count(t => t.ShapeType == e.DrawShapeType) > 0)
+                    if(_canvasDraw != null)
                     {
-                        var fwlst = _bounds.Where(t => t.ShapeType == e.DrawShapeType).ToList();
-                        foreach (var t in fwlst)
+                        if(_canvasDraw.links != null)
                         {
-                            if (t.JwSquareBase.Id == e.Id && t.IsSelected)
+                            if (_canvasDraw.links.Count > 0)
                             {
-
-                            }
-                            else
-                            {
-                                t.IsSelected = false;
-                                if (t.JwSquareBase.Id == e.Id)
+                                foreach (var link in _canvasDraw.links)
                                 {
-                                    t.IsSelected = true;
+                                    if (link.LinkPart.Id == e.Id)
+                                    {
+                                        link.IsSelected = true;
+                                    }
+                                    else
+                                    {
+                                        link.IsSelected = false;
+                                    }
+                                    Invalidate();
                                 }
-                                Invalidate();
+                            }
+                        }
+                        
+                    }
+                    
+                }
+                else
+                {
+                    if (HasCreated && _bounds != null)
+                    {
+                        if (_bounds.Count(t => t.ShapeType == e.DrawShapeType) > 0)
+                        {
+                            var fwlst = _bounds.Where(t => t.ShapeType == e.DrawShapeType).ToList();
+                            foreach (var t in fwlst)
+                            {
+                                if (t.JwSquareBase.Id == e.Id && t.IsSelected)
+                                {
+
+                                }
+                                else
+                                {
+                                    t.IsSelected = false;
+                                    if (t.JwSquareBase.Id == e.Id)
+                                    {
+                                        t.IsSelected = true;
+                                    }
+                                    Invalidate();
+                                }
                             }
                         }
                     }
                 }
+                
             }
         }
 
@@ -368,6 +398,8 @@ namespace RGBJWMain.Controls
                         foreach (var link in CanvasDraw.links)
                         {
                             Brush bush = new SolidBrush(Color.Red);
+
+                            Brush bushselected = new SolidBrush(Color.Green);
                             foreach (var b in link.Bounds)
                             {
                                 Brush sqwhite = new SolidBrush(Color.White);
@@ -380,7 +412,15 @@ namespace RGBJWMain.Controls
                                 }
                                 else
                                 {
-                                    pe.Graphics.FillRectangle(bush, b.Location.X, b.Location.Y, b.Width, b.Height);
+                                    if (link.IsSelected)
+                                    {
+                                        pe.Graphics.FillRectangle(bushselected, b.Location.X, b.Location.Y, b.Width, b.Height);
+                                    }
+                                    else
+                                    {
+                                        pe.Graphics.FillRectangle(bush, b.Location.X, b.Location.Y, b.Width, b.Height);
+                                    }
+                                    
                                 }
                                 
                             }

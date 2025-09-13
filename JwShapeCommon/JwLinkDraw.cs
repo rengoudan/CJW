@@ -27,7 +27,8 @@ namespace JwShapeCommon
         { 
             _part = new JwLinkPart
             {
-                Id = Guid.NewGuid().ToString(),
+                //Id = Guid.NewGuid().ToString(),
+                Id=linkPart.Id,
                 BujianName =linkPart.BujianName,
                 BjCenterPoint=new JWPoint(linkPart.BjCenterPoint.X, linkPart.BjCenterPoint.Y),
                 BeamId=linkPart.BeamId,
@@ -223,5 +224,7 @@ namespace JwShapeCommon
         public List<PointF> Polygon { get; set;}
 
         public List<RectangleF> Bounds { get; set; }
+
+        public bool IsSelected { get; set; }
     }
 }

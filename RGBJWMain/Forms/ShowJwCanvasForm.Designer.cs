@@ -114,9 +114,9 @@
             panel1.Controls.Add(splitContainer1);
             panel1.Controls.Add(panel2);
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(0, 35);
+            panel1.Location = new Point(0, 41);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1404, 1065);
+            panel1.Size = new Size(1436, 1059);
             panel1.TabIndex = 0;
             // 
             // splitContainer1
@@ -133,8 +133,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(jwCanvasControl1);
-            splitContainer1.Size = new Size(1404, 1019);
-            splitContainer1.SplitterDistance = 376;
+            splitContainer1.Size = new Size(1436, 1013);
+            splitContainer1.SplitterDistance = 384;
             splitContainer1.TabIndex = 1;
             // 
             // panel4
@@ -144,7 +144,7 @@
             panel4.Dock = DockStyle.Fill;
             panel4.Location = new Point(0, 234);
             panel4.Name = "panel4";
-            panel4.Size = new Size(376, 785);
+            panel4.Size = new Size(384, 779);
             panel4.TabIndex = 1;
             // 
             // dataGridView3
@@ -157,8 +157,9 @@
             dataGridView3.Location = new Point(0, 217);
             dataGridView3.Name = "dataGridView3";
             dataGridView3.RowTemplate.Height = 25;
-            dataGridView3.Size = new Size(376, 568);
+            dataGridView3.Size = new Size(384, 562);
             dataGridView3.TabIndex = 1;
+            dataGridView3.CellDoubleClick += dataGridView3_CellDoubleClick;
             // 
             // bujianNameDataGridViewTextBoxColumn
             // 
@@ -277,7 +278,7 @@
             panel5.Dock = DockStyle.Top;
             panel5.Location = new Point(0, 0);
             panel5.Name = "panel5";
-            panel5.Size = new Size(376, 217);
+            panel5.Size = new Size(384, 217);
             panel5.TabIndex = 0;
             // 
             // dataGridView2
@@ -293,7 +294,7 @@
             dataGridView2.Name = "dataGridView2";
             dataGridView2.ReadOnly = true;
             dataGridView2.RowTemplate.Height = 25;
-            dataGridView2.Size = new Size(376, 217);
+            dataGridView2.Size = new Size(384, 217);
             dataGridView2.TabIndex = 0;
             dataGridView2.CellDoubleClick += dataGridView2_CellDoubleClick;
             // 
@@ -478,7 +479,7 @@
             panel3.Dock = DockStyle.Top;
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(376, 234);
+            panel3.Size = new Size(384, 234);
             panel3.TabIndex = 0;
             // 
             // dataGridView1
@@ -494,7 +495,7 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(376, 234);
+            dataGridView1.Size = new Size(384, 234);
             dataGridView1.TabIndex = 0;
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
             // 
@@ -575,10 +576,11 @@
             jwCanvasControl1.CanvasDraw = null;
             jwCanvasControl1.Dock = DockStyle.Fill;
             jwCanvasControl1.Location = new Point(0, 0);
+            jwCanvasControl1.Margin = new Padding(4, 4, 4, 4);
             jwCanvasControl1.Name = "jwCanvasControl1";
             jwCanvasControl1.SelectBeamEvent = null;
             jwCanvasControl1.SelectedBeam = null;
-            jwCanvasControl1.Size = new Size(1024, 1019);
+            jwCanvasControl1.Size = new Size(1048, 1013);
             jwCanvasControl1.TabIndex = 0;
             // 
             // panel2
@@ -587,7 +589,7 @@
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1404, 46);
+            panel2.Size = new Size(1436, 46);
             panel2.TabIndex = 0;
             // 
             // uiSymbolButton1
@@ -599,13 +601,12 @@
             uiSymbolButton1.Size = new Size(205, 35);
             uiSymbolButton1.TabIndex = 0;
             uiSymbolButton1.Text = "設計図のエクスポート";
-            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // ShowJwCanvasForm
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(1404, 1100);
+            ClientSize = new Size(1436, 1100);
             Controls.Add(panel1);
             Name = "ShowJwCanvasForm";
             Text = "設計図";
