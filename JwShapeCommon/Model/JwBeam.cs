@@ -963,7 +963,7 @@ namespace JwShapeCommon
                     {
                         var z = new JWPoint(bp.X, beam.Center);
                         qiegecenterpoints.Add(z);
-                        var existbb = beam.LinkParts.Where(t => t.BjCenterPoint == z && t.Directed == TaggDirect.Up).ToList();
+                        var existbb = beam.LinkParts.Where(t => t.BjCenterPoint.IsEqualsWithError(z) && t.Directed == TaggDirect.Up).ToList();
                         if(existbb.Count==0)
                         {
                             JwLinkPart jbb = new JwLinkPart();
@@ -984,7 +984,7 @@ namespace JwShapeCommon
                         {
                             existbb.ForEach(t=>t.IsLianjie=true);
                         }
-                        var existbbdown = beam.LinkParts.Where(t => t.BjCenterPoint == z && t.Directed == TaggDirect.Down).ToList();
+                        var existbbdown = beam.LinkParts.Where(t => t.BjCenterPoint.IsEqualsWithError(z) && t.Directed == TaggDirect.Down).ToList();
                         if (existbbdown.Count == 0)
                         {
                             JwLinkPart jbb = new JwLinkPart();
@@ -1010,7 +1010,7 @@ namespace JwShapeCommon
                     {
                         var z = new JWPoint(beam.Center, bp.Y);
                         qiegecenterpoints.Add(new JWPoint(beam.CenterPoint.X, bp.Y));
-                        var existbbleft = beam.LinkParts.Where(t => t.BjCenterPoint == z && t.Directed == TaggDirect.Left).ToList();
+                        var existbbleft = beam.LinkParts.Where(t => t.BjCenterPoint.IsEqualsWithError(z) && t.Directed == TaggDirect.Left).ToList();
                         if (existbbleft.Count == 0)
                         {
                             JwLinkPart jbb = new JwLinkPart();
@@ -1031,7 +1031,7 @@ namespace JwShapeCommon
                         {
                             existbbleft.ForEach(t => t.IsLianjie = true);
                         }
-                        var existbbright = beam.LinkParts.Where(t => t.BjCenterPoint == z && t.Directed == TaggDirect.Right).ToList();
+                        var existbbright = beam.LinkParts.Where(t => t.BjCenterPoint.IsEqualsWithError(z) && t.Directed == TaggDirect.Right).ToList();
                         if (existbbright.Count == 0)
                         {
                             JwLinkPart jbb = new JwLinkPart();

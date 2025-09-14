@@ -395,8 +395,41 @@ namespace RGBJWMain.Controls
                 {
                     if (CanvasDraw.links.Count > 0)
                     {
+                        int iindex = 1;
+                        int bindex = 1;
+                        int bgindex = 1;
                         foreach (var link in CanvasDraw.links)
                         {
+                            var txtx = link.Bounds.First().Location.X;
+                            var txty= link.Bounds.First().Location.Y;
+                            string showtxt = "";
+                            if (link.LinkPart.GouJianType == GouJianType.B)
+                            {
+                                showtxt = string.Format("{0}{1}", link.LinkPart.GouJianType.ToString(), bindex);
+                                bindex++;
+                            }
+                            else
+                            {
+                                showtxt = string.Format("{0}{1}", link.LinkPart.GouJianType.ToString(), bgindex);
+                                bgindex++;
+                            }
+                            if (link.LinkPart.Directed == TaggDirect.Up)
+                            {
+                                txty -= 18;
+                            }
+                            if(link.LinkPart.Directed == TaggDirect.Down)
+                            {
+                                txty += 18;
+                            }
+                            if (link.LinkPart.Directed == TaggDirect.Right)
+                            {
+                                txtx += 18;
+
+                            }
+                            if (link.LinkPart.Directed == TaggDirect.Left)
+                            {
+                                txtx -= 18;
+                            }
                             Brush bush = new SolidBrush(Color.Red);
 
                             Brush bushselected = new SolidBrush(Color.Green);
@@ -423,7 +456,10 @@ namespace RGBJWMain.Controls
                                     
                                 }
                                 
+                                
                             }
+                            using var font = new Font("Arial", 12, FontStyle.Regular);
+                            pe.Graphics.DrawString(showtxt, font, Color.Yellow, txtx, txty);   
                             // pe.Graphics.FillPolygon(bush, link.Polygon.ToArray());//箭头 s 点和 pr点
                         }
                     }

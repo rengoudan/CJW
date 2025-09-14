@@ -97,7 +97,7 @@ namespace JwShapeCommon
             else
             {
 
-                 return (Math.Abs( (this.X - other.X)) < (1 / JwFileConsts.JwScale)) && (Math.Abs((this.Y - other.Y)) < (1 / JwFileConsts.JwScale));
+                 return (Math.Abs( (this.X - other.X)) < (10 / JwFileConsts.JwScale)) && (Math.Abs((this.Y - other.Y)) < (10 / JwFileConsts.JwScale));
 
             }
         }

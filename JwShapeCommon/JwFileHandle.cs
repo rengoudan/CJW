@@ -1016,7 +1016,7 @@ namespace JwShapeCommon
             }
 
             RectangleBlocks = RectangleBlocks.Where(t => t.ShapeType == JwBlockShapeType.Square).ToList();
-            RectangleBlocks= RectangleBlocks.Distinct(new JwBlockComparint()).ToList();
+            //RectangleBlocks= RectangleBlocks.Distinct(new JwBlockComparint()).ToList();
             //List<JwBlock> tempjbs = new List<JwBlock>();
             //foreach (var t in RectangleBlocks)
             //{
@@ -2212,6 +2212,7 @@ namespace JwShapeCommon
                 //if(p.BaseType)
             }
 
+            zfxblocks = zfxblocks.Distinct(new JwBlockComparint()).ToList();
 
             var wuqiegebeams = _tempBeams.Where(t => !t.IsParentBeam).ToList();
 
