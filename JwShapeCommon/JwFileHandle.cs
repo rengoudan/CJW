@@ -3344,6 +3344,13 @@ namespace JwShapeCommon
             return jwLianjieSingle;
         }
 
+        /// <summary>
+        /// 在判定touch上下左右的时候， 增加一层判断，判断beam的holes 距离此点的 置顶范围内
+        /// </summary>
+        /// <param name="touch"></param>
+        /// <param name="point"></param>
+        /// <param name="isstart"></param>
+        /// <returns></returns>
         public JwPointBeam touchHandle(JwTouch touch,JWPoint point,bool isstart)
         {
             JwPointBeam jwPointBeam=new JwPointBeam(point,touch,isstart);
@@ -3355,8 +3362,10 @@ namespace JwShapeCommon
 
             if (touch.LoserBeam.DirectionType == BeamDirectionType.Horizontal)
             {
+                //下面
                 if (point.Y < touch.LoserBeam.Center)
                 {
+                    //touch.WinnerBeam.Holes.Where
                     jwPointBeam.Direct = ZhengfuType.Reduce;
                     touch.JwHoleG.HasPreLinkHole = true;
                     if (touch.WinnerBeam.HasQieGe)
@@ -3414,6 +3423,12 @@ namespace JwShapeCommon
             //处理
 
             return jwPointBeam;
+        }
+
+
+        private void judgehole(JwTouch touch, JWPoint point, bool isstart)
+        {
+
         }
     }
 }

@@ -26,6 +26,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RGBSETUP", "RGBSETUP\RGBSET
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RGBJWSETUP", "RGBJWSETUP\RGBJWSETUP.vdproj", "{DE5DA4F7-4956-F576-95E7-A89D46A4F3D6}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RGBJW", "RGBJW\RGBJW.vdproj", "{03D4FD33-58F8-4333-AC0D-0B5E3CAB57F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,12 @@ Global
 		{DE5DA4F7-4956-F576-95E7-A89D46A4F3D6}.Release|Any CPU.ActiveCfg = Release
 		{DE5DA4F7-4956-F576-95E7-A89D46A4F3D6}.Release|x64.ActiveCfg = Release
 		{DE5DA4F7-4956-F576-95E7-A89D46A4F3D6}.Release|x86.ActiveCfg = Release
+		{03D4FD33-58F8-4333-AC0D-0B5E3CAB57F2}.Debug|Any CPU.ActiveCfg = Debug
+		{03D4FD33-58F8-4333-AC0D-0B5E3CAB57F2}.Debug|x64.ActiveCfg = Debug
+		{03D4FD33-58F8-4333-AC0D-0B5E3CAB57F2}.Debug|x86.ActiveCfg = Debug
+		{03D4FD33-58F8-4333-AC0D-0B5E3CAB57F2}.Release|Any CPU.ActiveCfg = Release
+		{03D4FD33-58F8-4333-AC0D-0B5E3CAB57F2}.Release|x64.ActiveCfg = Release
+		{03D4FD33-58F8-4333-AC0D-0B5E3CAB57F2}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
