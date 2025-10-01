@@ -3362,20 +3362,38 @@ namespace JwShapeCommon
 
             if (touch.LoserBeam.DirectionType == BeamDirectionType.Horizontal)
             {
+                //判断依据是否是84的两倍
+                //增加判断顺序 first 判 是否未截断点 判断上下归属
+                //2.判断是否大于2*84
+                //3.确定需要增加孔组的 孔组
                 //下面
                 if (point.Y < touch.LoserBeam.Center)
                 {
-                    //touch.WinnerBeam.Holes.Where
-                    jwPointBeam.Direct = ZhengfuType.Reduce;
-                    touch.JwHoleG.HasPreLinkHole = true;
+                    var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter > point.Y).OrderByDescending(t => t.HoleCenter).ToList();
                     if (touch.WinnerBeam.HasQieGe)
                     {
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
-                        if (f!=null)
+                        if (f != null)
                         {
                             f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                         }
                     }
+                    else
+                    {
+                        if (pdlst.Count > 0)
+                        {
+                            var p = pdlst.First();
+                            var cha = Math.Abs(p.HoleCenter - point.Y) * JwFileConsts.JwScale;
+                            //获取需要添加 上下额外孔组的 孔组
+                            //var f = pdlst.First();
+                            //f.HasBhLinkHole = true;
+                        }
+                    }
+                        
+                    
+                    jwPointBeam.Direct = ZhengfuType.Reduce;
+                    touch.JwHoleG.HasPreLinkHole = true;
+                    
                 }
                 else
                 {

@@ -165,6 +165,9 @@ namespace JwShapeCommon.Model
         /// </summary>
         public JWPoint NearPoint { get;set; }
 
+        /// <summary>
+        /// 需要针对84*2 两个孔组间的距离 增加额外判定并且赋值操作
+        /// </summary>
         public JWPoint RealPoint { get; set; }
 
         /// <summary>
