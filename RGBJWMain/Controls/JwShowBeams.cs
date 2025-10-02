@@ -23,6 +23,11 @@ namespace RGBJWMain.Controls
             this.BackColor = Color.Black;
             InitializeComponent();
             GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent += controlSelectedEvent;
+            this.MouseWheel += JwShowBeams_MouseWheel;
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
+              ControlStyles.UserPaint |
+              ControlStyles.OptimizedDoubleBuffer, true);
+            this.UpdateStyles();
         }
         
         private void controlSelectedEvent(object sender, ControlSelectedSquareArgs e)
@@ -190,6 +195,17 @@ namespace RGBJWMain.Controls
             set
             {
                 _showGoujian = value;
+                Invalidate();
+            }
+        }
+
+        private bool _showGoujiantext;
+        public bool ShowGoujiantext
+        {
+            get { return _showGoujiantext; }
+            set
+            {
+                _showGoujiantext = value;
                 Invalidate();
             }
         }
@@ -458,8 +474,12 @@ namespace RGBJWMain.Controls
                                 
                                 
                             }
-                            using var font = new Font("Arial", 12, FontStyle.Regular);
-                            pe.Graphics.DrawString(showtxt, font, Color.Yellow, txtx, txty);   
+                            if(_showGoujiantext)
+                            {
+                                using var font = new Font("Arial", 12, FontStyle.Regular);
+                                pe.Graphics.DrawString(showtxt, font, Color.Yellow, txtx, txty);
+                            }
+                            
                             // pe.Graphics.FillPolygon(bush, link.Polygon.ToArray());//箭头 s 点和 pr点
                         }
                     }
@@ -499,6 +519,8 @@ namespace RGBJWMain.Controls
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
+            pe.Graphics.TranslateTransform(origin.X, origin.Y);
+            pe.Graphics.ScaleTransform(scale, scale);
             drawControls(pe);
         }
 
@@ -559,6 +581,22 @@ namespace RGBJWMain.Controls
             base.OnClick(e);
         }
 
-        
+        private float scale = 1.0f;
+
+        private PointF origin = new PointF(0, 0);
+
+        // 添加缺失的 JwShowBeams_MouseWheel 事件处理方法
+        private void JwShowBeams_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // 可以根据需要实现缩放或其他功能，这里暂时留空
+            // 例如：Invalidate();
+            float oldScale = scale;
+            scale += e.Delta > 0 ? 0.1f : -0.1f;
+            scale = Math.Max(1f, scale); // 防止缩得太小
+                                         // 以鼠标位置为中心进行缩放
+            origin.X = e.X - (e.X - origin.X) * (scale / oldScale);
+            origin.Y = e.Y - (e.Y - origin.Y) * (scale / oldScale);
+            Invalidate();
+        }
     }
 }

@@ -129,5 +129,10 @@ namespace RGBJWMain.Controls
         {
             jwShowBeams1.ShowDownB = value;
         }
+
+        private void uiSwitch3_ValueChanged(object sender, bool value)
+        {
+            jwShowBeams1.ShowGoujiantext = value;
+        }
     }
 }

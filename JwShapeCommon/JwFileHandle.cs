@@ -3369,7 +3369,7 @@ namespace JwShapeCommon
                 //下面
                 if (point.Y < touch.LoserBeam.Center)
                 {
-                    var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter > point.Y).OrderByDescending(t => t.HoleCenter).ToList();
+                    var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter < point.Y).OrderByDescending(t => t.HoleCenter).ToList();
                     if (touch.WinnerBeam.HasQieGe)
                     {
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
@@ -3384,27 +3384,66 @@ namespace JwShapeCommon
                         {
                             var p = pdlst.First();
                             var cha = Math.Abs(p.HoleCenter - point.Y) * JwFileConsts.JwScale;
+                            if(cha> 2 * 84)
+                            {
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                jwPointBeam.Direct = ZhengfuType.Reduce;
+                                touch.JwHoleG.HasPreLinkHole = true;
+                            }
+                            else
+                            {
+                                jwPointBeam.Direct = ZhengfuType.Reduce;
+                                double realy= p.HoleCenter - (84 / JwFileConsts.JwScale);
+                                jwPointBeam.RealPoint=new JWPoint(jwPointBeam.RealPoint.X, realy);
+                            }
                             //获取需要添加 上下额外孔组的 孔组
                             //var f = pdlst.First();
                             //f.HasBhLinkHole = true;
                         }
                     }
-                        
-                    
-                    jwPointBeam.Direct = ZhengfuType.Reduce;
-                    touch.JwHoleG.HasPreLinkHole = true;
-                    
                 }
                 else
                 {
-                    jwPointBeam.Direct = ZhengfuType.Add;
-                    touch.JwHoleG.HasBhLinkHole = true;
+                    var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter > point.Y).OrderBy(t => t.HoleCenter).ToList();
+                    //jwPointBeam.Direct = ZhengfuType.Add;
+                    //touch.JwHoleG.HasBhLinkHole = true;
                     if (touch.WinnerBeam.HasQieGe)
                     {
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
                             f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                        }
+                    }
+                    else
+                    {
+                        if (pdlst.Count > 0)
+                        {
+                            var p = pdlst.First();
+                            var cha = Math.Abs(p.HoleCenter - point.Y) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                jwPointBeam.Direct = ZhengfuType.Add;
+                                touch.JwHoleG.HasBhLinkHole = true;
+                            }
+                            else
+                            {
+                                jwPointBeam.Direct = ZhengfuType.Add;
+                                double realy = p.HoleCenter + (84 / JwFileConsts.JwScale);
+                                jwPointBeam.RealPoint = new JWPoint(jwPointBeam.RealPoint.X, realy);
+                            }
+                            //获取需要添加 上下额外孔组的 孔组
+                            //var f = pdlst.First();
+                            //f.HasBhLinkHole = true;
+                        }
+                        else
+                        {
+                            //没有找到 说明在端部
+                            jwPointBeam.Direct = ZhengfuType.Add;
+                            touch.JwHoleG.HasBhLinkHole = true;
                         }
                     }
                 }
@@ -3413,8 +3452,7 @@ namespace JwShapeCommon
             {
                 if (point.X < touch.LoserBeam.Center)
                 {
-                    jwPointBeam.Direct = ZhengfuType.Reduce;
-                    touch.JwHoleG.HasPreLinkHole = true;
+                    var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter < point.X).OrderByDescending(t => t.HoleCenter).ToList();
                     if (touch.WinnerBeam.HasQieGe)
                     {
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
@@ -3423,17 +3461,72 @@ namespace JwShapeCommon
                             f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                         }
                     }
+                    else
+                    {
+                        if (pdlst.Count > 0)
+                        {
+                            var p = pdlst.First();
+                            var cha = Math.Abs(p.HoleCenter - point.X) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                jwPointBeam.Direct = ZhengfuType.Reduce;
+                                touch.JwHoleG.HasPreLinkHole = true;
+                            }
+                            else
+                            {
+                                jwPointBeam.Direct = ZhengfuType.Reduce;
+                                double realX = p.HoleCenter - (84 / JwFileConsts.JwScale);
+                                jwPointBeam.RealPoint = new JWPoint(realX, jwPointBeam.RealPoint.Y);
+                            }
+                            //获取需要添加 上下额外孔组的 孔组
+                            //var f = pdlst.First();
+                            //f.HasBhLinkHole = true;
+                        }
+                        else
+                        {
+                            //没有找到 说明在端部
+                            jwPointBeam.Direct = ZhengfuType.Reduce;
+                            touch.JwHoleG.HasPreLinkHole = true;
+                        }
+                        //jwPointBeam.Direct = ZhengfuType.Reduce;
+                        //touch.JwHoleG.HasPreLinkHole = true;
+                    }
                 }
                 else
                 {
-                    jwPointBeam.Direct = ZhengfuType.Add;
-                    touch.JwHoleG.HasBhLinkHole = true;
+                    var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter > point.X).OrderByDescending(t => t.HoleCenter).ToList();
+                    //jwPointBeam.Direct = ZhengfuType.Add;
+                    //touch.JwHoleG.HasBhLinkHole = true;
                     if (touch.WinnerBeam.HasQieGe)
                     {
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
                             f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                        }
+                    }
+                    else
+                    {
+                        if (pdlst.Count>0)
+                        {
+                            var p = pdlst.First();
+                            var cha = Math.Abs(p.HoleCenter - point.X) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                jwPointBeam.Direct = ZhengfuType.Add;
+                                touch.JwHoleG.HasBhLinkHole = true;
+                            }
+                            else
+                            {
+                                jwPointBeam.Direct = ZhengfuType.Add;
+                                //touch.JwHoleG.HasBhLinkHole = true;;
+                                double realX = p.HoleCenter + (84 / JwFileConsts.JwScale);
+                                jwPointBeam.RealPoint = new JWPoint(realX, jwPointBeam.RealPoint.Y);
+                            }
                         }
                     }
                 }
