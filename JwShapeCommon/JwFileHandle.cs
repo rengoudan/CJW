@@ -3372,6 +3372,8 @@ namespace JwShapeCommon
                     var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter < point.Y).OrderByDescending(t => t.HoleCenter).ToList();
                     if (touch.WinnerBeam.HasQieGe)
                     {
+                        jwPointBeam.Direct = ZhengfuType.Reduce;
+                        touch.JwHoleG.HasPreLinkHole = true;
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
@@ -3406,10 +3408,11 @@ namespace JwShapeCommon
                 else
                 {
                     var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter > point.Y).OrderBy(t => t.HoleCenter).ToList();
-                    //jwPointBeam.Direct = ZhengfuType.Add;
-                    //touch.JwHoleG.HasBhLinkHole = true;
+                    
                     if (touch.WinnerBeam.HasQieGe)
                     {
+                        jwPointBeam.Direct = ZhengfuType.Add;
+                        touch.JwHoleG.HasBhLinkHole = true;
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
@@ -3455,6 +3458,8 @@ namespace JwShapeCommon
                     var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter < point.X).OrderByDescending(t => t.HoleCenter).ToList();
                     if (touch.WinnerBeam.HasQieGe)
                     {
+                        jwPointBeam.Direct = ZhengfuType.Reduce;
+                        touch.JwHoleG.HasPreLinkHole = true;
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
@@ -3497,15 +3502,17 @@ namespace JwShapeCommon
                 else
                 {
                     var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter > point.X).OrderByDescending(t => t.HoleCenter).ToList();
-                    //jwPointBeam.Direct = ZhengfuType.Add;
-                    //touch.JwHoleG.HasBhLinkHole = true;
+                    
                     if (touch.WinnerBeam.HasQieGe)
                     {
+                        touch.JwHoleG.HasBhLinkHole = true;
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
                             f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
                         }
+                        jwPointBeam.Direct = ZhengfuType.Add;
+                       
                     }
                     else
                     {
