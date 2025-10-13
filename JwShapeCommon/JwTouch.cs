@@ -57,8 +57,14 @@ namespace JwShapeCommon
     {
         public double Qiegezb { get; set; }
 
+        /// <summary>
+        /// 左边 减 的小的一边
+        /// </summary>
         public JwBeam RJwBeam { get; set; }
 
+        /// <summary>
+        /// 右边 加 大的一边
+        /// </summary>
         public JwBeam AJwBeam { get; set; }
     }
 }

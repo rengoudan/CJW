@@ -1,4 +1,6 @@
-﻿using JwShapeCommon;
+﻿using JwCore;
+using JwShapeCommon;
+using RGBJWMain.Forms;
 using Sunny.UI.Win32;
 using System;
 using System.Collections.Generic;
@@ -79,10 +81,35 @@ namespace RGBJWMain.Controls
         private void jwShowBeams1_Click(object sender, EventArgs e)
         {
             SelectedBeam = jwShowBeams1.SelectedBeam;
-            if (SelectBeamEvent != null)
+            if (SelectedBeam != null)
             {
                 BeamSelected = true;
-                SelectBeamEvent(sender, e);
+                //SelectBeamEvent(sender, e);
+                
+                    var z = SelectedBeam;
+
+                    if (z != null)
+                    {
+                        //if (z.DirectionType == BeamDirectionType.Horizontal)
+                        //{
+                        //    z.AbsolutePD = z.TopLeft.X;
+                        //}
+                        //if (z.DirectionType == BeamDirectionType.Vertical)
+                        //{
+                        //    z.AbsolutePD = z.BottomLeft.Y;
+                        //}
+                        //var q = z.jwBeamMarks;
+                        //JwSingleBeamForm jsForm = new JwSingleBeamForm(z);
+
+                        ////jsForm.ShowBeam = js;
+                        ////jsForm.sha
+                        //jsForm.ShowDialog();
+
+                        NewJwBeamForm jsForm = new NewJwBeamForm(z);
+                        jsForm.Show();
+
+                    }
+                
             }
         }
 

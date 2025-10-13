@@ -22,8 +22,32 @@ namespace RGBJWMain.Controls
         public RGBJwwShow()
         {
             this.BackColor = Color.Black;
+
             InitializeComponent();
+            
+            
+            //if(sscale)
+
+            this.MouseWheel += RGBJwwShow_MouseClick;
             isdraw = false;
+        }
+
+        private float sscale=1.0f;
+        private float jscale = 1.0f;
+
+        private PointF origin = new PointF(0, 0);
+
+        private void RGBJwwShow_MouseClick(object? sender, MouseEventArgs e)
+        {
+            // 可以根据需要实现缩放或其他功能，这里暂时留空
+            // 例如：Invalidate();
+            float oldScale = sscale;
+            sscale += e.Delta > 0 ? 0.1f : -0.1f;
+            sscale = Math.Max(jscale, sscale); // 防止缩得太小
+                                           // 以鼠标位置为中心进行缩放
+            origin.X = e.X - (e.X - origin.X) * (sscale / oldScale);
+            origin.Y = e.Y - (e.Y - origin.Y) * (sscale / oldScale);
+            Invalidate();
         }
 
         double _minx;
@@ -196,21 +220,24 @@ namespace RGBJWMain.Controls
                 var z = pe.Graphics;
                 using (z)
                 {
-                    var wth = _maxx - _minx;
-                    var hth = _maxy - _miny;
-                    var wscale = Convert.ToSingle((this.Width - 20) / wth);
-                    var hscale = Convert.ToSingle((this.Height - 20) / hth);
-                    var scale = Math.Min(wscale, hscale);
+                    //var wth = _maxx - _minx;
+                    //var hth = _maxy - _miny;
+                    //var wscale = Convert.ToSingle((this.Width - 20) / wth);
+                    //var hscale = Convert.ToSingle((this.Height - 20) / hth);
+                    //var scale = Math.Min(wscale, hscale);
                     Matrix myMatrix = new Matrix(1, 0, 0, -1, 0, 0);
-                    myMatrix.Scale(scale, scale);
-                    float flx = Convert.ToSingle(_minx) * scale - 20;
-                    float fly = Convert.ToSingle(_maxy) * scale + 20;
+                    myMatrix.Scale(sscale, sscale);
+                    float flx = Convert.ToSingle(_minx) * sscale - 20;
+                    float fly = Convert.ToSingle(_maxy) * sscale + 20;
                     z.Transform = myMatrix;
                     z.TranslateTransform(-flx, fly, MatrixOrder.Append);
 
+                    //pe.Graphics.TranslateTransform(-origin.X,  origin.Y/fly);
+                    //pe.Graphics.ScaleTransform(sscale, sscale);
 
-                    Pen myPen = new Pen(Color.GreenYellow, 1 / scale);
-                    Pen myPen2 = new Pen(Color.Gray, 1 / scale);
+
+                    Pen myPen = new Pen(Color.GreenYellow, 1 / sscale);
+                    Pen myPen2 = new Pen(Color.Gray, 1 / sscale);
 
                     if (_showSen)
                     {
@@ -224,7 +251,7 @@ namespace RGBJWMain.Controls
                                     {
                                         if (!isselectcolor)
                                         {
-                                            var pen = new Pen(_colors2[se.m_nPenColor], 1 / scale);
+                                            var pen = new Pen(_colors2[se.m_nPenColor], 1 / sscale);
                                             pen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDotDot;
                                             z.DrawLine(pen, Convert.ToSingle(se.m_start_x), Convert.ToSingle(se.m_start_y), Convert.ToSingle(se.m_end_x), Convert.ToSingle(se.m_end_y));
                                         }
@@ -232,7 +259,7 @@ namespace RGBJWMain.Controls
                                         {
                                             if (se.m_nPenColor == selectedcolorint)
                                             {
-                                                var pen = new Pen(_colors2[se.m_nPenColor], 1 / scale);
+                                                var pen = new Pen(_colors2[se.m_nPenColor], 1 / sscale);
                                                 pen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDotDot;
                                                 z.DrawLine(pen, Convert.ToSingle(se.m_start_x), Convert.ToSingle(se.m_start_y), Convert.ToSingle(se.m_end_x), Convert.ToSingle(se.m_end_y));
                                             }
@@ -243,7 +270,7 @@ namespace RGBJWMain.Controls
                                     {
                                         if (!isselectcolor)
                                         {
-                                            var pen = new Pen(_colors2[se.m_nPenColor], 1 / scale);
+                                            var pen = new Pen(_colors2[se.m_nPenColor], 1 / sscale);
                                             //pen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDotDot;
                                             //myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                                             z.DrawLine(pen, Convert.ToSingle(se.m_start_x), Convert.ToSingle(se.m_start_y), Convert.ToSingle(se.m_end_x), Convert.ToSingle(se.m_end_y));
@@ -252,7 +279,7 @@ namespace RGBJWMain.Controls
                                         {
                                             if (se.m_nPenColor == selectedcolorint)
                                             {
-                                                var pen = new Pen(_colors2[se.m_nPenColor], 1 / scale);
+                                                var pen = new Pen(_colors2[se.m_nPenColor], 1 / sscale);
                                                 //pen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDotDot;
                                                 //myPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                                                 z.DrawLine(pen, Convert.ToSingle(se.m_start_x), Convert.ToSingle(se.m_start_y), Convert.ToSingle(se.m_end_x), Convert.ToSingle(se.m_end_y));

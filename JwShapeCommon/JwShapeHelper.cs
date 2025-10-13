@@ -79,7 +79,9 @@ namespace JwShapeCommon
                             KongNum = hole.KongNum,
                             HasLocationCenter = hole.HasLocationCenter,
                             Id = hole.Id,
-                            HoleType = hole.HoleType
+                            HoleType = hole.HoleType,
+                            HasBhLinkHole=hole.HasBhLinkHole,
+                            HasPreLinkHole=hole.HasPreLinkHole
                         };
                         if(jh.HasLocationCenter)
                         {

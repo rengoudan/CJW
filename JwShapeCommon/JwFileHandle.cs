@@ -3377,7 +3377,9 @@ namespace JwShapeCommon
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
-                            f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            f.RJwBeam.holesorder();
+                            f.RJwBeam.Holes.Last().HasPreLinkHole = true;
                         }
                     }
                     else
@@ -3416,7 +3418,9 @@ namespace JwShapeCommon
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
-                            f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                            //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                            f.AJwBeam.holesorder();
+                            f.AJwBeam.Holes.First().HasBhLinkHole=true;
                         }
                     }
                     else
@@ -3463,7 +3467,9 @@ namespace JwShapeCommon
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
-                            f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            f.RJwBeam.holesorder();
+                            f.RJwBeam.Holes.Last().HasPreLinkHole = true;   
                         }
                     }
                     else
@@ -3509,7 +3515,9 @@ namespace JwShapeCommon
                         var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
                         if (f != null)
                         {
-                            f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                            //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                            f.AJwBeam.holesorder();
+                            f.AJwBeam.Holes.First().HasBhLinkHole = true;   
                         }
                         jwPointBeam.Direct = ZhengfuType.Add;
                        

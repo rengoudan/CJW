@@ -636,6 +636,18 @@ namespace JwShapeCommon
 
         public List<JwBeamMarkPoint> jwBeamMarks = new List<JwBeamMarkPoint>();
 
+        public void holesorder()
+        {
+            if (this.DirectionType == BeamDirectionType.Horizontal)
+            {
+                this.Holes = this.Holes.OrderBy(t => t.Location.X).ToList();
+            }
+            if (this.DirectionType == BeamDirectionType.Vertical)
+            {
+                this.Holes = this.Holes.OrderBy(t => t.Location.Y).ToList();
+            }
+        }
+
         /// <summary>
         /// 前提默认holes 是完整 包含首尾
         /// 对holes进行排序 并生成需要计算区间的点数据
