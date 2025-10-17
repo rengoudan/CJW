@@ -378,7 +378,7 @@ namespace RGBJWMain.Controls
                             //starty -= 50;
                             if (!isselectcolor)
                             {
-                                Font ftext = new Font(FontFamily.GenericMonospace, 30F, FontStyle.Bold);
+                                System.Drawing.Font ftext = new System.Drawing.Font(FontFamily.GenericMonospace, 30F, FontStyle.Bold);
                                 var stext = pe.Graphics.MeasureString(color.Key.ToString(), ftext);
                                 var nl = new PointF(this.Width - 100, starty);
                                 RectangleF trf = new RectangleF(nl, new SizeF(stext.Width, stext.Height));
@@ -393,10 +393,10 @@ namespace RGBJWMain.Controls
                             }
                             else
                             {
-                                Font ftext;
+                                System.Drawing.Font ftext;
                                 if (color.Key == selectedcolorint)
                                 {
-                                    ftext = new Font(FontFamily.GenericMonospace, 38F, FontStyle.Underline);
+                                    ftext = new System.Drawing.Font(FontFamily.GenericMonospace, 38F, FontStyle.Underline);
                                     //現在選択されている色
                                     //Font ftext = new Font(FontFamily.GenericMonospace, 30F, FontStyle.Bold);
                                     var stext = pe.Graphics.MeasureString("現在選択されている色番号は :" + color.Key.ToString(), ftext);
@@ -414,7 +414,7 @@ namespace RGBJWMain.Controls
                                 }
                                 else
                                 {
-                                    ftext = new Font(FontFamily.GenericMonospace, 30F, FontStyle.Bold);
+                                    ftext = new System.Drawing.Font(FontFamily.GenericMonospace, 30F, FontStyle.Bold);
                                     //Font ftext = new Font(FontFamily.GenericMonospace, 30F, FontStyle.Bold);
                                     var stext = pe.Graphics.MeasureString(color.Key.ToString(), ftext);
                                     var nl = new PointF(this.Width - 100, starty);

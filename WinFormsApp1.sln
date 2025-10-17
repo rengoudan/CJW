@@ -26,6 +26,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RGBJWSETUP", "RGBJWSETUP\RG
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RGBJWCAD1", "RGBJWCAD1\RGBJWCAD1.vdproj", "{780435B5-4F51-ED73-56FF-F49E9D4774AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGBControls", "RGBControls\RGBControls.csproj", "{349DA53A-D87E-463E-AF04-9983F53BB979}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,18 @@ Global
 		{780435B5-4F51-ED73-56FF-F49E9D4774AE}.Release|Any CPU.ActiveCfg = Release
 		{780435B5-4F51-ED73-56FF-F49E9D4774AE}.Release|x64.ActiveCfg = Release
 		{780435B5-4F51-ED73-56FF-F49E9D4774AE}.Release|x86.ActiveCfg = Release
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Debug|x64.Build.0 = Debug|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Debug|x86.Build.0 = Debug|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Release|x64.ActiveCfg = Release|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Release|x64.Build.0 = Release|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Release|x86.ActiveCfg = Release|Any CPU
+		{349DA53A-D87E-463E-AF04-9983F53BB979}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -153,6 +153,7 @@ namespace JwShapeCommon
         /// <param name="qiegeen">end 是否为J端</param>
         public JwBeam(JwBeam parenbeam, JWPoint start, JWPoint end,bool qiegestart,bool qiegeend)
         {
+            double wc = 30 / JwFileConsts.JwScale;
             Id = Guid.NewGuid().ToString();
             parenbeam.IsParentBeam = true;
             List<JWPoint> qglst = new List<JWPoint>();
@@ -162,7 +163,7 @@ namespace JwShapeCommon
             List<JwHole> yhs;
             if (parenbeam.DirectionType == BeamDirectionType.Horizontal)
             {
-                yhs = parenbeam.Holes.Where(t => t.Location.X > start.X && t.Location.X < end.X && !t.IsStart && !t.IsEnd).ToList();
+                yhs = parenbeam.Holes.Where(t => t.Location.X > (start.X+wc) && t.Location.X < (end.X-wc) && !t.IsStart && !t.IsEnd).ToList();
 
                 this.Holes.AddRange(yhs);
                 if (qiegestart)
@@ -244,7 +245,7 @@ namespace JwShapeCommon
             }
             else
             {
-                yhs = parenbeam.Holes.Where(t => t.Location.Y > start.Y && t.Location.Y < end.Y && !t.IsStart && !t.IsEnd).ToList();
+                yhs = parenbeam.Holes.Where(t => t.Location.Y > (start.Y+wc) && t.Location.Y < (end.Y-wc) && !t.IsStart && !t.IsEnd).ToList();
 
                 this.Holes.AddRange(yhs);
                 //var hls = parenbeam.Holes.Where(t => t.Location.Y >= start.Y && t.Location.Y <= end.Y).ToList();

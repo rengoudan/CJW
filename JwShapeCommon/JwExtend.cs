@@ -501,8 +501,8 @@ namespace JwShapeCommon
                     //    hh.HoleCenter = location.Y;
                     //}
                     hh.HoleCenter = pccenter;
-                    //beam.Holes.Add(hh);
-                    fh.changeByOther(HoleCreateFrom.FengeJ);
+                    beam.Holes.Add(hh);
+                    //fh.changeByOther(HoleCreateFrom.FengeJ);
 
                 }
             }

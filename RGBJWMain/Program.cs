@@ -1,11 +1,14 @@
-using System.ComponentModel.Design;
-using System.Runtime.CompilerServices;
+using AutoUpdaterDotNET;
 using JwShapeCommon;
 using JwShapeCommon.JwService;
 using JwShapeCommon.JwService.Dtos;
 using JwShapeCommon.JwService.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace RGBJWMain
 {
@@ -43,7 +46,7 @@ namespace RGBJWMain
             }
         }
 
-        public static void InitBaseData()
+        public static void z()
         {
             if (!string.IsNullOrEmpty(Properties.Settings.Default.ServerUrl))
             {
@@ -64,5 +67,41 @@ namespace RGBJWMain
             IConfiguration  configuration = cfgBuilder.Build();
             services.AddSingleton<IConfiguration>(configuration);
         }
+
+        //private void CheckDllUpdate()
+        //{
+        //    //AutoUpdater.CheckForUpdateEvent += OnDllUpdateCheck;
+        //    AutoUpdater.CheckForUpdateEvent += (args) =>
+        //    {
+                
+        //        // 获取 DLL 的版本号
+        //        string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BusinessLogic.dll");
+        //        Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
+        //        Version serverVersion = new Version(args.CurrentVersion);
+
+        //        if (serverVersion > localDllVersion)
+        //        {
+        //            //DialogResult result = MessageBox.Show(
+        //            //    $"发现 DLL 新版本 {serverVersion}，是否更新？\n\n{args.Changelog}",
+        //            //    "更新提示", MessageBoxButtons.YesNo);
+
+
+        //            // 手动调用 ZipExtractor.exe
+        //            string zipExtractorPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZipExtractor.exe");
+        //            Process.Start(zipExtractorPath, $"\"{Application.ExecutablePath}\" \"{args.DownloadURL}\"");
+        //            Application.Exit();
+
+        //            //if (result == DialogResult.Yes)
+        //            //{
+
+        //            //}
+        //        }
+        //    };
+
+        //    AutoUpdater.Start("");
+        //}
+
+        
+
     }
 }
