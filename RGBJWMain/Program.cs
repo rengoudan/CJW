@@ -23,27 +23,65 @@ namespace RGBJWMain
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            var services = new ServiceCollection();
-            ConfigureServices(services);
-            //先用DI容器生成 serviceProvider, 然后通过 serviceProvider 获取Main Form的注册实例
-            var serviceProvider = services.BuildServiceProvider();
-            var formMain = serviceProvider.GetRequiredService<JwMainForm>();
-            string optype = "";
-            InitBaseData();
-            if (args.Length >0)
+            //var services = new ServiceCollection();
+            //ConfigureServices(services);
+            ////先用DI容器生成 serviceProvider, 然后通过 serviceProvider 获取Main Form的注册实例
+            //var serviceProvider = services.BuildServiceProvider();
+            //var formMain = serviceProvider.GetRequiredService<JwMainForm>();
+            //string optype = "";
+            ////InitBaseData();
+            //if (args.Length >0)
+            //{
+            //    optype= args[0];
+            //    formMain.Optype= optype;
+            //    //Application.Run(new FMain());
+            //    //Application.Run(formMain);
+            //}
+            //else
+            //{
+            //    formMain.Optype = "1";
+            //    //Application.Run(formMain);
+            //    //Application.Run(new FMain());
+            //    //Application.Run(new JwMainForm("1"));
+            //}
+            //CheckDllUpdate();
+            AutoUpdater.CheckForUpdateEvent += (args) =>
             {
-                optype= args[0];
-                formMain.Optype= optype;
-                Application.Run(new FMain());
-                //Application.Run(formMain);
-            }
-            else
-            {
-                formMain.Optype = "1";
-                //Application.Run(formMain);
-                Application.Run(new FMain());
-                //Application.Run(new JwMainForm("1"));
-            }
+
+                // 获取 DLL 的版本号
+                string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RGBControls.dll");
+                Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
+                Version serverVersion = new Version(args.CurrentVersion);
+
+                if (serverVersion > localDllVersion)
+                {
+                    DialogResult result = MessageBox.Show(
+                        $"新しいバージョンのDLLが見つかりました {serverVersion}，アップデート？\n\n",
+                        "アップデートのヒント", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        // 手动调用 ZipExtractor.exe
+                        //string zipExtractorPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZipExtractor.exe");
+                        //Process.Start(zipExtractorPath, $"\"{Application.ExecutablePath}\" \"{args.DownloadURL}\"");
+                        AutoUpdater.DownloadUpdate(args);
+                        System.Threading.Thread.Sleep(3000);
+                        Application.Exit();
+                        //Application.Exit();
+                    }
+                    else
+                    {
+                        Application.Run(new FMain());
+                    }
+                }
+                else
+                {
+                    Application.Run(new FMain());
+                }
+            };
+
+            AutoUpdater.Start("https://www.rgballwin.com/zupdate.xml");
+            
+            Application.Run();
         }
 
         public static void z()
@@ -68,40 +106,46 @@ namespace RGBJWMain
             services.AddSingleton<IConfiguration>(configuration);
         }
 
-        //private void CheckDllUpdate()
-        //{
-        //    //AutoUpdater.CheckForUpdateEvent += OnDllUpdateCheck;
-        //    AutoUpdater.CheckForUpdateEvent += (args) =>
-        //    {
-                
-        //        // 获取 DLL 的版本号
-        //        string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BusinessLogic.dll");
-        //        Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
-        //        Version serverVersion = new Version(args.CurrentVersion);
+        private static void CheckDllUpdate()
+        {
+            //AutoUpdater.CheckForUpdateEvent += OnDllUpdateCheck;
+            AutoUpdater.CheckForUpdateEvent += (args) =>
+            {
 
-        //        if (serverVersion > localDllVersion)
-        //        {
-        //            //DialogResult result = MessageBox.Show(
-        //            //    $"发现 DLL 新版本 {serverVersion}，是否更新？\n\n{args.Changelog}",
-        //            //    "更新提示", MessageBoxButtons.YesNo);
+                // 获取 DLL 的版本号
+                string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RGBControls.dll");
+                Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
+                Version serverVersion = new Version(args.CurrentVersion);
+
+                if (serverVersion > localDllVersion)
+                {
+                    DialogResult result = MessageBox.Show(
+                        $"新しいバージョンのDLLが見つかりました {serverVersion}，アップデート？\n\n",
+                        "アップデートのヒント", MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        // 手动调用 ZipExtractor.exe
+                        //string zipExtractorPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZipExtractor.exe");
+                        //Process.Start(zipExtractorPath, $"\"{Application.ExecutablePath}\" \"{args.DownloadURL}\"");
+                        AutoUpdater.DownloadUpdate(args);
+                        Application.Exit();
+                        //Application.Exit();
+                    }
+                    else
+                    {
+                        Application.Run(new FMain());
+                    }
+                }
+                else
+                {
+                    Application.Run(new FMain());
+                }
+            };
+
+            AutoUpdater.Start("https://www.rgballwin.com/zupdate.xml");
+        }
 
 
-        //            // 手动调用 ZipExtractor.exe
-        //            string zipExtractorPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZipExtractor.exe");
-        //            Process.Start(zipExtractorPath, $"\"{Application.ExecutablePath}\" \"{args.DownloadURL}\"");
-        //            Application.Exit();
-
-        //            //if (result == DialogResult.Yes)
-        //            //{
-
-        //            //}
-        //        }
-        //    };
-
-        //    AutoUpdater.Start("");
-        //}
-
-        
 
     }
 }
