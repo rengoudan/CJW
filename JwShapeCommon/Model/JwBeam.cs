@@ -654,6 +654,7 @@ namespace JwShapeCommon
         /// 对holes进行排序 并生成需要计算区间的点数据
         /// 2025年4月16日 由于endhole 
         /// 统一一下起始和结束 端口 2及端口所包含的hole 
+        /// 2025年10月22日 起始点缺少prebeam
         /// </summary>
         private void holeorder()
         {

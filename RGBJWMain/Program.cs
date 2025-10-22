@@ -23,28 +23,7 @@ namespace RGBJWMain
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            //var services = new ServiceCollection();
-            //ConfigureServices(services);
-            ////先用DI容器生成 serviceProvider, 然后通过 serviceProvider 获取Main Form的注册实例
-            //var serviceProvider = services.BuildServiceProvider();
-            //var formMain = serviceProvider.GetRequiredService<JwMainForm>();
-            //string optype = "";
-            ////InitBaseData();
-            //if (args.Length >0)
-            //{
-            //    optype= args[0];
-            //    formMain.Optype= optype;
-            //    //Application.Run(new FMain());
-            //    //Application.Run(formMain);
-            //}
-            //else
-            //{
-            //    formMain.Optype = "1";
-            //    //Application.Run(formMain);
-            //    //Application.Run(new FMain());
-            //    //Application.Run(new JwMainForm("1"));
-            //}
-            //CheckDllUpdate();
+            
             AutoUpdater.CheckForUpdateEvent += (args) =>
             {
 
@@ -103,7 +82,7 @@ namespace RGBJWMain
                 ;
             
             IConfiguration  configuration = cfgBuilder.Build();
-            services.AddSingleton<IConfiguration>(configuration);
+            services.AddSingleton<IConfiguration>(configuration);   
         }
 
         private static void CheckDllUpdate()

@@ -158,6 +158,7 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 针对于0.01 默认梁之间 精确到厘米，
+        /// 相对于前一个中心点距离
         /// </summary>
         private double _preCenterDistance;
         public double PreCenterDistance 
@@ -183,6 +184,9 @@ namespace JwShapeCommon
         /// </summary>
         public double PreCenterCorrect { get; set; }
 
+        /// <summary>
+        /// 相对于梁起始点的距离
+        /// </summary>
         public double PreBeamStartDistance { get; set; }
 
         public JwHole AppendHole { get; set; }
