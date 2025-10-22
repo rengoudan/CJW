@@ -28,6 +28,12 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace JwShapeCommon
 {
+    /// <summary>
+    /// 参考 CSVﾌｫｰﾏｯﾄ V2.2
+    /// 对照 center 对应 csv 上面 左上角为原点 Y+向下 X+向右
+    /// top 对应 csv 右面 原点为 中间  Y+向天 X+向右
+    /// bottom  对应 csv 左面 原点为 中间  Y+向天 X+向右
+    /// </summary>
     public class JwFileHandle
     {
 
