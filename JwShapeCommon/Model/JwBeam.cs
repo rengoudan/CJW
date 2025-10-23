@@ -888,6 +888,21 @@ namespace JwShapeCommon
         }
 
         public List<JwQiegeZu> jwQiegeZus = new List<JwQiegeZu>();
+
+        /// <summary>
+        /// 导出加工csv
+        /// </summary>
+        /// <returns></returns>
+        public string ToProcessCsv()
+        {
+            StringBuilder sb=new StringBuilder();
+
+
+
+            return sb.ToString();
+        }
+
+
     }
 
     public static class JwBeamExtensions
