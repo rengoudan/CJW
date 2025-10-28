@@ -901,7 +901,16 @@ namespace JwShapeCommon
 
         }
 
-        public void addMachining(double ks,double location,JwHole hole, bool isbis = false)
+        /// <summary>
+        /// 记录加工点位信息
+        /// </summary>
+        /// <param name="ks">梁开始坐标 </param>
+        /// <param name="location">hole孔组中心点</param>
+        /// <param name="hole">hole</param>
+        /// <param name="isbis">是否偏心2</param>
+        /// <param name="isstart"></param>
+        /// <param name="isend"></param>
+        public void addMachining(double ks,double location,JwHole hole, bool isbis = false,bool isstart=false,bool isend=false)
         {
             JwHoleMachining machining = new JwHoleMachining
             {
