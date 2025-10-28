@@ -637,6 +637,8 @@ namespace JwShapeCommon
 
         public List<JwBeamMarkPoint> jwBeamMarks = new List<JwBeamMarkPoint>();
 
+        public List<JwHoleMachining> JwHoleMachinings = new List<JwHoleMachining>();
+
         public void holesorder()
         {
             if (this.DirectionType == BeamDirectionType.Horizontal)
@@ -897,6 +899,30 @@ namespace JwShapeCommon
             var z = this.jwBeamMarks.Count;
             double xxlength=this.jwBeamMarks.Sum(t=>t.PreCenterDistance);
 
+        }
+
+        public void addMachining(double ks,double location,JwHole hole, bool isbis = false)
+        {
+            JwHoleMachining machining = new JwHoleMachining
+            {
+                Id = Id
+            };
+            var wc = (JwFileConsts.Kongjing / JwFileConsts.JwScale) / 2;
+            if (isbis)
+            {
+                
+                machining.RelativeStartDistance = location - wc - ks;
+                JwHoleMachinings.Add(machining);
+            }
+            else
+            {
+                JwHoleMachining machining1 = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = location + wc - ks
+                };
+                JwHoleMachinings.Add(machining1);
+            }
         }
 
         public List<JwQiegeZu> jwQiegeZus = new List<JwQiegeZu>();

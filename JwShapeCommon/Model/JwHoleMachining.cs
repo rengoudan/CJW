@@ -13,7 +13,10 @@ namespace JwShapeCommon.Model
     /// </summary>
     public class JwHoleMachining
     {
-        public double RelativeStartDistance { get; set; } = 0;
+
+        public string Id { get; set; }
+
+        public double RelativeStartDistance { get; set; }
 
 
         /// <summary>
