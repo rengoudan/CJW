@@ -335,6 +335,13 @@ namespace JwShapeCommon
 
         }
 
+        /// <summary>
+        /// jwfileconsts kongjing 为孔组间距
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="isbis"></param>
+        /// <param name="istart"></param>
+        /// <param name="isend"></param>
         private void drawhole(JwHole h, bool isbis, bool istart = false, bool isend = false)
         {
             double tcy = _starty + 0.5;

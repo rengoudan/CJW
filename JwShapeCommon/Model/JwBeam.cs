@@ -649,7 +649,15 @@ namespace JwShapeCommon
             }
         }
 
+
+        //beam 增加一个新类 并有相对的data类对应
+
+        //存有 相对开始距离  需要打孔的位置 上下中 或者all
+
+
         /// <summary>
+        /// 2025年10月28日本身在判断是否距离开始 150的时候判断了相对梁开始的距离 
+        /// 2025年10月28日 增加beammarkpoint的 RelativeStartDistance属性
         /// 前提默认holes 是完整 包含首尾
         /// 对holes进行排序 并生成需要计算区间的点数据
         /// 2025年4月16日 由于endhole 
@@ -714,7 +722,7 @@ namespace JwShapeCommon
                 //cbs.PreCenterDistance = 0;//他就是中心点
                 //prcentercoordinate = cbs.Coordinate;
                 starthole = new JwHole(true, cbs.Point, KongzuType.BC);
-
+                double pbmark = 0;
                 if (centerholes?.Count > 0)
                 {
                     var fch=centerholes[0];
@@ -732,11 +740,15 @@ namespace JwShapeCommon
                     if (ce >= 150)
                     {
                         starthole.KongNum = 4;
+
                     }
                     else
                     {
                         starthole.KongNum = 2;
                         cbs.IsBias = true;
+
+
+
                     }
                 }
             }
@@ -897,7 +909,28 @@ namespace JwShapeCommon
         {
             StringBuilder sb=new StringBuilder();
 
+            sb.Append("CBF V2.0\r\n");
+            sb.Append("START\r\n");
+            sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", "", "", "", "H-200x100x5.5x8", "", ""));
+            //sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", Gongqu, Liangfuhao, Louceng, "H-200x100x5.5x8", SingleBeamLength.ToString("0.0"), benshu));
+            sb.Append("0, 0, 0, , 0, 0\r\n");
+            //绘制上  对应csv的 右
 
+            foreach(var jfm in jwBeamMarks)
+            {
+                if(jfm.HasAppend&&jfm.AppendHole!=null)
+                {
+                    sb.Append(string.Format("1, {0}, {1}, , {2}, {3}\r\n", jfm.Point.X.ToString("0.00"), jfm.Point.Y.ToString("0.00"), jfm.AppendHole.KongNum, jfm.AppendHole.SuoShuMian.ToString("D")));
+                }
+                else
+                {
+                    sb.Append(string.Format("1, {0}, {1}, , {2}, {3}\r\n", jfm.Point.X.ToString("0.00"), jfm.Point.Y.ToString("0.00"), 0, 0));
+                }
+            }
+
+            //绘制center 对应csv的 top
+
+            //绘制下 对应csv的 left
 
             return sb.ToString();
         }

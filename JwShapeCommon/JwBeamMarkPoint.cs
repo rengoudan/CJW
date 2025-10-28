@@ -203,5 +203,10 @@ namespace JwShapeCommon
         /// 
         /// </summary>
         public bool HasError { get; set; }
-    }
+
+        /// <summary>
+        /// 相对于梁起始点的相对距离
+        /// </summary>
+        public double RelativeStartDistance { get; set; } = 0;
+        }
 }
