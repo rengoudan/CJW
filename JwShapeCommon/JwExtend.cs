@@ -231,7 +231,14 @@ namespace JwShapeCommon
                             jwbm.Baifangs.Add(vb.DataToJw());
                         }
                     }
-
+                    if(jwbm.DirectionType == BeamDirectionType.Horizontal)
+                    {
+                        jwbm.AbsolutePD = jwbm.TopLeft.X;
+                    }
+                    else
+                    {
+                          jwbm.AbsolutePD = jwbm.TopLeft.Y;
+                    }
                     reobj.Beams.Add(jwbm);
                 }
             }

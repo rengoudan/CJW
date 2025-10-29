@@ -123,7 +123,11 @@ namespace RGBJWMain.Forms
                 {
 
                 }
-                uiTextBox1.AppendText(mg);
+                //uiTextBox1.AppendText(mg);
+                uiTextBox1.BeginInvoke(() =>
+                {
+                    uiTextBox1.AppendText(mg);
+                });
             }
         }
 
@@ -170,78 +174,156 @@ namespace RGBJWMain.Forms
 
         private void SaveData()
         {
-            if (_jwFileHandle._subData != null)
+            if (this.InvokeRequired)
             {
-              
-                    _jwFileHandle._subData.DefaultBeamXHId = jwProjectPathModel.MaterialData.Id;
-                    _jwFileHandle._subData.DefaultBeamXHName = jwProjectPathModel.MaterialData.GeneralTitle;
-                    dbContext?.JwProjectSubDatas.Add(_jwFileHandle._subData);
-                    if (_jwFileHandle._beamdatas.Count > 0)
+                this.Invoke(new Action(() =>
+                {
+                    if (_jwFileHandle._subData != null)
                     {
-                        foreach (var pl in _jwFileHandle._beamdatas)
-                        {
-                            pl.BeamXHId = jwProjectPathModel.MaterialData.Id;
-                            pl.BeamXHName = jwProjectPathModel.MaterialData.GeneralTitle;
-                            dbContext?.JwBeamDatas.Add(pl);
-                            
-                        }
-                    }
-                    if(_jwFileHandle._jwbvdatas.Count > 0)
-                    {
-                        foreach(var bv in _jwFileHandle._jwbvdatas)
-                        {
-                            dbContext?.JwBeamVerticalDatas.Add(bv);
-                        }
-                    }
-                    if (_jwFileHandle._holeDatas.Count > 0)
-                    {
-                        foreach (var hd in _jwFileHandle._holeDatas)
-                        {
-                            dbContext?.JwHoleDatas.Add(hd);
-                        }
-                    }
-                    if (_jwFileHandle._beampillarDatas.Count > 0)
-                    {
-                        foreach (var pd in _jwFileHandle._beampillarDatas)
-                        {
-                            dbContext?.JwPillarDatas.Add(pd);
-                        }
-                    }
-                    if (_jwFileHandle._linkPartDatas.Count > 0)
-                    {
-                        foreach (var lp in _jwFileHandle._linkPartDatas)
-                        {
-                            dbContext?.JwLinkPartDatas.Add(lp);
-                        }
-                    }
-                    if(_jwFileHandle._lianjieDatas.Count > 0)
-                    {
-                        foreach(var jlj in _jwFileHandle._lianjieDatas)
-                        {
-                            dbContext?.JwLianjieDatas.Add(jlj);
-                        }
-                    }
-                    var md = dbContext.JwProjectMainDatas.Find(jwProjectPathModel.MainData.Id);
-                    md.BCount += _jwFileHandle._subData.BCount;
-                    md.BGCount += _jwFileHandle._subData.BGCount;
-                    if (md.BeamsNumber.HasValue)
-                    {
-                        md.BeamsNumber += _jwFileHandle._subData.BeamCount;
-                    }
-                    else
-                    {
-                        md.BeamsNumber = _jwFileHandle._subData.BeamCount;
-                    }
 
-                    md.PillarCount += _jwFileHandle._subData.PillarCount;
-                    md.KPillarCount += _jwFileHandle._subData.KPillarCount;
-                    md.SinglePillarCount += _jwFileHandle._subData.SinglePillarCount;
-                    md.ParsedQuantity += 1;
-                    dbContext?.SaveChanges();
+                        _jwFileHandle._subData.DefaultBeamXHId = jwProjectPathModel.MaterialData.Id;
+                        _jwFileHandle._subData.DefaultBeamXHName = jwProjectPathModel.MaterialData.GeneralTitle;
+                        dbContext?.JwProjectSubDatas.Add(_jwFileHandle._subData);
+                        if (_jwFileHandle._beamdatas.Count > 0)
+                        {
+                            foreach (var pl in _jwFileHandle._beamdatas)
+                            {
+                                pl.BeamXHId = jwProjectPathModel.MaterialData.Id;
+                                pl.BeamXHName = jwProjectPathModel.MaterialData.GeneralTitle;
+                                dbContext?.JwBeamDatas.Add(pl);
+
+                            }
+                        }
+                        if (_jwFileHandle._jwbvdatas.Count > 0)
+                        {
+                            foreach (var bv in _jwFileHandle._jwbvdatas)
+                            {
+                                dbContext?.JwBeamVerticalDatas.Add(bv);
+                            }
+                        }
+                        if (_jwFileHandle._holeDatas.Count > 0)
+                        {
+                            foreach (var hd in _jwFileHandle._holeDatas)
+                            {
+                                dbContext?.JwHoleDatas.Add(hd);
+                            }
+                        }
+                        if (_jwFileHandle._beampillarDatas.Count > 0)
+                        {
+                            foreach (var pd in _jwFileHandle._beampillarDatas)
+                            {
+                                dbContext?.JwPillarDatas.Add(pd);
+                            }
+                        }
+                        if (_jwFileHandle._linkPartDatas.Count > 0)
+                        {
+                            foreach (var lp in _jwFileHandle._linkPartDatas)
+                            {
+                                dbContext?.JwLinkPartDatas.Add(lp);
+                            }
+                        }
+                        if (_jwFileHandle._lianjieDatas.Count > 0)
+                        {
+                            foreach (var jlj in _jwFileHandle._lianjieDatas)
+                            {
+                                dbContext?.JwLianjieDatas.Add(jlj);
+                            }
+                        }
+                        var md = dbContext.JwProjectMainDatas.Find(jwProjectPathModel.MainData.Id);
+                        md.BCount += _jwFileHandle._subData.BCount;
+                        md.BGCount += _jwFileHandle._subData.BGCount;
+                        if (md.BeamsNumber.HasValue)
+                        {
+                            md.BeamsNumber += _jwFileHandle._subData.BeamCount;
+                        }
+                        else
+                        {
+                            md.BeamsNumber = _jwFileHandle._subData.BeamCount;
+                        }
+
+                        md.PillarCount += _jwFileHandle._subData.PillarCount;
+                        md.KPillarCount += _jwFileHandle._subData.KPillarCount;
+                        md.SinglePillarCount += _jwFileHandle._subData.SinglePillarCount;
+                        md.ParsedQuantity += 1;
+                        dbContext?.SaveChanges();
+                    }
+                }));
             }
+            else
+            {
+                this.Invoke(new Action(() =>
+                {
+                    if (_jwFileHandle._subData != null)
+                    {
 
+                        _jwFileHandle._subData.DefaultBeamXHId = jwProjectPathModel.MaterialData.Id;
+                        _jwFileHandle._subData.DefaultBeamXHName = jwProjectPathModel.MaterialData.GeneralTitle;
+                        dbContext?.JwProjectSubDatas.Add(_jwFileHandle._subData);
+                        if (_jwFileHandle._beamdatas.Count > 0)
+                        {
+                            foreach (var pl in _jwFileHandle._beamdatas)
+                            {
+                                pl.BeamXHId = jwProjectPathModel.MaterialData.Id;
+                                pl.BeamXHName = jwProjectPathModel.MaterialData.GeneralTitle;
+                                dbContext?.JwBeamDatas.Add(pl);
 
+                            }
+                        }
+                        if (_jwFileHandle._jwbvdatas.Count > 0)
+                        {
+                            foreach (var bv in _jwFileHandle._jwbvdatas)
+                            {
+                                dbContext?.JwBeamVerticalDatas.Add(bv);
+                            }
+                        }
+                        if (_jwFileHandle._holeDatas.Count > 0)
+                        {
+                            foreach (var hd in _jwFileHandle._holeDatas)
+                            {
+                                dbContext?.JwHoleDatas.Add(hd);
+                            }
+                        }
+                        if (_jwFileHandle._beampillarDatas.Count > 0)
+                        {
+                            foreach (var pd in _jwFileHandle._beampillarDatas)
+                            {
+                                dbContext?.JwPillarDatas.Add(pd);
+                            }
+                        }
+                        if (_jwFileHandle._linkPartDatas.Count > 0)
+                        {
+                            foreach (var lp in _jwFileHandle._linkPartDatas)
+                            {
+                                dbContext?.JwLinkPartDatas.Add(lp);
+                            }
+                        }
+                        if (_jwFileHandle._lianjieDatas.Count > 0)
+                        {
+                            foreach (var jlj in _jwFileHandle._lianjieDatas)
+                            {
+                                dbContext?.JwLianjieDatas.Add(jlj);
+                            }
+                        }
+                        var md = dbContext.JwProjectMainDatas.Find(jwProjectPathModel.MainData.Id);
+                        md.BCount += _jwFileHandle._subData.BCount;
+                        md.BGCount += _jwFileHandle._subData.BGCount;
+                        if (md.BeamsNumber.HasValue)
+                        {
+                            md.BeamsNumber += _jwFileHandle._subData.BeamCount;
+                        }
+                        else
+                        {
+                            md.BeamsNumber = _jwFileHandle._subData.BeamCount;
+                        }
 
+                        md.PillarCount += _jwFileHandle._subData.PillarCount;
+                        md.KPillarCount += _jwFileHandle._subData.KPillarCount;
+                        md.SinglePillarCount += _jwFileHandle._subData.SinglePillarCount;
+                        md.ParsedQuantity += 1;
+                        dbContext?.SaveChanges();
+                    }
+                }));
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)

@@ -534,6 +534,7 @@
             uiSymbolButton1.Symbol = 61587;
             uiSymbolButton1.TabIndex = 1;
             uiSymbolButton1.Text = "アップロード";
+            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // uiSymbolButton2
@@ -546,6 +547,7 @@
             uiSymbolButton2.Symbol = 300043;
             uiSymbolButton2.TabIndex = 3;
             uiSymbolButton2.Text = "增";
+            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // contextMenuStrip1
@@ -553,33 +555,33 @@
             contextMenuStrip1.ImageScalingSize = new Size(24, 24);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, 改訂ToolStripMenuItem, 詳細ToolStripMenuItem, deleteToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 122);
+            contextMenuStrip1.Size = new Size(241, 157);
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(180, 24);
+            toolStripMenuItem1.Size = new Size(240, 30);
             toolStripMenuItem1.Text = "輸出梁設計図";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
             // 改訂ToolStripMenuItem
             // 
             改訂ToolStripMenuItem.Name = "改訂ToolStripMenuItem";
-            改訂ToolStripMenuItem.Size = new Size(180, 24);
+            改訂ToolStripMenuItem.Size = new Size(240, 30);
             改訂ToolStripMenuItem.Text = "改訂";
             改訂ToolStripMenuItem.Click += 改訂ToolStripMenuItem_Click;
             // 
             // 詳細ToolStripMenuItem
             // 
             詳細ToolStripMenuItem.Name = "詳細ToolStripMenuItem";
-            詳細ToolStripMenuItem.Size = new Size(180, 24);
+            詳細ToolStripMenuItem.Size = new Size(240, 30);
             詳細ToolStripMenuItem.Text = "詳細";
             詳細ToolStripMenuItem.Click += 詳細ToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(180, 24);
+            deleteToolStripMenuItem.Size = new Size(240, 30);
             deleteToolStripMenuItem.Text = "消去";
             deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
             // 
@@ -607,7 +609,6 @@
             uiSymbolButton3.Symbol = 61587;
             uiSymbolButton3.TabIndex = 28;
             uiSymbolButton3.Text = "テストカラー";
-            uiSymbolButton3.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton3.Click += uiSymbolButton3_Click;
             // 
             // uiButton2
@@ -620,7 +621,6 @@
             uiButton2.Size = new Size(84, 35);
             uiButton2.TabIndex = 29;
             uiButton2.Text = "詳細";
-            uiButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiButton2.Click += uiButton2_Click_1;
             // 
             // JwProjectMainPage

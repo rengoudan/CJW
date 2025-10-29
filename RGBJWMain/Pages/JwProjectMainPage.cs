@@ -101,10 +101,20 @@ namespace RGBJWMain.Pages
                     UIMessageBox.ShowError(emsg);
                     return;
                 }
-                var f = new OpenFileDialog();
-                f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
-                if (f.ShowDialog() != DialogResult.OK) return;
-                OpenFile(f.FileName, maindata);
+
+
+                var staThread = new Thread(() =>
+                {
+                    // 这里放 OLE 相关代码，比如 Clipboard、SaveFileDialog 等
+                    var f = new OpenFileDialog();
+                    f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
+                    if (f.ShowDialog() != DialogResult.OK) return;
+                    OpenFile(f.FileName, maindata);
+                });
+                staThread.SetApartmentState(ApartmentState.STA);
+                staThread.Start();
+
+                
             }
 
             //if (!maindata.JwCustomerDataId.HasValue)

@@ -34,7 +34,7 @@ namespace RGBJWMain.Pages
             InitializeComponent();
             _subData = subData;
             uiLine1.Text = _subData.FloorName;
-            
+
             dbContext = ContextFactory.GetContext();
         }
 
@@ -175,7 +175,7 @@ namespace RGBJWMain.Pages
                     onerow.GetCell(12).SetCellValue(alllength.ToString());
                     XSSFSheet.GetRow(9).GetCell(0).SetCellValue(_subData.FloorName);
                     var zl = Math.Round(alllength / 1000 * 1.15, 0);
-                    IRow c1 = XSSFSheet.GetRow(8 + i+1);
+                    IRow c1 = XSSFSheet.GetRow(8 + i + 1);
                     string zls = string.Format("{0}KG", zl);
                     c1.GetCell(12).SetCellValue(zls);
                     IRow c2 = XSSFSheet.GetRow(8 + i + 1);
@@ -184,7 +184,7 @@ namespace RGBJWMain.Pages
                     c2.GetCell(12).SetCellValue(zls);
                     IRow c3 = XSSFSheet.GetRow(8 + i + 2);
                     c3.GetCell(4).SetCellValue(alllength);
-                    
+
                 }
 
                 string compname = _subData.JwProjectMainData.JwCustomerData?.CompanyName;
@@ -214,7 +214,7 @@ namespace RGBJWMain.Pages
                 UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
             }
 
-        
+
 
 
             //foreach (var z in subss)
@@ -320,7 +320,7 @@ namespace RGBJWMain.Pages
                 var ljl = uiDataGridView1.Rows[e.RowIndex].DataBoundItem as JwLianjieData;
                 if (ljl != null)
                 {
-                    if(ljl.CreateFrom== CreateFromType.ManuallyAdd)
+                    if (ljl.CreateFrom == CreateFromType.ManuallyAdd)
                     {
                         ShowErrorNotifier("手作業で作成したものは設計図に記入できない");
                     }
@@ -335,7 +335,7 @@ namespace RGBJWMain.Pages
                             });
                         }
                     }
-                    
+
                 }
                 //if (beam != null)
                 //{
@@ -348,6 +348,111 @@ namespace RGBJWMain.Pages
                 //        });
                 //    }
                 //}
+            }
+        }
+
+        private void panel5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void uiButton2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void uiButton1_Click(object sender, EventArgs e)
+        {
+            if (UIMessageBox.ShowAsk("プロジェクトデータをすべてエクスポートするかどうか"))
+            {
+
+                SaveSubBeams(_subData);
+                Thread.Sleep(2000);
+                this.HideProcessForm();
+
+                //if (!string.IsNullOrEmpty(_nowsavefold))
+                //{
+                //    UIMessageBox.ShowSuccess("エクスポートされたビーム-->" + _nowsavefold);
+                //}
+            }
+        }
+
+        private void SaveSubBeams(JwProjectSubData data)
+        {
+
+            var maindata = this.dbContext.JwProjectMainDatas.First(t => t.Id == data.JwProjectMainDataId);
+
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.Description = "";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                this.ShowProcessForm(200);
+                string foldPath = dialog.SelectedPath + "\\" + maindata.ProjectName;
+                if (!Directory.Exists(foldPath))
+                {
+                    Directory.CreateDirectory(foldPath);
+                }
+                else
+                {
+                    Directory.Delete(foldPath, true);
+                    Directory.CreateDirectory(foldPath);
+                }
+                var _nowsavefold = foldPath;
+
+
+                this.dbContext.Entry(data).Collection(e => e.JwBeamDatas).Load();
+                this.dbContext.Entry(data).Collection(e => e.JwPillarDatas).Load();
+                this.dbContext.Entry(data).Collection(e => e.JwLinkPartDatas).Load();
+                if (data.JwBeamDatas.Count > 0)
+                {
+                    foreach (var bd in data.JwBeamDatas)
+                    {
+                        this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                    }
+                }
+                string subpath = foldPath + "\\" + data.FloorName;
+                if (!Directory.Exists(subpath))
+                {
+                    Directory.CreateDirectory(subpath);
+                }
+                //this.dbContext.Entry(sub).Collection(e => e.jwho).Load();
+                JwCanvas jwCanvas = data.DataToCanvas();
+                if (jwCanvas.Beams.Count > 0)
+                {
+                    var gbeams = jwCanvas.Beams.GroupBy(t => t.BeamCode).ToList();
+                    foreach (var b in gbeams)
+                    {
+                        var bm = b.First();
+                        string sl = "";
+                        if (b.ToList().Count > 1)
+                        {
+                            sl = "(" + b.ToList().Count.ToString() + ")";
+                        }
+                        string wjm = string.Format("{0}{1}.jww", b.Key, sl);
+                        NewJwBeamJwDraw jwDraw = new NewJwBeamJwDraw(bm);
+                        jwDraw.CreateBeam();
+                        if (jwDraw.Sens.Count > 0)
+                        {
+                            using var a = new JwwHelper.JwwWriter();
+
+                            //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
+                            //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
+                            //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
+                            a.InitHeader("template.jww");
+                            foreach (var s in jwDraw.Datas)
+                            {
+                                a.AddData(s);
+                            }
+
+                            //foreach(var b in jwDraw.Biaozhu)
+                            //{
+                            //    a.AddData(b);
+                            //}
+                            a.Write(subpath + "\\" + wjm);
+                        }
+                    }
+                }
             }
         }
     }

@@ -23,44 +23,90 @@ namespace RGBJWMain
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            
-            AutoUpdater.CheckForUpdateEvent += (args) =>
+
+            // 创建一个隐藏窗体，用于处理更新逻辑
+            using (Form tempForm = new Form { ShowInTaskbar = false, WindowState = FormWindowState.Minimized })
             {
-
-                // 获取 DLL 的版本号
-                string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RGBControls.dll");
-                Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
-                Version serverVersion = new Version(args.CurrentVersion);
-
-                if (serverVersion > localDllVersion)
+                tempForm.Load += (s, e) =>
                 {
-                    DialogResult result = MessageBox.Show(
-                        $"新しいバージョンのDLLが見つかりました {serverVersion}，アップデート？\n\n",
-                        "アップデートのヒント", MessageBoxButtons.YesNo);
-                    if (result == DialogResult.Yes)
+                    AutoUpdater.CheckForUpdateEvent += (updateArgs) =>
                     {
-                        // 手动调用 ZipExtractor.exe
-                        //string zipExtractorPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZipExtractor.exe");
-                        //Process.Start(zipExtractorPath, $"\"{Application.ExecutablePath}\" \"{args.DownloadURL}\"");
-                        AutoUpdater.DownloadUpdate(args);
-                        System.Threading.Thread.Sleep(3000);
-                        Application.Exit();
-                        //Application.Exit();
-                    }
-                    else
-                    {
-                        Application.Run(new FMain());
-                    }
-                }
-                else
-                {
-                    Application.Run(new FMain());
-                }
-            };
+                        tempForm.Invoke(new Action(() =>
+                        {
+                            string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RGBControls.dll");
+                            Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
+                            Version serverVersion = new Version(updateArgs.CurrentVersion);
 
-            AutoUpdater.Start("https://www.rgballwin.com/zupdate.xml");
-            
-            Application.Run();
+                            if (serverVersion > localDllVersion)
+                            {
+                                DialogResult result = MessageBox.Show(
+                                    $"新しいバージョンのDLLが見つかりました {serverVersion}，アップデート？\n\n",
+                            "アップデートのヒント", MessageBoxButtons.YesNo);
+
+                                if (result == DialogResult.Yes)
+                                {
+                                    AutoUpdater.DownloadUpdate(updateArgs);
+                                    System.Threading.Thread.Sleep(3000);
+                                    Application.Exit();
+                                }
+                                else
+                                {
+                                    tempForm.Close(); // 关闭临时窗体，继续启动主窗体
+                                }
+                            }
+                            else
+                            {
+                                tempForm.Close(); // 没有更新，继续启动主窗体
+                            }
+                        }));
+                    };
+
+                    AutoUpdater.Start("https://www.rgballwin.com/zupdate.xml");
+                };
+
+                tempForm.ShowDialog(); // 用 ShowDialog 启动消息循环
+            }
+
+            // 更新处理完毕后，启动主窗体
+            Application.Run(new FMain());
+
+            //AutoUpdater.CheckForUpdateEvent += (args) =>
+            //{
+
+            //    // 获取 DLL 的版本号
+            //    string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RGBControls.dll");
+            //    Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
+            //    Version serverVersion = new Version(args.CurrentVersion);
+
+            //    if (serverVersion > localDllVersion)
+            //    {
+            //        DialogResult result = MessageBox.Show(
+            //            $"新しいバージョンのDLLが見つかりました {serverVersion}，アップデート？\n\n",
+            //            "アップデートのヒント", MessageBoxButtons.YesNo);
+            //        if (result == DialogResult.Yes)
+            //        {
+            //            // 手动调用 ZipExtractor.exe
+            //            //string zipExtractorPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZipExtractor.exe");
+            //            //Process.Start(zipExtractorPath, $"\"{Application.ExecutablePath}\" \"{args.DownloadURL}\"");
+            //            AutoUpdater.DownloadUpdate(args);
+            //            System.Threading.Thread.Sleep(3000);
+            //            Application.Exit();
+            //            //Application.Exit();
+            //        }
+            //        else
+            //        {
+            //            Application.Run(new FMain());
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Application.Run(new FMain());
+            //    }
+            //};
+
+            //AutoUpdater.Start("https://www.rgballwin.com/zupdate.xml");
+
+            //Application.Run();
         }
 
         public static void z()
