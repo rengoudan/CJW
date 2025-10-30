@@ -1010,11 +1010,9 @@ namespace JwShapeCommon
         {
             StringBuilder sb=new StringBuilder();
 
-            sb.Append("CBF V2.0\r\n");
-            sb.Append("START\r\n");
-            sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", "", "", "", "H-200x100x5.5x8", "", ""));
+            
             //sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", Gongqu, Liangfuhao, Louceng, "H-200x100x5.5x8", SingleBeamLength.ToString("0.0"), benshu));
-            sb.Append("0, 0, 0, , 0, 0\r\n");
+            //sb.Append("0, 0, 0, , 0, 0\r\n");
             //绘制上  对应csv的 右
 
             //foreach(var jfm in jwBeamMarks)

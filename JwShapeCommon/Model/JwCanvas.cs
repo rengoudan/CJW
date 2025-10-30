@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace JwShapeCommon
 {
+    /// <summary>
+    /// 对应floor
+    /// </summary>
     public class JwCanvas:JwSquareBase
     {
+        /// <summary>
+        ///
+        /// </summary>
         public JwProjectSubData JwProjectSubData { get; set; }          
 
         ///// <summary>
@@ -139,6 +145,35 @@ namespace JwShapeCommon
                 }
             }
             
+        }
+
+        /// <summary>
+        /// 导出加工csv
+        /// </summary>
+        /// <returns></returns>
+        public string ToProcessCsv()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("CBF V2.0\r\n");
+            sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", "", "", "", "H-200x100x5.5x8", "", ""));
+            foreach (var item in Beams)
+            {
+                sb.Append(item.ToProcessCsv());
+            }
+            //foreach (var item in ExcelSubDatas)
+            //{
+            //    //this.uiIntegerUpDown1.Value = (int)Properties.Settings.Default.Kongjing;
+            //    var kongju = Properties.Settings.Default.Kongju;
+            //    sb.Append(item.DrawToCsv(kongju, issingle));
+            //}
+            //sb.Append("START\r\n");
+            //sb.Append(string.Format("{0},{1},{2},{3},,, {4}, 0.0, 2175.0, 1, 0, 0.0, 0.0\r\n", Zhipinfanhao, mingcheng1, mingcheng2, mingcheng3, gangcaizhi, SingleBeamLength.ToString("0.0")));
+            //sb.Append("0, 0, 0, , 0, 0\r\n");
+            //sb.Append(TopBeam.DrawToCsv(0));
+            //sb.Append(CenterBeam.DrawToCsv(1));
+            //sb.Append(BottomBeam.DrawToCsv(0));
+            //sb.Append("END\r\n");
+            return sb.ToString();
         }
     }
 }

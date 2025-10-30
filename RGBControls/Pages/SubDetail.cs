@@ -356,11 +356,35 @@ namespace RGBJWMain.Pages
 
         }
 
+        /// <summary>
+        /// 输出加工csv
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void uiButton2_Click(object sender, EventArgs e)
         {
-
+            SaveFileDialog saveDataSend = new SaveFileDialog();
+            // Environment.SpecialFolder.MyDocuments 表示在我的文档中
+            saveDataSend.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);   // 获取文件路径
+            saveDataSend.Filter = "*.csv|csv file";   // 设置文件类型为文本文件
+            saveDataSend.DefaultExt = ".csv";   // 默认文件的拓展名
+            saveDataSend.FileName = string.Format("{0}-3015-2.csv", _subData.FloorName);   // 文件默认名
+            if (saveDataSend.ShowDialog() == DialogResult.OK)   // 显示文件框，并且选择文件
+            {
+                string fName = saveDataSend.FileName;   // 获取文件名
+                                                        // 参数1：写入文件的文件名；参数2：写入文件的内容
+                byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes("");
+                bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
+                string q = Encoding.Default.GetString(bs);
+                System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+            }
         }
 
+        /// <summary>
+        /// 输出jw格式 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void uiButton1_Click(object sender, EventArgs e)
         {
             if (UIMessageBox.ShowAsk("プロジェクトデータをすべてエクスポートするかどうか"))
