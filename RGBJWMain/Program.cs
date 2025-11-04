@@ -9,6 +9,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace RGBJWMain
 {
@@ -23,7 +24,7 @@ namespace RGBJWMain
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             // 创建一个隐藏窗体，用于处理更新逻辑
             using (Form tempForm = new Form { ShowInTaskbar = false, WindowState = FormWindowState.Minimized })
             {

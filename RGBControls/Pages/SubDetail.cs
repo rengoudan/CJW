@@ -37,7 +37,7 @@ namespace RGBJWMain.Pages
 
             dbContext = ContextFactory.GetContext();
         }
-
+        JwCanvas canvas;
         private void SubDetail_Load(object sender, EventArgs e)
         {
             if (_subData != null)
@@ -46,7 +46,7 @@ namespace RGBJWMain.Pages
                 this.Text = _subData.FloorName;
                 //jwCanvasControl1. = _subData;
 
-                JwCanvas canvas = _subData.DataToCanvas();
+                canvas = _subData.DataToCanvas();
                 ObservableCollectionListSource<JwProjectSubData> subDatas = new ObservableCollectionListSource<JwProjectSubData> { _subData };
 
                 JwCanvasDraw canvasDraw = new JwCanvasDraw(canvas);
@@ -363,21 +363,38 @@ namespace RGBJWMain.Pages
         /// <param name="e"></param>
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveDataSend = new SaveFileDialog();
-            // Environment.SpecialFolder.MyDocuments 表示在我的文档中
-            saveDataSend.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);   // 获取文件路径
-            saveDataSend.Filter = "*.csv|csv file";   // 设置文件类型为文本文件
-            saveDataSend.DefaultExt = ".csv";   // 默认文件的拓展名
-            saveDataSend.FileName = string.Format("{0}-3015-2.csv", _subData.FloorName);   // 文件默认名
-            if (saveDataSend.ShowDialog() == DialogResult.OK)   // 显示文件框，并且选择文件
+            if(canvas!=null && canvas.Beams.Count==0)
             {
-                string fName = saveDataSend.FileName;   // 获取文件名
-                                                        // 参数1：写入文件的文件名；参数2：写入文件的内容
-                byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes("");
-                bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
-                string q = Encoding.Default.GetString(bs);
-                System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+                var csvstr = canvas.ToProcessCsv();
+                if(!string.IsNullOrEmpty(csvstr))
+                {
+                    SaveFileDialog saveDataSend = new SaveFileDialog();
+                    // Environment.SpecialFolder.MyDocuments 表示在我的文档中
+                    saveDataSend.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);   // 获取文件路径
+                    saveDataSend.Filter = "*.csv|csv file";   // 设置文件类型为文本文件
+                    saveDataSend.DefaultExt = ".csv";   // 默认文件的拓展名
+                    saveDataSend.FileName = string.Format("{0}-3015-2.csv", _subData.FloorName);   // 文件默认名
+                    if (saveDataSend.ShowDialog() == DialogResult.OK)   // 显示文件框，并且选择文件
+                    {
+                        string fName = saveDataSend.FileName;   // 获取文件名
+                                                                // 参数1：写入文件的文件名；参数2：写入文件的内容
+                        byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(csvstr);
+                        bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
+                        string q = Encoding.Default.GetString(bs);
+                        System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+                        AntdUI.Modal.open(new AntdUI.Modal.Config(this, "完了プロンプト", "Some contents...Some contents...Some contents...Some contents...Some contents...Some contents...Some contents...", AntdUI.TType.Success)
+                        {
+                            OnButtonStyle = (id, btn) =>
+                            {
+                                btn.BackExtend = "135, #6253E1, #04BEFE";
+                            },
+                            CancelText = null,
+                            OkText = "YES"
+                        });
+                    }
+                }
             }
+            
         }
 
         /// <summary>

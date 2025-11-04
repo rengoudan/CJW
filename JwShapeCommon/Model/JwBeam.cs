@@ -10,6 +10,7 @@ using NetTopologySuite.Geometries;
 using Sunny.UI;
 using static System.Windows.Forms.AxHost;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Primitives;
 
 namespace JwShapeCommon
 {
@@ -1010,7 +1011,44 @@ namespace JwShapeCommon
         {
             StringBuilder sb=new StringBuilder();
 
+            var rights=  JwHoleMachinings.Where(t => t.HasRight).ToList();
+
+            var lefts= JwHoleMachinings.Where(t => t.HasLeft).ToList();
+
+            var tops= JwHoleMachinings.Where(t => t.HasTop).ToList();
+            sb.Append("右面穴\r\n");
+
+            double ry = JwFileConsts.Kongjing / 2;
+            if(rights.Count>0)
+            {
+                foreach (var h in rights)
+                {
+                    sb.Append(h.ToCsvString(-ry));
+                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
+
+                }
+            }
             
+            sb.Append("左面穴\r\n");
+            if(lefts.Count>0)
+            {
+                foreach (var h in lefts)
+                {
+                    sb.Append(h.ToCsvString(-ry));
+                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
+                }
+            }
+            
+            sb.Append("上面穴\r\n");
+            double cy = 100 - JwFileConsts.Kongjing / 2;
+            if(tops.Count>0)
+            {
+                foreach (var h in tops)
+                {
+                    sb.Append(h.ToCsvString(cy));
+                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
+                }
+            }
             //sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", Gongqu, Liangfuhao, Louceng, "H-200x100x5.5x8", SingleBeamLength.ToString("0.0"), benshu));
             //sb.Append("0, 0, 0, , 0, 0\r\n");
             //绘制上  对应csv的 右

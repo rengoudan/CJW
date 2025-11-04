@@ -155,10 +155,15 @@ namespace JwShapeCommon
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("CBF V2.0\r\n");
-            sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", "", "", "", "H-200x100x5.5x8", "", ""));
+            //sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", "", "", "", "H-200x100x5.5x8", "", ""));
             foreach (var item in Beams)
             {
+                sb.Append("START\\r\\n");
+                sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\\r\\n", "", "", "", "", "H-200x100x5.5x8", "", "1"));
+                sb.Append("0, 0, 0, , 0, 0\\r\\n");
                 sb.Append(item.ToProcessCsv());
+                sb.Append("END\r\n");
+                sb.Append("\r\n");
             }
             //foreach (var item in ExcelSubDatas)
             //{
