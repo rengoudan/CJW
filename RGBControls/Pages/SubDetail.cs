@@ -363,7 +363,7 @@ namespace RGBJWMain.Pages
         /// <param name="e"></param>
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            if(canvas!=null && canvas.Beams.Count==0)
+            if(canvas!=null && canvas.Beams.Count!=0)
             {
                 var csvstr = canvas.ToProcessCsv();
                 if(!string.IsNullOrEmpty(csvstr))
