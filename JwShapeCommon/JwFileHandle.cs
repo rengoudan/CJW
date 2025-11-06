@@ -354,9 +354,11 @@ namespace JwShapeCommon
 
             //createBeamAbsolutePD();
 
+            parsenLianjie();//寻找连接线
+
             Revision();
 
-            parsenLianjie();//寻找连接线
+            
         }
 
         int nownumber = -1;

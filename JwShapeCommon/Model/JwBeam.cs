@@ -629,7 +629,12 @@ namespace JwShapeCommon
                 _absolutePd = value;
                 if (this.DirectionType == BeamDirectionType.Horizontal || this.DirectionType == BeamDirectionType.Vertical)
                 {
-                    holeorder();
+                    
+                    if (!_hasOrdered)
+                    {
+                        holeorder();
+                        _hasOrdered = true;
+                    }
                 }
                 
             }
@@ -640,6 +645,15 @@ namespace JwShapeCommon
 
         public List<JwHoleMachining> JwHoleMachinings = new List<JwHoleMachining>();
 
+        /// <summary>
+        /// 用来避免重复对absolutepd 赋值导致的 list重复
+        /// </summary>
+        private bool _hasOrdered = false;
+
+        /// <summary>
+        /// 方法在对absolutepd赋值的时候调用，目前仅在加载渲染显示后调用
+        /// 针对连接线 也在赋值过程里对 孔
+        /// </summary>
         public void holesorder()
         {
             if (this.DirectionType == BeamDirectionType.Horizontal)
@@ -944,6 +958,32 @@ namespace JwShapeCommon
             var wc =Math.Round((JwFileConsts.Kongjing / JwFileConsts.JwScale) / 2,2);
             var holerealleft = location-wc;
             var holerealright = location+wc;
+            //处理加工点位-存在链接点 仅bottom增加 bottom对应 加工的right 还是left 需要确认 目前认定left
+            if (hole.HasPreLinkHole)
+            {
+                var singleleft = Math.Round((location - (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
+                JwHoleMachining preleft = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((singleleft - ks), 2) * JwFileConsts.JwScale,
+                    HasTop = true
+                };
+                JwHoleMachinings.Add(preleft);
+            }
+
+            //处理加工点位-存在链接点 仅bottom增加
+            if (hole.HasBhLinkHole)
+            {
+                var singleright = Math.Round((location + (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
+                JwHoleMachining preright = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((singleright - ks), 2) * JwFileConsts.JwScale,
+                    HasTop = true
+                };
+                JwHoleMachinings.Add(preright);
+            }
+
 
             JwHoleMachining machiningleft = new JwHoleMachining
             {
@@ -1010,17 +1050,18 @@ namespace JwShapeCommon
         public string ToProcessCsv()
         {
             StringBuilder sb=new StringBuilder();
+            sb.Append("START\r\n");
+            sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", "", "", "", "H-200x100x5.5x8", Length, "1"));
+            sb.Append("0, 0, 0, , 0, 0\r\n");
+            var rights=  JwHoleMachinings.Where(t => t.HasRight).OrderBy(t=>t.RelativeStartDistance).ToList();
 
-            var rights=  JwHoleMachinings.Where(t => t.HasRight).ToList();
+            var lefts= JwHoleMachinings.Where(t => t.HasLeft).OrderBy(t => t.RelativeStartDistance).ToList();
 
-            var lefts= JwHoleMachinings.Where(t => t.HasLeft).ToList();
-
-            var tops= JwHoleMachinings.Where(t => t.HasTop).ToList();
-            sb.Append("右面穴\r\n");
-
+            var tops= JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RelativeStartDistance).ToList();
             double ry = JwFileConsts.Kongjing / 2;
             if(rights.Count>0)
             {
+                sb.Append("右面穴\r\n");
                 foreach (var h in rights)
                 {
                     sb.Append(h.ToCsvString(-ry));
@@ -1028,10 +1069,9 @@ namespace JwShapeCommon
 
                 }
             }
-            
-            sb.Append("左面穴\r\n");
             if(lefts.Count>0)
             {
+                sb.Append("左面穴\r\n");
                 foreach (var h in lefts)
                 {
                     sb.Append(h.ToCsvString(-ry));
@@ -1039,16 +1079,18 @@ namespace JwShapeCommon
                 }
             }
             
-            sb.Append("上面穴\r\n");
             double cy = 100 - JwFileConsts.Kongjing / 2;
             if(tops.Count>0)
             {
+                sb.Append("上面穴\r\n");
                 foreach (var h in tops)
                 {
                     sb.Append(h.ToCsvString(cy));
                     //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
                 }
             }
+            sb.Append("END\r\n");
+            sb.Append("\r\n");
             //sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", Gongqu, Liangfuhao, Louceng, "H-200x100x5.5x8", SingleBeamLength.ToString("0.0"), benshu));
             //sb.Append("0, 0, 0, , 0, 0\r\n");
             //绘制上  对应csv的 右

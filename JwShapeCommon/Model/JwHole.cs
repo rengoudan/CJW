@@ -100,17 +100,21 @@ namespace JwShapeCommon.Model
                 case HoleCreateFrom.JieChuG:
                     HoleType = KongzuType.G;
                     HasCenter = true;
+                    HasTop= true;
+                    HasBottom=true;
                     KongNum = 2;
                     break;
                 case HoleCreateFrom.FengeJ:
                     HoleType = KongzuType.J;
                     HasCenter = true;
+                    HasTop = true;
+                    HasBottom = true;
                     KongNum = 2;
                     break;
                 case HoleCreateFrom.JieChu:
                     HasSG = true;
                     HasCenter = true;
-
+                    HasTop = true;
                     HasBottom = true;   
                     KongNum = 4;
                     break;

@@ -40,7 +40,7 @@ namespace JwShapeCommon.Model
         {
             
             //double ysjv = Math.Abs(Y) + .CsvYwucha;
-            return string.Format("{3},絶対,先端,{0},{1},1,{2},1,0.0,\r\n", RelativeStartDistance.ToString("0.0"), y.ToString("0.0"), JwFileConsts.Kongjing.ToString("0.0"), JwFileConsts.EllipseDiameter.ToString("0.0"));
+            return string.Format("{3},絶対,先端,{0},{1},1,{2},1,0.0,\r\n", RelativeStartDistance.ToString("0.0"), y.ToString("0.0"), "0.0", JwFileConsts.EllipseDiameter.ToString("0.0"));
             //return $"{Id},{RelativeStartDistance},{HasLeft},{HasRight},{HasTop}";
         }
     }

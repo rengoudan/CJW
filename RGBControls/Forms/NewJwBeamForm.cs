@@ -36,6 +36,8 @@ namespace RGBJWMain.Forms
             if (this._jwbeam != null)
             {
                 this.newSingleBeamControl1.ShowBeam = this._jwbeam;
+                var csvshow = this._jwbeam.ToProcessCsv();
+                this.uiTextBox1.Text = csvshow;
             }
 
         }

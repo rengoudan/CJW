@@ -49,6 +49,8 @@ namespace JwShapeCommon
         /// </summary>
         public static double Kongjing = 56;
 
+        public static double PianchaLianjieValue = 84;
+
         /// <summary>
         /// jww
         /// 转换过来的 读取到小数点第几位 0的话 不做改变
