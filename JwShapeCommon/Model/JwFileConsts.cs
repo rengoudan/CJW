@@ -12,6 +12,14 @@ namespace JwShapeCommon
     public static class JwFileConsts
     {
 
+        #region csv参数设置
+
+        public static int CsvHxNum = 1;
+        public static double CsvHxJianju = 0.0;
+        public static int CsvZxNum = 1;
+        public static double CsvZxJianju = 0.0;
+        #endregion
+
         /// <summary>
         /// 单位为mm 实际的宽度
         /// </summary>

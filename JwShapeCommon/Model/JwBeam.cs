@@ -1111,7 +1111,7 @@ namespace JwShapeCommon
             double ry = JwFileConsts.Kongjing / 2;
             if(rights.Count>0)
             {
-                sb.Append("右面穴\r\n");
+                sb.Append("右面穴\r\n");   
                 foreach (var h in rights)
                 {
                     sb.Append(h.ToCsvString(-ry));

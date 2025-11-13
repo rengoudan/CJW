@@ -363,10 +363,10 @@ namespace RGBJWMain.Pages
         /// <param name="e"></param>
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            if(canvas!=null && canvas.Beams.Count!=0)
+            if (canvas != null && canvas.Beams.Count != 0)
             {
                 var csvstr = canvas.ToProcessCsv();
-                if(!string.IsNullOrEmpty(csvstr))
+                if (!string.IsNullOrEmpty(csvstr))
                 {
                     SaveFileDialog saveDataSend = new SaveFileDialog();
                     // Environment.SpecialFolder.MyDocuments 表示在我的文档中
@@ -394,7 +394,7 @@ namespace RGBJWMain.Pages
                     }
                 }
             }
-            
+
         }
 
         /// <summary>
@@ -494,6 +494,36 @@ namespace RGBJWMain.Pages
                         }
                     }
                 }
+            }
+        }
+
+        private void uiDataGridView2_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex != -1)
+            {
+                var ljl = uiDataGridView2.Rows[e.RowIndex].DataBoundItem as JwBeamData;
+                if (ljl != null)
+                {
+                    if (GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent != null)
+                    {
+                        GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent(this, new ControlSelectedSquareArgs
+                        {
+                            Id = ljl.Id,
+                            DrawShapeType = DrawShapeType.Beam
+                        });
+                    }
+                }
+                //if (beam != null)
+                //{
+                //    if (GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent != null)
+                //    {
+                //        GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent(this, new ControlSelectedSquareArgs
+                //        {
+                //            Id = beam.Id,
+                //            DrawShapeType = JwCore.DrawShapeType.Beam
+                //        });
+                //    }
+                //}
             }
         }
     }

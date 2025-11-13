@@ -5,6 +5,7 @@ using JwShapeCommon.JwService.Dtos;
 using JwShapeCommon.JwService.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RGBControls;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Reflection;
@@ -69,45 +70,7 @@ namespace RGBJWMain
             }
 
             // 更新处理完毕后，启动主窗体
-            Application.Run(new FMain());
-
-            //AutoUpdater.CheckForUpdateEvent += (args) =>
-            //{
-
-            //    // 获取 DLL 的版本号
-            //    string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RGBControls.dll");
-            //    Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
-            //    Version serverVersion = new Version(args.CurrentVersion);
-
-            //    if (serverVersion > localDllVersion)
-            //    {
-            //        DialogResult result = MessageBox.Show(
-            //            $"新しいバージョンのDLLが見つかりました {serverVersion}，アップデート？\n\n",
-            //            "アップデートのヒント", MessageBoxButtons.YesNo);
-            //        if (result == DialogResult.Yes)
-            //        {
-            //            // 手动调用 ZipExtractor.exe
-            //            //string zipExtractorPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ZipExtractor.exe");
-            //            //Process.Start(zipExtractorPath, $"\"{Application.ExecutablePath}\" \"{args.DownloadURL}\"");
-            //            AutoUpdater.DownloadUpdate(args);
-            //            System.Threading.Thread.Sleep(3000);
-            //            Application.Exit();
-            //            //Application.Exit();
-            //        }
-            //        else
-            //        {
-            //            Application.Run(new FMain());
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Application.Run(new FMain());
-            //    }
-            //};
-
-            //AutoUpdater.Start("https://www.rgballwin.com/zupdate.xml");
-
-            //Application.Run();
+            Application.Run(new MainForm());
         }
 
         public static void z()

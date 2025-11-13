@@ -44,15 +44,14 @@
             uiNavBar1.BackColor = Color.FromArgb(240, 240, 240);
             uiNavBar1.Controls.Add(pictureBox1);
             uiNavBar1.Dock = DockStyle.Top;
-            uiNavBar1.DropMenuFont = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiNavBar1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiNavBar1.ForeColor = Color.FromArgb(48, 48, 48);
-            uiNavBar1.Location = new Point(0, 35);
+            uiNavBar1.Location = new Point(0, 49);
             uiNavBar1.MenuHoverColor = Color.FromArgb(230, 230, 230);
             uiNavBar1.MenuSelectedColor = Color.FromArgb(250, 250, 250);
             uiNavBar1.MenuStyle = Sunny.UI.UIMenuStyle.White;
             uiNavBar1.Name = "uiNavBar1";
-            uiNavBar1.Size = new Size(1276, 56);
+            uiNavBar1.Size = new Size(1320, 56);
             uiNavBar1.TabIndex = 0;
             // 
             // pictureBox1
@@ -72,22 +71,21 @@
             uiTabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
             uiTabControl1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiTabControl1.ItemSize = new Size(0, 1);
-            uiTabControl1.Location = new Point(0, 91);
+            uiTabControl1.Location = new Point(0, 105);
             uiTabControl1.MainPage = "";
             uiTabControl1.Name = "uiTabControl1";
             uiTabControl1.SelectedIndex = 0;
-            uiTabControl1.Size = new Size(1276, 941);
+            uiTabControl1.Size = new Size(1320, 927);
             uiTabControl1.SizeMode = TabSizeMode.Fixed;
             uiTabControl1.TabIndex = 2;
             uiTabControl1.TabUnSelectedForeColor = Color.FromArgb(240, 240, 240);
             uiTabControl1.TabVisible = false;
-            uiTabControl1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             // 
             // tabPage1
             // 
             tabPage1.Location = new Point(0, 0);
             tabPage1.Name = "tabPage1";
-            tabPage1.Size = new Size(1276, 941);
+            tabPage1.Size = new Size(1320, 927);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
@@ -104,7 +102,7 @@
             // FMain
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(1276, 1032);
+            ClientSize = new Size(1320, 1032);
             Controls.Add(uiTabControl1);
             Controls.Add(uiNavBar1);
             Icon = (Icon)resources.GetObject("$this.Icon");
