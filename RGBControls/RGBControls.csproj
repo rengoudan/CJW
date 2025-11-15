@@ -5,9 +5,9 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>1.2.3.5</Version>
-    <AssemblyVersion>1.2.3.5</AssemblyVersion>
-    <FileVersion>1.2.3.5</FileVersion>
+    <Version>1.2.3.6</Version>
+    <AssemblyVersion>1.2.3.6</AssemblyVersion>
+    <FileVersion>1.2.3.6</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,9 +41,6 @@
     </Compile>
     <Compile Update="Controls\RGBJwwShow.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="FMain.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\AddBudget.cs">
       <SubType>Form</SubType>

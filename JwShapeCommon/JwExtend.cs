@@ -2,6 +2,7 @@
 using JwCore;
 using JwShapeCommon.Jwbase;
 using JwShapeCommon.Model;
+using JwwHelper;
 using NetTopologySuite.Geometries;
 using Newtonsoft.Json.Converters;
 using Sunny.UI;
@@ -847,6 +848,26 @@ namespace JwShapeCommon
             double minY = Math.Min(line.Pone.Y, line.Ptwo.Y);
             double maxY = Math.Max(line.Pone.Y, line.Ptwo.Y);
             return point.X >= minX && point.X <= maxX && point.Y >= minY && point.Y <= maxY;
+        }
+
+        /// <summary>
+        /// 旋转偏移
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="block"></param>
+        /// <returns></returns>
+        public static JWPoint PianyiXuanzhuan(this JWPoint point, JwwBlock block)
+        {
+            double angleRadians = block.m_radKaitenKaku;
+
+            // 旋转公式
+            double rotatedX = point.X * Math.Cos(angleRadians) - point.Y * Math.Sin(angleRadians);
+            double rotatedY = point.X * Math.Sin(angleRadians) + point.Y * Math.Cos(angleRadians);
+
+            // 平移
+            double newX = rotatedX + block.m_DPKijunTen_x;
+            double newY = rotatedY + block.m_DPKijunTen_y;
+            return new JWPoint(newX,newY);
         }
     }
     }

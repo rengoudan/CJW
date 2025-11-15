@@ -79,17 +79,21 @@ namespace JwShapeCommon
 
         public JwBlock(JwwSolid solid,JwwBlock block)
         {
+            var str = new JWPoint(solid.m_start_x, solid.m_start_y);
+            var end = new JWPoint(solid.m_end_x, solid.m_end_y);
+            var dp = new JWPoint(solid.m_DPoint2_x, solid.m_DPoint2_y);
             BlockPoint = new List<JWPoint>
             {
-                new JWPoint(solid.m_start_x+block.m_DPKijunTen_x, solid.m_start_y+block.m_DPKijunTen_y),
-                new JWPoint(solid.m_end_x+block.m_DPKijunTen_x, solid.m_end_y + block.m_DPKijunTen_y),
-                new JWPoint(solid.m_DPoint2_x + block.m_DPKijunTen_x, solid.m_DPoint2_y + block.m_DPKijunTen_y)
+                str.PianyiXuanzhuan(block),
+                end.PianyiXuanzhuan(block),
+                dp.PianyiXuanzhuan(block)
             };
             ShapeType = JwBlockShapeType.Triangular;
             if (solid.m_DPoint2_x != solid.m_DPoint3_x || solid.m_DPoint2_y != solid.m_DPoint3_y)
             {
+                var dp3 = new JWPoint(solid.m_DPoint3_x, solid.m_DPoint3_y);
                 //直接处理四边形
-                BlockPoint.Add(new JWPoint(solid.m_DPoint3_x + block.m_DPKijunTen_x, solid.m_DPoint3_y + block.m_DPKijunTen_y));
+                BlockPoint.Add(dp3.PianyiXuanzhuan(block));
                 ShapeType = JwBlockShapeType.Square;
                 squareParse();//处理
             }

@@ -70,6 +70,7 @@ namespace RGBJWMain
             }
 
             // 更新处理完毕后，启动主窗体
+            //Application.Run(new FMain());
             Application.Run(new MainForm());
         }
 

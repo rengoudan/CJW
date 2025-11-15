@@ -818,11 +818,13 @@ namespace JwShapeCommon
             double realfirstholeloaction=0;
             if (this.DirectionType == BeamDirectionType.Horizontal)
             {
-                realfirstholeloaction = cbs.AppendHole.Location.X;
+                if(cbs.AppendHole!=null)
+                    realfirstholeloaction = cbs.AppendHole.Location.X;
             }
             else if (this.DirectionType == BeamDirectionType.Vertical)
             {
-                realfirstholeloaction = cbs.AppendHole.Location.Y;
+                if(cbs.AppendHole!=null)
+                    realfirstholeloaction = cbs.AppendHole.Location.Y;
             }
 
             addMachining(sb,realfirstholeloaction,cbs.AppendHole,true,false);
@@ -954,74 +956,77 @@ namespace JwShapeCommon
         /// <param name="isend"></param>
         public void addMachining(double ks,double location,JwHole hole,bool isstart=false,bool isend=false)
         {
-           
-            var wc =Math.Round((JwFileConsts.Kongjing / JwFileConsts.JwScale) / 2,2);
-            var holerealleft = location-wc;
-            var holerealright = location+wc;
-            //处理加工点位-存在链接点 仅bottom增加 bottom对应 加工的right 还是left 需要确认 目前认定left
-            
-            var singleleft = Math.Round((location - (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
-            JwHoleMachining preleft = new JwHoleMachining
+            if (hole != null)
             {
-                Id = Id,
-                RelativeStartDistance = Math.Round((singleleft - ks), 2) * JwFileConsts.JwScale,
-                HasLeft = true
-            };
-            //JwHoleMachinings.Add(preleft);
-            var singleright = Math.Round((location + (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
-            JwHoleMachining preright = new JwHoleMachining
-            {
-                Id = Id,
-                RelativeStartDistance = Math.Round((singleright - ks), 2) * JwFileConsts.JwScale,
-                HasLeft = true
-            };
-            //JwHoleMachinings.Add(preright);
-            //处理加工点位-存在链接点 仅bottom增加
-            var weileft = Math.Round((location - (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
-            JwHoleMachining jwweileft = new JwHoleMachining
-            {
-                Id = Id,
-                RelativeStartDistance = Math.Round((weileft - ks), 2) * JwFileConsts.JwScale,
-                HasLeft = true
-            };
-            var touright = Math.Round((location + (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
-            JwHoleMachining jwtouright = new JwHoleMachining
-            {
-                Id = Id,
-                RelativeStartDistance = Math.Round((touright - ks), 2) * JwFileConsts.JwScale,
-                HasLeft = true
-            };
 
-            JwHoleMachining machiningleft = new JwHoleMachining
-            {
-                Id = Id,
-                RelativeStartDistance = Math.Round((holerealleft - ks), 2) * JwFileConsts.JwScale,
-                HasLeft = hole.HasTop,
-                HasRight = hole.HasBottom,
-                HasTop = hole.HasCenter
-            };
-            //JwHoleMachinings.Add(machiningleft);
-            JwHoleMachining machiningright = new JwHoleMachining
-            {
-                Id = Id,
-                RelativeStartDistance = Math.Round((holerealright - ks), 2) * JwFileConsts.JwScale,
-                HasLeft = hole.HasTop,
-                HasRight = hole.HasBottom,
-                HasTop = hole.HasCenter
-            };
-            //JwHoleMachinings.Add(machiningright);
-            JwHoleMachining machiningsingle = new JwHoleMachining
-            {
-                Id = Id,
-                RelativeStartDistance = Math.Round((location - ks), 2) * JwFileConsts.JwScale,
-                HasLeft = hole.HasTop,
-                HasRight = hole.HasBottom,
-                HasTop = hole.HasCenter
-            };
-            switch (hole.HoleType)
-            {
-                case KongzuType.BC:
-                    //4孔
+
+                var wc = Math.Round((JwFileConsts.Kongjing / JwFileConsts.JwScale) / 2, 2);
+                var holerealleft = location - wc;
+                var holerealright = location + wc;
+                //处理加工点位-存在链接点 仅bottom增加 bottom对应 加工的right 还是left 需要确认 目前认定left
+
+                var singleleft = Math.Round((location - (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
+                JwHoleMachining preleft = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((singleleft - ks), 2) * JwFileConsts.JwScale,
+                    HasLeft = true
+                };
+                //JwHoleMachinings.Add(preleft);
+                var singleright = Math.Round((location + (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
+                JwHoleMachining preright = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((singleright - ks), 2) * JwFileConsts.JwScale,
+                    HasLeft = true
+                };
+                //JwHoleMachinings.Add(preright);
+                //处理加工点位-存在链接点 仅bottom增加
+                var weileft = Math.Round((location - (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
+                JwHoleMachining jwweileft = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((weileft - ks), 2) * JwFileConsts.JwScale,
+                    HasLeft = true
+                };
+                var touright = Math.Round((location + (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
+                JwHoleMachining jwtouright = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((touright - ks), 2) * JwFileConsts.JwScale,
+                    HasLeft = true
+                };
+
+                JwHoleMachining machiningleft = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((holerealleft - ks), 2) * JwFileConsts.JwScale,
+                    HasLeft = hole.HasTop,
+                    HasRight = hole.HasBottom,
+                    HasTop = hole.HasCenter
+                };
+                //JwHoleMachinings.Add(machiningleft);
+                JwHoleMachining machiningright = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((holerealright - ks), 2) * JwFileConsts.JwScale,
+                    HasLeft = hole.HasTop,
+                    HasRight = hole.HasBottom,
+                    HasTop = hole.HasCenter
+                };
+                //JwHoleMachinings.Add(machiningright);
+                JwHoleMachining machiningsingle = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((location - ks), 2) * JwFileConsts.JwScale,
+                    HasLeft = hole.HasTop,
+                    HasRight = hole.HasBottom,
+                    HasTop = hole.HasCenter
+                };
+                switch (hole.HoleType)
+                {
+                    case KongzuType.BC:
+                        //4孔
                         JwHoleMachinings.Add(machiningleft);
                         JwHoleMachinings.Add(machiningright);
                         if (hole.HasBhLinkHole)
@@ -1034,60 +1039,61 @@ namespace JwShapeCommon
                             //JwHoleMachinings.Add(preleft);
                             JwHoleMachinings.Add(preleft);
                         }
-                    break;
-                case KongzuType.BP:
-                    if (isstart)
-                    {
-                        JwHoleMachinings.Add(machiningleft);
+                        break;
+                    case KongzuType.BP:
+                        if (isstart)
+                        {
+                            JwHoleMachinings.Add(machiningleft);
+                            if (hole.HasBhLinkHole)
+                            {
+                                JwHoleMachinings.Add(jwtouright);
+                            }
+                        }
+
+                        if (isend)
+                        {
+                            JwHoleMachinings.Add(machiningright);
+                            if (hole.HasPreLinkHole)
+                            {
+                                JwHoleMachinings.Add(jwweileft);
+                            }
+                        }
+                        break;
+                    case KongzuType.J:
+                        JwHoleMachinings.Add(machiningsingle);
                         if (hole.HasBhLinkHole)
                         {
                             JwHoleMachinings.Add(jwtouright);
                         }
-                    }
-
-                    if (isend)
-                    {
-                        JwHoleMachinings.Add(machiningright);
-                        if(hole.HasPreLinkHole)
+                        if (hole.HasPreLinkHole)
                         {
                             JwHoleMachinings.Add(jwweileft);
                         }
-                    }
-                    break;
-                case KongzuType.J:
-                    JwHoleMachinings.Add(machiningsingle);
-                    if(hole.HasBhLinkHole)
-                    {
-                        JwHoleMachinings.Add(jwtouright);
-                    }
-                    if (hole.HasPreLinkHole)
-                    {
-                        JwHoleMachinings.Add(jwweileft);
-                    }
-                    break;
-                case KongzuType.G:
-                    JwHoleMachinings.Add(machiningsingle);
-                    if (hole.HasBhLinkHole)
-                    {
-                        JwHoleMachinings.Add(jwtouright);
-                    }
-                    if (hole.HasPreLinkHole)
-                    {
-                        JwHoleMachinings.Add(jwweileft);
-                    }
-                    break;
-                default:
-                    JwHoleMachinings.Add(machiningleft);
-                    JwHoleMachinings.Add(machiningright);
-                    if(hole.HasBhLinkHole)
-                    {
-                        JwHoleMachinings.Add(preright);
-                    }
-                    if (hole.HasPreLinkHole)
-                    {
-                        JwHoleMachinings.Add(preleft);
-                    }
-                    break;
+                        break;
+                    case KongzuType.G:
+                        JwHoleMachinings.Add(machiningsingle);
+                        if (hole.HasBhLinkHole)
+                        {
+                            JwHoleMachinings.Add(jwtouright);
+                        }
+                        if (hole.HasPreLinkHole)
+                        {
+                            JwHoleMachinings.Add(jwweileft);
+                        }
+                        break;
+                    default:
+                        JwHoleMachinings.Add(machiningleft);
+                        JwHoleMachinings.Add(machiningright);
+                        if (hole.HasBhLinkHole)
+                        {
+                            JwHoleMachinings.Add(preright);
+                        }
+                        if (hole.HasPreLinkHole)
+                        {
+                            JwHoleMachinings.Add(preleft);
+                        }
+                        break;
+                }
             }
         }
 

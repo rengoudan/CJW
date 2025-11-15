@@ -123,11 +123,12 @@ namespace RGBJWMain.Forms
                 {
 
                 }
+                uiTextBox1.AppendText(mg);
                 //uiTextBox1.AppendText(mg);
-                uiTextBox1.BeginInvoke(() =>
-                {
-                    uiTextBox1.AppendText(mg);
-                });
+                //uiTextBox1.BeginInvoke(() =>
+                //{
+                //    uiTextBox1.AppendText(mg);
+                //});
             }
         }
 
