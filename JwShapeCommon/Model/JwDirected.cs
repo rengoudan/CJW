@@ -10,6 +10,7 @@ namespace JwShapeCommon
 {
     /// <summary>
     /// 指示分割点 确定为三角形
+    /// 将jwblock 如果是线 将线的点填充进入jwdirected 进行初始化
     /// </summary>
     public class JwDirected
     {
@@ -45,6 +46,17 @@ namespace JwShapeCommon
             }
             
         }
+
+        public JwDirected(JwwBlock block,List<JwwSolid> solids)
+        {
+
+        }
+
+        public JwDirected(JwwBlock block,List<JwwSen> sens)
+        {
+            
+        }
+
 
         public JwDirected(JwBlock block)
         {

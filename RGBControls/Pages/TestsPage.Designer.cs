@@ -28,12 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "TestsPage";
+            components = new System.ComponentModel.Container();
+            table1 = new AntdUI.Table();
+            jwProjectMainDataBindingSource = new BindingSource(components);
+            ((System.ComponentModel.ISupportInitialize)jwProjectMainDataBindingSource).BeginInit();
+            SuspendLayout();
+            // 
+            // table1
+            // 
+            table1.Dock = DockStyle.Fill;
+            table1.Gap = 12;
+            table1.Location = new Point(0, 0);
+            table1.Name = "table1";
+            table1.Size = new Size(800, 450);
+            table1.TabIndex = 0;
+            table1.Text = "table1";
+            // 
+            // jwProjectMainDataBindingSource
+            // 
+            jwProjectMainDataBindingSource.DataSource = typeof(JwCore.JwProjectMainData);
+            // 
+            // TestsPage
+            // 
+            AutoScaleMode = AutoScaleMode.None;
+            ClientSize = new Size(800, 450);
+            Controls.Add(table1);
+            Name = "TestsPage";
+            Text = "TestsPage";
+            Load += TestsPage_Load;
+            ((System.ComponentModel.ISupportInitialize)jwProjectMainDataBindingSource).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private AntdUI.Table table1;
+        private BindingSource jwProjectMainDataBindingSource;
     }
 }

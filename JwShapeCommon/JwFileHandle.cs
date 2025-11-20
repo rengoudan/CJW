@@ -451,6 +451,16 @@ namespace JwShapeCommon
         }
         Dictionary<int, List<JwwSolid>> _dictionarytempblocklst = new Dictionary<int, List<JwwSolid>>();
 
+        /// <summary>
+        /// 分割的三角块
+        /// </summary>
+        Dictionary<int, List<JwwSolid>> _dictionarytempfengelst = new Dictionary<int, List<JwwSolid>>();
+
+        /// <summary>
+        /// 分割的线组
+        /// </summary>
+        Dictionary<int, List<JwwSen>> _dictionarytempsenfengelst = new Dictionary<int, List<JwwSen>>();
+
         List<JwwData> _tempblocklist = new List<JwwData>();
 
         bool jwblockread(JwwData jd)
@@ -472,6 +482,19 @@ namespace JwShapeCommon
                     {
                         var solid = jd as JwwSolid;
                         _dictionarytempblocklst[nownumber].Add(solid);
+                    }
+                    if (jd.m_nPenColor == JwFileConsts.BeamSplitParseColor.ColorNumber)
+                    {
+                        var solid = jd as JwwSolid;
+                        _dictionarytempfengelst[nownumber].Add(solid);
+                    }
+                }
+                if(typename == "JwwSen")
+                {
+                    if (jd.m_nPenColor == JwFileConsts.BeamSplitParseColor.ColorNumber)
+                    {
+                        var sen = jd as JwwSen;
+                        _dictionarytempsenfengelst[nownumber].Add(sen);
                     }
                 }
                 //_tempblocklist.Add(jd);
@@ -1376,7 +1399,10 @@ namespace JwShapeCommon
             }
             return jp;
         }
-       
+
+        /// <summary>
+        /// 2025年11月19日 针对切割柱子进行处理 增加三角线围成三角的识别
+        /// </summary>
         public void ChangeQieGeSolis()
         {
             //&& pillarsplitstylext
@@ -1477,6 +1503,38 @@ namespace JwShapeCommon
                                 }
                             }
                             
+                        }
+                    }
+                }
+                else
+                {
+                    _tempDirected=new List<JwDirected>();
+                    //block soidl
+                    if (_dictionarytempfengelst.Count > 0)
+                    {
+                        foreach (var fenges in _dictionarytempfengelst)
+                        {
+                            var nnkey = fenges.Key;
+                            var blk = JWWBlockLst.Find(t => t.m_nNumber == nnkey);
+                            if (blk != null)
+                            {
+                                var d = new JwDirected(blk, fenges.Value);
+                                _tempDirected.Add(d);
+                            }
+                        }
+                    }
+
+                    if (_dictionarytempsenfengelst.Count > 0)
+                    {
+                        foreach(var sens in _dictionarytempsenfengelst)
+                        {
+                            var nnkey = sens.Key;
+                            var sen = JWWBlockLst.Find(t => t.m_nNumber == nnkey);
+                            if (sen != null)
+                            {
+                                var d = new JwDirected(sen, sens.Value);
+                                _tempDirected.Add(d);
+                            }
                         }
                     }
                 }
