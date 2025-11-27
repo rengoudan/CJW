@@ -49,12 +49,44 @@ namespace JwShapeCommon
 
         public JwDirected(JwwBlock block,List<JwwSolid> solids)
         {
-
+            _initialPoints = new List<JWPoint>();
+            foreach(var solid in solids)
+            {
+                var p1 = new JWPoint(solid.m_start_x, solid.m_start_y);
+                var p2 = new JWPoint(solid.m_end_x, solid.m_end_y);
+                var p3 = new JWPoint(solid.m_DPoint2_x, solid.m_DPoint2_y);
+                var p4 = new JWPoint(solid.m_DPoint3_x, solid.m_DPoint3_y);
+                _initialPoints.Add( p1.PianyiXuanzhuan(block));
+                _initialPoints.Add( p2.PianyiXuanzhuan(block));
+                _initialPoints.Add( p3.PianyiXuanzhuan(block));
+                _initialPoints.Add( p4.PianyiXuanzhuan(block));
+            }
+            Points = _initialPoints.Distinct(new JwPointComparint()).ToList();
+            if (Points.Count == 3)
+            {
+                parse();
+                IsDirected = true;
+            }
         }
 
         public JwDirected(JwwBlock block,List<JwwSen> sens)
         {
-            
+            _initialPoints = new List<JWPoint>();
+
+            foreach (var sen in sens)
+            {
+                var st = new JWPoint(sen.m_start_x, sen.m_start_y);
+                var en = new JWPoint(sen.m_end_x, sen.m_end_y);
+                _initialPoints.Add(st.PianyiXuanzhuan(block));
+                _initialPoints.Add(en.PianyiXuanzhuan(block));
+            }
+            Points = _initialPoints.Distinct(new JwPointComparint()).ToList();
+            if (Points.Count == 3)
+            {
+                parse();
+                IsDirected = true;
+                
+            }
         }
 
 

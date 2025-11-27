@@ -481,12 +481,30 @@ namespace JwShapeCommon
                     if(jd.m_nPenColor == JwFileConsts.BeamPillarParseColor.ColorNumber)
                     {
                         var solid = jd as JwwSolid;
-                        _dictionarytempblocklst[nownumber].Add(solid);
+                        if(!_dictionarytempblocklst.Keys.Contains(nownumber))
+                        {
+                            _dictionarytempblocklst.Add(nownumber, new List<JwwSolid>());
+                            _dictionarytempblocklst[nownumber].Add(solid);
+                        }
+                        else
+                        {
+                            _dictionarytempblocklst[nownumber].Add(solid);
+                        }
                     }
                     if (jd.m_nPenColor == JwFileConsts.BeamSplitParseColor.ColorNumber)
                     {
                         var solid = jd as JwwSolid;
-                        _dictionarytempfengelst[nownumber].Add(solid);
+                        if(!_dictionarytempfengelst.Keys.Contains(nownumber))
+                        {
+                            _dictionarytempfengelst.Add(nownumber, new List<JwwSolid>());
+                            _dictionarytempfengelst[nownumber].Add(solid);
+                        }
+                        else
+                        {
+                            
+                            _dictionarytempfengelst[nownumber].Add(solid);
+                        }
+                        
                     }
                 }
                 if(typename == "JwwSen")
@@ -494,7 +512,16 @@ namespace JwShapeCommon
                     if (jd.m_nPenColor == JwFileConsts.BeamSplitParseColor.ColorNumber)
                     {
                         var sen = jd as JwwSen;
-                        _dictionarytempsenfengelst[nownumber].Add(sen);
+                        if (!_dictionarytempsenfengelst.Keys.Contains(nownumber))
+                        {
+                            _dictionarytempsenfengelst.Add(nownumber, new List<JwwSen>());
+                            _dictionarytempsenfengelst[nownumber].Add(sen);
+                        }
+                        else
+                        {
+                            _dictionarytempsenfengelst[nownumber].Add(sen);
+                        }
+                        
                     }
                 }
                 //_tempblocklist.Add(jd);
@@ -1509,32 +1536,71 @@ namespace JwShapeCommon
                 else
                 {
                     _tempDirected=new List<JwDirected>();
-                    //block soidl
-                    if (_dictionarytempfengelst.Count > 0)
+
+                    if (JWWBlockLst.Count > 0)
                     {
-                        foreach (var fenges in _dictionarytempfengelst)
+                        if (_dictionarytempfengelst.Count > 0)
                         {
-                            var nnkey = fenges.Key;
-                            var blk = JWWBlockLst.Find(t => t.m_nNumber == nnkey);
-                            if (blk != null)
+
+                        }
+                            foreach (var bl in JWWBlockLst)
+                        {
+                            int num = bl.m_nNumber;
+                            if (_dictionarytempfengelst.Keys.Contains(num))
                             {
-                                var d = new JwDirected(blk, fenges.Value);
+                                var d=new JwDirected(bl, _dictionarytempfengelst[num]);
                                 _tempDirected.Add(d);
+                            }
+                        }
+
+                        if (_dictionarytempsenfengelst.Count > 0)
+                        {
+                            foreach (var sens in JWWBlockLst)
+                            {
+                                int num = sens.m_nNumber;
+                                //var sen = JWWBlockLst.Find(t => t.m_nNumber == nnkey);
+                                if (_dictionarytempsenfengelst.Keys.Contains(num))
+                                {
+                                    var d = new JwDirected(sens, _dictionarytempsenfengelst[num]);
+                                    _tempDirected.Add(d);
+                                }
                             }
                         }
                     }
 
-                    if (_dictionarytempsenfengelst.Count > 0)
+
+                    
+                    Directeds = _tempDirected.Distinct(new JwDirectedComparint()).ToList();
+                    foreach (var qg in Directeds)
                     {
-                        foreach(var sens in _dictionarytempsenfengelst)
+                        foreach (var bm in _tempBeams)
                         {
-                            var nnkey = sens.Key;
-                            var sen = JWWBlockLst.Find(t => t.m_nNumber == nnkey);
-                            if (sen != null)
+                            if (!bm.ContainsDirected(qg))
                             {
-                                var d = new JwDirected(sen, sens.Value);
-                                _tempDirected.Add(d);
+                                if (bm.JieChuDirected(qg))
+                                //if (bm.Contains(qg.DirectPoint))
+                                {
+                                    if (bm.DirectionType == BeamDirectionType.Horizontal)
+                                    {
+                                        if (qg.TaggDirect == TaggDirect.Up || qg.TaggDirect == TaggDirect.Down)
+                                        {
+                                            bm.HasQieGe = true;
+                                            bm.QieGePoints.Add(qg.DirectPoint);
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (qg.TaggDirect == TaggDirect.Left || qg.TaggDirect == TaggDirect.Right)
+                                        {
+                                            bm.HasQieGe = true;
+                                            bm.QieGePoints.Add(qg.DirectPoint);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
+
                         }
                     }
                 }
