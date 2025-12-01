@@ -43,6 +43,8 @@
             table1.Size = new Size(800, 450);
             table1.TabIndex = 0;
             table1.Text = "table1";
+            table1.CellClick += table1_CellClick;
+            table1.SelectIndexChanged += table1_SelectIndexChanged;
             // 
             // jwProjectMainDataBindingSource
             // 

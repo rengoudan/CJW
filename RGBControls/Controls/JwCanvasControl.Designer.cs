@@ -32,6 +32,8 @@
             panel3 = new Panel();
             jwShowBeams1 = new JwShowBeams();
             panel2 = new Panel();
+            uiSwitch3 = new Sunny.UI.UISwitch();
+            uiLabel7 = new Sunny.UI.UILabel();
             uiSDown = new Sunny.UI.UISwitch();
             uiLabel6 = new Sunny.UI.UILabel();
             uiSwitch2 = new Sunny.UI.UISwitch();
@@ -44,8 +46,6 @@
             uiShowfuzhu = new Sunny.UI.UISwitch();
             uiShowpillar = new Sunny.UI.UISwitch();
             uiSwitch1 = new Sunny.UI.UISwitch();
-            uiLabel7 = new Sunny.UI.UILabel();
-            uiSwitch3 = new Sunny.UI.UISwitch();
             panel1.SuspendLayout();
             panel3.SuspendLayout();
             panel2.SuspendLayout();
@@ -87,12 +87,12 @@
             jwShowBeams1.ShowDownB = false;
             jwShowBeams1.ShowFuzhu = false;
             jwShowBeams1.ShowGoujian = false;
+            jwShowBeams1.ShowGoujiantext = false;
             jwShowBeams1.Showmsg = false;
             jwShowBeams1.ShowPillar = false;
             jwShowBeams1.Size = new Size(2224, 1022);
             jwShowBeams1.TabIndex = 0;
             jwShowBeams1.Text = "jwShowBeams1";
-            jwShowBeams1.Click += jwShowBeams1_Click;
             // 
             // panel2
             // 
@@ -116,6 +116,32 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(2224, 75);
             panel2.TabIndex = 0;
+            panel2.MouseDown += panel2_MouseDown;
+            // 
+            // uiSwitch3
+            // 
+            uiSwitch3.ActiveText = "On";
+            uiSwitch3.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSwitch3.InActiveText = "Off";
+            uiSwitch3.Location = new Point(1272, 20);
+            uiSwitch3.Margin = new Padding(5, 4, 5, 4);
+            uiSwitch3.MinimumSize = new Size(2, 1);
+            uiSwitch3.Name = "uiSwitch3";
+            uiSwitch3.Size = new Size(90, 41);
+            uiSwitch3.TabIndex = 13;
+            uiSwitch3.Text = "uiSwitch2";
+            uiSwitch3.ValueChanged += uiSwitch3_ValueChanged;
+            // 
+            // uiLabel7
+            // 
+            uiLabel7.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiLabel7.ForeColor = Color.FromArgb(48, 48, 48);
+            uiLabel7.Location = new Point(1108, 22);
+            uiLabel7.Name = "uiLabel7";
+            uiLabel7.Size = new Size(167, 34);
+            uiLabel7.TabIndex = 12;
+            uiLabel7.Text = "B/BG自動統計:";
+            uiLabel7.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiSDown
             // 
@@ -272,31 +298,6 @@
             uiSwitch1.TabIndex = 0;
             uiSwitch1.Text = "uiSwitch1";
             uiSwitch1.ValueChanged += uiSwitch1_ValueChanged;
-            // 
-            // uiLabel7
-            // 
-            uiLabel7.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiLabel7.ForeColor = Color.FromArgb(48, 48, 48);
-            uiLabel7.Location = new Point(1108, 22);
-            uiLabel7.Name = "uiLabel7";
-            uiLabel7.Size = new Size(167, 34);
-            uiLabel7.TabIndex = 12;
-            uiLabel7.Text = "B/BG自動統計:";
-            uiLabel7.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // uiSwitch3
-            // 
-            uiSwitch3.ActiveText = "On";
-            uiSwitch3.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiSwitch3.InActiveText = "Off";
-            uiSwitch3.Location = new Point(1272, 20);
-            uiSwitch3.Margin = new Padding(5, 4, 5, 4);
-            uiSwitch3.MinimumSize = new Size(2, 1);
-            uiSwitch3.Name = "uiSwitch3";
-            uiSwitch3.Size = new Size(90, 41);
-            uiSwitch3.TabIndex = 13;
-            uiSwitch3.Text = "uiSwitch2";
-            uiSwitch3.ValueChanged += uiSwitch3_ValueChanged;
             // 
             // JwCanvasControl
             // 

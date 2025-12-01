@@ -1,11 +1,12 @@
 ﻿using JwCore;
 using JwShapeCommon;
-
+using RGBJWMain.Forms;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -24,12 +25,21 @@ namespace RGBJWMain.Controls
             InitializeComponent();
             GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent += controlSelectedEvent;
             this.MouseWheel += JwShowBeams_MouseWheel;
+            this.MouseClick += JwShowBeams_MouseClick;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
               ControlStyles.UserPaint |
               ControlStyles.OptimizedDoubleBuffer, true);
             this.UpdateStyles();
+
+            //消去
+
+            menulist = new AntdUI.IContextMenuStripItem[]
+            {
+                new AntdUI.ContextMenuStripItem("消去")
+            };
         }
-        
+       
+
         private void controlSelectedEvent(object sender, ControlSelectedSquareArgs e)
         {
             if (e.IsLianjie)
@@ -529,14 +539,21 @@ namespace RGBJWMain.Controls
         private Point MouseDownPoint;
 
         public bool IsBeamSelected = false; 
-
+        bool nowisleftdown = false;
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            nowisleftdown = false;
             if (e.Button != MouseButtons.Left)
             {
+                //
+                //nowisleftdown = true;
                 return;
             }
-            MouseDownPoint=new Point(e.X, e.Y);
+            else
+            {
+                nowisleftdown = true;
+            }
+                MouseDownPoint = new Point(e.X, e.Y);
             HasMouseDownPoint = true;
         }
 
@@ -544,15 +561,23 @@ namespace RGBJWMain.Controls
 
         protected override void OnClick(EventArgs e)
         {
-            if(HasCreated)
+            
+            if(HasCreated&& nowisleftdown)
             {
                 var z = MouseDownPoint;
+
+
+                float logicX = (MouseDownPoint.X - origin.X) / scale;
+                float logicY = (MouseDownPoint.Y - origin.Y) / scale;
+                PointF logicPoint = new PointF(logicX, logicY);
+
+
                 bool re = false;
                 IsSelectedOneBeam = false;
                 var beamsbs = _bounds.Where(t => t.ShapeType == DrawShapeType.Beam).ToList();
                 foreach (var beam in beamsbs)
                 {
-                    if (beam.DrawRectangleF.Contains(z))
+                    if (beam.DrawRectangleF.Contains(logicPoint))
                     {
                         //beam.NeedReDraw = true;
                         beam.IsNeed = !beam.IsNeed;
@@ -560,7 +585,8 @@ namespace RGBJWMain.Controls
                         if (beam.IsNeed)
                         {
                             SelectedBeam = beam.JwSquareBase as JwBeam;
-
+                            NewJwBeamForm jsForm = new NewJwBeamForm(SelectedBeam);
+                            jsForm.Show();
                         }
                         else
                         {
@@ -579,6 +605,73 @@ namespace RGBJWMain.Controls
                 }
             }
             base.OnClick(e);
+        }
+        bool candeletebeam = false;
+        bool candeletepillar = false;   
+        AntdUI.IContextMenuStripItem[] menulist = { };
+        private void JwShowBeams_MouseClick(object? sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                float logicX = (e.X - origin.X) / scale;
+                float logicY = (e.Y - origin.Y) / scale;
+                PointF logicPoint = new PointF(logicX, logicY);
+                bool re = false;
+                IsSelectedOneBeam = false;
+                var beamsbs = _bounds.Where(t => t.ShapeType == DrawShapeType.Beam).ToList();
+                var bj= beamsbs.FirstOrDefault(t => t.DrawRectangleF.Contains(logicPoint));
+                if(bj != null)
+                {
+                    bj.IsNeed = true;
+                    SelectedBeam = bj.JwSquareBase as JwBeam;
+                    candeletebeam = true;
+                    AntdUI.ContextMenuStrip.open(this, it =>
+                    {
+                        RightKey(it);
+                    }, menulist);
+                }
+                // 重置缩放和位置
+                //AntdUI.ContextMenuStrip.Config config = new AntdUI.ContextMenuStrip.Config(this, RightKey, menulist);
+                //config.Font = new Font("Microsoft YaHei UI", 10f, FontStyle.Bold);
+                //AntdUI.ContextMenuStrip.open(config);
+                
+            }
+        }
+        private void RightKey(AntdUI.ContextMenuStripItem it)
+        {
+            if (it.Text.Equals("消去"))
+            {
+
+                if(GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent!=null)
+                {
+                    if (candeletebeam && SelectedBeam != null)
+                    {
+                        ControlSelectedSquareArgs args = new ControlSelectedSquareArgs();
+                        args.DrawShapeType = DrawShapeType.Beam;
+                        args.Id = SelectedBeam.Id;
+                        args.IsLianjie = false;
+                        GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent(this, args);
+                    }
+                }
+                // 执行对应的操作
+                MessageBox.Show("你点击了新增按钮！");
+            }
+            if (it.Text.Equals("修改"))
+            {
+
+            }
+            if (it.Text.Equals("删除"))
+            {
+
+            }
+            if (it.Text.Equals("刷新"))
+            {
+
+            }
+            if (it.Text.Equals("重置"))
+            {
+
+            }
         }
 
         private float scale = 1.0f;

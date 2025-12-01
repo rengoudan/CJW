@@ -21,6 +21,22 @@ namespace RGBJWMain.Controls
         {
 
             InitializeComponent();
+            this.MouseDown += JwCanvasControl_MouseDown;
+        }
+
+        bool isleftdown = false;
+        
+        private void JwCanvasControl_MouseDown(object? sender, MouseEventArgs e)
+        {
+            isleftdown = false;
+            if (e.Button == MouseButtons.Left)
+            {
+                isleftdown = true;
+            }
+            else
+            {
+                isleftdown = false;
+            }
         }
 
         private JwCanvasDraw _canvasDraw;
@@ -78,40 +94,44 @@ namespace RGBJWMain.Controls
             jwShowBeams1.ShowGoujian = value;
         }
 
-        private void jwShowBeams1_Click(object sender, EventArgs e)
-        {
-            SelectedBeam = jwShowBeams1.SelectedBeam;
-            if (SelectedBeam != null)
-            {
-                BeamSelected = true;
-                //SelectBeamEvent(sender, e);
-                
-                    var z = SelectedBeam;
+        //private void jwShowBeams1_Click(object sender, EventArgs e)
+        //{
+        //    //if (isleftdown)
+        //    //{
+        //        SelectedBeam = jwShowBeams1.SelectedBeam;
+        //        if (SelectedBeam != null)
+        //        {
+        //            BeamSelected = true;
+        //            //SelectBeamEvent(sender, e);
 
-                    if (z != null)
-                    {
-                        //if (z.DirectionType == BeamDirectionType.Horizontal)
-                        //{
-                        //    z.AbsolutePD = z.TopLeft.X;
-                        //}
-                        //if (z.DirectionType == BeamDirectionType.Vertical)
-                        //{
-                        //    z.AbsolutePD = z.BottomLeft.Y;
-                        //}
-                        //var q = z.jwBeamMarks;
-                        //JwSingleBeamForm jsForm = new JwSingleBeamForm(z);
+        //            var z = SelectedBeam;
 
-                        ////jsForm.ShowBeam = js;
-                        ////jsForm.sha
-                        //jsForm.ShowDialog();
+        //            if (z != null)
+        //            {
+        //                //if (z.DirectionType == BeamDirectionType.Horizontal)
+        //                //{
+        //                //    z.AbsolutePD = z.TopLeft.X;
+        //                //}
+        //                //if (z.DirectionType == BeamDirectionType.Vertical)
+        //                //{
+        //                //    z.AbsolutePD = z.BottomLeft.Y;
+        //                //}
+        //                //var q = z.jwBeamMarks;
+        //                //JwSingleBeamForm jsForm = new JwSingleBeamForm(z);
 
-                        NewJwBeamForm jsForm = new NewJwBeamForm(z);
-                        jsForm.Show();
+        //                ////jsForm.ShowBeam = js;
+        //                ////jsForm.sha
+        //                //jsForm.ShowDialog();
 
-                    }
-                
-            }
-        }
+        //                NewJwBeamForm jsForm = new NewJwBeamForm(z);
+        //                jsForm.Show();
+
+        //            }
+
+        //        }
+        //    //}
+
+        //}
 
         private void JwCanvasControl_Click(object sender, EventArgs e)
         {
@@ -160,6 +180,11 @@ namespace RGBJWMain.Controls
         private void uiSwitch3_ValueChanged(object sender, bool value)
         {
             jwShowBeams1.ShowGoujiantext = value;
+        }
+
+        private void panel2_MouseDown(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

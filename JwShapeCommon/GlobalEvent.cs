@@ -37,11 +37,21 @@ namespace JwShapeCommon
 
         public EventHandler<ControlSelectedSquareArgs> ControlSelectedSquareEvent;
 
+        public EventHandler<ControlSelectedSquareArgs> DeleteSelectedSquareEvent;
+
         /// <summary>
         /// 操作记录日志
         /// </summary>
         public EventHandler<OperateLogArgs> OperateLogEvent;
     }
+
+    public class DeletePartArgs : EventArgs
+    {
+        public string DeleteId { get; set; }
+
+        public DrawShapeType DrawShapeType { get; set; }
+    }
+
 
     public class ApiErrorArgs : EventArgs
     {

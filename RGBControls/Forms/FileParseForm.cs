@@ -30,8 +30,13 @@ namespace RGBJWMain.Forms
             InitializeComponent();
             jwProjectPathModel = model;
             GlobalEvent.GetGlobalEvent().ShowParseLogEvent += ShowParseLog;
+            GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent += DeleteSelectedSquare;
         }
 
+        private void DeleteSelectedSquare(object? sender, ControlSelectedSquareArgs e)
+        {
+            
+        }
 
         private void FileParseForm_Load(object sender, EventArgs e)
         {

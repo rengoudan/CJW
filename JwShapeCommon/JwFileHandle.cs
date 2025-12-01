@@ -1800,6 +1800,18 @@ namespace JwShapeCommon
             }
         }
 
+        public async void DeleteSquare(ControlSelectedSquareArgs e)
+        {
+            if (e != null)
+            {
+                if (!string.IsNullOrEmpty(e.Id))
+                {
+                    _beamdatas.RemoveAll(t => t.Id == e.Id);
+                }
+            }
+        }
+
+
         public List<JwTouch> Touchs = new List<JwTouch>();
 
         /// <summary>
