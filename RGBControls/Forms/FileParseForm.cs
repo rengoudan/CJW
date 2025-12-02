@@ -35,7 +35,10 @@ namespace RGBJWMain.Forms
 
         private void DeleteSelectedSquare(object? sender, ControlSelectedSquareArgs e)
         {
-            
+            if(_jwFileHandle!=null)
+            {
+                _jwFileHandle.DeleteSquare(e);
+            }
         }
 
         private void FileParseForm_Load(object sender, EventArgs e)

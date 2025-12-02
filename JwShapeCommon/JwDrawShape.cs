@@ -17,6 +17,8 @@ namespace JwShapeCommon
         public DrawShapeType ShapeType { get; set; }
         public JwSquareBase jwShape { get; set; }
 
+        public JwSquareBase ParentSquare { get; set; }
+
         public List<ControlText> Texts =new List<ControlText>();
 
         public JwDrawShape(JwSquareBase jwSquare) 
@@ -150,7 +152,7 @@ namespace JwShapeCommon
 
         public List<ControlDraw> controlDraws=new List<ControlDraw>();
 
-
+        public RectangleF VirtualRectangleF=new RectangleF();
 
         public List<ControlDraw> Draw()
         {
@@ -254,6 +256,7 @@ namespace JwShapeCommon
                 draw.DrawRectangleF = z;
                 draw.ShapeType = ShapeType;
                 draw.JwSquareBase = jwShape;
+                draw.ParentSquareBase= ParentSquare;
                 controlDraws.Add(draw);
             }
             if(ShapeType==DrawShapeType.Hole)

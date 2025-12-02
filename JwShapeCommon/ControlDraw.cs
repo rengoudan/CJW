@@ -11,6 +11,8 @@ namespace JwShapeCommon
     public  class ControlDraw
     {
         public JwSquareBase JwSquareBase { get; set; }
+
+        public JwSquareBase ParentSquareBase { get; set; }
         public Color PenColor { get; set; }
 
         public bool IsNeed { get; set; }

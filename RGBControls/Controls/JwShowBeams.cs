@@ -30,13 +30,6 @@ namespace RGBJWMain.Controls
               ControlStyles.UserPaint |
               ControlStyles.OptimizedDoubleBuffer, true);
             this.UpdateStyles();
-
-            //消去
-
-            menulist = new AntdUI.IContextMenuStripItem[]
-            {
-                new AntdUI.ContextMenuStripItem("消去")
-            };
         }
        
 
@@ -259,6 +252,8 @@ namespace RGBJWMain.Controls
         private bool _canCreatebeams = false;
 
         public JwBeam SelectedBeam { get; set; }
+
+        public JwPillar SelectPillar { get; set; }
 
         /// <summary>
         /// 通用 同时使用pillar 和beam
@@ -608,11 +603,15 @@ namespace RGBJWMain.Controls
         }
         bool candeletebeam = false;
         bool candeletepillar = false;   
-        AntdUI.IContextMenuStripItem[] menulist = { };
+        //AntdUI.IContextMenuStripItem[] menulist = { };
+        List<AntdUI.IContextMenuStripItem> menulist = new List<AntdUI.IContextMenuStripItem>();
+        ControlDraw _selectcontroldraw;
+
         private void JwShowBeams_MouseClick(object? sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
+                menulist.Clear();
                 float logicX = (e.X - origin.X) / scale;
                 float logicY = (e.Y - origin.Y) / scale;
                 PointF logicPoint = new PointF(logicX, logicY);
@@ -623,27 +622,59 @@ namespace RGBJWMain.Controls
                 if(bj != null)
                 {
                     bj.IsNeed = true;
+                    _selectcontroldraw = bj;
                     SelectedBeam = bj.JwSquareBase as JwBeam;
                     candeletebeam = true;
+                    //AntdUI.ContextMenuStrip.open(this, it =>
+                    //{
+                    //    RightKey(it);
+                    //}, menulist);
+                    menulist.Add(new AntdUI.ContextMenuStripItem("消去-梁"));
+                }
+                var pillarsbs = _bounds.Where(t => t.ShapeType == DrawShapeType.Pillar).ToList();
+                if (pillarsbs.Count > 0)
+                {
+                    var pl= pillarsbs.FirstOrDefault(t => t.DrawRectangleF.Contains(logicPoint));
+                    if (pl != null)
+                    {
+                        pl.IsNeed = true;
+                        _selectcontroldraw = pl;
+                        candeletepillar = true;
+                        SelectPillar = pl.ParentSquareBase as JwPillar;
+                        //AntdUI.ContextMenuStrip.open(this, it =>
+                        //{
+                        //    RightKey(it);
+                        //}, menulist);
+                        menulist.Add(new AntdUI.ContextMenuStripItem("消去-柱"));
+                    }
+                }
+                if(candeletebeam|| candeletepillar)
+                {
                     AntdUI.ContextMenuStrip.open(this, it =>
                     {
                         RightKey(it);
-                    }, menulist);
+                    }, menulist.ToArray());
                 }
                 // 重置缩放和位置
                 //AntdUI.ContextMenuStrip.Config config = new AntdUI.ContextMenuStrip.Config(this, RightKey, menulist);
                 //config.Font = new Font("Microsoft YaHei UI", 10f, FontStyle.Bold);
                 //AntdUI.ContextMenuStrip.open(config);
-                
+
             }
         }
         private void RightKey(AntdUI.ContextMenuStripItem it)
         {
-            if (it.Text.Equals("消去"))
+            if (it.Text.Equals("消去-梁"))
             {
 
                 if(GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent!=null)
                 {
+                    if(_selectcontroldraw != null)
+                    {
+                        _bounds.Remove(_selectcontroldraw);
+                        Invalidate();
+                        
+                    }
                     if (candeletebeam && SelectedBeam != null)
                     {
                         ControlSelectedSquareArgs args = new ControlSelectedSquareArgs();
@@ -654,11 +685,27 @@ namespace RGBJWMain.Controls
                     }
                 }
                 // 执行对应的操作
-                MessageBox.Show("你点击了新增按钮！");
+                //MessageBox.Show("你点击了新增按钮！");
             }
-            if (it.Text.Equals("修改"))
+            if (it.Text.Equals("消去-柱"))
             {
+                if (GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent != null)
+                {
+                    if (_selectcontroldraw != null)
+                    {
+                        _bounds.Remove(_selectcontroldraw);
+                        Invalidate();
 
+                    }
+                    if (candeletebeam && SelectedBeam != null)
+                    {
+                        ControlSelectedSquareArgs args = new ControlSelectedSquareArgs();
+                        args.DrawShapeType = DrawShapeType.Pillar;
+                        args.Id = SelectPillar.Id;
+                        args.IsLianjie = false;
+                        GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent(this, args);
+                    }
+                }
             }
             if (it.Text.Equals("删除"))
             {

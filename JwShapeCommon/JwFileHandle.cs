@@ -1800,13 +1800,24 @@ namespace JwShapeCommon
             }
         }
 
+        /// <summary>
+        /// 删除指定形状
+        /// </summary>
+        /// <param name="e"></param>
         public async void DeleteSquare(ControlSelectedSquareArgs e)
         {
             if (e != null)
             {
                 if (!string.IsNullOrEmpty(e.Id))
                 {
-                    _beamdatas.RemoveAll(t => t.Id == e.Id);
+                    if(e.DrawShapeType== DrawShapeType.Pillar)
+                    {
+                        Pillars.RemoveAll(t => t.Id == e.Id);
+                    }
+                    else
+                    {
+                        _beamdatas.RemoveAll(t => t.Id == e.Id);
+                    }
                 }
             }
         }

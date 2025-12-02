@@ -1,10 +1,13 @@
 ﻿using JwCore;
+using JwData;
 using JwShapeCommon;
+using RGBControls.Classes;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,15 +18,44 @@ namespace RGBJWMain.Forms
 {
     public partial class ShowJwCanvasForm : UIForm2
     {
+        public JwDataContext? dbContext;
         public ShowJwCanvasForm()
         {
             InitializeComponent();
+            GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent += DeleteSelectedSquare;
+        }
+
+        private void DeleteSelectedSquare(object? sender, ControlSelectedSquareArgs e)
+        {
+            //throw new NotImplementedException();
+            if (!string.IsNullOrEmpty(e.Id))
+            {
+                if (e.DrawShapeType == JwCore.DrawShapeType.Beam)
+                {
+                    var z = this.dbContext?.JwBeamDatas.Find(e.Id);
+                    this.dbContext?.JwBeamDatas.Remove(z);
+                }
+                else
+                {
+                    var p = this.dbContext?.JwPillarDatas.Find(e.Id);
+                    this.dbContext?.JwPillarDatas.Remove(p);
+                }
+                this.SuccessModal("指定されたコンテンツは削除されました!");
+                this.dbContext?.SaveChanges();
+            }
+
+
         }
 
         public JwCanvas jwCanvas { get; set; }
 
         private void ShowJwCanvasForm_Load(object sender, EventArgs e)
         {
+            dbContext = ContextFactory.GetContext();
+            this.dbContext?.Database.EnsureCreated();
+
+            this.dbContext?.JwBeamDatas.Load();
+            this.dbContext?.JwPillarDatas.Load();
             if (jwCanvas != null)
             {
                 JwCanvasDraw canvasDraw = new JwCanvasDraw(jwCanvas);
@@ -143,6 +175,11 @@ namespace RGBJWMain.Forms
                     }
                 }
             }
+        }
+
+        private void ShowJwCanvasForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent-= DeleteSelectedSquare;
         }
     }
 }

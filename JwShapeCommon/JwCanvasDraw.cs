@@ -75,10 +75,14 @@ namespace JwShapeCommon
                 {
                     foreach (var pll in jwCanvas.Pillars)
                     {
+                        JwDrawShape parentpll = new JwDrawShape(pll);
+                        var q=parentpll.Change(_minbeilv, axisX, axisY);
+
                         foreach (var blp in pll.Blocks)
                         {
                             blp.Id=pll.Id;
                             JwDrawShape bz = new JwDrawShape(blp);
+                            bz.ParentSquare = pll;
                             //bz.Id = pll.Id;
                             bz.ShapeType = DrawShapeType.Pillar;
                             controls.AddRange(bz.Change(_minbeilv, axisX, axisY));
