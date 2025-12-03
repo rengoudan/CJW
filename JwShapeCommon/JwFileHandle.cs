@@ -1814,9 +1814,13 @@ namespace JwShapeCommon
                     {
                         Pillars.RemoveAll(t => t.Id == e.Id);
                     }
-                    else
+                    if(e.DrawShapeType== DrawShapeType.Beam)
                     {
                         _beamdatas.RemoveAll(t => t.Id == e.Id);
+                    }
+                    if (e.DrawShapeType == DrawShapeType.LinkPart)
+                    {
+                        _linkPartDatas.RemoveAll(t => t.Id == e.Id);
                     }
                 }
             }

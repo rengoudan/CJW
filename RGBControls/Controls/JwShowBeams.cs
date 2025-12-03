@@ -606,7 +606,8 @@ namespace RGBJWMain.Controls
         //AntdUI.IContextMenuStripItem[] menulist = { };
         List<AntdUI.IContextMenuStripItem> menulist = new List<AntdUI.IContextMenuStripItem>();
         ControlDraw _selectcontroldraw;
-
+        LinkDrawModel _selectedlinkpart;
+        bool candeletelinkpart = false;
         private void JwShowBeams_MouseClick(object? sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -648,7 +649,26 @@ namespace RGBJWMain.Controls
                         menulist.Add(new AntdUI.ContextMenuStripItem("消去-柱"));
                     }
                 }
-                if(candeletebeam|| candeletepillar)
+                
+                if(CanvasDraw.links.Count > 0)
+                {
+                    var lp= CanvasDraw.links.FirstOrDefault(t => t.VirtualArea.Contains(logicPoint));
+                    if (lp != null)
+                    {
+                        //lp.IsNeed = true;
+                        //_selectcontroldraw = lp;
+                        //AntdUI.ContextMenuStrip.open(this, it =>
+                        //{
+                        //    RightKey(it);
+                        //}, menulist);
+                        _selectedlinkpart= lp;
+                        candeletelinkpart = true;
+                        menulist.Add(new AntdUI.ContextMenuStripItem("消去-B/BG"));
+                    }
+                }
+
+
+                if (candeletebeam|| candeletepillar)
                 {
                     AntdUI.ContextMenuStrip.open(this, it =>
                     {
@@ -702,6 +722,27 @@ namespace RGBJWMain.Controls
                         ControlSelectedSquareArgs args = new ControlSelectedSquareArgs();
                         args.DrawShapeType = DrawShapeType.Pillar;
                         args.Id = SelectPillar.Id;
+                        args.IsLianjie = false;
+                        GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent(this, args);
+                    }
+                }
+            }
+            if (it.Text.Equals("消去-B/BG"))
+            {
+                if (GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent != null)
+                {
+                    if (_selectedlinkpart != null)
+                    {
+                        CanvasDraw.links.Remove(_selectedlinkpart);
+                        //_bounds.Remove(_selectcontroldraw);
+                        Invalidate();
+
+                    }
+                    if (candeletebeam && SelectedBeam != null)
+                    {
+                        ControlSelectedSquareArgs args = new ControlSelectedSquareArgs();
+                        args.DrawShapeType = DrawShapeType.LinkPart;
+                        args.Id = _selectedlinkpart.LinkPart.Id;
                         args.IsLianjie = false;
                         GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent(this, args);
                     }

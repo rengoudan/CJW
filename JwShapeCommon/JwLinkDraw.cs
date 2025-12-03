@@ -67,6 +67,8 @@ namespace JwShapeCommon
             directOffset=directOffset * zoom;
         }
 
+        
+
         public void ChangeAxis(double x, double y)
         {
             LinkDrawModel linkDraw = new LinkDrawModel();
@@ -82,11 +84,14 @@ namespace JwShapeCommon
                     PointF p2 = new PointF((float)CenterPoint.X - (float)(width / 2), (float)CenterPoint.Y - (float)directOffset - (float)height);
                     PointF p3 = new PointF((float)CenterPoint.X + (float)(width / 2), (float)CenterPoint.Y - (float)directOffset);
                     PointF p4 = new PointF((float)CenterPoint.X + (float)(width / 2), (float)CenterPoint.Y - (float)directOffset - (float)height);
+
+                    linkDraw.VirtualArea = new RectangleF(p1.X,p1.Y, (float)width, (float)height);
                     linkDraw.Polygon.Add(p1);
                     linkDraw.Polygon.Add(p2);
                     linkDraw.Polygon.Add(p3);
                     linkDraw.Polygon.Add(p4);
-                    linkDraw.Bounds.Add(new RectangleF(p2,new SizeF((float)width, (float)height)));
+                    linkDraw.VirtualArea = new RectangleF(p2, new SizeF((float)width, (float)height));
+                    linkDraw.Bounds.Add(linkDraw.VirtualArea);
                 }
                 if (_part.Directed == TaggDirect.Down)
                 {
@@ -94,6 +99,7 @@ namespace JwShapeCommon
                     PointF p2 = new PointF((float)CenterPoint.X - (float)(width / 2), (float)CenterPoint.Y + (float)directOffset + (float)height);
                     PointF p3 = new PointF((float)CenterPoint.X + (float)(width / 2), (float)CenterPoint.Y + (float)directOffset);
                     PointF p4 = new PointF((float)CenterPoint.X + (float)(width / 2), (float)CenterPoint.Y + (float)directOffset + (float)height);
+                    linkDraw.VirtualArea = new RectangleF(p1.X, p1.Y, (float)width, (float)height);
                     linkDraw.Polygon.Add(p1);
                     linkDraw.Polygon.Add(p2);
                     linkDraw.Polygon.Add(p3);
@@ -107,12 +113,14 @@ namespace JwShapeCommon
                     PointF p3 = new PointF((float)CenterPoint.X - (float)directOffset, (float)CenterPoint.Y + (float)(width / 2));
                     PointF p4 = new PointF((float)CenterPoint.X - (float)directOffset - (float)height , (float)CenterPoint.Y + (float)(width / 2));
                     PointF p5 = new PointF((float)CenterPoint.X - (float)directOffset, (float)CenterPoint.Y - (float)(width / 2));
+                    //linkDraw.VirtualArea = new RectangleF(p1.X, p1.Y, (float)height, (float)width);
                     linkDraw.Polygon.Add(p1);
                     linkDraw.Polygon.Add(p2);
                     linkDraw.Polygon.Add(p3);
                     linkDraw.Polygon.Add(p4);
                     linkDraw.Polygon.Add(p5);
-                    linkDraw.Bounds.Add(new RectangleF(p2, new SizeF((float)height, (float)width)));
+                    linkDraw.VirtualArea = new RectangleF(p2, new SizeF((float)height, (float)width));
+                    linkDraw.Bounds.Add(linkDraw.VirtualArea);
                 }
                 if (_part.Directed == TaggDirect.Right)
                 {
@@ -121,6 +129,7 @@ namespace JwShapeCommon
                     PointF p3 = new PointF((float)CenterPoint.X + (float)directOffset, (float)CenterPoint.Y + (float)(width / 2));
                     PointF p4 = new PointF((float)CenterPoint.X + (float)directOffset + (float)(height / 2), (float)CenterPoint.Y + (float)(width / 2));
                     PointF p5 = new PointF((float)CenterPoint.X + (float)directOffset, (float)CenterPoint.Y - (float)(width / 2));
+                    linkDraw.VirtualArea = new RectangleF(p1.X, p1.Y, (float)height, (float)width);
                     linkDraw.Polygon.Add(p1);
                     linkDraw.Polygon.Add(p2);
                     linkDraw.Polygon.Add(p3);
@@ -142,6 +151,7 @@ namespace JwShapeCommon
                     PointF p7 = new PointF((float)CenterPoint.X + (float)(width / 2), (float)CenterPoint.Y - (float)directOffset);
                     PointF p8 = new PointF((float)CenterPoint.X + (float)(width / 2), (float)CenterPoint.Y - (float)directOffset - (float)height);
                     PointF p9 = new PointF((float)CenterPoint.X - (float)(width / 2), (float)CenterPoint.Y - (float)directOffset);
+                    //linkDraw.VirtualArea = new RectangleF(p1.X, p1.Y, (float)width, (float)height);
                     linkDraw.Polygon.Add(p1);
                     linkDraw.Polygon.Add(p2);
                     linkDraw.Polygon.Add(p3);
@@ -149,7 +159,8 @@ namespace JwShapeCommon
                     linkDraw.Polygon.Add(p7);
                     linkDraw.Polygon.Add(p8);
                     linkDraw.Polygon.Add(p9);
-                    linkDraw.Bounds.Add(new RectangleF(p2, new SizeF((float)width, (float)height)));
+                    linkDraw.VirtualArea = new RectangleF(p2, new SizeF((float)width, (float)height));
+                    linkDraw.Bounds.Add(linkDraw.VirtualArea);
                     linkDraw.Bounds.Add(new RectangleF(p4, new SizeF((float)tuchuwidth, (float)tuchuheight)));
                 }
                 if (_part.Directed == TaggDirect.Down)
@@ -163,6 +174,7 @@ namespace JwShapeCommon
                     PointF p7 = new PointF((float)CenterPoint.X + (float)(width / 2), (float)CenterPoint.Y + (float)directOffset);
                     PointF p8 = new PointF((float)CenterPoint.X + (float)(width / 2), (float)CenterPoint.Y + (float)directOffset + (float)height);
                     PointF p9 = new PointF((float)CenterPoint.X - (float)(width / 2), (float)CenterPoint.Y + (float)directOffset);
+                    linkDraw.VirtualArea = new RectangleF(p1.X, p1.Y, (float)width, (float)height);
                     linkDraw.Polygon.Add(p1);
                     linkDraw.Polygon.Add(p2);
                     linkDraw.Polygon.Add(p3);
@@ -184,6 +196,7 @@ namespace JwShapeCommon
                     PointF p7 = new PointF((float)CenterPoint.X - (float)directOffset, (float)CenterPoint.Y + (float)(width / 2));
                     PointF p8 = new PointF((float)CenterPoint.X - (float)directOffset - (float)(height / 2), (float)CenterPoint.Y + (float)(width / 2));
                     PointF p9 = new PointF((float)CenterPoint.X - (float)directOffset, (float)CenterPoint.Y - (float)(width / 2));
+                    //linkDraw.VirtualArea = new RectangleF(p1.X, p1.Y, (float)height, (float)width);
                     linkDraw.Polygon.Add(p1);
                     linkDraw.Polygon.Add(p2);
                     linkDraw.Polygon.Add(p3);
@@ -191,8 +204,10 @@ namespace JwShapeCommon
                     linkDraw.Polygon.Add(p7);
                     linkDraw.Polygon.Add(p8);
                     linkDraw.Polygon.Add(p9);
-                    linkDraw.Bounds.Add(new RectangleF(p2, new SizeF((float)height, (float)width)));
+                    linkDraw.VirtualArea = new RectangleF(p2, new SizeF((float)height, (float)width));
+                    linkDraw.Bounds.Add(linkDraw.VirtualArea);
                     linkDraw.Bounds.Add(new RectangleF(p4, new SizeF((float)tuchuheight, (float)tuchuwidth)));
+
                 }
                 if (_part.Directed == TaggDirect.Right)
                 {
@@ -204,6 +219,7 @@ namespace JwShapeCommon
                     PointF p6 = new PointF((float)CenterPoint.X + (float)directOffset + (float)(height / 2), (float)CenterPoint.Y + (float)(tuchuwidth / 2));
                     PointF p7 = new PointF((float)CenterPoint.X + (float)directOffset, (float)CenterPoint.Y + (float)(width / 2));
                     PointF p8 = new PointF((float)CenterPoint.X + (float)directOffset + (float)(height / 2), (float)CenterPoint.Y + (float)(width / 2));
+                    linkDraw.VirtualArea = new RectangleF(p1.X, p1.Y, (float)height, (float)width);
                     linkDraw.Polygon.Add(p1);
                     linkDraw.Polygon.Add(p2);
                     linkDraw.Polygon.Add(p3);
@@ -222,6 +238,11 @@ namespace JwShapeCommon
     {
         public JwLinkPart LinkPart { get; set; }    
         public List<PointF> Polygon { get; set;}
+
+        /// <summary>
+        /// 用来判断点击范围
+        /// </summary>
+        public RectangleF VirtualArea { get; set; }
 
         public List<RectangleF> Bounds { get; set; }
 

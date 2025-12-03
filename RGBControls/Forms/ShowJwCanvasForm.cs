@@ -35,10 +35,15 @@ namespace RGBJWMain.Forms
                     var z = this.dbContext?.JwBeamDatas.Find(e.Id);
                     this.dbContext?.JwBeamDatas.Remove(z);
                 }
-                else
+                if(e.DrawShapeType== JwCore.DrawShapeType.Pillar)
                 {
                     var p = this.dbContext?.JwPillarDatas.Find(e.Id);
                     this.dbContext?.JwPillarDatas.Remove(p);
+                }
+                if(e.DrawShapeType== JwCore.DrawShapeType.LinkPart)
+                {
+                    var lp = this.dbContext?.JwLinkPartDatas.Find(e.Id);
+                    this.dbContext?.JwLinkPartDatas.Remove(lp);
                 }
                 this.SuccessModal("指定されたコンテンツは削除されました!");
                 this.dbContext?.SaveChanges();
