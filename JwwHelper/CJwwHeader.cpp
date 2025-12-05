@@ -478,7 +478,7 @@ void CJwwHeader::Write(CArchive& ar) {
 }
 
 CJwwHeader* CJwwHeader::Clone() {
-	CMemFile mem;
+	/*CMemFile mem;
 	CArchive store(&mem, CArchive::store);
 	Write(store);
 	store.Close();
@@ -492,6 +492,25 @@ CJwwHeader* CJwwHeader::Clone() {
 	load.Close();
 	tmp.Close();
 	free(buf);
+	return h;
+	*/
+	CMemFile mem;
+	CArchive store(&mem, CArchive::store);
+	Write(store);
+	store.Close();
+
+	DWORD len = mem.GetLength();
+	BYTE* buf = mem.Detach();
+	mem.Close();
+
+	CMemFile tmp(buf, len);
+	CArchive load(&tmp, CArchive::load);
+	CJwwHeader* h = new CJwwHeader();
+	h->Read(load);
+	load.Close();
+	tmp.Close();
+
+	delete[] buf; // ✅ 正确释放
 	return h;
 }
 

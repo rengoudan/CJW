@@ -159,6 +159,7 @@ namespace JwwHelper {
 		property String^ m_strMemo {
 			String^ get() {
 				return gcnew String(CA2W(m_pHeader->m_strMemo.GetString()));
+				//return gcnew String(m_pHeader->m_strMemo.GetString());
 			}
 			void set(String^ value) { 
 				pin_ptr<const WCHAR> str = PtrToStringChars(value);
