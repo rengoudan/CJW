@@ -11,13 +11,10 @@ CDataList::CDataList() {
 }
 
 CDataList::~CDataList() {
-	/*POSITION pos = m_DataList.GetHeadPosition();
+	POSITION pos = m_DataList.GetHeadPosition();
 	while (pos != NULL) {
 		CData* data = m_DataList.GetNext(pos);
 		delete data;
-	}*/
-	while (!m_DataList.IsEmpty()) {
-		delete m_DataList.RemoveHead();
 	}
 }
 

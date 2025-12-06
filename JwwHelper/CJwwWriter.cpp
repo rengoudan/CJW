@@ -35,7 +35,7 @@ void CJwwWriter::WriteImages(CArchive& ar) {
 }
 
 void CJwwWriter::InitHeader(LPCTSTR path) {
-	/*AFX_MANAGE_STATE(AfxGetStaticModuleState());
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	CFile file;
 	file.Open(path, CFile::modeRead);
 	CArchive ar(&file, CArchive::load);
@@ -43,53 +43,7 @@ void CJwwWriter::InitHeader(LPCTSTR path) {
 	ar.Read(buf, 8);
 	if (memcmp(buf, "JwwData.", 8) != 0)	AfxThrowFileException(CFileException::invalidFile);
 	m_pHeader->Read(ar);
-	ar.Close();*/
-	//AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	//CFile file;
-	//if (!file.Open(path, CFile::modeRead)) {
-	//	AfxThrowFileException(CFileException::fileNotFound);
-	//}
-
-	//if (file.GetLength() < 8) {
-	//	AfxThrowFileException(CFileException::invalidFile);
-	//}
-
-	//CArchive ar(&file, CArchive::load);
-	//BYTE buf[8];
-	//ar.Read(buf, 8);
-	//if (memcmp(buf, "JwwData.", 8) != 0) {
-	//	AfxThrowFileException(CFileException::invalidFile);
-	//}
-
-	//m_pHeader->Read(ar);
-	//ar.Close();
-
-
-	try {
-		AFX_MANAGE_STATE(AfxGetStaticModuleState());
-		CFile file;
-		if (!file.Open(path, CFile::modeRead)) {
-			/*AfxThrowFileException(CFileException::fileNotFound);*/
-		}
-
-		if (file.GetLength() < 8) {
-			AfxThrowFileException(CFileException::invalidFile);
-		}
-		CArchive ar(&file, CArchive::load);
-		BYTE buf[8];
-		ar.Read(buf, 8);
-		if (memcmp(buf, "JwwData.", 8) != 0)
-			/*AfxThrowFileException(CFileException::invalidFile);*/
-		m_pHeader->Read(ar);
-		ar.Close();
-	}
-	catch (CException* e) {
-		TCHAR msg[512];
-		e->GetErrorMessage(msg, 512);
-		AfxMessageBox(msg);
-		e->Delete();
-	}
-
+	ar.Close();
 }
 
 void CJwwWriter::InitHeader(CJwwHeader* pHeader) {

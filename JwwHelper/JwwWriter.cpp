@@ -19,7 +19,6 @@ namespace JwwHelper {
 		CW2A astr(str);
 		//ファイルを読み込んでヘッダーを初期化
 		m_pWriter->InitHeader(astr);
-		//m_pWriter->InitHeader(str);
 		//C#側からヘッダーを変更できるようにコピー。コピーであることに注意。
 		_Header = gcnew JwwHeader(m_pWriter->m_pHeader->Clone());
 	}
@@ -43,6 +42,5 @@ namespace JwwHelper {
 		//C#側ヘッダーでC++側を初期化
 		m_pWriter->InitHeader(_Header->GetNativeHeader());
 		m_pWriter->Write(astr);
-		/*m_pWriter->Write(str);*/
 	}
 }

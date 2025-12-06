@@ -380,7 +380,7 @@ namespace RGBJWMain.Pages
                         {
 
                             SaveBeams(_selecteddata);
-                            //Thread.Sleep(2000);
+                            Thread.Sleep(2000);
                             this.HideProcessForm();
 
                             if (!string.IsNullOrEmpty(_nowsavefold))
@@ -512,26 +512,23 @@ namespace RGBJWMain.Pages
                             jwDraw.CreateBeam();
                             if (jwDraw.Sens.Count > 0)
                             {
-                                using (var a = new JwwHelper.JwwWriter())
-                                {
-                                    //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
-                                    //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
-                                    //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
-                                    a.InitHeader("template.jww");
-                                    foreach (var s in jwDraw.Datas)
-                                    {
-                                        a.AddData(s);
-                                    }
+                                using var a = new JwwHelper.JwwWriter();
 
-                                    //foreach(var b in jwDraw.Biaozhu)
-                                    //{
-                                    //    a.AddData(b);
-                                    //}
-                                    a.Write(subpath + "\\" + wjm);
-                                    a.Dispose();
-                                }    
+                                //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
+                                //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
+                                //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
+                                a.InitHeader("template.jww");
+                                foreach (var s in jwDraw.Datas)
+                                {
+                                    a.AddData(s);
+                                }
+
+                                //foreach(var b in jwDraw.Biaozhu)
+                                //{
+                                //    a.AddData(b);
+                                //}
+                                a.Write(subpath + "\\" + wjm);
                             }
-                            Thread.Sleep(1000);
                         }
                         //foreach (var b in jwCanvas.Beams)
                         //{
@@ -602,8 +599,6 @@ namespace RGBJWMain.Pages
                 {
                     Directory.CreateDirectory(subpath);
                 }
-                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                var temstr= Path.Combine(baseDir, "template.jww");
                 //this.dbContext.Entry(sub).Collection(e => e.jwho).Load();
                 JwCanvas jwCanvas = data.DataToCanvas();
                 if (jwCanvas.Beams.Count > 0)
@@ -620,26 +615,24 @@ namespace RGBJWMain.Pages
                         string wjm = string.Format("{0}{1}.jww", b.Key, sl);
                         NewJwBeamJwDraw jwDraw = new NewJwBeamJwDraw(bm);
                         jwDraw.CreateBeam();
-
                         if (jwDraw.Sens.Count > 0)
                         {
-                            using (var a = new JwwHelper.JwwWriter())
-                            {
-                                //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
-                                //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
-                                //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
-                                a.InitHeader(temstr);
-                                foreach (var s in jwDraw.Datas)
-                                {
-                                    a.AddData(s);
-                                }
+                            using var a = new JwwHelper.JwwWriter();
 
-                                //foreach(var b in jwDraw.Biaozhu)
-                                //{
-                                //    a.AddData(b);
-                                //}
-                                a.Write(subpath + "\\" + wjm);
-                            }    
+                            //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
+                            //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
+                            //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
+                            a.InitHeader("template.jww");
+                            foreach (var s in jwDraw.Datas)
+                            {
+                                a.AddData(s);
+                            }
+
+                            //foreach(var b in jwDraw.Biaozhu)
+                            //{
+                            //    a.AddData(b);
+                            //}
+                            a.Write(subpath + "\\" + wjm);
                         }
                     }
                 }

@@ -27,7 +27,6 @@ namespace JwwHelper {
 		CW2A astr(str);
 		m_pWriter->InitHeader(_Header->GetNativeHeader());
 		m_pWriter->Write(astr);
-		//m_pWriter->Write(str);
 	}
 
 }

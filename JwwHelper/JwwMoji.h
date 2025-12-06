@@ -72,8 +72,7 @@ namespace JwwHelper {
 		};
 		property String^ m_strFontName {
 			String^ get() {
-				/*return gcnew String(CA2W(((CDataMoji*)m_pData)->m_strFontName.GetString()));*/
-				return gcnew String(((CDataMoji*)m_pData)->m_strFontName.GetString());
+				return gcnew String(CA2W(((CDataMoji*)m_pData)->m_strFontName.GetString()));
 			}
 			void set(String^ value) {
 				pin_ptr<const WCHAR> str = PtrToStringChars(value);
@@ -84,7 +83,6 @@ namespace JwwHelper {
 		property String^ m_string {
 			String^ get() {
 				return gcnew String(CA2W(((CDataMoji*)m_pData)->m_string.GetString()));
-				//return gcnew String(((CDataMoji*)m_pData)->m_string.GetString());
 			}
 			void set(String^ value) {
 				pin_ptr<const WCHAR> str = PtrToStringChars(value);

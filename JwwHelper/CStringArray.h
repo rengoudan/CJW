@@ -22,7 +22,6 @@ namespace JwwHelper {
 			{
 				if (index < 0 || index >= _size) throw gcnew System::IndexOutOfRangeException();
 				return gcnew String(CA2W(_elems[index]));
-				//return gcnew String(_elems[index]);
 			}
 			void set(int index, String ^ value)
 			{

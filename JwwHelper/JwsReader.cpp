@@ -17,7 +17,6 @@ namespace JwwHelper {
 		CW2A astr(str);
 
 		m_pReader->Read(astr);
-		//m_pReader->Read(str);
 		ConvertToManaged();
 		if (completed != nullptr) {
 			completed(this);

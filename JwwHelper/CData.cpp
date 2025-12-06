@@ -59,25 +59,6 @@ void CData::CopyFrom(CData* src) {
 }
 
 CData* CData::Clone(){
-	/*AFX_MANAGE_STATE(AfxGetStaticModuleState());
-	CMemFile mem;
-	CArchive store(&mem, CArchive::store);
-	store.SetObjectSchema(JWW_VERSION);
-	store << this;
-	store.Close();
-	DWORD len = mem.GetLength();
-	BYTE* buf = mem.Detach();
-	mem.Close();
-	CMemFile tmp(buf, len);
-	CArchive load(&tmp, CArchive::load);
-	load.SetObjectSchema(JWW_VERSION);
-	CData* data = NULL;
-	load >> data;
-	ASSERT_VALID(data);
-	load.Close();
-	tmp.Close();
-	free(buf);
-	return data;*/
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 	CMemFile mem;
 	CArchive store(&mem, CArchive::store);
