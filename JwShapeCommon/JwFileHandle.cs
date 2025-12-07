@@ -2700,18 +2700,50 @@ namespace JwShapeCommon
                     double y = lg % mkkkk;
 
                     int c = (int)lg / mkkkk;
-                    if(y==0)
-                    {
-                        beam.BeamCode = string.Format("{0}{1}{2}", s, e, c);
-                    }
-                    else
-                    {
-                        beam.BeamCode = string.Format("{0}{1}{2}+{3}", s, e, c, Math.Round(y,0));
-                    }
+                    var zmu = NormalizePrefix(s, e);
+                    //if (y==0)
+                    //{
+                    //    beam.BeamCode = string.Format("{0}{1}", zmu, c);
+                    //}
+                    //else
+                    //{
+                    //    beam.BeamCode = string.Format("{0}{1}+{2}", zmu, c, Math.Round(y,0));
+                    //}
                     
                 }
             }
         }
+
+        string NormalizePrefix(string s, string e)
+        {
+            // 如果两个端点相同，比如 BB、GG、JJ → 合并为一个
+            if (s == e)
+            {
+                if (s == "J")
+                {
+                    return "JJ";
+                }
+                else
+                {
+                    return s;
+                }
+            }
+                
+
+            // 特定组合顺序调整
+            var pair = s + e;
+            return pair switch
+            {
+                "GB" => "BG",
+                "JB" => "BJ",
+                "JG" => "GJ",
+                "GJ" => "GJ",
+                "BJ" => "BJ",
+                "BG" => "BG",
+                _ => pair // 默认不变
+            };
+        }
+
 
         public void ChangeJwwEnojiToText()
         {
@@ -3045,13 +3077,26 @@ namespace JwShapeCommon
                 double y = b.XXLength % mkkkk;
 
                 int q = (int)b.XXLength / mkkkk;
+                var zmu = NormalizePrefix(s, e);
                 if (y == 0)
                 {
-                    b.BeamCode = string.Format("{0}{1}{2}", s, e, q);
+                    b.BeamCode = string.Format("{0}{1}", zmu, q);
                 }
                 else
                 {
-                    b.BeamCode = string.Format("{0}{1}{2}+{3}", s, e, q, Math.Round(y, 0));
+                    b.BeamCode = string.Format("{0}{1}+{2}", zmu, q, Math.Round(y, 0));
+                }
+            }
+            //2025年12月7日 针对相同的梁符号进行abcd后缀处理
+            var grouped = Beams.GroupBy(t => t.BeamCode).Where(g => g.Count() > 1);
+
+            foreach (var group in grouped)
+            {
+                char suffix = 'a';
+                foreach (var beam in group)
+                {
+                    beam.BeamCode = $"{group.Key}{suffix}";
+                    suffix++;
                 }
             }
         }

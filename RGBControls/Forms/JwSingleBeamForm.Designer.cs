@@ -30,11 +30,12 @@
         {
             panel1 = new Panel();
             panel3 = new Panel();
-            beamSingleShow1 = new Controls.BeamSingleShow();
+            beamSingleShow1 = new RGBJWMain.Controls.BeamSingleShow();
             panel2 = new Panel();
-            uiSymbolButton1 = new Sunny.UI.UISymbolButton();
-            uiMarkLabel7 = new Sunny.UI.UIMarkLabel();
             uiComboBox3 = new Sunny.UI.UIComboBox();
+            uiMarkLabel7 = new Sunny.UI.UIMarkLabel();
+            uiSymbolButton1 = new Sunny.UI.UISymbolButton();
+            select1 = new AntdUI.Select();
             panel1.SuspendLayout();
             panel3.SuspendLayout();
             panel2.SuspendLayout();
@@ -54,56 +55,33 @@
             // 
             panel3.Controls.Add(beamSingleShow1);
             panel3.Dock = DockStyle.Fill;
-            panel3.Location = new Point(0, 43);
+            panel3.Location = new Point(0, 57);
             panel3.Name = "panel3";
-            panel3.Size = new Size(980, 372);
+            panel3.Size = new Size(980, 358);
             panel3.TabIndex = 1;
             // 
             // beamSingleShow1
             // 
             beamSingleShow1.BackColor = Color.Black;
             beamSingleShow1.Dock = DockStyle.Fill;
-            //beamSingleShow1.JwDrawShape = null;
+            beamSingleShow1.JwDrawShape = null;
             beamSingleShow1.Location = new Point(0, 0);
             beamSingleShow1.Name = "beamSingleShow1";
-            beamSingleShow1.Size = new Size(980, 372);
+            beamSingleShow1.Size = new Size(980, 358);
             beamSingleShow1.TabIndex = 0;
             beamSingleShow1.Text = "beamSingleShow1";
             // 
             // panel2
             // 
+            panel2.Controls.Add(select1);
             panel2.Controls.Add(uiComboBox3);
             panel2.Controls.Add(uiMarkLabel7);
             panel2.Controls.Add(uiSymbolButton1);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(980, 43);
+            panel2.Size = new Size(980, 57);
             panel2.TabIndex = 0;
-            // 
-            // uiSymbolButton1
-            // 
-            uiSymbolButton1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiSymbolButton1.Location = new Point(3, 3);
-            uiSymbolButton1.MinimumSize = new Size(1, 1);
-            uiSymbolButton1.Name = "uiSymbolButton1";
-            uiSymbolButton1.Size = new Size(107, 35);
-            uiSymbolButton1.Symbol = 558052;
-            uiSymbolButton1.TabIndex = 0;
-            uiSymbolButton1.Text = "輸出JWW";
-            uiSymbolButton1.Click += uiSymbolButton1_Click;
-            // 
-            // uiMarkLabel7
-            // 
-            uiMarkLabel7.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiMarkLabel7.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel7.Location = new Point(158, 10);
-            uiMarkLabel7.Name = "uiMarkLabel7";
-            uiMarkLabel7.Padding = new Padding(5, 0, 0, 0);
-            uiMarkLabel7.Size = new Size(108, 23);
-            uiMarkLabel7.TabIndex = 26;
-            uiMarkLabel7.Text = "梁モデル:";
-            uiMarkLabel7.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiComboBox3
             // 
@@ -122,6 +100,40 @@
             uiComboBox3.TabIndex = 15;
             uiComboBox3.TextAlignment = ContentAlignment.MiddleLeft;
             uiComboBox3.Watermark = "";
+            // 
+            // uiMarkLabel7
+            // 
+            uiMarkLabel7.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiMarkLabel7.ForeColor = Color.FromArgb(48, 48, 48);
+            uiMarkLabel7.Location = new Point(158, 10);
+            uiMarkLabel7.Name = "uiMarkLabel7";
+            uiMarkLabel7.Padding = new Padding(5, 0, 0, 0);
+            uiMarkLabel7.Size = new Size(108, 23);
+            uiMarkLabel7.TabIndex = 26;
+            uiMarkLabel7.Text = "梁モデル:";
+            uiMarkLabel7.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // uiSymbolButton1
+            // 
+            uiSymbolButton1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton1.Location = new Point(3, 3);
+            uiSymbolButton1.MinimumSize = new Size(1, 1);
+            uiSymbolButton1.Name = "uiSymbolButton1";
+            uiSymbolButton1.Size = new Size(107, 35);
+            uiSymbolButton1.Symbol = 558052;
+            uiSymbolButton1.TabIndex = 0;
+            uiSymbolButton1.Text = "輸出JWW";
+            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton1.Click += uiSymbolButton1_Click;
+            // 
+            // select1
+            // 
+            select1.Items.AddRange(new object[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" });
+            select1.Location = new Point(477, 0);
+            select1.Name = "select1";
+            select1.Size = new Size(160, 51);
+            select1.TabIndex = 27;
+            select1.Text = "工区選択";
             // 
             // JwSingleBeamForm
             // 
@@ -148,5 +160,6 @@
         private Sunny.UI.UISymbolButton uiSymbolButton1;
         private Sunny.UI.UIMarkLabel uiMarkLabel7;
         private Sunny.UI.UIComboBox uiComboBox3;
+        private AntdUI.Select select1;
     }
 }

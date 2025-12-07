@@ -1,6 +1,7 @@
 ﻿using JwCore;
 using JwData;
 using JwShapeCommon;
+using RGBControls.Classes;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,22 @@ namespace RGBJWMain.Forms
         public FileParseForm()
         {
             InitializeComponent();
+            GlobalEvent.GetGlobalEvent().UpdateNewGongQuEvent += FileParseUpdateNewGongQuEvent;
+        }
+
+        private void FileParseUpdateNewGongQuEvent(object? sender, UpdateCodeArgs e)
+        {
+            if(_jwFileHandle.Beams.Count>0)
+            {
+                var bs = _jwFileHandle.Beams.Find(t => t.Id == e.Id);
+                if (bs != null)
+                {
+                    bs.GongQu = e.NewCode;
+                    //var msg = string.Format("梁番号:{0}、新しい工区コード:{1}", bs.BeamCode, e.NewCode);
+                    var msg = $"梁番号:{bs.BeamCode}、新しい工区コード:{e.NewCode}";
+                    this.SuccessModal(msg);
+                }
+            }
         }
 
         JwProjectPathModel? jwProjectPathModel = null!;
@@ -31,6 +48,7 @@ namespace RGBJWMain.Forms
             jwProjectPathModel = model;
             GlobalEvent.GetGlobalEvent().ShowParseLogEvent += ShowParseLog;
             GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent += DeleteSelectedSquare;
+            GlobalEvent.GetGlobalEvent().UpdateNewGongQuEvent += FileParseUpdateNewGongQuEvent;
         }
 
         private void DeleteSelectedSquare(object? sender, ControlSelectedSquareArgs e)
@@ -84,6 +102,7 @@ namespace RGBJWMain.Forms
                 this.HideProcessForm();
                 jwCanvasControl1.Invoke(() =>
                 {
+                    jwCanvasControl1.IsNewCanvas = true;
                     jwCanvasControl1.CanvasDraw = canvasDraw;
                     //jwCanvasControl1.Click += JwCanvasControl1_Click;
                     jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
@@ -92,6 +111,7 @@ namespace RGBJWMain.Forms
             else
             {
                 this.HideProcessForm();
+                jwCanvasControl1.IsNewCanvas = true;
                 jwCanvasControl1.CanvasDraw = canvasDraw;
                 //jwCanvasControl1.Click += JwCanvasControl1_Click;
                 jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;

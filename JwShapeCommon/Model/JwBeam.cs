@@ -82,7 +82,9 @@ namespace JwShapeCommon
 
         public double XXLength { get; set; }
 
-        
+        public string GongQu { get; set; } = "";
+
+
 
         public JwBeam()
         {
@@ -610,6 +612,7 @@ namespace JwShapeCommon
             data.EndTelosType=this.EndTelosType;
             data.StartCenter=this.StartCenter;
             data.EndCenter=this.EndCenter;
+            data.GongQu = this.GongQu;
             return data;
         }
 

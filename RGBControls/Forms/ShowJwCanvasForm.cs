@@ -64,6 +64,7 @@ namespace RGBJWMain.Forms
             if (jwCanvas != null)
             {
                 JwCanvasDraw canvasDraw = new JwCanvasDraw(jwCanvas);
+                jwCanvasControl1.IsNewCanvas = false;
                 jwCanvasControl1.CanvasDraw = canvasDraw;
                 //jwCanvasControl1.Click += JwCanvasControl1_Click;
                 jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;

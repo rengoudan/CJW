@@ -30,12 +30,17 @@
         {
             newSingleBeamControl1 = new RGBJWMain.Controls.NewSingleBeamControl();
             panel1 = new Panel();
+            pageHeader1 = new AntdUI.PageHeader();
+            panel5 = new Panel();
+            select7 = new AntdUI.Select();
+            button2 = new AntdUI.Button();
             uiSymbolButton1 = new Sunny.UI.UISymbolButton();
             panel2 = new Panel();
             panel3 = new Panel();
             uiTextBox1 = new Sunny.UI.UITextBox();
             divider1 = new AntdUI.Divider();
             panel1.SuspendLayout();
+            panel5.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             SuspendLayout();
@@ -54,22 +59,69 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(pageHeader1);
+            panel1.Controls.Add(panel5);
             panel1.Controls.Add(uiSymbolButton1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1562, 62);
+            panel1.Size = new Size(1562, 111);
             panel1.TabIndex = 1;
+            // 
+            // pageHeader1
+            // 
+            pageHeader1.Dock = DockStyle.Top;
+            pageHeader1.Location = new Point(0, 0);
+            pageHeader1.Name = "pageHeader1";
+            pageHeader1.ShowButton = true;
+            pageHeader1.Size = new Size(1562, 53);
+            pageHeader1.TabIndex = 31;
+            pageHeader1.Text = "梁预览";
+            // 
+            // panel5
+            // 
+            panel5.Controls.Add(select7);
+            panel5.Controls.Add(button2);
+            panel5.Location = new Point(238, 68);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(249, 40);
+            panel5.TabIndex = 30;
+            panel5.Text = "panel4";
+            // 
+            // select7
+            // 
+            select7.AllowClear = true;
+            select7.Dock = DockStyle.Fill;
+            select7.Items.AddRange(new object[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" });
+            select7.JoinMode = AntdUI.TJoinMode.Left;
+            select7.LocalizationPlaceholderText = "Select.{id}";
+            select7.Location = new Point(0, 0);
+            select7.Name = "select7";
+            select7.PlaceholderText = "工区選択";
+            select7.Size = new Size(199, 40);
+            select7.TabIndex = 0;
+            // 
+            // button2
+            // 
+            button2.Dock = DockStyle.Right;
+            button2.IconSvg = "CheckOutlined";
+            button2.JoinMode = AntdUI.TJoinMode.Right;
+            button2.Location = new Point(199, 0);
+            button2.Name = "button2";
+            button2.Size = new Size(50, 40);
+            button2.TabIndex = 1;
+            button2.Type = AntdUI.TTypeMini.Primary;
+            button2.Click += button2_Click;
             // 
             // uiSymbolButton1
             // 
             uiSymbolButton1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiSymbolButton1.Location = new Point(15, 14);
+            uiSymbolButton1.Location = new Point(13, 68);
             uiSymbolButton1.Margin = new Padding(4);
             uiSymbolButton1.MinimumSize = new Size(1, 1);
             uiSymbolButton1.Name = "uiSymbolButton1";
-            uiSymbolButton1.Size = new Size(202, 42);
+            uiSymbolButton1.Size = new Size(202, 36);
             uiSymbolButton1.Symbol = 558052;
             uiSymbolButton1.TabIndex = 0;
             uiSymbolButton1.Text = "輸出JWW";
@@ -81,9 +133,9 @@
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(newSingleBeamControl1);
             panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(0, 62);
+            panel2.Location = new Point(0, 111);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1562, 847);
+            panel2.Size = new Size(1562, 798);
             panel2.TabIndex = 2;
             // 
             // panel3
@@ -91,7 +143,7 @@
             panel3.Controls.Add(uiTextBox1);
             panel3.Controls.Add(divider1);
             panel3.Dock = DockStyle.Bottom;
-            panel3.Location = new Point(0, 568);
+            panel3.Location = new Point(0, 519);
             panel3.Name = "panel3";
             panel3.Size = new Size(1562, 279);
             panel3.TabIndex = 1;
@@ -131,11 +183,14 @@
             ClientSize = new Size(1562, 909);
             Controls.Add(panel2);
             Controls.Add(panel1);
+            HelpButton = true;
             Margin = new Padding(2);
             Name = "NewJwBeamForm";
+            SizeGripStyle = SizeGripStyle.Show;
             Text = "NewJwBeamForm";
             Shown += NewJwBeamForm_Shown;
             panel1.ResumeLayout(false);
+            panel5.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel3.ResumeLayout(false);
             ResumeLayout(false);
@@ -150,5 +205,9 @@
         private Panel panel3;
         private AntdUI.Divider divider1;
         private Sunny.UI.UITextBox uiTextBox1;
+        private Panel panel5;
+        private AntdUI.Select select7;
+        private AntdUI.Button button2;
+        private AntdUI.PageHeader pageHeader1;
     }
 }

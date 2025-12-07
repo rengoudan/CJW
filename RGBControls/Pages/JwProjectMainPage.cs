@@ -18,6 +18,7 @@ using NPOI.POIFS.Crypt.Dsig;
 using JwwHelper;
 using SixLabors.ImageSharp;
 using System.IdentityModel.Tokens.Jwt;
+using RGBControls.Classes;
 
 namespace RGBJWMain.Pages
 {
@@ -27,6 +28,16 @@ namespace RGBJWMain.Pages
         {
             InitializeComponent();
             base.InitData();
+            GlobalEvent.GetGlobalEvent().UpdateCodeEvent += JwProjectMainPage_UpdateCodeEvent;
+        }
+
+        private void JwProjectMainPage_UpdateCodeEvent(object? sender, UpdateCodeArgs e)
+        {
+            var obj = this.dbContext?.JwBeamDatas.Find(e.Id);
+            obj.GongQu=e.NewCode;
+            this.dbContext?.SaveChanges();
+            var msg = $"梁番号:{obj.BeamCode}、新しい工区コード:{e.NewCode}";
+            this.SuccessModal(msg);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -40,14 +51,14 @@ namespace RGBJWMain.Pages
             var z = this.uiDataGridView1.Columns["jwCustomerDataIdDataGridViewTextBoxColumn"] as DataGridViewComboBoxColumn;
             z.DataSource = dbContext?.JwCustomerDatas.ToList();
             this.jwProjectMainDataBindingSource.DataSource = dbContext?.JwProjectMainDatas.Local.ToBindingList();
-            ////this.uiDataGridView1.Refresh();
+            this.uiDataGridView1.Refresh();
             //if (uiDataGridView1.SelectedIndex >= 0)
             //{
             //    HasSelectedRow = true;
             //    SelectedRow = uiDataGridView1.SelectedRows[0];
             //}
             uiDataGridView1.ClearSelection();
-            uiDataGridView1.Rows[0].Selected = false;
+            //uiDataGridView1.Rows[0].Selected = false;
         }
 
         private void uiDataGridView1_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)

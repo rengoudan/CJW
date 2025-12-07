@@ -1,4 +1,5 @@
 ﻿using JwShapeCommon;
+using RGBControls.Classes;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,11 @@ using System.Windows.Forms;
 
 namespace RGBJWMain.Forms
 {
-    public partial class NewJwBeamForm : Form
+    public partial class NewJwBeamForm : AntdUI.Window
     {
         private JwBeam _jwbeam;
 
+        public bool IsNewBeam = false;
 
         public NewJwBeamForm()
         {
@@ -25,10 +27,10 @@ namespace RGBJWMain.Forms
         public NewJwBeamForm(JwBeam jwbeam)
         {
             this._jwbeam = jwbeam;
-            
+
             //this.Name = this._jwbeam.BeamCode;
             InitializeComponent();
-            this.Text = this._jwbeam.BeamCode;
+            this.pageHeader1.Text = string.Format("梁预览-{0}", this._jwbeam.BeamCode);
         }
 
         private void NewJwBeamForm_Shown(object sender, EventArgs e)
@@ -38,8 +40,11 @@ namespace RGBJWMain.Forms
                 this.newSingleBeamControl1.ShowBeam = this._jwbeam;
                 var csvshow = this._jwbeam.ToProcessCsv();
                 this.uiTextBox1.Text = csvshow;
+                if(!string.IsNullOrEmpty(this._jwbeam.GongQu))
+                {
+                    this.select7.SelectedValue = this._jwbeam.GongQu;
+                }   
             }
-
         }
 
         private void uiSymbolButton1_Click(object sender, EventArgs e)
@@ -79,6 +84,47 @@ namespace RGBJWMain.Forms
                         UIMessageBox.ShowSuccess(msgshow);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 确认工区
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //var st = select7.SelectedValue;
+            if (select7.SelectedValue != null)
+            {
+                if (IsNewBeam)
+                {
+                    if(GlobalEvent.GetGlobalEvent().UpdateNewGongQuEvent != null)
+                    {
+                        var args = new UpdateCodeArgs()
+                        {
+                            Id = this._jwbeam.Id,
+                            NewCode = this.select7.SelectedValue.ToString()
+                        };
+                        GlobalEvent.GetGlobalEvent().UpdateNewGongQuEvent(this, args);
+                    }
+                }
+                else
+                {
+                    if (GlobalEvent.GetGlobalEvent().UpdateCodeEvent != null)
+                    {
+                        var args = new UpdateCodeArgs()
+                        {
+                            Id = this._jwbeam.Id,
+                            NewCode = this.select7.SelectedValue.ToString()
+                        };
+                        GlobalEvent.GetGlobalEvent().UpdateCodeEvent(this, args);
+                    }
+                }
+            }
+            else
+            {
+                this.SuccessModal("1つ選択してください");
             }
         }
     }

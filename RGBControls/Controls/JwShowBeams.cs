@@ -148,6 +148,8 @@ namespace RGBJWMain.Controls
             }
         }
 
+        public bool IsNewCanvas = false;
+
         private bool _showBeams;
         public bool ShowBeams
         {
@@ -581,6 +583,7 @@ namespace RGBJWMain.Controls
                         {
                             SelectedBeam = beam.JwSquareBase as JwBeam;
                             NewJwBeamForm jsForm = new NewJwBeamForm(SelectedBeam);
+                            jsForm.IsNewBeam = IsNewCanvas;
                             jsForm.Show();
                         }
                         else

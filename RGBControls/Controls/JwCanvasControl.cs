@@ -25,6 +25,9 @@ namespace RGBJWMain.Controls
         }
 
         bool isleftdown = false;
+
+        public bool IsNewCanvas = false;    
+
         
         private void JwCanvasControl_MouseDown(object? sender, MouseEventArgs e)
         {
@@ -57,6 +60,7 @@ namespace RGBJWMain.Controls
                     uiGoujian.Active = true;
                     uiSwitch2.Active = true;
                     uiSDown.Active = true;
+                    jwShowBeams1.IsNewCanvas= IsNewCanvas;
                     jwShowBeams1.CanvasDraw = _canvasDraw;
 
                     Invalidate();

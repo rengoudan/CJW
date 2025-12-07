@@ -43,8 +43,29 @@ namespace JwShapeCommon
         /// 操作记录日志
         /// </summary>
         public EventHandler<OperateLogArgs> OperateLogEvent;
+
+        public EventHandler<UpdateCodeArgs> UpdateCodeEvent;
+
+        public EventHandler<UpdateCodeArgs> UpdateNewGongQuEvent;
     }
 
+    /// <summary>
+    /// 更新梁工区
+    /// </summary>
+    public class UpdateCodeArgs: EventArgs
+    {
+        public string Id { get; set; }
+
+        /// <summary>
+        /// 用作工区
+        /// </summary>
+        public string NewCode { get; set; }
+        public DrawShapeType DrawShapeType { get; set; }
+    }
+
+    /// <summary>
+    /// 暂时无用
+    /// </summary>
     public class DeletePartArgs : EventArgs
     {
         public string DeleteId { get; set; }

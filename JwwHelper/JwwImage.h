@@ -38,12 +38,12 @@ namespace JwwHelper {
 		/// </summary>
 		property String^ ImageName {
 			String^ get() {
-				return gcnew String(CA2W(m_pImage->m_ImageName.GetString()));
+				return gcnew String(m_pImage->m_ImageName.GetString());
 			}
 			void set(String^ value) {
 				pin_ptr<const WCHAR> str = PtrToStringChars(value);
-				CW2A astr(str);
-				m_pImage->m_ImageName = astr;
+				//CW2A astr(str);
+				m_pImage->m_ImageName = str;
 			}
 		};
 
