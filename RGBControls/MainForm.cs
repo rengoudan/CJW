@@ -1,6 +1,7 @@
 ﻿using JwShapeCommon;
 using MathNet.Numerics;
 using RGBControls.Forms;
+using RGBControls.Pages;
 using RGBJWMain.Pages;
 using Sunny.UI;
 using System;
@@ -34,7 +35,8 @@ namespace RGBControls
             //uiNavBar1.
             uiNavBar1.CreateNode(AddPage(new EmptyPage(), ++pageIndex));
             //uiNavBar1.CreateNode(AddPage(new TestsPage(), ++pageIndex));
-            uiNavBar1.CreateNode(AddPage(new JwProjectMainPage(), ++pageIndex));
+            //uiNavBar1.CreateNode(AddPage(new JwProjectMainPage(), ++pageIndex));
+            uiNavBar1.CreateNode(AddPage(new NewProjectMainPage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwBudgePage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwCustomerPage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwBaseDataPage(), ++pageIndex));
