@@ -96,42 +96,42 @@ namespace RGBJWMain.Forms
             //jwfh.ChangeQieGeSolis();
             _jwFileHandle.FollowTheStep();
             var jc = _jwFileHandle.CreateCanvas();
-            JwCanvasDraw canvasDraw = new JwCanvasDraw(jc);
-            if (jwCanvasControl1.InvokeRequired)
-            {
-                this.HideProcessForm();
-                jwCanvasControl1.Invoke(() =>
+            if (_jwFileHandle.HasCanvas) {
+                JwCanvasDraw canvasDraw = new JwCanvasDraw(jc);
+                if (jwCanvasControl1.InvokeRequired)
                 {
+                    this.HideProcessForm();
+                    jwCanvasControl1.Invoke(() =>
+                    {
+                        jwCanvasControl1.IsNewCanvas = true;
+                        jwCanvasControl1.CanvasDraw = canvasDraw;
+                        //jwCanvasControl1.Click += JwCanvasControl1_Click;
+                        jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
+                    });
+                }
+                else
+                {
+                    this.HideProcessForm();
                     jwCanvasControl1.IsNewCanvas = true;
                     jwCanvasControl1.CanvasDraw = canvasDraw;
                     //jwCanvasControl1.Click += JwCanvasControl1_Click;
                     jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
-                });
+                }
+                if (uiSymbolButton1.InvokeRequired)
+                {
+                    uiSymbolButton1.Invoke(() => { uiSymbolButton1.Enabled = true; });
+                }
+                else
+                {
+                    uiSymbolButton1.Enabled = true;
+                }
             }
             else
             {
                 this.HideProcessForm();
-                jwCanvasControl1.IsNewCanvas = true;
-                jwCanvasControl1.CanvasDraw = canvasDraw;
-                //jwCanvasControl1.Click += JwCanvasControl1_Click;
-                jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
+                UIMessageBox.ShowError("現在の解析設定では有効なデータが検出されません!!");
+                this.Close();
             }
-            if (uiSymbolButton1.InvokeRequired)
-            {
-                uiSymbolButton1.Invoke(() => { uiSymbolButton1.Enabled = true; });
-            }
-            else
-            {
-                uiSymbolButton1.Enabled = true;
-            }
-            //jwShowBeams1.Canvas = jc;
-            //jwShowBeams1.CreateBeams();
-            //jwShowBeams1.CanvasDraw = canvasDraw;
-            //jwShowBeams1.Click += JwShowBeams1_Click;
-            //jwfh.sss();
-            //分割需要去除重复
-            //var lst = jwfh.SolidLst.Select(t => t.m_nPenColor).ToList().Distinct().ToList();
-            //var s = jwfh.RectangleBlocks;
         }
 
         private void ShowParseLog(object sender, ShowParseLogArgs e)

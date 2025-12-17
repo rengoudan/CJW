@@ -772,15 +772,18 @@ namespace RGBJWMain.Controls
         // 添加缺失的 JwShowBeams_MouseWheel 事件处理方法
         private void JwShowBeams_MouseWheel(object sender, MouseEventArgs e)
         {
-            // 可以根据需要实现缩放或其他功能，这里暂时留空
-            // 例如：Invalidate();
-            float oldScale = scale;
-            scale += e.Delta > 0 ? 0.1f : -0.1f;
-            scale = Math.Max(1f, scale); // 防止缩得太小
-                                         // 以鼠标位置为中心进行缩放
-            origin.X = e.X - (e.X - origin.X) * (scale / oldScale);
-            origin.Y = e.Y - (e.Y - origin.Y) * (scale / oldScale);
-            Invalidate();
+            if ((ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                // 可以根据需要实现缩放或其他功能，这里暂时留空
+                // 例如：Invalidate();
+                float oldScale = scale;
+                scale += e.Delta > 0 ? 0.1f : -0.1f;
+                scale = Math.Max(1f, scale); // 防止缩得太小
+                                             // 以鼠标位置为中心进行缩放
+                origin.X = e.X - (e.X - origin.X) * (scale / oldScale);
+                origin.Y = e.Y - (e.Y - origin.Y) * (scale / oldScale);
+                Invalidate();
+            }
         }
     }
 }

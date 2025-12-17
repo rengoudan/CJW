@@ -3,6 +3,7 @@ using AutoMapper.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,17 +25,23 @@ namespace JwShapeCommon
 
         MapperConfiguration config ;
 
+
         public IMapper GetMapper()
         {
-            if(config == null)
+            var myAssemblies = new[]
+{
+    Assembly.Load("JwCore"),
+    Assembly.Load("JwShapeCommon")
+};
+            if (config == null)
             {
                 config = new MapperConfiguration(cfg =>
                 {
                     // 扫描当前程序集
-                    cfg.AddMaps(System.AppDomain.CurrentDomain.GetAssemblies());
+                    //cfg.AddMaps(System.AppDomain.CurrentDomain.GetAssemblies());
                     //cfg.Internal().ForAllPropertyMaps()
                     // 也可以传程序集名称（dll 名称）
-
+                    cfg.AddMaps(myAssemblies);
                 });
             }
             

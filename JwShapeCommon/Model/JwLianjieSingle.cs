@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NetTopologySuite.Geometries;
+using JwwHelper;
 
 namespace JwShapeCommon.Model
 {
@@ -44,6 +45,11 @@ namespace JwShapeCommon.Model
 
         public bool IsCreateSuccess { get; set; }
 
+        /// <summary>
+        /// 成对的交叉线，一个标识为增加，一个标识为减少  用来错开显示的长度
+        /// </summary>
+        public bool IsAddOrReduce { get; set; }
+
         public JwLianjieData ToDbData()
         {
             JwLianjieData lianjieData = new JwLianjieData();
@@ -60,9 +66,11 @@ namespace JwShapeCommon.Model
 
             return lianjieData;
         }
+
+
     }
 
-    public class JwLianjie
+    public class JwLianjie:IDrawToJww
     {
         public JWPoint Start { get; set; }
 
@@ -77,6 +85,43 @@ namespace JwShapeCommon.Model
 
         public string Id { get; set; }
         public string JwProjectSubDataId { get; set; }
+
+        public bool IsAddOrReduce { get; set; }
+
+        public List<JwwData> DrawToJww()
+        {
+            double jd=Start.LineAngle(End);
+            List<JwwData> jwwDatas = new List<JwwData>();
+            JwwSunpou sunpou = new JwwSunpou();
+            //sunpou.m_nPenColor = 2;
+            //sunpou.m_nPenStyle = 1;
+            sunpou.m_Sen.m_nPenColor = 2;
+            sunpou.m_Sen.m_nPenStyle = 2;
+            sunpou.m_Sen.m_start_x = Start.X;
+            sunpou.m_Sen.m_start_y = Start.Y;
+            sunpou.m_Sen.m_end_x = End.X;
+            sunpou.m_Sen.m_end_y = End.Y;
+            sunpou.m_Moji.m_string= Length.ToString();
+            sunpou.m_Moji.m_start_x = (Start.X+End.X)/2;
+            sunpou.m_Moji.m_start_y = (Start.Y+End.Y)/2;
+            sunpou.m_Moji.m_dSizeX = 2;
+            sunpou.m_Moji.m_dSizeY = 3;
+            sunpou.m_Moji.m_degKakudo = jd;
+            jwwDatas.Add(sunpou);
+            JwwTen tenone=new JwwTen();
+            tenone.m_nPenColor = 9;
+            tenone.m_nPenStyle = 1;
+            tenone.m_start_x = Start.X;
+            tenone.m_start_y = Start.Y;
+            jwwDatas.Add(tenone);
+            JwwTen tentwo = new JwwTen();
+            tentwo.m_nPenColor = 9;
+            tentwo.m_nPenStyle = 1;
+            tentwo.m_start_x = End.X;
+            tentwo.m_start_y = End.Y;
+            jwwDatas.Add(tentwo);
+            return jwwDatas;
+        }
     }
 
     /// <summary>

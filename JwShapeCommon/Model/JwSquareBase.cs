@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwwHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +69,27 @@ namespace JwShapeCommon
         /// 约定小于零右上，大于零右下
         /// </summary>
         public double Jiaodu { get; set; }
+
+        /// <summary>
+        /// 实现 style 1  虚线2
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        public JwwSen CreateSenByTwoPoint(JWPoint p1, JWPoint p2)
+        {
+            var sen = new JwwSen();
+            //sen.m_nPenWidth=1/
+            sen.m_nPenColor = 2;
+            sen.m_start_x = p1.X;
+            sen.m_start_y = p1.Y;
+            sen.m_end_x = Math.Round(p2.X, 6);
+            sen.m_end_y = Math.Round(p2.Y, 6);
+            sen.m_nPenColor = 5;
+            sen.m_nPenStyle = 1;
+            sen.m_nPenWidth = 0;
+            return sen;
+        }
 
 
         public BeamDirectionType DirectionType { get; set; }

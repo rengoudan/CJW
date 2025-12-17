@@ -1,16 +1,18 @@
 ﻿using JwCore;
 using JwShapeCommon.Model;
+using JwwHelper;
+using Microsoft.Extensions.Primitives;
+using NetTopologySuite.Geometries;
+using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
-using NetTopologySuite.Geometries;
-using Sunny.UI;
+using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
-using System.Runtime.CompilerServices;
-using Microsoft.Extensions.Primitives;
 
 namespace JwShapeCommon
 {
@@ -18,7 +20,7 @@ namespace JwShapeCommon
     /// <summary>
     /// BEAM 确定矩形 上边 下边 左边 右边
     /// </summary>
-    public class JwBeam: JwSquareBase
+    public class JwBeam: JwSquareBase, IDrawToJww
     {
         /// <summary>
         /// 梁的方向
@@ -973,6 +975,7 @@ namespace JwShapeCommon
                 {
                     Id = Id,
                     RelativeStartDistance = Math.Round((singleleft - ks), 2) * JwFileConsts.JwScale,
+                    RealLocation = singleleft,
                     HasLeft = true
                 };
                 //JwHoleMachinings.Add(preleft);
@@ -981,6 +984,7 @@ namespace JwShapeCommon
                 {
                     Id = Id,
                     RelativeStartDistance = Math.Round((singleright - ks), 2) * JwFileConsts.JwScale,
+                    RealLocation = singleright,
                     HasLeft = true
                 };
                 //JwHoleMachinings.Add(preright);
@@ -990,6 +994,7 @@ namespace JwShapeCommon
                 {
                     Id = Id,
                     RelativeStartDistance = Math.Round((weileft - ks), 2) * JwFileConsts.JwScale,
+                    RealLocation = weileft,
                     HasLeft = true
                 };
                 var touright = Math.Round((location + (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
@@ -997,6 +1002,7 @@ namespace JwShapeCommon
                 {
                     Id = Id,
                     RelativeStartDistance = Math.Round((touright - ks), 2) * JwFileConsts.JwScale,
+                    RealLocation = touright,
                     HasLeft = true
                 };
 
@@ -1004,6 +1010,7 @@ namespace JwShapeCommon
                 {
                     Id = Id,
                     RelativeStartDistance = Math.Round((holerealleft - ks), 2) * JwFileConsts.JwScale,
+                    RealLocation = holerealleft,
                     HasLeft = hole.HasTop,
                     HasRight = hole.HasBottom,
                     HasTop = hole.HasCenter
@@ -1013,6 +1020,7 @@ namespace JwShapeCommon
                 {
                     Id = Id,
                     RelativeStartDistance = Math.Round((holerealright - ks), 2) * JwFileConsts.JwScale,
+                    RealLocation = holerealright,
                     HasLeft = hole.HasTop,
                     HasRight = hole.HasBottom,
                     HasTop = hole.HasCenter
@@ -1022,6 +1030,7 @@ namespace JwShapeCommon
                 {
                     Id = Id,
                     RelativeStartDistance = Math.Round((location - ks), 2) * JwFileConsts.JwScale,
+                    RealLocation = location,
                     HasLeft = hole.HasTop,
                     HasRight = hole.HasBottom,
                     HasTop = hole.HasCenter
@@ -1173,6 +1182,158 @@ namespace JwShapeCommon
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 未做坐标系变换情况下的jww导出
+        /// 可以尝试增加参数 实现导出不同类型的施工图
+        /// </summary>
+        /// <returns>返回jwwdata父类，jwwriter addata调用</returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public List<JwwData> DrawToJww()
+        {
+            List<JwwData> jd = new List<JwwData>();
+            //填充线
+            jd.Add(CreateSenByTwoPoint(TopLeft, TopRight));
+            jd.Add(CreateSenByTwoPoint(TopLeft, BottomLeft));
+            jd.Add(CreateSenByTwoPoint(TopRight, BottomRight));
+            jd.Add(CreateSenByTwoPoint(BottomLeft, BottomRight));
+            //填充文字
+            JwwMoji jwwMoji = new JwwMoji();
+            jwwMoji.m_nPenColor = 1;
+            jwwMoji.m_start_x = this.DirectionType==BeamDirectionType.Horizontal? (TopLeft.X+Width/2):(TopLeft.X-70/JwFileConsts.JwScale);
+            jwwMoji.m_start_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale):(TopRight.Y-Height/2);
+            jwwMoji.m_string = this.BeamCode;
+            jwwMoji.m_end_x = this.DirectionType == BeamDirectionType.Horizontal ? TopLeft.X  : (TopLeft.X - 70 / JwFileConsts.JwScale);
+            jwwMoji.m_end_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale) : TopRight.Y;
+            //jwwMoji.m_nMojiShu += this.DirectionType == BeamDirectionType.Horizontal ? 1000 : 2000;
+            jwwMoji.m_degKakudo= this.DirectionType == BeamDirectionType.Horizontal ? 0 : 90;
+            jwwMoji.m_dKankaku = 0.2;
+            jwwMoji.m_dSizeX = 2;
+            jwwMoji.m_dSizeY = 3;
+            jwwMoji.m_nPenColor = 4;
+            jwwMoji.m_nPenStyle = 5;
+            jd.Add(jwwMoji);
+            //绘制中心辅助线
+            if (GlobalEvent.GetGlobalEvent().DrawAuxiliaryLineEvent!=null)
+            {
+                GlobalEvent.GetGlobalEvent().DrawAuxiliaryLineEvent(this, new DrawAuxiliaryLineArgs
+                {
+                    DirectionType = this.DirectionType,
+                    Auxiliary = Center
+                }
+                );
+            }
+            //填充形状
+
+
+
+
+
+
+            return jd;
+        }
+
+        double banjing = 0;
+
+
+        /// <summary>
+        /// 使用和csv配置过的JwHoleMachining 进行绘制jww
+        /// 然后另一个维度坐标值为center加减孔组半径来实现 56/2
+        /// </summary>
+        /// <returns></returns>
+        public List<JwwData> DrawBeamWithHoleToJww(bool istop)
+        {
+            this.banjing = JwFileConsts.EllipseDiameter / (2 * JwFileConsts.JwScale);
+            List<JwwData> jd = new List<JwwData>();
+            //填充线
+            jd.Add(CreateSenByTwoPoint(TopLeft, TopRight));
+            jd.Add(CreateSenByTwoPoint(TopLeft, BottomLeft));
+            jd.Add(CreateSenByTwoPoint(TopRight, BottomRight));
+            jd.Add(CreateSenByTwoPoint(BottomLeft, BottomRight));
+            //填充文字
+            JwwMoji jwwMoji = new JwwMoji();
+            jwwMoji.m_nPenColor = 1;
+            jwwMoji.m_start_x = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.X + Width / 2) : (TopLeft.X - 70 / JwFileConsts.JwScale);
+            jwwMoji.m_start_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale) : (TopRight.Y - Height / 2);
+            jwwMoji.m_string = this.BeamCode;
+            jwwMoji.m_end_x = this.DirectionType == BeamDirectionType.Horizontal ? TopLeft.X : (TopLeft.X - 70 / JwFileConsts.JwScale);
+            jwwMoji.m_end_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale) : TopRight.Y;
+            //jwwMoji.m_nMojiShu += this.DirectionType == BeamDirectionType.Horizontal ? 1000 : 2000;
+            jwwMoji.m_degKakudo = this.DirectionType == BeamDirectionType.Horizontal ? 0 : 90;
+            jwwMoji.m_dKankaku = 0.2;
+            jwwMoji.m_dSizeX = 2;
+            jwwMoji.m_dSizeY = 3;
+            jwwMoji.m_nPenColor = 4;
+            jwwMoji.m_nPenStyle = 5;
+            jd.Add(jwwMoji);
+            //绘制中心辅助线
+            if (GlobalEvent.GetGlobalEvent().DrawAuxiliaryLineEvent != null)
+            {
+                GlobalEvent.GetGlobalEvent().DrawAuxiliaryLineEvent(this, new DrawAuxiliaryLineArgs
+                {
+                    DirectionType = this.DirectionType,
+                    Auxiliary = Center
+                }
+                );
+            }
+            //定义梁起始
+            this.AbsolutePD = this.DirectionType == BeamDirectionType.Horizontal ? TopLeft.X :BottomLeft.Y;
+            if (istop)
+            {
+                var tops= JwHoleMachinings.Where(t => t.HasLeft).OrderBy(t => t.RelativeStartDistance).ToList();
+                if(tops.Count>0)
+                {
+                    foreach(var th in tops)
+                    {
+                        if (this.DirectionType == BeamDirectionType.Horizontal)
+                        {
+                            jd.Add(createhole(th.RealLocation, Center + JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale)));
+                            jd.Add(createhole(th.RealLocation, Center - JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale)));
+                        }
+                        else if (this.DirectionType == BeamDirectionType.Vertical)
+                        {
+                            jd.Add(createhole(Center + JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale), th.RealLocation));
+                            jd.Add(createhole(Center - JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale), th.RealLocation));
+                        }
+                    }
+                }   
+            }
+            else
+            {
+                var bottoms = JwHoleMachinings.Where(t => t.HasRight).OrderBy(t => t.RelativeStartDistance).ToList();
+                if (bottoms.Count > 0)
+                {
+                    foreach (var bh in bottoms)
+                    {
+                        if (this.DirectionType == BeamDirectionType.Horizontal)
+                        {
+                            jd.Add(createhole(bh.RealLocation, Center - JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale)));
+                            jd.Add(createhole(bh.RealLocation, Center + JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale)));
+                        }
+                        else if (this.DirectionType == BeamDirectionType.Vertical)
+                        {
+                            jd.Add(createhole(Center - JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale), bh.RealLocation));
+                            jd.Add(createhole(Center + JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale), bh.RealLocation));
+                        }
+                    }
+                }
+            }
+            return jd;
+        }
+
+        private JwwEnko createhole(double x, double y)
+        {
+            JwwEnko enko = new JwwEnko();
+            enko.m_nPenColor = 2;
+            enko.m_dHankei = banjing;
+            enko.m_radKaishiKaku = 0;
+            enko.m_radEnkoKaku = 6.2831853;
+            enko.m_radKatamukiKaku = 0;
+            enko.m_dHenpeiRitsu = 1;
+            enko.m_bZenEnFlg = 1;
+            enko.m_start_x = x;
+            enko.m_start_y = y;
+            return enko;
+        }
 
     }
 

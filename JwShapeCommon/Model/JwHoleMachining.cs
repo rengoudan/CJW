@@ -18,6 +18,10 @@ namespace JwShapeCommon.Model
 
         public double RelativeStartDistance { get; set; }
 
+        /// <summary>
+        /// 用来绘制jww 使用 水平此为X  垂直此为Y  然后通过center 生成具体的location
+        /// </summary>
+        public double RealLocation { get; set; }
 
         /// <summary>
         /// 工字梁上面

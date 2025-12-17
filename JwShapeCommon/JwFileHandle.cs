@@ -1677,24 +1677,47 @@ namespace JwShapeCommon
         /// </summary>
         public JwCanvas CreateCanvas()
         {
-            double minx = JwAllPoints.Select(t => t.X).Min();
-            double maxx=JwAllPoints.Select(t=>t.X).Max();
-            double miny = JwAllPoints.Select(t => t.Y).Min();
-            double maxy=JwAllPoints.Select(t=>t.Y).Max();
+            if(JwAllPoints.Count > 0)
+            {
+                double minx = JwAllPoints.Select(t => t.X).Min();
+                double maxx = JwAllPoints.Select(t => t.X).Max();
+                double miny = JwAllPoints.Select(t => t.Y).Min();
+                double maxy = JwAllPoints.Select(t => t.Y).Max();
 
-            TopLeft = new JWPoint(minx,maxy);
+                TopLeft = new JWPoint(minx, maxy);
 
-            TopRight = new JWPoint(maxx, maxy);
+                TopRight = new JWPoint(maxx, maxy);
 
-            BottomLeft = new JWPoint(minx,miny);
-            BottomRight = new JWPoint(maxx, miny);
-            Width = TopRight.X - TopLeft.X;
-            Height = TopLeft.Y - BottomLeft.Y;
-            HasCanvas=true;
-            jwCanvas = new JwCanvas(TopLeft, TopRight, BottomLeft, BottomRight, Beams, JwAllPoints,Width,Height,Pillars,ParentQieGeBeam);
-            jwCanvas.LinkParts = AllLinkPart;
-            jwCanvas.LianjieSingles=this.LianjieSingles;
-            return jwCanvas;
+                BottomLeft = new JWPoint(minx, miny);
+                BottomRight = new JWPoint(maxx, miny);
+                Width = TopRight.X - TopLeft.X;
+                Height = TopLeft.Y - BottomLeft.Y;
+                HasCanvas = true;
+                jwCanvas = new JwCanvas(TopLeft, TopRight, BottomLeft, BottomRight, Beams, JwAllPoints, Width, Height, Pillars, ParentQieGeBeam);
+                jwCanvas.LinkParts = AllLinkPart;
+                jwCanvas.LianjieSingles = this.LianjieSingles;
+                return jwCanvas;
+            }
+            else
+            {
+                double minx = -500;
+                double maxx = 500;
+                double miny = -500;
+                double maxy = 500;
+
+                TopLeft = new JWPoint(minx, maxy);
+
+                TopRight = new JWPoint(maxx, maxy);
+
+                BottomLeft = new JWPoint(minx, miny);
+                BottomRight = new JWPoint(maxx, miny);
+                Width = TopRight.X - TopLeft.X;
+                Height = TopLeft.Y - BottomLeft.Y;
+                HasCanvas = false;
+                jwCanvas = new JwCanvas(TopLeft, TopRight, BottomLeft, BottomRight, Beams, JwAllPoints, Width, Height, Pillars, ParentQieGeBeam);
+                return jwCanvas;
+            }
+            
         }
 
 
@@ -1729,34 +1752,37 @@ namespace JwShapeCommon
             {
                 foreach (var bm in Beams)
                 {
-                    JwBeamData beamData = bm.ToDbData();
-                    beamData.JwProjectSubDataId = _subData.Id;
-                    beamData.FloorName = _floorName;
-                    //beamData.x
-                    
-                    if(bm.Holes.Count>0 )
+                    if (!bm.IsParentBeam)
                     {
-                        foreach (var hd in bm.Holes)
+                        JwBeamData beamData = bm.ToDbData();
+                        beamData.JwProjectSubDataId = _subData.Id;
+                        beamData.FloorName = _floorName;
+                        //beamData.x
+
+                        if (bm.Holes.Count > 0)
                         {
-                            JwHoleData jhd = hd.ToData();
-                            jhd.JwBeamDataId = beamData.Id;
-                           
-                            _holeDatas.Add(jhd);
+                            foreach (var hd in bm.Holes)
+                            {
+                                JwHoleData jhd = hd.ToData();
+                                jhd.JwBeamDataId = beamData.Id;
+
+                                _holeDatas.Add(jhd);
+                            }
                         }
-                    }
-                    if(bm.Baifangs?.Count>0)
-                    {
-                        //记录败方数据
-                        foreach(var bd in bm.Baifangs)
+                        if (bm.Baifangs?.Count > 0)
                         {
-                            JwBeamVerticalData verticalData = bd.ToData();
-                            //bd.ParentBeamId = beamData.Id;
-                            verticalData.JwBeamDataId= beamData.Id;
-                            _jwbvdatas.Add(verticalData);
+                            //记录败方数据
+                            foreach (var bd in bm.Baifangs)
+                            {
+                                JwBeamVerticalData verticalData = bd.ToData();
+                                //bd.ParentBeamId = beamData.Id;
+                                verticalData.JwBeamDataId = beamData.Id;
+                                _jwbvdatas.Add(verticalData);
+                            }
                         }
+                        _beamdatas.Add(beamData);
+                        //beamData
                     }
-                    _beamdatas.Add(beamData);
-                    //beamData
                 }
             }
             if (Pillars.Count>0)

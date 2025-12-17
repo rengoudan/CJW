@@ -45,5 +45,11 @@ namespace RGBJWMain.Pages
         {
             this.dbContext?.SaveChanges();
         }
+
+        public void WarningMsg(string msg)
+        {
+            AntdUI.Message.warn(this, msg, Font);
+        }
+
     }
 }

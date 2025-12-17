@@ -47,6 +47,16 @@ namespace JwShapeCommon
         public EventHandler<UpdateCodeArgs> UpdateCodeEvent;
 
         public EventHandler<UpdateCodeArgs> UpdateNewGongQuEvent;
+
+        public EventHandler<DrawAuxiliaryLineArgs> DrawAuxiliaryLineEvent;
+    }
+
+    public  class DrawAuxiliaryLineArgs : EventArgs
+    {
+        public double Auxiliary { get; set; }
+
+        public BeamDirectionType DirectionType { get; set; }
+
     }
 
     /// <summary>

@@ -32,8 +32,10 @@
             projectmaintable = new AntdUI.Table();
             jwProjectMainDataBindingSource = new BindingSource(components);
             panel3 = new Panel();
-            table1 = new AntdUI.Table();
             jwProjectSubDatasBindingSource = new BindingSource(components);
+            button1 = new AntdUI.Button();
+            button2 = new AntdUI.Button();
+            table1 = new AntdUI.Table();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)jwProjectMainDataBindingSource).BeginInit();
@@ -47,7 +49,12 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(button2);
+            panel1.Controls.Add(button1);
             panel1.Size = new Size(1422, 43);
+            panel1.Controls.SetChildIndex(uiButton1, 0);
+            panel1.Controls.SetChildIndex(button1, 0);
+            panel1.Controls.SetChildIndex(button2, 0);
             // 
             // panel2
             // 
@@ -63,6 +70,7 @@
             projectmaintable.Name = "projectmaintable";
             projectmaintable.Size = new Size(1422, 381);
             projectmaintable.TabIndex = 0;
+            projectmaintable.CellDoubleClick += projectmaintable_CellDoubleClick;
             projectmaintable.SelectIndexChanged += projectmaintable_SelectIndexChanged;
             // 
             // jwProjectMainDataBindingSource
@@ -78,6 +86,33 @@
             panel3.Size = new Size(1422, 412);
             panel3.TabIndex = 1;
             // 
+            // jwProjectSubDatasBindingSource
+            // 
+            jwProjectSubDatasBindingSource.DataMember = "JwProjectSubDatas";
+            jwProjectSubDatasBindingSource.DataSource = jwProjectMainDataBindingSource;
+            // 
+            // button1
+            // 
+            button1.IconSvg = "PlusOutlined";
+            button1.Location = new Point(131, 6);
+            button1.Name = "button1";
+            button1.Size = new Size(112, 34);
+            button1.TabIndex = 1;
+            button1.Text = "增";
+            button1.Type = AntdUI.TTypeMini.Primary;
+            button1.Click += button1_Click;
+            // 
+            // button2
+            // 
+            button2.IconSvg = "UploadOutlined";
+            button2.Location = new Point(249, 6);
+            button2.Name = "button2";
+            button2.Size = new Size(188, 34);
+            button2.TabIndex = 2;
+            button2.Text = "アップロード";
+            button2.Type = AntdUI.TTypeMini.Primary;
+            button2.Click += button2_Click;
+            // 
             // table1
             // 
             table1.Dock = DockStyle.Fill;
@@ -87,18 +122,16 @@
             table1.Size = new Size(1422, 412);
             table1.TabIndex = 0;
             table1.Text = "table1";
-            // 
-            // jwProjectSubDatasBindingSource
-            // 
-            jwProjectSubDatasBindingSource.DataMember = "JwProjectSubDatas";
-            jwProjectSubDatasBindingSource.DataSource = jwProjectMainDataBindingSource;
+            table1.CellClick += table1_CellClick;
+            table1.CellHover += table1_CellHover;
+            table1.CellDoubleClick += table1_CellDoubleClick;
             // 
             // NewProjectMainPage
             // 
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(1422, 865);
             Name = "NewProjectMainPage";
-            Text = "NewProjectMainPage";
+            Text = "プロジェクト";
             Load += NewProjectMainPage_Load;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
@@ -113,7 +146,9 @@
         private AntdUI.Table projectmaintable;
         private BindingSource jwProjectMainDataBindingSource;
         private Panel panel3;
-        private AntdUI.Table table1;
         private BindingSource jwProjectSubDatasBindingSource;
+        private AntdUI.Button button1;
+        private AntdUI.Button button2;
+        private AntdUI.Table table1;
     }
 }

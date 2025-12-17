@@ -1,5 +1,6 @@
 ﻿using JwCore;
 using JwShapeCommon.Model;
+using JwwHelper;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -208,5 +209,37 @@ namespace JwShapeCommon
         /// 相对于梁起始点的相对距离
         /// </summary>
         public double RelativeStartDistance { get; set; } = 0;
+
+        public BeamDirectionType DirectionType 
+        {
+            get 
+            {
+                return _sourceBeam.DirectionType;
+            }
         }
+
+        public List<JwwData> DrawToJww()
+        {
+            List<JwwData> jd = new List<JwwData>();
+            //var sen = new JwwSen();
+            //sen.m_nPenColor = 2;
+            //sen.m_start_x = Point.X - 50;
+            //sen.m_start_y = Point.Y;
+            //sen.m_end_x = Point.X + 50;
+            //sen.m_end_y = Point.Y;
+            //sen.m_nPenStyle = 1;
+            //sen.m_nPenWidth = 0;
+            //jd.Add(sen);
+            //var sen1 = new JwwSen();
+            //sen1.m_nPenColor = 2;
+            //sen1.m_start_x = Point.X;
+            //sen1.m_start_y = Point.Y - 50;
+            //sen1.m_end_x = Point.X;
+            //sen1.m_end_y = Point.Y + 50;
+            //sen1.m_nPenStyle = 1;
+            //sen1.m_nPenWidth = 0;
+            //jd.Add(sen1);
+            return jd;
+        }
+    }
 }

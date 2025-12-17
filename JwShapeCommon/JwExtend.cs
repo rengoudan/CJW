@@ -89,7 +89,7 @@ namespace JwShapeCommon
         {
             JwBeamVertical vertical = new JwBeamVertical
             {
-                ParentBeamId=data.JwBeamDataId,
+                ParentBeamId = data.JwBeamDataId,
                 Center = data.Center,
                 HasLast = data.HasLast,
                 HasPre = data.HasPre
@@ -101,10 +101,10 @@ namespace JwShapeCommon
         public static JwLianjie DataToLianjie(this JwLianjieData data)
         {
             JwLianjie lianjie = new JwLianjie();
-            lianjie.Start=new JWPoint(data.Start.X, data.Start.Y);
-            lianjie.End=new JWPoint(data.End.X, data.End.Y);
+            lianjie.Start = new JWPoint(data.Start.X, data.Start.Y);
+            lianjie.End = new JWPoint(data.End.X, data.End.Y);
             lianjie.Length = data.Length;
-            lianjie.Id=data.Id;
+            lianjie.Id = data.Id;
             //lianjie.
             return lianjie;
         }
@@ -226,20 +226,20 @@ namespace JwShapeCommon
                             jwbm.Holes.Add(hb.DataToHole());
                         }
                     }
-                    if(bm.JwBeamVerticalDatas.Count> 0)
+                    if (bm.JwBeamVerticalDatas.Count > 0)
                     {
-                        foreach(var  vb in bm.JwBeamVerticalDatas)
+                        foreach (var vb in bm.JwBeamVerticalDatas)
                         {
                             jwbm.Baifangs.Add(vb.DataToJw());
                         }
                     }
-                    if(jwbm.DirectionType == BeamDirectionType.Horizontal)
+                    if (jwbm.DirectionType == BeamDirectionType.Horizontal)
                     {
                         jwbm.AbsolutePD = jwbm.TopLeft.X;
                     }
                     else
                     {
-                          jwbm.AbsolutePD = jwbm.TopLeft.Y;
+                        jwbm.AbsolutePD = jwbm.TopLeft.Y;
                     }
                     reobj.Beams.Add(jwbm);
                 }
@@ -289,16 +289,16 @@ namespace JwShapeCommon
                     reobj.LinkParts.Add(jwLink);
                 }
             }
-            
-            if(data.JwLianjieDatas.Count > 0)
+
+            if (data.JwLianjieDatas.Count > 0)
             {
-                foreach(var lianjie in data.JwLianjieDatas)
+                foreach (var lianjie in data.JwLianjieDatas)
                 {
                     JwLianjie jlj = lianjie.DataToLianjie();
                     reobj.LianjieLsts.Add(jlj);
                 }
             }
-            reobj.IsFromData= true;
+            reobj.IsFromData = true;
             return reobj;
         }
 
@@ -345,10 +345,10 @@ namespace JwShapeCommon
                 var fh = beam.Holes.Find(t => t.Location == location);
                 if (fh == null)
                 {
-                     hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                    hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
                     if (beam.DirectionType == BeamDirectionType.Horizontal)
                     {
-                        hh.HoleCenter = location.X; 
+                        hh.HoleCenter = location.X;
                     }
                     if (beam.DirectionType == BeamDirectionType.Vertical)
                     {
@@ -360,7 +360,7 @@ namespace JwShapeCommon
                 {
                     if (createFrom == HoleCreateFrom.FengeJ)
                     {
-                         hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                        hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
                         if (beam.DirectionType == BeamDirectionType.Horizontal)
                         {
                             hh.HoleCenter = location.X;
@@ -397,7 +397,7 @@ namespace JwShapeCommon
             //    {
             //        hh.HasSG = true;
             //    }
-                
+
             //}
         }
 
@@ -412,7 +412,7 @@ namespace JwShapeCommon
         /// <param name="isEnd"></param>
         public static JwHole AddAnyHoleReturn(this JwBeam beam, JWPoint location, HoleCreateFrom createFrom, JWPoint? locationcenter = null, bool isStart = false, bool isEnd = false)
         {
-            JwHole hh=new JwHole();
+            JwHole hh = new JwHole();
             if (beam.Holes.Count > 0)
             {
                 var fh = beam.Holes.Find(t => t.Location == location);
@@ -794,7 +794,7 @@ namespace JwShapeCommon
         }
 
 
-       
+
 
         /// <summary>
         /// 判断四个点是否组成矩形
@@ -868,7 +868,20 @@ namespace JwShapeCommon
             // 平移
             double newX = rotatedX + block.m_DPKijunTen_x;
             double newY = rotatedY + block.m_DPKijunTen_y;
-            return new JWPoint(newX,newY);
+            return new JWPoint(newX, newY);
+        }
+
+        public static double LineAngle(this JWPoint P1, JWPoint P2)
+        {
+            double deltaY = P2.Y - P1.Y;
+            double deltaX = P2.X - P1.X;
+            double angleInRadians = Math.Atan2(deltaY, deltaX);
+            double angleInDegrees = angleInRadians * (180.0 / Math.PI);
+            if (angleInDegrees < 0)
+            {
+                angleInDegrees += 360;
+            }
+            return angleInDegrees;
         }
     }
-    }
+}

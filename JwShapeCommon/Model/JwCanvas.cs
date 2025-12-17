@@ -1,5 +1,6 @@
 ﻿using JwCore;
 using JwShapeCommon.Model;
+using JwwHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace JwShapeCommon
     /// <summary>
     /// 对应floor
     /// </summary>
-    public class JwCanvas:JwSquareBase
+    public class JwCanvas:JwSquareBase, IDrawToJww
     {
         /// <summary>
         ///
@@ -176,6 +177,121 @@ namespace JwShapeCommon
             //sb.Append(BottomBeam.DrawToCsv(0));
             //sb.Append("END\r\n");
             return sb.ToString();
+        }
+
+        private List<JwwData> OthersDatas=new List<JwwData>();
+
+        public List<JwwData> DrawToJww()
+        {
+            List<JwwData> jd = new List<JwwData>();
+            
+            foreach (var item in Beams)
+            {
+                jd.AddRange(item.DrawToJww());
+            }
+            foreach (var lj in LianjieLsts)
+            {
+                jd.AddRange(lj.DrawToJww());
+            }
+
+            if (OthersDatas.Count>0)
+            {
+                jd.AddRange(OthersDatas);
+            }
+            //链接Ten color 9 
+
+            return jd;
+        }
+
+        /// <summary>
+        /// 绘制带孔的施工图
+        /// 将孔的绘制下放至beam里
+        /// </summary>
+        /// <returns></returns>
+        public List<JwwData> DrawShigong(bool istop)
+        {
+            List<JwwData> jd = new List<JwwData>();
+
+            foreach (var item in Beams)
+            {
+                jd.AddRange(item.DrawBeamWithHoleToJww(istop));
+            }
+            //foreach (var lj in LianjieLsts)
+            //{
+            //    jd.AddRange(lj.DrawToJww());
+            //}
+            if (OthersDatas.Count > 0)
+            {
+                jd.AddRange(OthersDatas);
+            }
+            return jd;
+        }
+
+
+
+        /// <summary>
+        /// 施工图连接线
+        /// </summary>
+        /// <returns></returns>
+        public List<JwwData> DrawLinesToJww()
+        {
+            List<JwwData> jd = new List<JwwData>();
+
+            foreach (var item in Beams)
+            {
+                jd.AddRange(item.DrawToJww());
+            }
+            foreach (var lj in LianjieLsts)
+            {
+                jd.AddRange(lj.DrawToJww());
+            }
+
+            if (OthersDatas.Count > 0)
+            {
+                jd.AddRange(OthersDatas);
+            }
+            //链接Ten color 9 
+
+            return jd;
+        }
+
+        public void BindDrawOtherEvent()
+        {
+            GlobalEvent.GetGlobalEvent().DrawAuxiliaryLineEvent+=DrawAuxiliaryLine;
+        }
+
+        /// <summary>
+        /// 绘制辅助线 canvas 确定范围的方法重新确认
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void DrawAuxiliaryLine(object? sender, DrawAuxiliaryLineArgs e)
+        {
+            if (e.DirectionType == BeamDirectionType.Horizontal)
+            {
+                var sen = new JwwSen();
+                sen.m_nPenColor = 1;
+                sen.m_start_x = TopLeft.X - 200;
+                sen.m_start_y = e.Auxiliary;
+                sen.m_end_x = TopRight.X+200;
+                sen.m_end_y = e.Auxiliary; 
+                sen.m_nPenStyle = 2;
+                sen.m_nPenWidth = 0;
+                OthersDatas.Add(sen);
+            }
+            else
+            {
+                var sen = new JwwSen();
+                sen.m_nPenColor = 1;
+                sen.m_start_x = e.Auxiliary;
+                sen.m_start_y = TopLeft.Y + 200;
+                sen.m_end_x = e.Auxiliary;
+                sen.m_end_y = BottomLeft.Y - 200;
+                sen.m_nPenStyle = 2;
+                sen.m_nPenWidth = 0;
+                OthersDatas.Add(sen);
+            }
         }
     }
 }
