@@ -114,11 +114,11 @@ namespace WinFormsApp1
                 Location = new NetTopologySuite.Geometries.Point(0, 0)
             };
 
-            using (var db=new JwDataContext())
-            {
-                db.Add(jwLine);
-                db.SaveChanges();
-            }
+            //using (var db=new JwDataContext())
+            //{
+            //    db.Add(jwLine);
+            //    db.SaveChanges();
+            //}
         }
 
         private async void button3_Click(object sender, EventArgs e)

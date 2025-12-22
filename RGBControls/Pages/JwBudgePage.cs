@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwServices;
 using JwShapeCommon;
 using Microsoft.EntityFrameworkCore;
 using NPOI.HPSF;
@@ -25,12 +26,16 @@ namespace RGBJWMain.Pages
             InitializeComponent();
         }
 
-        private void uiSymbolButton2_Click(object sender, EventArgs e)
+        public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
+
+        public JwProjectMainService jwProjectMainService => ServiceFactory.GetInstance().CreateJwProjectMainService();
+
+        private async void uiSymbolButton2_Click(object sender, EventArgs e)
         {
             UIEditOption option = new UIEditOption();
             option.AutoLabelWidth = true;
             option.Text = "予算の作成";
-            var cuslst = dbContext.JwProjectMainDatas.ToList();
+            var cuslst =await jwProjectMainService.GetAllAsync();
 
             option.AddCombobox("ProjectMainId", "プロジェクト", cuslst, "ProjectName", "Id", 0);
 
@@ -49,11 +54,11 @@ namespace RGBJWMain.Pages
             {
                 //JwCustomerData customerdata = new JwCustomerData();
                 var id = Convert.ToInt64(frm["ProjectMainId"]);
-                var maindata = dbContext.JwProjectMainDatas.Find(id);
-                var budgetlst = dbContext.JwBudgetMainDatas.Where(t => t.JwProjectMainDataId == id).ToList();
+                var maindata =await jwProjectMainService.GetByIdAsync(id);
+                var budgetlst =await jwqitaService.GetAllJwBudgetMainDataAsync(t => t.JwProjectMainDataId == id);
                 if (maindata != null&&budgetlst.Count()==0)
                 {
-                    this.dbContext.Entry(maindata).Collection(e => e.JwProjectSubDatas).Load();
+                    await jwProjectMainService.LoadSubDataAsync(maindata);
                     if (maindata.JwProjectSubDatas.Count > 0)
                     {
                         CreateBudge(maindata);
@@ -98,13 +103,11 @@ namespace RGBJWMain.Pages
             return true;
         }
 
-        private void JwBudgePage_Load(object sender, EventArgs e)
+        private async void JwBudgePage_Load(object sender, EventArgs e)
         {
             InitData();
-            this.dbContext.Database.EnsureCreated();
-
-            this.dbContext.JwBudgetMainDatas.Load();
-            this.jwBudgetMainDataBindingSource.DataSource = dbContext.JwBudgetMainDatas.Local.ToBindingList();
+            
+            this.jwBudgetMainDataBindingSource.DataSource = await jwqitaService.GetAllJwBudgetMainDataAsync(null);
             this.uiDataGridView1.ClearSelection();
             this.uiDataGridView1.SelectedIndex = -1;
             this.panel3.Visible = false;
@@ -114,19 +117,20 @@ namespace RGBJWMain.Pages
         /// 根据识别 自动生成预算项
         /// </summary>
         /// <param name="data"></param>
-        private void CreateBudge(JwProjectMainData data)
+        private async Task CreateBudge(JwProjectMainData data)
         {
             //var materdatas = dbContext.JwMaterialDatas.Include(t => t.JwMaterialTypeData).ToList();
             //this.dbContext.Entry(data).Collection(e => e.JwProjectSubDatas).Load();
-            var wls = dbContext.JwMaterialDatas.Include(t => t.JwMaterialTypeData).ToList();
-            var subids = dbContext.JwProjectSubDatas.Where(t => t.JwProjectMainDataId == data.Id).Select(t => t.Id).ToList();
-            var beams = dbContext.JwBeamDatas.Where(t => subids.Contains(t.JwProjectSubDataId)).ToList();
-            var pillars = dbContext.JwPillarDatas.Where(t => subids.Contains(t.JwProjectSubDataId)).ToList();
-            var links = dbContext.JwLinkPartDatas.Where(t => subids.Contains(t.JwProjectSubDataId)).ToList();
+            var wls = await jwqitaService.GetMaterialDataAsync();
+            var subs = await jwProjectMainService.GetSubDatasAsync(t=>t.JwProjectMainDataId == data.Id);
+            var subids = subs.Select(t => t.Id).ToList();
+            var beams = await jwProjectMainService.GetBeamDatasAsync(t => subids.Contains(t.JwProjectSubDataId));
+            var pillars = await jwProjectMainService.GetPillarDatasAsync(t => subids.Contains(t.JwProjectSubDataId));
+            var links = await jwProjectMainService.GetLinkPartDatasAsync(t => subids.Contains(t.JwProjectSubDataId));
             JwBudgetMainData budget = new JwBudgetMainData();
             budget.JwProjectMainDataId = data.Id;
             budget.ProjectName = data.ProjectName;
-            dbContext.JwBudgetMainDatas.Add(budget);
+            await jwqitaService.AddJwBudgetMainDataAsync(budget);
 
             var ltlst = links.GroupBy(t => t.GouJianType).ToList();
             foreach (var link in ltlst)
@@ -150,7 +154,7 @@ namespace RGBJWMain.Pages
                 plbudget.ModelParm = pwl.MaterialParameter;
                 plbudget.MaterialType = pwl.MaterialType;
                 budget.Amount += plbudget.Amount;
-                dbContext.JwBudgetSubDatas.Add(plbudget);
+                await jwqitaService.AddJwBudgetSubDataAsync(plbudget);
             }
 
             var beamgpnames = beams.GroupBy(t => t.BeamXHId).ToList();
@@ -176,7 +180,7 @@ namespace RGBJWMain.Pages
                 beambudget.ModelParm = wl.MaterialParameter;
                 beambudget.MaterialType = wl.MaterialType;
                 budget.Amount += beambudget.Amount;
-                dbContext.JwBudgetSubDatas.Add(beambudget);
+                await jwqitaService.AddJwBudgetSubDataAsync(beambudget);
                 //beambudget.UnitName=
             }
 
@@ -210,11 +214,11 @@ namespace RGBJWMain.Pages
                     plbudget.MaterialType = pwl.MaterialType;
                     //plbudget
                     budget.Amount += plbudget.Amount;
-                    dbContext.JwBudgetSubDatas.Add(plbudget);
+                    await jwqitaService.AddJwBudgetSubDataAsync(plbudget);
                 }
 
             }
-            dbContext.SaveChanges();
+            await jwqitaService.UpdateJwBudgetMainDataAsync(budget);
 
         }
 
@@ -250,7 +254,7 @@ namespace RGBJWMain.Pages
         private JwBudgetMainData? selectedmaiandata;
         private bool isselected = false;
 
-        private void uiDataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private async void uiDataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -261,7 +265,7 @@ namespace RGBJWMain.Pages
                     {
                         isselected = true;
                         selectedmaiandata = main;
-                        this.dbContext.Entry(main).Collection(e => e.JwBudgetSubDatas).Load();
+                        await jwqitaService.LoadBudgetSubCollectionAsync(main);
                         this.uilbprojectname.Text = main.ProjectName + "予算の詳細";
                         this.panel3.Visible = true;
                     }
@@ -287,9 +291,9 @@ namespace RGBJWMain.Pages
             }
         }
 
-        private void ExcelExporter(JwBudgetMainData mainData)
+        private async void ExcelExporter(JwBudgetMainData mainData)
         {
-            var materdatas = dbContext.JwMaterialDatas.Include(t => t.JwMaterialTypeData).ToList();
+            var materdatas =await jwqitaService.GetMaterialDataAsync();
             FileStream file = new FileStream(@"template.xlsx", FileMode.Open, FileAccess.Read);
             XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
             ISheet XSSFSheet = hssfworkbook.GetSheetAt(0);

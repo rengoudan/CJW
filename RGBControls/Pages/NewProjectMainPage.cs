@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using JwServices;
 
 namespace RGBControls.Pages
 {
@@ -28,6 +29,8 @@ namespace RGBControls.Pages
             InitializeComponent();
             Initform();
         }
+
+        private JwProjectMainService JwProjectMainService => ServiceFactory.GetInstance().CreateJwProjectMainService();
 
         private void Initform()
         {
@@ -68,23 +71,24 @@ namespace RGBControls.Pages
                 new AntdUI.ContextMenuStripItem("ブレース施工図", ""),
                 new AntdUI.ContextMenuStripItemDivider()
             };
+            GlobalEvent.GetGlobalEvent().UpdateCodeEvent.Subscribe(JwProjectMainPage_UpdateCodeEvent);
             base.InitData();
         }
 
-        private void NewProjectMainPage_Load(object sender, EventArgs e)
+        private async Task JwProjectMainPage_UpdateCodeEvent(object? sender, UpdateCodeArgs e)
         {
-            this.dbContext?.Database.EnsureCreated();
+            var z=await JwProjectMainService.ChangeBeamGongqu(e.Id, e.NewCode);
+            var msg = $"梁番号:{z.BeamCode}、新しい工区コード:{e.NewCode}";
+            this.SuccessModal(msg);
+        }
 
-            this.dbContext?.JwProjectMainDatas.Load();
-
-            this.dbContext?.JwCustomerDatas.Load();
-            //var z = this.uiDataGridView1.Columns["jwCustomerDataIdDataGridViewTextBoxColumn"] as DataGridViewComboBoxColumn;
-            //z.DataSource = dbContext?.JwCustomerDatas.ToList();
-            this.jwProjectMainDataBindingSource.DataSource = dbContext?.JwProjectMainDatas.Local.ToBindingList();
+        private async void NewProjectMainPage_Load(object sender, EventArgs e)
+        {
+            this.jwProjectMainDataBindingSource.DataSource = JwProjectMainService.GetAllAsync().Result;
             this.projectmaintable.DataSource = this.jwProjectMainDataBindingSource;
         }
 
-        private void projectmaintable_SelectIndexChanged(object sender, EventArgs e)
+        private async void projectmaintable_SelectIndexChanged(object sender, EventArgs e)
         {
             if (projectmaintable.SelectedIndex > 0)
             {
@@ -93,7 +97,8 @@ namespace RGBControls.Pages
                 {
                     if (selecteddata.JwProjectSubDatas != null)
                     {
-                        this.dbContext.Entry(selecteddata).Collection(e => e.JwProjectSubDatas).Load();
+                        await JwProjectMainService.LoadSubDataAsync(selecteddata);
+                        //this.dbContext.Entry(selecteddata).Collection(e => e.JwProjectSubDatas).Load();
                         this.table1.DataSource = selecteddata.JwProjectSubDatas.ToList();
                     }
                 }
@@ -112,7 +117,7 @@ namespace RGBControls.Pages
 
         JwProjectSubData selectedsubData;
 
-        private void contextMenuStrip1_Opening(ContextMenuStripItem e)
+        private async void contextMenuStrip1_Opening(ContextMenuStripItem e)
         {
             if (e.Text.Equals("輸出-梁JW"))
             {
@@ -121,7 +126,7 @@ namespace RGBControls.Pages
                     if (AntdUI.Modal.open(this, "ヒント", "プロジェクトデータをすべてエクスポートするかどうか") == DialogResult.OK)
                     {
 
-                        SaveSubBeams(selectedsubData);
+                        await SaveSubBeams(selectedsubData);
                         if (!string.IsNullOrEmpty(_nowsavefold))
                         {
                             this.SuccessModal("エクスポートされたビーム-->" + _nowsavefold);
@@ -134,8 +139,6 @@ namespace RGBControls.Pages
             {
                 if (selectedsubData != null)
                 {
-
-
                     SaveSubTopCanvas(selectedsubData);
                 }
             }
@@ -187,10 +190,10 @@ namespace RGBControls.Pages
 
         #region 各类jww及施工图导出
 
-        private void SaveSubBeams(JwProjectSubData data)
+        private async Task SaveSubBeams(JwProjectSubData data)
         {
 
-            var maindata = this.dbContext.JwProjectMainDatas.First(t => t.Id == data.JwProjectMainDataId);
+            var maindata =await JwProjectMainService.GetByIdAsync(data.JwProjectMainDataId);
 
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
@@ -210,14 +213,12 @@ namespace RGBControls.Pages
                 }
                 _nowsavefold = foldPath;
 
-                this.dbContext.Entry(data).Collection(e => e.JwBeamDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwPillarDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwLinkPartDatas).Load();
+                await JwProjectMainService.LoadSubCollectionAsync(data);
                 if (data.JwBeamDatas.Count > 0)
                 {
                     foreach (var bd in data.JwBeamDatas)
                     {
-                        this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
                     }
                 }
                 string subpath = foldPath + "\\" + data.FloorName;
@@ -265,7 +266,7 @@ namespace RGBControls.Pages
             }
         }
 
-        private void SaveSubTopCanvas(JwProjectSubData data)
+        private async Task SaveSubTopCanvas(JwProjectSubData data)
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
@@ -277,15 +278,12 @@ namespace RGBControls.Pages
                     Directory.CreateDirectory(foldPath);
                 }
 
-                this.dbContext.Entry(data).Collection(e => e.JwBeamDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwPillarDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwLinkPartDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwLianjieDatas).Load();
+                await JwProjectMainService.LoadSubCollectionAsync(data);
                 if (data.JwBeamDatas.Count > 0)
                 {
                     foreach (var bd in data.JwBeamDatas)
                     {
-                        this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
                     }
                 }
                 JwCanvas jwCanvas = data.DataToCanvas();
@@ -309,7 +307,7 @@ namespace RGBControls.Pages
             }
         }
 
-        private void SaveSubBottomCanvas(JwProjectSubData data)
+        private async Task SaveSubBottomCanvas(JwProjectSubData data)
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
@@ -321,15 +319,12 @@ namespace RGBControls.Pages
                     Directory.CreateDirectory(foldPath);
                 }
 
-                this.dbContext.Entry(data).Collection(e => e.JwBeamDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwPillarDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwLinkPartDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwLianjieDatas).Load();
+                await JwProjectMainService.LoadSubCollectionAsync(data);
                 if (data.JwBeamDatas.Count > 0)
                 {
                     foreach (var bd in data.JwBeamDatas)
                     {
-                        this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
                     }
                 }
                 JwCanvas jwCanvas = data.DataToCanvas();
@@ -352,7 +347,7 @@ namespace RGBControls.Pages
                 a.Write(foldPath + "\\" + data.FloorName + ".jww");
             }
         }
-        private void SaveSubCanvasLines(JwProjectSubData data)
+        private async Task SaveSubCanvasLines(JwProjectSubData data)
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
@@ -364,16 +359,12 @@ namespace RGBControls.Pages
                 {
                     Directory.CreateDirectory(foldPath);
                 }
-
-                this.dbContext.Entry(data).Collection(e => e.JwBeamDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwPillarDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwLinkPartDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwLianjieDatas).Load();
+                await JwProjectMainService.LoadSubCollectionAsync(data);
                 if (data.JwBeamDatas.Count > 0)
                 {
                     foreach (var bd in data.JwBeamDatas)
                     {
-                        this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
                     }
                 }
                 JwCanvas jwCanvas = data.DataToCanvas();
@@ -405,7 +396,7 @@ namespace RGBControls.Pages
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void projectmaintable_CellDoubleClick(object sender, TableClickEventArgs e)
+        private async void projectmaintable_CellDoubleClick(object sender, TableClickEventArgs e)
         {
             if (e.RowIndex > 0)
             {
@@ -416,16 +407,12 @@ namespace RGBControls.Pages
                 {
                     foreach (var sub in z.JwProjectSubDatas)
                     {
-                        this.dbContext.Entry(sub).Collection(e => e.JwBeamDatas).Load();
-                        this.dbContext.Entry(sub).Collection(e => e.JwPillarDatas).Load();
-                        this.dbContext.Entry(sub).Collection(e => e.JwLinkPartDatas).Load();
-                        this.dbContext.Entry(sub).Collection(e => e.JwLianjieDatas).Load();
+                        await JwProjectMainService.LoadSubCollectionAsync(sub);
                         if (sub.JwBeamDatas.Count > 0)
                         {
                             foreach (var bd in sub.JwBeamDatas)
                             {
-                                this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
-                                this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
+                                await JwProjectMainService.LoadBeamCollectionAsync(bd);
                             }
                         }
                     }
@@ -439,7 +426,7 @@ namespace RGBControls.Pages
         #region 新增项目
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             UIEditOption option = new UIEditOption();
             option.AutoLabelWidth = true;
@@ -470,8 +457,7 @@ namespace RGBControls.Pages
                 customerdata.Biaochi = "";
                 customerdata.JwCustomerDataId = Convert.ToInt64(frm["JwCustomerDataId"].ToString());
                 //customerdata.Telephone = frm["Telephone"].ToString();
-                this.dbContext.JwProjectMainDatas.Add(customerdata);
-                this.dbContext.SaveChanges();
+                await JwProjectMainService.AddMainData(customerdata);
             }
         }
 
@@ -561,24 +547,22 @@ namespace RGBControls.Pages
             }
         }
 
-        private void table1_CellDoubleClick(object sender, TableClickEventArgs e)
+        private async void table1_CellDoubleClick(object sender, TableClickEventArgs e)
         {
             if (e.RowIndex > -1)
             {
 
                 var z = table1[e.RowIndex-1].record as JwProjectSubData;
-                this.dbContext.Entry(z).Collection(e => e.JwBeamDatas).Load();
-                this.dbContext.Entry(z).Collection(e => e.JwPillarDatas).Load();
-                this.dbContext.Entry(z).Collection(e => e.JwLinkPartDatas).Load();
-                this.dbContext.Entry(z).Collection(e => e.JwLianjieDatas).Load();
-
+                
+                await JwProjectMainService.LoadSubCollectionAsync(z);
 
                 if (z.JwBeamDatas.Count > 0)
                 {
                     foreach (var bd in z.JwBeamDatas)
                     {
-                        this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
-                        this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
+                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
+                        //this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                        //this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
                     }
                 }
                 //MessageBox.Show(z.CompanyName);

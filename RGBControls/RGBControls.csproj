@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\JwCore\JwCore.csproj" />
     <ProjectReference Include="..\JwData\JwData.csproj" />
+    <ProjectReference Include="..\JwServices\JwServices.csproj" />
     <ProjectReference Include="..\JwShapeCommon\JwShapeCommon.csproj" />
   </ItemGroup>
 

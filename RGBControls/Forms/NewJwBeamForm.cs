@@ -92,7 +92,7 @@ namespace RGBJWMain.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
             //var st = select7.SelectedValue;
             if (select7.SelectedValue != null)
@@ -118,7 +118,8 @@ namespace RGBJWMain.Forms
                             Id = this._jwbeam.Id,
                             NewCode = this.select7.SelectedValue.ToString()
                         };
-                        GlobalEvent.GetGlobalEvent().UpdateCodeEvent(this, args);
+                        await GlobalEvent.GetGlobalEvent().UpdateCodeEvent.InvokeAsync(this, args);
+                        //GlobalEvent.GetGlobalEvent().UpdateCodeEvent(this, args);
                     }
                 }
             }

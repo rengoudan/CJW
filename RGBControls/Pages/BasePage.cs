@@ -22,7 +22,7 @@ namespace RGBJWMain.Pages
 
         public virtual void InitData()
         {
-            dbContext = ContextFactory.GetContext();
+            //dbContext = ContextFactory.GetContext();
             //BindingList = dbContext.Set<TModel>().Local.ToBindingList();
         }
 

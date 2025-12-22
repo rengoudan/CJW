@@ -28,7 +28,7 @@ namespace RGBJWMain.Pages
         {
             InitializeComponent();
             base.InitData();
-            GlobalEvent.GetGlobalEvent().UpdateCodeEvent += JwProjectMainPage_UpdateCodeEvent;
+            //GlobalEvent.GetGlobalEvent().UpdateCodeEvent += JwProjectMainPage_UpdateCodeEvent;
         }
 
         private void JwProjectMainPage_UpdateCodeEvent(object? sender, UpdateCodeArgs e)

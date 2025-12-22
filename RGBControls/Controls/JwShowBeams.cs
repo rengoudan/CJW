@@ -784,6 +784,15 @@ namespace RGBJWMain.Controls
                 origin.Y = e.Y - (e.Y - origin.Y) * (scale / oldScale);
                 Invalidate();
             }
+            else
+            {
+                if (GlobalEvent.GetGlobalEvent().WarningEvent != null)
+                {
+                    WarningArgs args = new WarningArgs();
+                    args.WarningMsg = "Ctrlキーを押しながらマウスホイールをスクロールして、ズームインまたはズームアウトします。";
+                    GlobalEvent.GetGlobalEvent().WarningEvent(this, args);
+                }
+            }
         }
     }
 }

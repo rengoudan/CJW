@@ -1,5 +1,6 @@
 ﻿using JwCore;
 using JwData;
+using JwServices;
 using JwShapeCommon;
 using RGBControls.Classes;
 using Sunny.UI;
@@ -18,49 +19,46 @@ namespace RGBJWMain.Forms
 {
     public partial class ShowJwCanvasForm : UIForm2
     {
-        public JwDataContext? dbContext;
+        private JwProjectMainService JwProjectMainService => ServiceFactory.GetInstance().CreateJwProjectMainService();
         public ShowJwCanvasForm()
         {
             InitializeComponent();
             GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent += DeleteSelectedSquare;
+            GlobalEvent.GetGlobalEvent().WarningEvent += GlobalEvent_WarningEvent;
         }
 
-        private void DeleteSelectedSquare(object? sender, ControlSelectedSquareArgs e)
+        /// <summary>
+        /// 全局提示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GlobalEvent_WarningEvent(object? sender, WarningArgs e)
+        {
+            AntdUI.Message.warn(this, e.WarningMsg, Font);
+        }
+
+        /// <summary>
+        /// 针对于数据的删除，需要同步更新主表里的合计字段的算法
+        /// 增加dataoperate类，专门处理数据的增删改查和联动更新
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void DeleteSelectedSquare(object? sender, ControlSelectedSquareArgs e)
         {
             //throw new NotImplementedException();
             if (!string.IsNullOrEmpty(e.Id))
             {
-                if (e.DrawShapeType == JwCore.DrawShapeType.Beam)
-                {
-                    var z = this.dbContext?.JwBeamDatas.Find(e.Id);
-                    this.dbContext?.JwBeamDatas.Remove(z);
-                }
-                if(e.DrawShapeType== JwCore.DrawShapeType.Pillar)
-                {
-                    var p = this.dbContext?.JwPillarDatas.Find(e.Id);
-                    this.dbContext?.JwPillarDatas.Remove(p);
-                }
-                if(e.DrawShapeType== JwCore.DrawShapeType.LinkPart)
-                {
-                    var lp = this.dbContext?.JwLinkPartDatas.Find(e.Id);
-                    this.dbContext?.JwLinkPartDatas.Remove(lp);
-                }
-                this.SuccessModal("指定されたコンテンツは削除されました!");
-                this.dbContext?.SaveChanges();
+                var z =await JwProjectMainService.DeleteSquare(e.Id, e.DrawShapeType);
+                if(z)
+                    this.SuccessModal("指定されたコンテンツは削除されました!");
             }
-
-
         }
 
         public JwCanvas jwCanvas { get; set; }
 
         private void ShowJwCanvasForm_Load(object sender, EventArgs e)
         {
-            dbContext = ContextFactory.GetContext();
-            this.dbContext?.Database.EnsureCreated();
-
-            this.dbContext?.JwBeamDatas.Load();
-            this.dbContext?.JwPillarDatas.Load();
+            
             if (jwCanvas != null)
             {
                 JwCanvasDraw canvasDraw = new JwCanvasDraw(jwCanvas);
@@ -69,11 +67,6 @@ namespace RGBJWMain.Forms
                 //jwCanvasControl1.Click += JwCanvasControl1_Click;
                 jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
                 this.jwProjectSubDataBindingSource.DataSource = jwCanvas.JwProjectSubData;
-                //if(jwCanvas.JwProjectSubData.JwBeamDatas != null )
-                //{
-                //    this.jwBeamDatasBindingSource.DataSource = jwCanvas.JwProjectSubData.JwBeamDatas;
-                //}
-
             }
 
 
@@ -161,7 +154,6 @@ namespace RGBJWMain.Forms
                     jwCanvasControl1.jwToPng(saveFileDialog1.FileName);
                 }
             }
-
         }
 
         private void dataGridView3_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -186,6 +178,7 @@ namespace RGBJWMain.Forms
         private void ShowJwCanvasForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent-= DeleteSelectedSquare;
+            GlobalEvent.GetGlobalEvent().WarningEvent -= GlobalEvent_WarningEvent;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace JwData
         {
             if (Context == null)
             {
-                Context = new JwDataContext();
+                //Context = new JwDataContext();
             }
             return Context;
         }

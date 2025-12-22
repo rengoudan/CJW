@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwShapeCommon.Event;
 using JwShapeCommon.JwService.Models;
 using RGB.Jw.JW.Dtos;
 using Sunny.UI;
@@ -44,11 +45,23 @@ namespace JwShapeCommon
         /// </summary>
         public EventHandler<OperateLogArgs> OperateLogEvent;
 
-        public EventHandler<UpdateCodeArgs> UpdateCodeEvent;
+        public AsyncEvent<UpdateCodeArgs> UpdateCodeEvent { get; } = new();
+
+        //public EventHandler<UpdateCodeArgs> UpdateCodeEvent;
 
         public EventHandler<UpdateCodeArgs> UpdateNewGongQuEvent;
 
         public EventHandler<DrawAuxiliaryLineArgs> DrawAuxiliaryLineEvent;
+
+        public EventHandler<WarningArgs> WarningEvent;
+    }
+
+    /// <summary>
+    /// 全局warning事件参数
+    /// </summary>
+    public class WarningArgs : EventArgs
+    {
+        public string WarningMsg { get; set; }
     }
 
     public  class DrawAuxiliaryLineArgs : EventArgs

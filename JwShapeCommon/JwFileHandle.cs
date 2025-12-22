@@ -240,8 +240,11 @@ namespace JwShapeCommon
             GlobalEvent.GetGlobalEvent().AddLinkPartEvent += AddLinkPartEvent;
         }
 
+        public JwProjectPathModel ProjectPathModel;
+
         public JwFileHandle(JwProjectPathModel model)
         {
+            ProjectPathModel = model;
             _path = model.Path;
             _projectMaindata = model.MainData;
             _floorName = model.FloorName;

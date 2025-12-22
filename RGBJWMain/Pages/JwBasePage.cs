@@ -24,7 +24,7 @@ namespace RGBJWMain.Pages
 
         public virtual void InitData()
         {
-            dbContext=new JwDataContext();
+            //dbContext=new JwDataContext();
             //BindingList = dbContext.Set<TModel>().Local.ToBindingList();
         }
 
