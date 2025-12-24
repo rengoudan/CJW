@@ -337,12 +337,22 @@ namespace JwShapeCommon
             }
         }
 
+        /// <summary>
+        /// 为addhole 增加优先级别  first为接触 接触为全局的hole
+        /// 第二为pillar 第三为分割J
+        /// </summary>
+        /// <param name="beam"></param>
+        /// <param name="location"></param>
+        /// <param name="createFrom"></param>
+        /// <param name="locationcenter"></param>
+        /// <param name="isStart"></param>
+        /// <param name="isEnd"></param>
         public static void AddAnyHole(this JwBeam beam, JWPoint location, HoleCreateFrom createFrom, JWPoint? locationcenter = null, bool isStart = false, bool isEnd = false)
         {
             JwHole hh;
             if (beam.Holes.Count > 0)
             {
-                var fh = beam.Holes.Find(t => t.Location == location);
+                var fh = beam.Holes.Find(t => t.Location.IsEqualsWithError(location));
                 if (fh == null)
                 {
                     hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);

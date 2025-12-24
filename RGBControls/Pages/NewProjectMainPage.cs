@@ -1,7 +1,9 @@
 ﻿using AntdUI;
 using AntdUI.Svg;
 using JwCore;
+using JwServices;
 using JwShapeCommon;
+using JwwHelper;
 using Org.BouncyCastle.Asn1.Pkcs;
 using RGBControls.Classes;
 using RGBJWMain.Forms;
@@ -18,7 +20,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using JwServices;
 
 namespace RGBControls.Pages
 {
@@ -28,6 +29,14 @@ namespace RGBControls.Pages
         {
             InitializeComponent();
             Initform();
+        }
+
+        Form _parentForm;
+        public NewProjectMainPage(Form form)
+        {
+            InitializeComponent();
+            Initform();
+            _parentForm = form;
         }
 
         private JwProjectMainService JwProjectMainService => ServiceFactory.GetInstance().CreateJwProjectMainService();
@@ -77,7 +86,7 @@ namespace RGBControls.Pages
 
         private async Task JwProjectMainPage_UpdateCodeEvent(object? sender, UpdateCodeArgs e)
         {
-            var z=await JwProjectMainService.ChangeBeamGongqu(e.Id, e.NewCode);
+            var z = await JwProjectMainService.ChangeBeamGongqu(e.Id, e.NewCode);
             var msg = $"梁番号:{z.BeamCode}、新しい工区コード:{e.NewCode}";
             this.SuccessModal(msg);
         }
@@ -126,7 +135,31 @@ namespace RGBControls.Pages
                     if (AntdUI.Modal.open(this, "ヒント", "プロジェクトデータをすべてエクスポートするかどうか") == DialogResult.OK)
                     {
 
-                        await SaveSubBeams(selectedsubData);
+                        await Progress(async() => { await SaveSubBeams(selectedsubData); });
+                        //await AntdUI.Spin.open(_parentForm, AntdUI.Localization.Get("Loading2", "正在加载中..."), async config =>
+                        //{
+                        //    Thread.Sleep(100);
+                        //    this.BeginInvoke(async () =>
+                        //    {
+                        //        await SaveSubBeams(selectedsubData);
+                        //    });
+                        //    //await SaveSubBeams(selectedsubData);
+                        //    for (int i = 0; i < 101; i++)
+                        //    {
+                        //        config.Value = i / 100F;
+                        //        config.Text = AntdUI.Localization.Get("Processing", "处理中") + " " + i + "%";
+                        //        Thread.Sleep(20);
+                        //    }
+                        //    Thread.Sleep(1000);
+                        //    config.Value = null;
+                        //    config.Text = AntdUI.Localization.Get("PleaseWait", "请耐心等候...");
+                        //    Thread.Sleep(2000);
+                        //}, () =>
+                        //{
+                        //    System.Diagnostics.Debug.WriteLine("加载结束");
+                        //});
+
+
                         if (!string.IsNullOrEmpty(_nowsavefold))
                         {
                             this.SuccessModal("エクスポートされたビーム-->" + _nowsavefold);
@@ -139,21 +172,24 @@ namespace RGBControls.Pages
             {
                 if (selectedsubData != null)
                 {
-                    SaveSubTopCanvas(selectedsubData);
+                    await Progress(async () => { await SaveSubTopCanvas(selectedsubData); });
+                    //SaveSubTopCanvas(selectedsubData);
                 }
             }
             if (e.Text.Equals("輸出-番付図下JW"))
             {
                 if (selectedsubData != null)
                 {
-                    SaveSubBottomCanvas(selectedsubData);
+                    await Progress(async () => { await SaveSubBottomCanvas(selectedsubData); });
+                    //SaveSubBottomCanvas(selectedsubData);
                 }
             }
             if (e.Text.Equals("ブレース施工図"))
             {
                 if (selectedsubData != null)
                 {
-                    SaveSubCanvasLines(selectedsubData);
+                    await Progress(async () => { await SaveSubCanvasLines(selectedsubData); });
+                    //SaveSubCanvasLines(selectedsubData);
                 }
             }
 
@@ -164,6 +200,32 @@ namespace RGBControls.Pages
         {
             nowhoverrow = e.RowIndex;
         }
+
+        private async Task Progress(Action action)
+        {
+            await AntdUI.Spin.open(_parentForm, AntdUI.Localization.Get("Loading2", "読み込み中..."), async config =>
+            {
+                Thread.Sleep(100);
+                this.Invoke(() =>
+                {
+                    action();
+                });
+                for (int i = 0; i < 101; i++)
+                {
+                    config.Value = i / 100F;
+                    config.Text = AntdUI.Localization.Get("Processing", "処理") + " " + i + "%";
+                    Thread.Sleep(20);
+                }
+                Thread.Sleep(1000);
+                config.Value = null;
+                config.Text = AntdUI.Localization.Get("PleaseWait", "お待ちください。...");
+                Thread.Sleep(2000);
+            }, () =>
+            {
+                System.Diagnostics.Debug.WriteLine("仕上げる");
+            });
+        }
+
 
         private void table1_CellClick(object sender, TableClickEventArgs e)
         {
@@ -193,7 +255,7 @@ namespace RGBControls.Pages
         private async Task SaveSubBeams(JwProjectSubData data)
         {
 
-            var maindata =await JwProjectMainService.GetByIdAsync(data.JwProjectMainDataId);
+            var maindata = await JwProjectMainService.GetByIdAsync(data.JwProjectMainDataId);
 
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
@@ -288,7 +350,7 @@ namespace RGBControls.Pages
                 }
                 JwCanvas jwCanvas = data.DataToCanvas();
                 jwCanvas.BindDrawOtherEvent();
-                var lst=jwCanvas.DrawShigong(true);
+                var lst = jwCanvas.DrawShigong(true);
                 using var a = new JwwHelper.JwwWriter();
                 //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
                 //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
@@ -351,7 +413,7 @@ namespace RGBControls.Pages
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
-            string flname=string.Format("{0}_ブレース施工図.jww", data.FloorName);
+            string flname = string.Format("{0}_ブレース施工図.jww", data.FloorName);
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 string foldPath = dialog.SelectedPath + "\\" + data.FloorName;
@@ -388,7 +450,7 @@ namespace RGBControls.Pages
         }
 
 
-       
+
         #endregion
 
         /// <summary>
@@ -552,8 +614,8 @@ namespace RGBControls.Pages
             if (e.RowIndex > -1)
             {
 
-                var z = table1[e.RowIndex-1].record as JwProjectSubData;
-                
+                var z = table1[e.RowIndex - 1].record as JwProjectSubData;
+
                 await JwProjectMainService.LoadSubCollectionAsync(z);
 
                 if (z.JwBeamDatas.Count > 0)
@@ -577,5 +639,243 @@ namespace RGBControls.Pages
 
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var f = new OpenFileDialog();
+            f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
+            if (f.ShowDialog() != DialogResult.OK) return;
+
+            if (Path.GetExtension(f.FileName).ToLower() == ".jww")
+            {
+                //JwwReaderが読み込み用のクラス。
+                using var reader = new JwwHelper.JwwReader();
+                //Completedは読み込み完了時に実行される関数。
+                reader.Read(f.FileName, Completed);
+                //var a = reader.Header.m_jwwDataVersion;
+
+
+            }
+            else if (Path.GetExtension(f.FileName) == ".jws")
+            {
+                UIMessageBox.ShowError("JWSを処理できません");
+                ////jwsも読めますが、このプロジェクトでは確認用のコードがありません。
+                //using var a = new JwwHelper.JwsReader();
+                //a.Read(path, Completed2);
+            }
+        }
+
+
+        List<double> jwwxs = new List<double>();
+
+        List<double> jwwys = new List<double>();
+
+        List<JwwSen> senes = new List<JwwSen>();
+
+        List<JwwSolid> solides = new List<JwwSolid>();
+
+        List<JwwTen> tenes = new List<JwwTen>();
+
+        List<JwwMoji> mojies = new List<JwwMoji>();
+
+        public List<JwwBlock> JWWBlockLst = new List<JwwBlock>();
+        Dictionary<int, List<JwwSolid>> _dictionarytempblocklst = new Dictionary<int, List<JwwSolid>>();
+        int nownumber = -1;
+        void Completed(JwwHelper.JwwReader reader)
+        {
+            nownumber = -1;
+            _dictionarytempblocklst = new Dictionary<int, List<JwwSolid>>();
+            jwwxs = new List<double>();
+            jwwys = new List<double>();
+            senes = new List<JwwSen>();
+            solides = new List<JwwSolid>();
+            mojies = new List<JwwMoji>();
+            var sb = new StringBuilder();
+            var header = reader.Header;
+            sb.AppendLine("Paper:" + header.m_nZumen);
+            sb.AppendLine("Layers=============================================");
+            for (var j = 0; j < 16; j++)
+            {
+
+                sb.AppendLine("Layer group " + j + " Name:" + header.m_aStrGLayName[j] + " Scale:" + header.m_adScale[j]);
+                for (var i = 0; i < 16; i++)
+                {
+                    if (i % 2 == 1)
+                    {
+                        sb.AppendLine("  Layer " + i + " Name:" + header.m_aStrLayName[j][i]);
+                    }
+                    else
+                    {
+                        sb.Append("  Layer " + i + " Name:" + header.m_aStrLayName[j][i]);
+                    }
+                }
+            }
+            sb.AppendLine("Blocks=============================================");
+            sb.AppendLine("Size of blocks:" + reader.GetBlockSize());
+            //foreach (var s in reader.Blocks) {
+            //    sb.AppendLine(s.ToString());
+            //}
+
+            sb.AppendLine("Shapes=============================================");
+            var dataList = reader.DataList;
+
+            foreach (var s in reader.DataListList)
+            {
+                _dictionarytempblocklst.Add(s.m_nNumber, new List<JwwSolid>());
+                nownumber = s.m_nNumber;
+                s.EnumerateDataList(jwblockread);
+            }
+
+
+            List<int> colors = new List<int>();
+            foreach (var data in dataList)
+            {
+                string typename = data.GetType().Name;
+                if (typename == "JwwSen")//线
+                {
+                    var sen = data as JwwSen;
+                    if (sen != null)
+                    {
+                        colors.Add(sen.m_nPenColor);
+                        senes.Add(sen);
+                        jwwxs.Add(sen.m_end_x);
+                        jwwxs.Add(sen.m_start_x);
+                        jwwys.Add(sen.m_end_y);
+                        jwwys.Add(sen.m_start_y);
+                    }
+
+                    //if(sen?.m_nPenColor==JwFileConsts.BeamParseColor.ColorNumber)
+                    //{
+                    //    ParseSenLst.Add(sen);
+                    //}
+
+                }
+                if (typename == "JwwSolid")//块
+                {
+
+                    var solid = data as JwwSolid;
+                    if (solid != null)
+                    {
+                        colors.Add(solid.m_nPenColor);
+                        solides.Add(solid);
+                    }
+
+                    //jwwys.Add(solid.m_end_y);
+                    //jwwys.Add(solid.m_start_y);
+                    //jwwys.Add(solid.m_DPoint2_y);
+                    //jwwys.Add(solid.m_DPoint3_y);
+                    //jwwxs.Add(solid.m_start_x);
+                    //jwwxs.Add(solid.m_end_x);
+                    //jwwxs.Add(solid.m_DPoint2_x);
+                    //jwwxs.Add(solid.m_DPoint3_x);
+                }
+                if (typename == "JwwMoji")//文字
+                {
+                    var moji = data as JwwMoji;
+                    mojies.Add(moji);
+                    //jwwxs.Add(moji.m_end_x);
+                    //jwwxs.Add(moji.m_start_x);
+                    //jwwys.Add(moji.m_end_y);
+                    //jwwys.Add(moji.m_start_y);
+
+                }
+                if (typename == "JwwBlock")
+                {
+                    var block = data as JwwBlock;
+                    JWWBlockLst.Add(block);
+                }
+            }
+            List<JwBlock> _tempblocks = new List<JwBlock>();
+            if (JWWBlockLst.Count > 0)
+            {
+                foreach (var bl in JWWBlockLst)
+                {
+                    int num = bl.m_nNumber;
+                    if (_dictionarytempblocklst.Keys.Contains(num))
+                    {
+                        var zsolidlst = _dictionarytempblocklst[num];
+                        if (zsolidlst.Count > 0)
+                        {
+                            foreach (var solidss in zsolidlst)
+                            {
+                                colors.Add(solidss.m_nPenColor);
+                                _tempblocks.Add(new JwBlock(solidss, bl));
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            double wx = 0;
+            double hy = 0;
+            double minx = 0;
+            double maxx = 0;
+            double miny = 0;
+            double maxy = 0;
+            if (jwwxs.Count > 0)
+            {
+                minx = jwwxs.Min();
+                maxx = jwwxs.Max();
+                wx = maxx - minx;
+            }
+
+            if (jwwys.Count > 0)
+            {
+                miny = jwwys.Min();
+
+                maxy = jwwys.Max();
+
+                hy = maxy - miny;
+            }
+            var colordistinct = colors.Distinct().ToList();
+            var arrycolors = new System.Drawing.Color[] { System.Drawing.Color.Red, System.Drawing.Color.Green, System.Drawing.Color.Yellow, System.Drawing.Color.Blue, System.Drawing.Color.White, System.Drawing.Color.Purple, System.Drawing.Color.Orange, System.Drawing.Color.Sienna };
+            using (RGBJWMain.Forms.Form1 f1 = new RGBJWMain.Forms.Form1(minx, maxx, miny, maxy, senes, solides, colordistinct, _tempblocks))
+            {
+                f1.ShowDialog();
+            }
+
+            //sb.AppendLine("Imagess=============================================");
+            //var images = reader.Images;
+            //foreach (var s in images)
+            //{
+            //    sb.Append(s.ImageName + "  ");
+            //    sb.AppendLine(s.Size + "bytes");
+            //}
+
+        }
+
+        bool jwblockread(JwwData jd)
+        {
+            if (nownumber != -1)
+            {
+                string typename = jd.GetType().Name;
+                if (typename == "JwwBlock")
+                {
+                    var bl = jd as JwwBlock;
+                    if (_dictionarytempblocklst.Keys.Contains(bl.m_nNumber))
+                    {
+                        _dictionarytempblocklst[nownumber] = _dictionarytempblocklst[bl.m_nNumber];
+                    }
+                }
+                if (typename == "JwwSolid")
+                {
+                    var solid = jd as JwwSolid;
+                    _dictionarytempblocklst[nownumber].Add(solid);
+                    //if (jd.m_nPenColor == JwFileConsts.BeamPillarParseColor.ColorNumber)
+                    //{
+
+                    //}
+                }
+                //_tempblocklist.Add(jd);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
     }
 }

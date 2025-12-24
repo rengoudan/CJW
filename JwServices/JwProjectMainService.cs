@@ -57,7 +57,7 @@ namespace JwServices
                 { p => p.JwCustomerData});
         }
 
-        public async Task<JwProjectSubData> FindSubData(Expression<Func<JwProjectSubData, bool>> predicate)
+        public async Task<JwProjectSubData?> FindSubData(Expression<Func<JwProjectSubData, bool>> predicate)
         {
             return await FindAsync<JwProjectSubData>(predicate);
         }

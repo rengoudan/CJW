@@ -2443,8 +2443,15 @@ namespace JwShapeCommon
                         //};
                         ////r.Kongzus.Add(bfkongzu);
                         //b.AddHole(kongzu);
-                        b.AddAnyHole(jbb.BjCenterPoint, HoleCreateFrom.Pillar);
-
+                        var bhs = b.Holes.Where(t => t.Location.IsEqualsWithError(jbb.BjCenterPoint));
+                        if(bhs.Count()>0)
+                        {
+                            
+                        }
+                        else
+                        {
+                            b.AddAnyHole(jbb.BjCenterPoint, HoleCreateFrom.Pillar);
+                        }
                         //IsEqualsWithError
                         if (AllLinkPart.Where(t => t.BjCenterPoint.IsEqualsWithError(jbb.BjCenterPoint)).Count() == 0)
                         //if (AllLinkPart.Where(t => t.BjCenterPoint == jbb.BjCenterPoint).Count()== 0)

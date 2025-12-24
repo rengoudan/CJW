@@ -31,6 +31,16 @@ namespace JwServices
             { p => p.JwMaterialTypeData});
         }
 
+        public async Task<List<JwCustDesignConstData>> GetConstDatasAsync()
+        {
+                       return await GetAllAsync<JwCustDesignConstData>();
+        }
+
+        public async Task<JwCustDesignConstData?> FindCustDesignConstData(Expression<Func<JwCustDesignConstData, bool>> predicate)
+        {
+            return await FindAsync(predicate);
+        }
+
         public async Task AddJwBudgetMainDataAsync(JwBudgetMainData data)
         {
             await AddAsync<JwBudgetMainData>(data);
@@ -52,6 +62,16 @@ namespace JwServices
             using var context = CreateContext();
             //var newsubdata=await GetByIdAsync<JwProjectSubData>(subdata.Id);
             await LoadCollectionAsync(context, subdata, p => p.JwBudgetSubDatas);
+        }
+
+        public async Task AddJwCustDesignConstDataAsync(JwCustDesignConstData data)
+        {
+            await AddAsync<JwCustDesignConstData>(data);
+        }   
+
+        public async Task UpdateJwCustDesignConstDataAsync(JwCustDesignConstData data)
+        {
+            await UpdateAsync<JwCustDesignConstData>(data);
         }
 
     }

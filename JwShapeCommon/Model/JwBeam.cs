@@ -698,6 +698,8 @@ namespace JwShapeCommon
                 this.Holes = this.Holes.OrderBy(t => t.Location.Y).ToList();
             }
             
+            
+
             var starthole = this.Holes.Find(t => t.IsStart);
 
             var endhole = this.Holes.Find(t => t.IsEnd);
@@ -759,17 +761,28 @@ namespace JwShapeCommon
                     }
                     double ce=(fcc-sb)*JwFileConsts.JwScale;
                     cbs.IsBias = true;
+                    JwHole tempstarthole;
                     if (ce >= 150)
                     {
-                        starthole= new JwHole(true, cbs.Point, KongzuType.BC);
-                        starthole.KongNum = 4;
-
+                        tempstarthole= new JwHole(true, cbs.Point, KongzuType.BC);
+                        tempstarthole.KongNum = 4;
+                        tempstarthole.IsStart = true;
                     }
                     else
                     {
-                        starthole = new JwHole(true, cbs.Point, KongzuType.BP);
-                        starthole.KongNum = 2;
+                        tempstarthole = new JwHole(true, cbs.Point, KongzuType.BP);
+                        tempstarthole.KongNum = 2;
+                        tempstarthole.IsStart = true;
                         cbs.IsBias = true;
+                    }
+                    if (starthole == null)
+                    {
+                        this.Holes.Add(tempstarthole);
+                        starthole = tempstarthole;
+                    }
+                    else
+                    {
+                        starthole= tempstarthole;
                     }
                 }
             }
@@ -785,9 +798,6 @@ namespace JwShapeCommon
                 cbs.coordinated();
             }
             cbs.PreBeamStartDistance=Math.Round(cbs.Coordinate-sb,2);
-
-
-            
 
             this.jwBeamMarks.Add(cbs);
             precb = cbs.Coordinate;
@@ -1092,6 +1102,7 @@ namespace JwShapeCommon
                         {
                             JwHoleMachinings.Add(jwweileft);
                         }
+
                         break;
                     default:
                         JwHoleMachinings.Add(machiningleft);

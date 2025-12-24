@@ -179,7 +179,7 @@ namespace RGBJWMain.Forms
             }
         }
 
-        private void uiSymbolButton1_Click(object sender, EventArgs e)
+        private async void uiSymbolButton1_Click(object sender, EventArgs e)
         {
             if (_jwFileHandle != null)
             {
@@ -187,7 +187,7 @@ namespace RGBJWMain.Forms
                 if (_jwFileHandle._subData != null)
                 {
                     string fn = _jwFileHandle._subData.FloorName;
-                    var sbd = JwProjectMainService.FindSubData(t => t.FloorName == fn && t.JwProjectMainDataId == jwProjectPathModel.MainData.Id);
+                    var sbd =await JwProjectMainService.FindSubData(t => t.FloorName == fn && t.JwProjectMainDataId == jwProjectPathModel.MainData.Id);
                     if (sbd == null)
                     {
                         SaveData();

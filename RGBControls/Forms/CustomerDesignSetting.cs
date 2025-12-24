@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using JwCore;
 using JwData;
 using NPOI.POIFS.Crypt.Dsig;
+using JwServices;
 
 namespace RGBJWMain.Forms
 {
@@ -25,6 +26,8 @@ namespace RGBJWMain.Forms
         private JwCustomerData? JwCustomer = null!;
 
         private JwCustDesignConstData? jwCustDesignConstData = null!;
+
+        public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
 
         public CustomerDesignSetting(JwCustomerData customerData)
         {
@@ -101,7 +104,7 @@ namespace RGBJWMain.Forms
 
         //}
 
-        private void uiButton1_Click(object sender, EventArgs e)
+        private async void uiButton1_Click(object sender, EventArgs e)
         {
             if (JwCustomer != null && jwCustDesignConstData == null)
             {
@@ -130,7 +133,7 @@ namespace RGBJWMain.Forms
                     {
                         data.JwCustomerDataId = JwCustomer.Id;
                     }
-                    dbContext.JwCustDesignConstDatas.Add(data);
+                    await jwqitaService.AddJwCustDesignConstDataAsync(data);
                 }
                 else
                 {
@@ -158,9 +161,8 @@ namespace RGBJWMain.Forms
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
                     }
+                    await jwqitaService.UpdateJwCustDesignConstDataAsync(jwCustDesignConstData);
                 }
-
-                dbContext.SaveChanges();
             }
             else
             {
@@ -191,8 +193,8 @@ namespace RGBJWMain.Forms
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
                     }
+                    await jwqitaService.UpdateJwCustDesignConstDataAsync(jwCustDesignConstData);
                 }
-                dbContext.SaveChanges();
             }
             if ((int)uiCbBeamcolor.SelectedValue != -1)
             {
@@ -240,7 +242,7 @@ namespace RGBJWMain.Forms
             DialogResult = DialogResult.OK;
         }
 
-        private void CustomerDesignSetting_Load(object sender, EventArgs e)
+        private async void CustomerDesignSetting_Load(object sender, EventArgs e)
         {
             //base.OnLoad(e);
             dbContext = ContextFactory.GetContext();
@@ -282,7 +284,7 @@ namespace RGBJWMain.Forms
 
             if (JwCustomer != null)
             {
-                var z = dbContext?.JwCustDesignConstDatas.ToList().Find(t => t.JwCustomerDataId == JwCustomer.Id);
+                var z =await jwqitaService.FindCustDesignConstData(t => t.JwCustomerDataId == JwCustomer.Id);
                 if (z != null)
                 {
                     jwCustDesignConstData = z;
@@ -304,9 +306,10 @@ namespace RGBJWMain.Forms
 
                 string floorname = Path.GetFileNameWithoutExtension(_path);
                 propn.FloorName = floorname;
-                uiTextBox1.Text= floorname; 
-               //dbContext.JwMaterialDatas.Where(t=>t.MaterialType==MaterialType.梁).ToList();
-                var medlst = dbContext.JwMaterialDatas.Where(t => t.MaterialType == MaterialType.梁).ToList();
+                uiTextBox1.Text= floorname;
+                //dbContext.JwMaterialDatas.Where(t=>t.MaterialType==MaterialType.梁).ToList();
+                var allst = await jwqitaService.GetMaterialDataAsync();
+                var medlst = allst.Where(t => t.MaterialType == MaterialType.梁).ToList();
                 if (medlst.Count > 0)
                 {
                     uiComboBox3.DataSource = medlst;

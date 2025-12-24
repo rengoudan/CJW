@@ -211,7 +211,6 @@ namespace JwShapeCommon.Model
             Id = Guid.NewGuid().ToString();
             Location = new JWPoint(location.X, location.Y);
             //Kongzu = kongZu;
-
             //需确认 柱的化 是创建上 还是上下中都要的孔
             HasTop = true;
 
@@ -219,9 +218,11 @@ namespace JwShapeCommon.Model
 
             HasCenter = true;
 
-            IsBias = true; 
+            IsBias = false; 
 
             IsFromBSE = true;
+
+            HoleType = kongzuType;
         }
 
 
