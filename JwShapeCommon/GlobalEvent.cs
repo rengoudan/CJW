@@ -54,6 +54,8 @@ namespace JwShapeCommon
         public EventHandler<DrawAuxiliaryLineArgs> DrawAuxiliaryLineEvent;
 
         public EventHandler<WarningArgs> WarningEvent;
+
+        public EventHandler RefreshDataEvent;
     }
 
     /// <summary>
@@ -133,11 +135,19 @@ namespace JwShapeCommon
         public JwLinkPart LinkPart { get; set; }
     }
 
+    /// <summary>
+    /// 删除指定形状
+    /// </summary>
     public class ControlSelectedSquareArgs : EventArgs
     {
         public string Id { get; set; }
 
         public DrawShapeType DrawShapeType { get; set; }
+
+        /// <summary>
+        /// 传入subid 用来重新计算删除后的数量
+        /// </summary>
+        public string SubId { get; set; }
 
         public bool IsLianjie { get; set; }
     }

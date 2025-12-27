@@ -1,5 +1,6 @@
 ﻿using JwCore;
 using JwData;
+using JwServices;
 using JwShapeCommon;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -28,6 +29,9 @@ namespace RGBJWMain.Pages
         }
 
         private JwProjectSubData _subData;
+        public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
+
+        public JwProjectMainService jwProjectMainService => ServiceFactory.GetInstance().CreateJwProjectMainService();
 
         public SubDetail(JwProjectSubData subData)
         {
@@ -67,7 +71,7 @@ namespace RGBJWMain.Pages
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void uiSymbolButton2_Click(object sender, EventArgs e)
+        private async void uiSymbolButton2_Click(object sender, EventArgs e)
         {
             UIEditOption option = new UIEditOption();
             option.AutoLabelWidth = true;
@@ -87,8 +91,7 @@ namespace RGBJWMain.Pages
                 lianjieData.CreateFrom = CreateFromType.ManuallyAdd;
                 //lianjieData.Id = Guid.NewGuid().ToString();
 
-                this.dbContext.JwLianjieDatas.Add(lianjieData);
-                this.dbContext.SaveChanges();
+                await jwProjectMainService.AddLianjie(lianjieData);
             }
         }
 
@@ -122,15 +125,16 @@ namespace RGBJWMain.Pages
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void uiSymbolButton1_Click(object sender, EventArgs e)
+        private async void uiSymbolButton1_Click(object sender, EventArgs e)
         {
-            ExcelExporter();
+            await ExcelExporter();
         }
 
 
-        private void ExcelExporter()
+        private async Task ExcelExporter()
         {
-            var materdatas = dbContext.JwMaterialDatas.Include(t => t.JwMaterialTypeData).ToList();
+            
+            var materdatas = await jwqitaService.GetMaterialDataAsync(); 
             FileStream file = new FileStream(@"lianjietemplate.xlsx", FileMode.Open, FileAccess.Read);
             XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
             ISheet XSSFSheet = hssfworkbook.GetSheetAt(0);
@@ -418,10 +422,10 @@ namespace RGBJWMain.Pages
             }
         }
 
-        private void SaveSubBeams(JwProjectSubData data)
+        private async void SaveSubBeams(JwProjectSubData data)
         {
 
-            var maindata = this.dbContext.JwProjectMainDatas.First(t => t.Id == data.JwProjectMainDataId);
+            var maindata =await jwProjectMainService.GetByIdAsync(data.JwProjectMainDataId);
 
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.Description = "";
@@ -441,15 +445,15 @@ namespace RGBJWMain.Pages
                 }
                 var _nowsavefold = foldPath;
 
-
-                this.dbContext.Entry(data).Collection(e => e.JwBeamDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwPillarDatas).Load();
-                this.dbContext.Entry(data).Collection(e => e.JwLinkPartDatas).Load();
+                await jwProjectMainService.LoadSubCollectionAsync(data);
+                //this.dbContext.Entry(data).Collection(e => e.JwBeamDatas).Load();
+                //this.dbContext.Entry(data).Collection(e => e.JwPillarDatas).Load();
+                //this.dbContext.Entry(data).Collection(e => e.JwLinkPartDatas).Load();
                 if (data.JwBeamDatas.Count > 0)
                 {
                     foreach (var bd in data.JwBeamDatas)
                     {
-                        this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                        await jwProjectMainService.LoadBeamCollectionAsync(bd);
                     }
                 }
                 string subpath = foldPath + "\\" + data.FloorName;

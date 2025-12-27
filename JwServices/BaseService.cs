@@ -77,10 +77,28 @@ namespace JwServices
             return true; 
         }
 
+        protected async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            using var context = CreateContext();
+            var entities = context.Set<T>().Where(predicate);
+            context.Set<T>().RemoveRange(entities);
+            return await context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// 原有方法 如果在context = CreateContext(); 生成新的上下文
+        /// 如果单纯使用update 无法更新
+        /// 方法1 ：Attach + Modified
+        /// 方法2：查询和更新使用同一个上下文
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         protected async Task UpdateAsync<T>(T entity) where T : class 
         { 
-            using var context = CreateContext(); 
-            context.Set<T>().Update(entity); 
+            using var context = CreateContext();
+            context.Set<T>().Attach(entity); 
+            context.Entry(entity).State = EntityState.Modified;
             await context.SaveChangesAsync(); 
         }
 

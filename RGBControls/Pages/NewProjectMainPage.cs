@@ -6,6 +6,8 @@ using JwShapeCommon;
 using JwwHelper;
 using Org.BouncyCastle.Asn1.Pkcs;
 using RGBControls.Classes;
+using RGBControls.Controls;
+using RGBControls.Forms;
 using RGBJWMain.Forms;
 using RGBJWMain.Pages;
 using Sunny.UI;
@@ -40,6 +42,12 @@ namespace RGBControls.Pages
         }
 
         private JwProjectMainService JwProjectMainService => ServiceFactory.GetInstance().CreateJwProjectMainService();
+
+        AntdUI.IContextMenuStripItem[] menulist = { };
+
+        JwProjectSubData selectedsubData;
+
+        JwProjectMainData _selectedMainData;
 
         private void Initform()
         {
@@ -78,10 +86,18 @@ namespace RGBControls.Pages
                 new AntdUI.ContextMenuStripItem("輸出-番付図上JW", ""),
                 new AntdUI.ContextMenuStripItem("輸出-番付図下JW", ""),
                 new AntdUI.ContextMenuStripItem("ブレース施工図", ""),
-                new AntdUI.ContextMenuStripItemDivider()
+                new AntdUI.ContextMenuStripItemDivider(),
+                new AntdUI.ContextMenuStripItem("消去", ""),
             };
             GlobalEvent.GetGlobalEvent().UpdateCodeEvent.Subscribe(JwProjectMainPage_UpdateCodeEvent);
+            GlobalEvent.GetGlobalEvent().RefreshDataEvent += GlobalEvent_RefreshDataEvent;
             base.InitData();
+        }
+
+        #region gloal event
+        private async void GlobalEvent_RefreshDataEvent(object? sender, EventArgs e)
+        {
+            await ReloadData();
         }
 
         private async Task JwProjectMainPage_UpdateCodeEvent(object? sender, UpdateCodeArgs e)
@@ -90,26 +106,82 @@ namespace RGBControls.Pages
             var msg = $"梁番号:{z.BeamCode}、新しい工区コード:{e.NewCode}";
             this.SuccessModal(msg);
         }
+        #endregion
 
+        #region winform event   
         private async void NewProjectMainPage_Load(object sender, EventArgs e)
         {
-            this.jwProjectMainDataBindingSource.DataSource = JwProjectMainService.GetAllAsync().Result;
-            this.projectmaintable.DataSource = this.jwProjectMainDataBindingSource;
+            //this.jwProjectMainDataBindingSource.DataSource = JwProjectMainService.GetAllAsync().Result;
+            //this.projectmaintable.DataSource = this.jwProjectMainDataBindingSource;
+            await ReloadData();
         }
+
+        private void NewProjectMainPage_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GlobalEvent.GetGlobalEvent().UpdateCodeEvent.Unsubscribe(JwProjectMainPage_UpdateCodeEvent);
+            GlobalEvent.GetGlobalEvent().RefreshDataEvent -= GlobalEvent_RefreshDataEvent;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (projectmaintable.SelectedIndex > 0)
+            {
+                var selectedmaindata = this.projectmaintable[projectmaintable.SelectedIndex - 1].record as JwProjectMainData;
+                if (selectedmaindata != null)
+                {
+                    if (selectedmaindata.ProjectStatus == ProjectStatus.Budget)
+                    {
+                        string emsg = string.Format("{0}には予算が生成されているためアップロードできません", selectedmaindata.ProjectName);
+                        UIMessageBox.ShowError(emsg);
+                        return;
+                    }
+                    var f = new OpenFileDialog();
+                    f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
+                    if (f.ShowDialog() != DialogResult.OK) return;
+                    OpenFile(f.FileName, selectedmaindata);
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var f = new OpenFileDialog();
+            f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
+            if (f.ShowDialog() != DialogResult.OK) return;
+
+            if (Path.GetExtension(f.FileName).ToLower() == ".jww")
+            {
+                //JwwReaderが読み込み用のクラス。
+                using var reader = new JwwHelper.JwwReader();
+                //Completedは読み込み完了時に実行される関数。
+                reader.Read(f.FileName, Completed);
+                //var a = reader.Header.m_jwwDataVersion;
+
+
+            }
+            else if (Path.GetExtension(f.FileName) == ".jws")
+            {
+                UIMessageBox.ShowError("JWSを処理できません");
+                ////jwsも読めますが、このプロジェクトでは確認用のコードがありません。
+                //using var a = new JwwHelper.JwsReader();
+                //a.Read(path, Completed2);
+            }
+        }
+
+        #endregion
+
+        #region data event
 
         private async void projectmaintable_SelectIndexChanged(object sender, EventArgs e)
         {
             if (projectmaintable.SelectedIndex > 0)
             {
-                var selecteddata = this.projectmaintable[projectmaintable.SelectedIndex - 1].record as JwProjectMainData;
-                if (selecteddata != null)
+                _selectedMainData = this.projectmaintable[projectmaintable.SelectedIndex - 1].record as JwProjectMainData;
+                if (_selectedMainData != null)
                 {
-                    if (selecteddata.JwProjectSubDatas != null)
-                    {
-                        await JwProjectMainService.LoadSubDataAsync(selecteddata);
-                        //this.dbContext.Entry(selecteddata).Collection(e => e.JwProjectSubDatas).Load();
-                        this.table1.DataSource = selecteddata.JwProjectSubDatas.ToList();
-                    }
+                    await JwProjectMainService.LoadSubDataAsync(_selectedMainData);
+                    //this.dbContext.Entry(selecteddata).Collection(e => e.JwProjectSubDatas).Load();
+                    this.table1.DataSource = _selectedMainData.JwProjectSubDatas.ToList();
                 }
                 HasSelectedRow = true;
                 /*                SelectedRow = projectmaintable.DataSource[projectmaintable.SelectedIndex]*/
@@ -122,10 +194,6 @@ namespace RGBControls.Pages
             }
         }
 
-        AntdUI.IContextMenuStripItem[] menulist = { };
-
-        JwProjectSubData selectedsubData;
-
         private async void contextMenuStrip1_Opening(ContextMenuStripItem e)
         {
             if (e.Text.Equals("輸出-梁JW"))
@@ -134,32 +202,7 @@ namespace RGBControls.Pages
                 {
                     if (AntdUI.Modal.open(this, "ヒント", "プロジェクトデータをすべてエクスポートするかどうか") == DialogResult.OK)
                     {
-
-                        await Progress(async() => { await SaveSubBeams(selectedsubData); });
-                        //await AntdUI.Spin.open(_parentForm, AntdUI.Localization.Get("Loading2", "正在加载中..."), async config =>
-                        //{
-                        //    Thread.Sleep(100);
-                        //    this.BeginInvoke(async () =>
-                        //    {
-                        //        await SaveSubBeams(selectedsubData);
-                        //    });
-                        //    //await SaveSubBeams(selectedsubData);
-                        //    for (int i = 0; i < 101; i++)
-                        //    {
-                        //        config.Value = i / 100F;
-                        //        config.Text = AntdUI.Localization.Get("Processing", "处理中") + " " + i + "%";
-                        //        Thread.Sleep(20);
-                        //    }
-                        //    Thread.Sleep(1000);
-                        //    config.Value = null;
-                        //    config.Text = AntdUI.Localization.Get("PleaseWait", "请耐心等候...");
-                        //    Thread.Sleep(2000);
-                        //}, () =>
-                        //{
-                        //    System.Diagnostics.Debug.WriteLine("加载结束");
-                        //});
-
-
+                        await Progress(async () => { await SaveSubBeams(selectedsubData); });
                         if (!string.IsNullOrEmpty(_nowsavefold))
                         {
                             this.SuccessModal("エクスポートされたビーム-->" + _nowsavefold);
@@ -192,6 +235,23 @@ namespace RGBControls.Pages
                     //SaveSubCanvasLines(selectedsubData);
                 }
             }
+            if (e.Text.Equals("消去"))
+            {
+                if (selectedsubData != null)
+                {
+                    var tishimsg = string.Format("選択した階データ {0} を削除しますか？", selectedsubData.FloorName);
+                    if (AntdUI.Modal.open(this, "ヒント", tishimsg) == DialogResult.OK)
+                    {
+                        await Progress(async () =>
+                        {
+                            await JwProjectMainService.DeleteSubData(selectedsubData.Id);
+                            await ReloadData();
+                        });
+
+                    }
+
+                }
+            }
 
         }
 
@@ -200,6 +260,123 @@ namespace RGBControls.Pages
         {
             nowhoverrow = e.RowIndex;
         }
+
+
+        /// <summary>
+        /// 双击项目行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void projectmaintable_CellDoubleClick(object sender, TableClickEventArgs e)
+        {
+            if (e.RowIndex > 0)
+            {
+                //WarningMsg("読み込み中");
+                await Progress(async() =>
+                {
+                    var z = projectmaintable[e.RowIndex - 1].record as JwProjectMainData;
+                    await JwProjectMainService.LoadSubDataAsync(z);
+                    if (z.JwProjectSubDatas.Count > 0)
+                    {
+                        foreach (var sub in z.JwProjectSubDatas)
+                        {
+                            await JwProjectMainService.LoadSubCollectionAsync(sub);
+                            if (sub.JwBeamDatas.Count > 0)
+                            {
+                                foreach (var bd in sub.JwBeamDatas)
+                                {
+                                    await JwProjectMainService.LoadBeamCollectionAsync(bd);
+                                }
+                            }
+                        }
+                        ProjectDetail detail = new ProjectDetail(z);
+                        detail.ShowDialog();
+                    }
+                });
+            }
+        }
+
+        private void table1_CellClick(object sender, TableClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.RowIndex > 0)
+                {
+                    selectedsubData = table1[e.RowIndex - 1].record as JwProjectSubData;
+                    if (selectedsubData != null)
+                    {
+                        AntdUI.ContextMenuStrip.open(this, it =>
+                        {
+                            contextMenuStrip1_Opening(it);
+                        }, menulist);
+                    }
+                    table1.SelectedIndex = e.RowIndex;
+                }
+            }
+        }
+
+
+        private async void table1_CellDoubleClick(object sender, TableClickEventArgs e)
+        {
+            if (e.RowIndex > -1)
+            {
+
+                var z = table1[e.RowIndex - 1].record as JwProjectSubData;
+
+                await JwProjectMainService.LoadSubCollectionAsync(z);
+
+                if (z.JwBeamDatas.Count > 0)
+                {
+                    foreach (var bd in z.JwBeamDatas)
+                    {
+                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
+                        //this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
+                        //this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
+                    }
+                }
+                //MessageBox.Show(z.CompanyName);
+                if (z != null)
+                {
+
+                    //ShowJwCanvasForm showJw = new ShowJwCanvasForm();
+                    //showJw.jwCanvas = canvas;
+                    //showJw.ShowDialog();
+                    ShowSubForm subForm = new ShowSubForm(z);
+                    subForm.WindowState = FormWindowState.Maximized;
+                    Sub sub = new Sub(z);
+                    sub.Dock= DockStyle.Fill;
+                    //sub.AutoSize = true;
+                    subForm.Controls.Add(sub);
+
+                    
+                    
+                    subForm.ShowDialog();
+                }
+
+            }
+        }
+
+        #endregion
+
+        private async Task ReloadData()
+        {
+            this.jwProjectMainDataBindingSource.DataSource = await JwProjectMainService.GetAllAsync();
+            this.projectmaintable.DataSource = this.jwProjectMainDataBindingSource;
+            this.projectmaintable.Refresh();
+            if (_selectedMainData != null)
+            {
+                var refreshedMainData = await JwProjectMainService.GetByIdAsync(_selectedMainData.Id);
+                if (refreshedMainData != null)
+                {
+                    _selectedMainData = refreshedMainData;
+                    await JwProjectMainService.LoadSubDataAsync(_selectedMainData);
+                    this.table1.DataSource = _selectedMainData.JwProjectSubDatas.ToList();
+                    this.table1.Refresh();
+                }
+            }
+
+        }
+
 
         private async Task Progress(Action action)
         {
@@ -226,28 +403,7 @@ namespace RGBControls.Pages
             });
         }
 
-
-        private void table1_CellClick(object sender, TableClickEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                if (e.RowIndex > 0)
-                {
-                    selectedsubData = table1[e.RowIndex - 1].record as JwProjectSubData;
-                    if (selectedsubData != null)
-                    {
-                        AntdUI.ContextMenuStrip.open(this, it =>
-                        {
-                            contextMenuStrip1_Opening(it);
-                        }, menulist);
-                    }
-                    table1.SelectedIndex = e.RowIndex;
-                }
-            }
-        }
-
         private string _nowsavefold = "";
-
 
 
         #region 各类jww及施工图导出
@@ -453,40 +609,7 @@ namespace RGBControls.Pages
 
         #endregion
 
-        /// <summary>
-        /// 双击项目行
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void projectmaintable_CellDoubleClick(object sender, TableClickEventArgs e)
-        {
-            if (e.RowIndex > 0)
-            {
-                WarningMsg("読み込み中");
-                var z = projectmaintable[e.RowIndex - 1].record as JwProjectMainData;
-                this.dbContext.Entry(z).Collection(e => e.JwProjectSubDatas).Load();
-                if (z.JwProjectSubDatas.Count > 0)
-                {
-                    foreach (var sub in z.JwProjectSubDatas)
-                    {
-                        await JwProjectMainService.LoadSubCollectionAsync(sub);
-                        if (sub.JwBeamDatas.Count > 0)
-                        {
-                            foreach (var bd in sub.JwBeamDatas)
-                            {
-                                await JwProjectMainService.LoadBeamCollectionAsync(bd);
-                            }
-                        }
-                    }
-                    ProjectDetail detail = new ProjectDetail(z);
-                    detail.ShowDialog();
-                }
-
-            }
-        }
-
         #region 新增项目
-
 
         private async void button1_Click(object sender, EventArgs e)
         {
@@ -543,28 +666,7 @@ namespace RGBControls.Pages
         }
         #endregion
 
-        JwProjectMainData selectedmaindata;
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (projectmaintable.SelectedIndex > 0)
-            {
-                var selectedmaindata = this.projectmaintable[projectmaintable.SelectedIndex - 1].record as JwProjectMainData;
-                if (selectedmaindata != null)
-                {
-                    if (selectedmaindata.ProjectStatus == ProjectStatus.Budget)
-                    {
-                        string emsg = string.Format("{0}には予算が生成されているためアップロードできません", selectedmaindata.ProjectName);
-                        UIMessageBox.ShowError(emsg);
-                        return;
-                    }
-                    var f = new OpenFileDialog();
-                    f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
-                    if (f.ShowDialog() != DialogResult.OK) return;
-                    OpenFile(f.FileName, selectedmaindata);
-                }
-            }
-        }
+        #region jww读取回调
 
         void OpenFile(String path, JwProjectMainData data)
         {
@@ -606,62 +708,6 @@ namespace RGBControls.Pages
             {
                 //textBox1.Text = "";
                 //MessageBox.Show(exception.Message, "Error");
-            }
-        }
-
-        private async void table1_CellDoubleClick(object sender, TableClickEventArgs e)
-        {
-            if (e.RowIndex > -1)
-            {
-
-                var z = table1[e.RowIndex - 1].record as JwProjectSubData;
-
-                await JwProjectMainService.LoadSubCollectionAsync(z);
-
-                if (z.JwBeamDatas.Count > 0)
-                {
-                    foreach (var bd in z.JwBeamDatas)
-                    {
-                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
-                        //this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
-                        //this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
-                    }
-                }
-                //MessageBox.Show(z.CompanyName);
-                if (z != null)
-                {
-                    JwCanvas canvas = z.DataToCanvas();
-                    canvas.JwProjectSubData = z;
-                    ShowJwCanvasForm showJw = new ShowJwCanvasForm();
-                    showJw.jwCanvas = canvas;
-                    showJw.ShowDialog();
-                }
-
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            var f = new OpenFileDialog();
-            f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
-            if (f.ShowDialog() != DialogResult.OK) return;
-
-            if (Path.GetExtension(f.FileName).ToLower() == ".jww")
-            {
-                //JwwReaderが読み込み用のクラス。
-                using var reader = new JwwHelper.JwwReader();
-                //Completedは読み込み完了時に実行される関数。
-                reader.Read(f.FileName, Completed);
-                //var a = reader.Header.m_jwwDataVersion;
-
-
-            }
-            else if (Path.GetExtension(f.FileName) == ".jws")
-            {
-                UIMessageBox.ShowError("JWSを処理できません");
-                ////jwsも読めますが、このプロジェクトでは確認用のコードがありません。
-                //using var a = new JwwHelper.JwsReader();
-                //a.Read(path, Completed2);
             }
         }
 
@@ -876,6 +922,8 @@ namespace RGBControls.Pages
             }
 
         }
+
+        #endregion
 
     }
 }

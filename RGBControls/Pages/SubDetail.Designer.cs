@@ -1026,7 +1026,7 @@
             tabPage4.Controls.Add(panel4);
             tabPage4.Location = new Point(0, 40);
             tabPage4.Name = "tabPage4";
-            tabPage4.Size = new Size(200, 60);
+            tabPage4.Size = new Size(1704, 341);
             tabPage4.TabIndex = 3;
             tabPage4.Text = "接続部品";
             tabPage4.UseVisualStyleBackColor = true;
@@ -1083,7 +1083,7 @@
             uiDataGridView1.RowTemplate.Height = 32;
             uiDataGridView1.SelectedIndex = -1;
             uiDataGridView1.ShowEditingIcon = false;
-            uiDataGridView1.Size = new Size(200, 6);
+            uiDataGridView1.Size = new Size(1704, 287);
             uiDataGridView1.StripeOddColor = Color.FromArgb(235, 243, 255);
             uiDataGridView1.TabIndex = 1;
             uiDataGridView1.CellClick += uiDataGridView1_CellClick;
@@ -1172,7 +1172,7 @@
             panel4.Dock = DockStyle.Top;
             panel4.Location = new Point(0, 0);
             panel4.Name = "panel4";
-            panel4.Size = new Size(200, 54);
+            panel4.Size = new Size(1704, 54);
             panel4.TabIndex = 0;
             // 
             // uiSymbolButton2

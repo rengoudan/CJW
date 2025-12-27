@@ -22,6 +22,17 @@ namespace RGBJWMain.Controls
 
             InitializeComponent();
             this.MouseDown += JwCanvasControl_MouseDown;
+            // 在窗体的构造函数或 Load 事件中添加：
+            //this.Resize += (s, e) =>
+            //{
+                
+            //};
+            this.Resize += JwCanvasControl_Resize;
+        }
+
+        private void JwCanvasControl_Resize(object? sender, EventArgs e)
+        {
+            jwShowBeams1.Invalidate(); // 触发重绘
         }
 
         bool isleftdown = false;

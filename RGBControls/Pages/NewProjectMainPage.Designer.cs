@@ -146,6 +146,7 @@
             ClientSize = new Size(1422, 865);
             Name = "NewProjectMainPage";
             Text = "プロジェクト";
+            FormClosed += NewProjectMainPage_FormClosed;
             Load += NewProjectMainPage_Load;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);

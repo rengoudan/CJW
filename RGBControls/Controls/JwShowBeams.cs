@@ -134,16 +134,32 @@ namespace RGBJWMain.Controls
             set
             {
                 _canvasDraw = value;
-                if(_canvasDraw != null)
+                setcanvas(_canvasDraw);
+                //if(_canvasDraw != null)
+                //{
+                //    _canvasDraw.Draw(Width, Height, 40, 40);
+                //    //_jwDrawShape.Draw();
+                //    if (_canvasDraw.controls != null)
+                //    {
+                //        HasCreated = true;  
+                //        _bounds = _canvasDraw.controls;
+                //        Invalidate();
+                //    }
+                //}
+            }
+        }
+
+        private void setcanvas(JwCanvasDraw canvasDraw)
+        {
+            if (canvasDraw != null)
+            {
+                canvasDraw.Draw(Width, Height, 40, 40);
+                //_jwDrawShape.Draw();
+                if (canvasDraw.controls != null)
                 {
-                    _canvasDraw.Draw(Width, Height, 40, 40);
-                    //_jwDrawShape.Draw();
-                    if (_canvasDraw.controls != null)
-                    {
-                        HasCreated = true;  
-                        _bounds = _canvasDraw.controls;
-                        Invalidate();
-                    }
+                    HasCreated = true;
+                    _bounds = canvasDraw.controls;
+                    Invalidate();
                 }
             }
         }
@@ -526,6 +542,9 @@ namespace RGBJWMain.Controls
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
+            pe.Graphics.Clear(this.BackColor);
+            setcanvas(_canvasDraw);
+            
             pe.Graphics.TranslateTransform(origin.X, origin.Y);
             pe.Graphics.ScaleTransform(scale, scale);
             drawControls(pe);
@@ -704,6 +723,7 @@ namespace RGBJWMain.Controls
                         args.DrawShapeType = DrawShapeType.Beam;
                         args.Id = SelectedBeam.Id;
                         args.IsLianjie = false;
+                        args.SubId = this._canvasDraw.jwCanvas.JwProjectSubData.Id;
                         GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent(this, args);
                     }
                 }
@@ -726,6 +746,7 @@ namespace RGBJWMain.Controls
                         args.DrawShapeType = DrawShapeType.Pillar;
                         args.Id = SelectPillar.Id;
                         args.IsLianjie = false;
+                        args.SubId = this._canvasDraw.jwCanvas.JwProjectSubData.Id;
                         GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent(this, args);
                     }
                 }
@@ -747,6 +768,7 @@ namespace RGBJWMain.Controls
                         args.DrawShapeType = DrawShapeType.LinkPart;
                         args.Id = _selectedlinkpart.LinkPart.Id;
                         args.IsLianjie = false;
+                        args.SubId = this._canvasDraw.jwCanvas.JwProjectSubData.Id;
                         GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent(this, args);
                     }
                 }

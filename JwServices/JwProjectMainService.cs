@@ -103,6 +103,12 @@ namespace JwServices
         {
             await AddAsync<JwProjectSubData>(subdata);
         }
+
+        public async Task AddLianjie(JwLianjieData lianjieData)
+        {
+            await AddAsync<JwLianjieData>(lianjieData);
+        }
+
         #endregion
 
         /// <summary>
@@ -111,28 +117,120 @@ namespace JwServices
         /// <param name="id"></param>
         /// <param name="shapeType"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteSquare(string id, DrawShapeType shapeType)
+        public async Task<bool> DeleteSquare(string id,string subid, DrawShapeType shapeType)
         {
             var re = false;
             switch (shapeType)
             {
                 case DrawShapeType.Beam:
-                    await DeleteAsync<JwBeamData>(id);
-                    re = true;
-                    break;
+                    {
+                        re= await DeleteAsync<JwBeamData>(id);
+                        re = true;
+                        break;
+                    }
                 case DrawShapeType.Pillar:
-                    await DeleteAsync<JwPillarData>(id);
-                    re = true;
-                    break;
+                    {
+                        re = await DeleteAsync<JwPillarData>(id);
+                        break;
+                    }
                 case DrawShapeType.LinkPart:
-                    await DeleteAsync<JwLinkPartData>(id);
-                    re = true;
-                    break;
+                    {
+                        re = await DeleteAsync<JwLinkPartData>(id);
+                        break;
+                    }
                 default:
                     break;
             }
-            
+            //重新计算sub 和main的计数
+            await ReCalculateSub(subid);
             return re;
+        }
+
+        public async Task DeleteSubData(string subId)
+        {
+            var subdata = await GetByIdAsync<JwProjectSubData>(subId, p => p.JwProjectMainData);
+            if (subdata != null)
+            {
+                var maindata = await FindAsync<JwProjectMainData>(p => p.Id == subdata.JwProjectMainDataId);
+                var beamdatas = await GetAllAsync<JwBeamData>(t => t.JwProjectSubDataId == subId);
+                var beamidlst= beamdatas.Select(t => t.Id).ToList();
+                await DeleteAsync<JwHoleData>(t => beamidlst.Contains(t.JwBeamDataId));
+                await DeleteAsync<JwBeamData>(t=>t.JwProjectSubDataId == subId);
+                await DeleteAsync<JwPillarData>(t => t.JwProjectSubDataId == subId);
+                await DeleteAsync<JwLinkPartData>(t => t.JwProjectSubDataId == subId);
+                await DeleteAsync<JwLianjieData>(t => t.JwProjectSubDataId == subId);
+                await DeleteAsync<JwProjectSubData>(subId);
+                await DeleteAsync<JwProjectSubData>(subId);
+                if (maindata != null)
+                {
+                    //maindata.ParsedQuantity -= 1;
+                    await ReCalculateMain(maindata.Id);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 重新计算sub 和 main 的各类计数
+        /// </summary>
+        /// <param name="subId"></param>
+        /// <returns></returns>
+        public async Task ReCalculateSub(string subId)
+        {
+            var subdata = await GetByIdAsync<JwProjectSubData>(subId,p=>p.JwProjectMainData);
+            var maindata=await FindAsync<JwProjectMainData>(p=>p.Id==subdata.JwProjectMainDataId);
+            await LoadSubDataAsync(maindata);
+            var subidlst = maindata.JwProjectSubDatas.Select(t=>t.Id).ToList();
+            
+            if (subdata!=null)
+            {
+                var beamcount = await GetAllAsync<JwBeamData>(p => p.JwProjectSubDataId == subId);
+                subdata.BeamCount = beamcount.Count;
+                subdata.HorizontalBeamsCount = beamcount.Where(p => p.DirectionType == BeamDirectionType.Horizontal).Count();
+                subdata.VerticalBeamsCount = beamcount.Where(p => p.DirectionType == BeamDirectionType.Vertical).Count();   
+                
+                var beammaincount = await GetAllAsync<JwBeamData>(p => subidlst.Contains( p.JwProjectSubDataId));
+                maindata.BeamsNumber = beammaincount.Count;
+                
+
+                var pillarcount = await GetAllAsync<JwPillarData>(p => p.JwProjectSubDataId == subId);
+                subdata.PillarCount = pillarcount.Count;
+                subdata.KPillarCount = pillarcount.Where(p => p.BaseType==PillarBaseType.KPillar).Count();
+                subdata.SinglePillarCount = pillarcount.Where(p => p.BaseType==PillarBaseType.SinglePillar).Count();
+
+                var pillarmaincount = await GetAllAsync<JwPillarData>(p => subidlst.Contains(p.JwProjectSubDataId));
+                maindata.PillarCount = pillarmaincount.Count;
+                maindata.KPillarCount = pillarmaincount.Where(p => p.BaseType == PillarBaseType.KPillar).Count();
+                maindata.SinglePillarCount = pillarmaincount.Where(p => p.BaseType == PillarBaseType.SinglePillar).Count();
+
+                var bbg=await GetAllAsync<JwLinkPartData>(p => p.JwProjectSubDataId == subId);
+                subdata.BCount = bbg.Where(p => p.GouJianType == GouJianType.B).Count();
+                subdata.BGCount = bbg.Where(p => p.GouJianType == GouJianType.BG).Count();
+
+                var bbgmain=await GetAllAsync<JwLinkPartData>(p => subidlst.Contains(p.JwProjectSubDataId));
+                maindata.BCount = bbgmain.Where(p => p.GouJianType == GouJianType.B).Count();
+                maindata.BGCount = bbgmain.Where(p => p.GouJianType == GouJianType.BG).Count();
+
+                await UpdateAsync<JwProjectSubData>(subdata);
+                await UpdateAsync<JwProjectMainData>(maindata);
+            }
+        }
+
+        public async Task ReCalculateMain(long id)
+        {
+            var maindata=await GetByIdAsync<JwProjectMainData>(id);
+            await LoadSubDataAsync(maindata);
+            maindata.ParsedQuantity= maindata.JwProjectSubDatas.Count;
+            var subidlst = maindata.JwProjectSubDatas.Select(t => t.Id).ToList();
+            var beammaincount = await GetAllAsync<JwBeamData>(p => subidlst.Contains(p.JwProjectSubDataId));
+            maindata.BeamsNumber = beammaincount.Count;
+            var pillarmaincount = await GetAllAsync<JwPillarData>(p => subidlst.Contains(p.JwProjectSubDataId));
+            maindata.PillarCount = pillarmaincount.Count;
+            maindata.KPillarCount = pillarmaincount.Where(p => p.BaseType == PillarBaseType.KPillar).Count();
+            maindata.SinglePillarCount = pillarmaincount.Where(p => p.BaseType == PillarBaseType.SinglePillar).Count();
+            var bbgmain = await GetAllAsync<JwLinkPartData>(p => subidlst.Contains(p.JwProjectSubDataId));
+            maindata.BCount = bbgmain.Where(p => p.GouJianType == GouJianType.B).Count();
+            maindata.BGCount = bbgmain.Where(p => p.GouJianType == GouJianType.BG).Count();
+            await UpdateAsync<JwProjectMainData>(maindata);
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace JwShapeCommon
 {
     public class JwCanvasDraw
     {
-        private JwCanvas jwCanvas;
+        public JwCanvas jwCanvas;
 
         public JwCanvasDraw( JwCanvas _jwCanvas)
         {
@@ -34,7 +34,13 @@ namespace JwShapeCommon
 
             if (jwCanvas != null)
             {
+
                 controls = new List<ControlDraw>();
+                FuzhuXs.Clear();
+                FuzhuYs.Clear();
+                links.Clear();
+                Texts.Clear();
+                LianjieLines.Clear();
                 var wb = Math.Round((double)(wwidth - xoffset) / jwCanvas.Width, 2);
                 var hb = Math.Round((double)(wheight - yoffset) / jwCanvas.Height, 2);
                 var _minbeilv = wb > hb ? hb : wb;

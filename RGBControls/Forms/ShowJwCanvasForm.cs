@@ -48,9 +48,15 @@ namespace RGBJWMain.Forms
             //throw new NotImplementedException();
             if (!string.IsNullOrEmpty(e.Id))
             {
-                var z =await JwProjectMainService.DeleteSquare(e.Id, e.DrawShapeType);
+                var z =await JwProjectMainService.DeleteSquare(e.Id,e.SubId, e.DrawShapeType);
                 if(z)
+                {
                     this.SuccessModal("指定されたコンテンツは削除されました!");
+                    if(GlobalEvent.GetGlobalEvent().RefreshDataEvent!=null)
+                    {
+                        GlobalEvent.GetGlobalEvent().RefreshDataEvent(this, EventArgs.Empty);
+                    }
+                }  
             }
         }
 
