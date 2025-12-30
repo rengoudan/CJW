@@ -299,6 +299,7 @@ namespace JwShapeCommon
                 }
             }
             reobj.IsFromData = true;
+            reobj.JwProjectSubData = data;
             return reobj;
         }
 

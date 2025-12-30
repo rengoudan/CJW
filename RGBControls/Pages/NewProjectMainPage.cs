@@ -271,8 +271,8 @@ namespace RGBControls.Pages
         {
             if (e.RowIndex > 0)
             {
-                //WarningMsg("読み込み中");
-                await Progress(async() =>
+                ////WarningMsg("読み込み中");
+                await Progress(async () =>
                 {
                     var z = projectmaintable[e.RowIndex - 1].record as JwProjectMainData;
                     await JwProjectMainService.LoadSubDataAsync(z);
@@ -289,10 +289,13 @@ namespace RGBControls.Pages
                                 }
                             }
                         }
-                        ProjectDetail detail = new ProjectDetail(z);
-                        detail.ShowDialog();
+                        //ProjectDetail detail = new ProjectDetail(z);
+                        //detail.Show();
+                        SubsForm subsForm = new SubsForm(z);
+                        subsForm.ShowDialog();
                     }
                 });
+                
             }
         }
 
@@ -341,16 +344,19 @@ namespace RGBControls.Pages
                     //ShowJwCanvasForm showJw = new ShowJwCanvasForm();
                     //showJw.jwCanvas = canvas;
                     //showJw.ShowDialog();
-                    ShowSubForm subForm = new ShowSubForm(z);
-                    subForm.WindowState = FormWindowState.Maximized;
                     Sub sub = new Sub(z);
-                    sub.Dock= DockStyle.Fill;
-                    //sub.AutoSize = true;
-                    subForm.Controls.Add(sub);
+                    ShowSubForm subForm = new ShowSubForm(z,sub);
+                    subForm.WindowState = FormWindowState.Maximized;
+                    
+                    //sub.Dock= DockStyle.Fill;
 
+                    ////sub.AutoSize = true;
+                    //subForm.Controls.Add(sub);
+                    //sub.BringToFront();
+                    //sub.Focus();
                     
                     
-                    subForm.ShowDialog();
+                    subForm.Show();
                 }
 
             }

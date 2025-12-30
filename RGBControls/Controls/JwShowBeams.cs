@@ -533,6 +533,13 @@ namespace RGBJWMain.Controls
             Invalidate();
         }
 
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            setcanvas(_canvasDraw);
+            Invalidate();
+        }
+
         public override void Refresh()
         {
             base.Refresh();
@@ -542,8 +549,8 @@ namespace RGBJWMain.Controls
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
-            pe.Graphics.Clear(this.BackColor);
-            setcanvas(_canvasDraw);
+            //pe.Graphics.Clear(this.BackColor);
+            //setcanvas(_canvasDraw);
             
             pe.Graphics.TranslateTransform(origin.X, origin.Y);
             pe.Graphics.ScaleTransform(scale, scale);

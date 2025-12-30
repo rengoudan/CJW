@@ -96,6 +96,7 @@
             uiTabControl1.TabIndex = 1;
             uiTabControl1.TabUnSelectedForeColor = Color.FromArgb(240, 240, 240);
             uiTabControl1.TabVisible = false;
+            uiTabControl1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             // 
             // tabPage1
             // 
@@ -120,6 +121,7 @@
             uiNavBar1.BackColor = SystemColors.ButtonFace;
             uiNavBar1.Controls.Add(pictureBox1);
             uiNavBar1.Dock = DockStyle.Top;
+            uiNavBar1.DropMenuFont = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiNavBar1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiNavBar1.ForeColor = Color.FromArgb(48, 48, 48);
             uiNavBar1.Location = new Point(0, 0);
@@ -146,6 +148,7 @@
             ClientSize = new Size(1261, 834);
             Controls.Add(panel1);
             Controls.Add(pageHeader1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             Text = "MainForm";
             WindowState = FormWindowState.Maximized;

@@ -92,21 +92,25 @@ namespace RGBJWMain.Controls
         private void uiSwitch1_ValueChanged(object sender, bool value)
         {
             jwShowBeams1.ShowBeams = value;
+            uiSwitch1.Invalidate();
         }
 
         private void uiShowpillar_ValueChanged(object sender, bool value)
         {
             jwShowBeams1.ShowPillar = value;
+            uiShowpillar.Invalidate();
         }
 
         private void uiShowfuzhu_ValueChanged(object sender, bool value)
         {
             jwShowBeams1.ShowFuzhu = value;
+            uiShowfuzhu.Invalidate();
         }
 
         private void uiGoujian_ValueChanged(object sender, bool value)
         {
             jwShowBeams1.ShowGoujian = value;
+            uiGoujian.Invalidate();
         }
 
         //private void jwShowBeams1_Click(object sender, EventArgs e)
@@ -168,7 +172,8 @@ namespace RGBJWMain.Controls
         public override void Refresh()
         {
             base.Refresh();
-            jwShowBeams1.Refresh();
+            //jwShowBeams1.Refresh();
+            jwShowBeams1.Invalidate();
         }
 
         public void jwToPng(string path)
@@ -185,16 +190,19 @@ namespace RGBJWMain.Controls
         private void uiSwitch2_ValueChanged(object sender, bool value)
         {
             jwShowBeams1.Showmsg = value;
+            uiSwitch2.Invalidate();
         }
 
         private void uiSDown_ValueChanged(object sender, bool value)
         {
             jwShowBeams1.ShowDownB = value;
+            uiSDown.Invalidate();
         }
 
         private void uiSwitch3_ValueChanged(object sender, bool value)
         {
             jwShowBeams1.ShowGoujiantext = value;
+            uiSwitch3.Invalidate();
         }
 
         private void panel2_MouseDown(object sender, MouseEventArgs e)

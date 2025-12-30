@@ -39,6 +39,7 @@
             pageHeader1.Location = new Point(0, 0);
             pageHeader1.Name = "pageHeader1";
             pageHeader1.ShowButton = true;
+            pageHeader1.ShowIcon = true;
             pageHeader1.Size = new Size(800, 40);
             pageHeader1.TabIndex = 0;
             pageHeader1.Text = "pageHeader1";
@@ -49,6 +50,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(pageHeader1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "ShowSubForm";
             Text = "ShowSubForm";
             Load += ShowSubForm_Load;
