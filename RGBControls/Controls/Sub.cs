@@ -1,7 +1,11 @@
 ﻿using JwCore;
 using JwServices;
 using JwShapeCommon;
+using NPOI.HPSF;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using RGBControls.Classes;
+using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,10 +47,57 @@ namespace RGBControls.Controls
         {
             InitializeComponent();
             SubData = subdata;
+            inittable();
             //this.Resize += Sub_Resize;
 
         }
 
+        private void inittable()
+        {
+            this.liangtable.Columns = new AntdUI.ColumnCollection
+            {
+                new AntdUI.Column("BeamCode", "梁番号"),
+                                new AntdUI.Column("FloorName", "階"),
+                                new AntdUI.Column("GongQu", "工区"),
+                                new AntdUI.Column("Length", "長さ"),
+                                new AntdUI.Column("XXLength", "コア長"),
+                                new AntdUI.Column("StartTelosType", "終了タイプ"),
+                                new AntdUI.Column("EndTelosType", "終了タイプ"),
+                                new AntdUI.Column("IsQiegeBeam", "分割"),
+                                new AntdUI.Column("BeamXHName", "梁のモデル"),
+                                new AntdUI.Column("Id", "ID"),
+                                //new AntdUI.Column("ParsedQuantity", "解析数")
+
+            };
+
+            this.zhutable.Columns = new AntdUI.ColumnCollection
+            {
+                new AntdUI.Column("PillarCode", "番号"),
+                                new AntdUI.Column("BaseType", "タイプ"),
+                                new AntdUI.Column("CenterLocation", "中心点"),
+                                new AntdUI.Column("Length", "長さ"),
+                                new AntdUI.Column("DirectionType", "方向"),
+                                new AntdUI.Column("TaggTitle", "TaggTitle"),
+                                //new AntdUI.Column("ParsedQuantity", "解析数")
+
+            };
+            this.lianjietable.Columns = new AntdUI.ColumnCollection
+            {
+                new AntdUI.Column("Start","開始座標点"),
+                new AntdUI.Column("End","終了座標点"),
+                new AntdUI.Column("Length","長さ(mm)"),
+                new AntdUI.Column("CreateFrom","から"),
+                new AntdUI.Column("Id","Id"),
+            };
+            this.bbgtable.Columns = new AntdUI.ColumnCollection
+            {
+                new AntdUI.Column("BujianName","金物"),
+                new AntdUI.Column("GouJianType","タイプ"),
+                new AntdUI.Column("Directed","方向"),
+                new AntdUI.Column("BeamId","梁ID"),
+                new AntdUI.Column("CreateFrom","起源"),
+            };
+        }
 
 
         private void Sub_Resize(object? sender, EventArgs e)
@@ -185,7 +236,7 @@ namespace RGBControls.Controls
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            if(_subdata != null)
+            if (_subdata != null)
             {
                 await Progress(async () => { await SaveSubTopCanvas(_subdata); });
             }
@@ -260,7 +311,7 @@ namespace RGBControls.Controls
                 }
                 _nowsavefold = foldPath;
 
-                
+
                 string subpath = foldPath + "\\" + data.FloorName;
                 if (!Directory.Exists(subpath))
                 {
@@ -430,5 +481,157 @@ namespace RGBControls.Controls
 
 
         #endregion
+
+        public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
+
+        public JwProjectMainService jwProjectMainService => ServiceFactory.GetInstance().CreateJwProjectMainService();
+
+        private async void button5_Click(object sender, EventArgs e)
+        {
+            UIEditOption option = new UIEditOption();
+            option.AutoLabelWidth = true;
+            option.Text = "認識されません。手動で追加してください";
+            option.AddDouble("Length", "長さ", 0, true);
+
+            UIEditForm frm = new UIEditForm(option);
+            frm.Render();
+            frm.CheckedData += Frm_CheckedData;//校验
+            frm.ShowDialog();
+            if (frm.IsOK)
+            {
+                JwLianjieData lianjieData = new JwLianjieData(true);
+                lianjieData.Length = Convert.ToDouble(frm["Length"].ToString());
+                lianjieData.JwProjectSubDataId = _subdata.Id;
+                lianjieData.ProjectSubName = _subdata.FloorName;
+                lianjieData.CreateFrom = CreateFromType.ManuallyAdd;
+                //lianjieData.Id = Guid.NewGuid().ToString();
+
+                await jwProjectMainService.AddLianjie(lianjieData);
+            }
+        }
+
+        private bool Frm_CheckedData(object sender, UIEditForm.EditFormEventArgs e)
+        {
+            var dl = Convert.ToDouble(e.Form["Length"]);
+            if (dl <= 0)
+            {
+                e.Form.SetEditorFocus("Length");
+                //ShowWarningTip("長さはゼロ以下にすることはできません");
+                return false;
+            }
+            //if (string.IsNullOrEmpty(e.Form["Length"].ToString()))
+            //{
+            //    e.Form.SetEditorFocus("ProjectName");
+            //    ShowWarningTip("プロジェクトを空にすることはできません");
+            //    return false;
+            //}
+            //if (Convert.ToDouble(e.Form["UnitPrice"]) == 0)
+            //{
+            //    e.Form.SetEditorFocus("単価");
+            //    ShowWarningTip("単価をゼロにすることはできません");
+            //    return false;
+            //}
+
+            return true;
+        }
+
+        private async Task ExcelExporter()
+        {
+
+            var materdatas = await jwqitaService.GetMaterialDataAsync();
+            FileStream file = new FileStream(@"lianjietemplate.xlsx", FileMode.Open, FileAccess.Read);
+            XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
+            ISheet XSSFSheet = hssfworkbook.GetSheetAt(0);
+            DocumentSummaryInformation dsi = PropertySetFactory.CreateDocumentSummaryInformation();
+            dsi.Company = "RGB COMPANY";
+            //hssfworkbook.se.DocumentSummaryInformation = dsi;
+
+            //create a entry of SummaryInformation
+            SummaryInformation si = PropertySetFactory.CreateSummaryInformation();
+            si.Subject = "Quotation";
+            string filename = string.Format("{0}.xlsx", _subdata.FloorName);
+            //FileDto files = new FileDto(filename, MimeTypeNames.ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet);
+            //var workbook = new XSSFWorkbook();
+            int i = 1;
+            //var subss = mainData.JwBudgetSubDatas.OrderBy(t => t.MaterialType).ToList();
+            if (_subdata != null)
+            {
+                if (_subdata.JwLianjieDatas.Count > 0)
+                {
+                    var ljs = _subdata.JwLianjieDatas;
+
+                    var ljgs = ljs.GroupBy(t => t.Length).ToList();
+                    double alllength = 0;
+                    int allnum = 0;
+                    foreach (var lj in ljgs)
+                    {
+                        IRow c = XSSFSheet.CopyRow(8, 8 + i);
+
+                        c.GetCell(3).SetCellValue(lj.Key.ToString());
+                        var sl = lj.Count();
+                        c.GetCell(5).SetCellValue(sl.ToString());
+                        c.GetCell(6).SetCellValue(sl.ToString());
+                        double alslc = lj.Key * sl;
+                        c.GetCell(9).SetCellValue(alslc.ToString());
+                        alllength = alllength + alslc;
+                        allnum += sl;
+                        i++;
+                    }
+
+                    IRow onerow = XSSFSheet.GetRow(8);
+                    onerow.GetCell(11).SetCellValue(allnum);
+                    onerow.GetCell(12).SetCellValue(alllength.ToString());
+                    XSSFSheet.GetRow(9).GetCell(0).SetCellValue(_subData.FloorName);
+                    var zl = Math.Round(alllength / 1000 * 1.15, 0);
+                    IRow c1 = XSSFSheet.GetRow(8 + i + 1);
+                    string zls = string.Format("{0}KG", zl);
+                    c1.GetCell(12).SetCellValue(zls);
+                    IRow c2 = XSSFSheet.GetRow(8 + i + 1);
+                    c2.GetCell(5).SetCellValue(allnum);
+                    c2.GetCell(6).SetCellValue(allnum);
+                    c2.GetCell(12).SetCellValue(zls);
+                    IRow c3 = XSSFSheet.GetRow(8 + i + 2);
+                    c3.GetCell(4).SetCellValue(alllength);
+
+                }
+
+                string compname = _subdata.JwProjectMainData.JwCustomerData?.CompanyName;
+                IRow c0 = XSSFSheet.GetRow(0);
+                c0.GetCell(0).SetCellValue(compname);
+                c0.GetCell(5).SetCellValue(DateTime.Now.ToShortDateString());
+                string siteadr = _subdata.JwProjectMainData.SiteAddress;
+                if (!string.IsNullOrEmpty(siteadr))
+                {
+                    XSSFSheet.GetRow(4).GetCell(0).SetCellValue(siteadr);
+                }
+
+                XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(9, 8 + i - 1, 0, 0));
+
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
+                saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", _subData.JwProjectMainData.ProjectName, _subData.FloorName);
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                    {
+                        hssfworkbook.Write(stream);
+                        //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
+                    }
+                }
+                UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
+            }
+
+        }
+
+        private async void button6_Click(object sender, EventArgs e)
+        {
+            await ExcelExporter();
+        }
+
+        private async void button7_Click(object sender, EventArgs e)
+        {
+            await ExcelExporter();
+        }
     }
 }

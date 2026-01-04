@@ -356,7 +356,7 @@ namespace RGBControls.Pages
                     //sub.Focus();
                     
                     
-                    subForm.Show();
+                    subForm.ShowDialog();
                 }
 
             }

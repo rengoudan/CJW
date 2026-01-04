@@ -42,6 +42,8 @@ namespace RGBControls.Controls
             panel8 = new Panel();
             lianjietable = new AntdUI.Table();
             divider3 = new AntdUI.Divider();
+            button6 = new AntdUI.Button();
+            button5 = new AntdUI.Button();
             panel7 = new Panel();
             zhutable = new AntdUI.Table();
             divider2 = new AntdUI.Divider();
@@ -54,6 +56,7 @@ namespace RGBControls.Controls
             button3 = new AntdUI.Button();
             button2 = new AntdUI.Button();
             button1 = new AntdUI.Button();
+            button7 = new AntdUI.Button();
             panel1.SuspendLayout();
             panel3.SuspendLayout();
             panel5.SuspendLayout();
@@ -62,6 +65,7 @@ namespace RGBControls.Controls
             panel4.SuspendLayout();
             leftpane.SuspendLayout();
             panel8.SuspendLayout();
+            divider3.SuspendLayout();
             panel7.SuspendLayout();
             panel6.SuspendLayout();
             panel2.SuspendLayout();
@@ -70,10 +74,12 @@ namespace RGBControls.Controls
             // pageHeader1
             // 
             pageHeader1.Description = "floorcaozuo";
+            pageHeader1.DividerShow = true;
             pageHeader1.Dock = DockStyle.Top;
             pageHeader1.Location = new Point(0, 0);
             pageHeader1.Name = "pageHeader1";
-            pageHeader1.Size = new Size(1359, 75);
+            pageHeader1.Size = new Size(1359, 80);
+            pageHeader1.SubGap = 4;
             pageHeader1.TabIndex = 8;
             pageHeader1.TabStop = false;
             pageHeader1.Text = "subname";
@@ -83,9 +89,9 @@ namespace RGBControls.Controls
             panel1.Controls.Add(panel3);
             panel1.Controls.Add(panel2);
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(0, 75);
+            panel1.Location = new Point(0, 80);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1359, 1299);
+            panel1.Size = new Size(1359, 1294);
             panel1.TabIndex = 1;
             // 
             // panel3
@@ -94,7 +100,7 @@ namespace RGBControls.Controls
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(0, 55);
             panel3.Name = "panel3";
-            panel3.Size = new Size(1359, 1244);
+            panel3.Size = new Size(1359, 1239);
             panel3.TabIndex = 2;
             // 
             // panel5
@@ -104,7 +110,7 @@ namespace RGBControls.Controls
             panel5.Dock = DockStyle.Fill;
             panel5.Location = new Point(0, 0);
             panel5.Name = "panel5";
-            panel5.Size = new Size(1359, 1244);
+            panel5.Size = new Size(1359, 1239);
             panel5.TabIndex = 1;
             // 
             // tableLayoutPanel1
@@ -121,7 +127,7 @@ namespace RGBControls.Controls
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1357, 1242);
+            tableLayoutPanel1.Size = new Size(1357, 1237);
             tableLayoutPanel1.TabIndex = 20;
             // 
             // panel9
@@ -132,7 +138,7 @@ namespace RGBControls.Controls
             panel9.Dock = DockStyle.Fill;
             panel9.Location = new Point(3, 3);
             panel9.Name = "panel9";
-            panel9.Size = new Size(265, 1236);
+            panel9.Size = new Size(265, 1231);
             panel9.TabIndex = 1;
             // 
             // panel4
@@ -177,7 +183,7 @@ namespace RGBControls.Controls
             leftpane.Dock = DockStyle.Fill;
             leftpane.Location = new Point(1088, 3);
             leftpane.Name = "leftpane";
-            leftpane.Size = new Size(266, 1236);
+            leftpane.Size = new Size(266, 1231);
             leftpane.TabIndex = 3;
             leftpane.TabStop = true;
             // 
@@ -185,7 +191,7 @@ namespace RGBControls.Controls
             // 
             panel8.Controls.Add(lianjietable);
             panel8.Dock = DockStyle.Top;
-            panel8.Location = new Point(0, 702);
+            panel8.Location = new Point(0, 708);
             panel8.Name = "panel8";
             panel8.Size = new Size(264, 300);
             panel8.TabIndex = 15;
@@ -207,13 +213,40 @@ namespace RGBControls.Controls
             divider3.BadgeMode = true;
             divider3.BadgeSize = 0.8F;
             divider3.BadgeSvg = "ArrowsAltOutlined";
+            divider3.Controls.Add(button6);
+            divider3.Controls.Add(button5);
             divider3.Dock = DockStyle.Top;
             divider3.Location = new Point(0, 668);
             divider3.Name = "divider3";
             divider3.Orientation = AntdUI.TOrientation.Left;
-            divider3.Size = new Size(264, 34);
+            divider3.Size = new Size(264, 40);
             divider3.TabIndex = 13;
             divider3.Text = "接続部品";
+            // 
+            // button6
+            // 
+            button6.Dock = DockStyle.Right;
+            button6.Ghost = true;
+            button6.IconSvg = "FileExcelOutlined";
+            button6.Location = new Point(179, 0);
+            button6.Name = "button6";
+            button6.Size = new Size(39, 40);
+            button6.TabIndex = 1;
+            button6.Type = AntdUI.TTypeMini.Error;
+            button6.Click += button6_Click;
+            // 
+            // button5
+            // 
+            button5.Dock = DockStyle.Right;
+            button5.Ghost = true;
+            button5.IconSvg = "PlusOutlined";
+            button5.Location = new Point(218, 0);
+            button5.Name = "button5";
+            button5.Shape = AntdUI.TShape.Round;
+            button5.Size = new Size(46, 40);
+            button5.TabIndex = 0;
+            button5.Type = AntdUI.TTypeMini.Success;
+            button5.Click += button5_Click;
             // 
             // panel7
             // 
@@ -294,11 +327,12 @@ namespace RGBControls.Controls
             jwCanvasControl1.Name = "jwCanvasControl1";
             jwCanvasControl1.SelectBeamEvent = null;
             jwCanvasControl1.SelectedBeam = null;
-            jwCanvasControl1.Size = new Size(804, 1234);
+            jwCanvasControl1.Size = new Size(804, 1229);
             jwCanvasControl1.TabIndex = 4;
             // 
             // panel2
             // 
+            panel2.Controls.Add(button7);
             panel2.Controls.Add(button4);
             panel2.Controls.Add(button3);
             panel2.Controls.Add(button2);
@@ -353,6 +387,17 @@ namespace RGBControls.Controls
             button1.Type = AntdUI.TTypeMini.Primary;
             button1.Click += button1_Click;
             // 
+            // button7
+            // 
+            button7.IconSvg = "FileExcelOutlined";
+            button7.Location = new Point(635, 6);
+            button7.Name = "button7";
+            button7.Size = new Size(198, 43);
+            button7.TabIndex = 7;
+            button7.Text = "輸出接続";
+            button7.Type = AntdUI.TTypeMini.Error;
+            button7.Click += button7_Click;
+            // 
             // Sub
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
@@ -370,6 +415,7 @@ namespace RGBControls.Controls
             panel4.ResumeLayout(false);
             leftpane.ResumeLayout(false);
             panel8.ResumeLayout(false);
+            divider3.ResumeLayout(false);
             panel7.ResumeLayout(false);
             panel6.ResumeLayout(false);
             panel2.ResumeLayout(false);
@@ -405,5 +451,8 @@ namespace RGBControls.Controls
         private Panel panel4;
         private AntdUI.Table bbgtable;
         private RGBJWMain.Controls.JwCanvasControl jwCanvasControl1;
+        private AntdUI.Button button5;
+        private AntdUI.Button button6;
+        private AntdUI.Button button7;
     }
 }

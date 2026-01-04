@@ -2,6 +2,7 @@
 using JwServices;
 using RGBControls.Controls;
 using RGBJWMain.Forms;
+using RGBJWMain.Pages;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,21 @@ namespace RGBControls.Forms
             {
                 var tl = string.Format("{0}JW設計分析作業台", _mainData.ProjectName);
                 this.pageHeader1.Text = tl;
+                var page = new AntdUI.TabPage()
+                {
+                    Name = "main",
+                    Text = _mainData.ProjectName
+                };
+                var poform = new ProjectOverview(_mainData);
+                poform.TopLevel = false;
+                poform.FormBorderStyle = FormBorderStyle.None;
+                poform.Dock = DockStyle.Fill;
+                page.Controls.Add(poform);
+
+                tabs1.Pages.Add(page);
+                poform.Show();
+                //var z = new TabPage();
+                //z.Controls.Add(new ProjectOverview());
                 initload();
                 this.WindowState = FormWindowState.Maximized;
             }
