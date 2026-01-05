@@ -23,10 +23,10 @@ namespace RGBControls.Forms
             input2.TextChanged += Input2_TextChanged;
             input3.TextChanged += Input3_TextChanged;
             input4.TextChanged += Input4_TextChanged;
-            input1.Text=JwFileConsts.CsvHxNum.ToString();
-            input2.Text=JwFileConsts.CsvHxJianju.ToString();
-            input3.Text=JwFileConsts.CsvZxNum.ToString();
-            input4.Text=JwFileConsts.CsvZxJianju.ToString();
+            input1.Text = JwFileConsts.CsvHxNum.ToString();
+            input2.Text = JwFileConsts.CsvHxJianju.ToString();
+            input3.Text = JwFileConsts.CsvZxNum.ToString();
+            input4.Text = JwFileConsts.CsvZxJianju.ToString();
 
         }
 
@@ -59,11 +59,21 @@ namespace RGBControls.Forms
             set { _zxjianju = value; }
         }
 
+        private double _ytiaozheng;
+        public double Ytiaozheng
+        {
+            get { return _ytiaozheng; }
+            set
+            {
+                _ytiaozheng = value;
+            }
+        }
+
         private void Input1_TextChanged(object? sender, EventArgs e)
         {
             if (input1.Text.IsNumber())
             {
-                _hxnum=Convert.ToInt32(input1.Text);
+                _hxnum = Convert.ToInt32(input1.Text);
             }
             else
             {
@@ -73,9 +83,9 @@ namespace RGBControls.Forms
 
         private void Input2_TextChanged(object? sender, EventArgs e)
         {
-            if(input2.Text.IsNumber())
+            if (input2.Text.IsNumber())
             {
-                _hxjianju= Convert.ToDouble(input2.Text);
+                _hxjianju = Convert.ToDouble(input2.Text);
             }
             else
             {
@@ -86,9 +96,9 @@ namespace RGBControls.Forms
 
         private void Input3_TextChanged(object? sender, EventArgs e)
         {
-            if(input3.Text.IsNumber())
+            if (input3.Text.IsNumber())
             {
-                _zxnum= Convert.ToInt32(input3.Text);
+                _zxnum = Convert.ToInt32(input3.Text);
             }
             else
             {
@@ -98,14 +108,19 @@ namespace RGBControls.Forms
 
         private void Input4_TextChanged(object? sender, EventArgs e)
         {
-            if(input4.Text.IsNumber())
+            if (input4.Text.IsNumber())
             {
-                _zxjianju= Convert.ToDouble(input4.Text);
+                _zxjianju = Convert.ToDouble(input4.Text);
             }
             else
             {
                 _zxjianju = 0.0;
             }
+        }
+
+        private void uiDoubleUpDown1_ValueChanged(object sender, double value)
+        {
+            _ytiaozheng = uiDoubleUpDown1.Value;
         }
     }
 }

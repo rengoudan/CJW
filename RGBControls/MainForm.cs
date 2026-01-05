@@ -1,4 +1,4 @@
-﻿using JwShapeCommon;
+﻿ using JwShapeCommon;
 using MathNet.Numerics;
 using RGBControls.Forms;
 using RGBControls.Pages;

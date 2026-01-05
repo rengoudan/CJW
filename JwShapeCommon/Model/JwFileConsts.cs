@@ -18,6 +18,7 @@ namespace JwShapeCommon
         public static double CsvHxJianju = 0.0;
         public static int CsvZxNum = 1;
         public static double CsvZxJianju = 0.0;
+        public static double CsvYTiaozheng= 0.0;
         #endregion
 
         /// <summary>

@@ -133,6 +133,7 @@ namespace RGBJWMain.Pages
             await jwqitaService.AddJwBudgetMainDataAsync(budget);
 
             var ltlst = links.GroupBy(t => t.GouJianType).ToList();
+
             foreach (var link in ltlst)
             {
                 var z = link.Key.ToString();

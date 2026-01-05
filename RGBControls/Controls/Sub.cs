@@ -5,6 +5,7 @@ using NPOI.HPSF;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using RGBControls.Classes;
+using RGBControls.Forms;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace RGBControls.Controls
                 if (_subdata != null)
                 {
                     this.pageHeader1.Text = _subdata.FloorName;
-                    this.pageHeader1.Description = "解析されたデータからさまざまな処理図または関連する CSV ファイルをエクスポートします。";
+                    //this.pageHeader1.Description = "解析されたデータからさまざまな処理図または関連する CSV ファイルをエクスポートします。";
                     //this.pageHeader1.Refresh();
                 }
             }
@@ -83,9 +84,9 @@ namespace RGBControls.Controls
             };
             this.lianjietable.Columns = new AntdUI.ColumnCollection
             {
+                new AntdUI.Column("Length","長さ(mm)"),
                 new AntdUI.Column("Start","開始座標点"),
                 new AntdUI.Column("End","終了座標点"),
-                new AntdUI.Column("Length","長さ(mm)"),
                 new AntdUI.Column("CreateFrom","から"),
                 new AntdUI.Column("Id","Id"),
             };
@@ -97,6 +98,11 @@ namespace RGBControls.Controls
                 new AntdUI.Column("BeamId","梁ID"),
                 new AntdUI.Column("CreateFrom","起源"),
             };
+            var alllength = _subdata.JwLianjieDatas.Sum(t => t.Length);
+            var headertitle = string.Format("{0}設計図分析完了。梁{1}。単柱{2}-K柱{3}。B金物{4},BG金物{5}。接続部品数量{6},接続部品長さ{7}。"
+                , _subdata.FloorName, _subdata.BeamCount, _subdata.SinglePillarCount, _subdata.KPillarCount
+                , _subdata.BCount, _subdata.BGCount, _subdata.JwLianjieDatas.Count, alllength);
+            this.pageHeader1.Description = headertitle;
         }
 
 
@@ -122,13 +128,15 @@ namespace RGBControls.Controls
                     //this.jwShowBeams1.ShowGoujiantext = false;
                     //this.jwShowBeams1.ShowPillar = true;
 
-                    this.liangtable.DataSource = _subdata.JwBeamDatas;
+                    this.liangtable.DataSource = _subdata.JwBeamDatas.OrderBy(t => t.BeamCode).ToList();
 
                     this.zhutable.DataSource = _subdata.JwPillarDatas;
 
                     this.lianjietable.DataSource = _subdata.JwLianjieDatas;
 
                     this.bbgtable.DataSource = _subdata.JwLinkPartDatas;
+                    var str = jwc.ToProcessCsv();
+                    this.textBox1.Text = str;
                 }
             }
             catch (Exception ex)
@@ -581,7 +589,7 @@ namespace RGBControls.Controls
                     IRow onerow = XSSFSheet.GetRow(8);
                     onerow.GetCell(11).SetCellValue(allnum);
                     onerow.GetCell(12).SetCellValue(alllength.ToString());
-                    XSSFSheet.GetRow(9).GetCell(0).SetCellValue(_subData.FloorName);
+                    XSSFSheet.GetRow(9).GetCell(0).SetCellValue(_subdata.FloorName);
                     var zl = Math.Round(alllength / 1000 * 1.15, 0);
                     IRow c1 = XSSFSheet.GetRow(8 + i + 1);
                     string zls = string.Format("{0}KG", zl);
@@ -610,7 +618,7 @@ namespace RGBControls.Controls
 
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
-                saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", _subData.JwProjectMainData.ProjectName, _subData.FloorName);
+                saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", _subdata.JwProjectMainData.ProjectName, _subdata.FloorName);
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
@@ -633,5 +641,69 @@ namespace RGBControls.Controls
         {
             await ExcelExporter();
         }
+
+        /// <summary>
+        /// 配置梁csv 设置项
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button8_Click(object sender, EventArgs e)
+        {
+            var settingsForm = new CsvSettings(this.ParentForm);
+            if (AntdUI.Modal.open(this.ParentForm, AntdUI.Localization.Get("Setting", "設定"), settingsForm) == DialogResult.OK)
+            {
+                JwFileConsts.CsvHxJianju = settingsForm.Hxjianju;
+                JwFileConsts.CsvHxNum = settingsForm.Hxnum;
+                JwFileConsts.CsvZxJianju = settingsForm.Zxjianju;
+                JwFileConsts.CsvZxNum = settingsForm.Zxnum;
+                JwFileConsts.CsvYTiaozheng = settingsForm.Ytiaozheng;
+                Refresh();
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (_subdata != null)
+            {
+                ExportCsv(_subdata);
+            }
+        }
+
+        private void ExportCsv(JwProjectSubData data)
+        {
+            var canvas = data.DataToCanvas();
+            if (canvas != null && canvas.Beams.Count != 0)
+            {
+                var csvstr = canvas.ToProcessCsv();
+                if (!string.IsNullOrEmpty(csvstr))
+                {
+                    SaveFileDialog saveDataSend = new SaveFileDialog();
+                    // Environment.SpecialFolder.MyDocuments 表示在我的文档中
+                    saveDataSend.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);   // 获取文件路径
+                    saveDataSend.Filter = "*.csv|csv file";   // 设置文件类型为文本文件
+                    saveDataSend.DefaultExt = ".csv";   // 默认文件的拓展名
+                    saveDataSend.FileName = string.Format("{0}-3015-2.csv", data.FloorName);   // 文件默认名
+                    if (saveDataSend.ShowDialog() == DialogResult.OK)   // 显示文件框，并且选择文件
+                    {
+                        string fName = saveDataSend.FileName;   // 获取文件名
+                                                                // 参数1：写入文件的文件名；参数2：写入文件的内容
+                        byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(csvstr);
+                        bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
+                        string q = Encoding.Default.GetString(bs);
+                        System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+                        AntdUI.Modal.open(new AntdUI.Modal.Config(this.ParentForm, "完了プロンプト", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
+                        {
+                            OnButtonStyle = (id, btn) =>
+                            {
+                                btn.BackExtend = "135, #6253E1, #04BEFE";
+                            },
+                            CancelText = null,
+                            OkText = "YES"
+                        });
+                    }
+                }
+            }
+        }
+
     }
 }

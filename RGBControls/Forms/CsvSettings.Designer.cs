@@ -37,6 +37,8 @@
             input2 = new AntdUI.Input();
             input3 = new AntdUI.Input();
             input4 = new AntdUI.Input();
+            label5 = new AntdUI.Label();
+            uiDoubleUpDown1 = new Sunny.UI.UIDoubleUpDown();
             SuspendLayout();
             // 
             // label3
@@ -112,10 +114,35 @@
             input4.TabIndex = 8;
             input4.Text = "0.0";
             // 
+            // label5
+            // 
+            label5.Location = new Point(3, 321);
+            label5.Name = "label5";
+            label5.Size = new Size(112, 34);
+            label5.TabIndex = 9;
+            label5.Text = "Y-調整する";
+            // 
+            // uiDoubleUpDown1
+            // 
+            uiDoubleUpDown1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiDoubleUpDown1.Location = new Point(184, 311);
+            uiDoubleUpDown1.Margin = new Padding(4, 5, 4, 5);
+            uiDoubleUpDown1.MinimumSize = new Size(100, 0);
+            uiDoubleUpDown1.Name = "uiDoubleUpDown1";
+            uiDoubleUpDown1.ShowText = false;
+            uiDoubleUpDown1.Size = new Size(174, 44);
+            uiDoubleUpDown1.Step = 0.5D;
+            uiDoubleUpDown1.TabIndex = 10;
+            uiDoubleUpDown1.Text = "uiDoubleUpDown1";
+            uiDoubleUpDown1.TextAlignment = ContentAlignment.MiddleCenter;
+            uiDoubleUpDown1.ValueChanged += uiDoubleUpDown1_ValueChanged;
+            // 
             // CsvSettings
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(uiDoubleUpDown1);
+            Controls.Add(label5);
             Controls.Add(input4);
             Controls.Add(input3);
             Controls.Add(input2);
@@ -141,5 +168,7 @@
         private AntdUI.Input input2;
         private AntdUI.Input input3;
         private AntdUI.Input input4;
+        private AntdUI.Label label5;
+        private Sunny.UI.UIDoubleUpDown uiDoubleUpDown1;
     }
 }

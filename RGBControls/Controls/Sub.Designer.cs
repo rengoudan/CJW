@@ -35,6 +35,9 @@ namespace RGBControls.Controls
             panel5 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             panel9 = new Panel();
+            panel10 = new Panel();
+            divider5 = new AntdUI.Divider();
+            button8 = new AntdUI.Button();
             panel4 = new Panel();
             bbgtable = new AntdUI.Table();
             divider4 = new AntdUI.Divider();
@@ -52,16 +55,20 @@ namespace RGBControls.Controls
             divider1 = new AntdUI.Divider();
             jwCanvasControl1 = new RGBJWMain.Controls.JwCanvasControl();
             panel2 = new Panel();
+            button9 = new AntdUI.Button();
+            button7 = new AntdUI.Button();
             button4 = new AntdUI.Button();
             button3 = new AntdUI.Button();
             button2 = new AntdUI.Button();
             button1 = new AntdUI.Button();
-            button7 = new AntdUI.Button();
+            textBox1 = new TextBox();
             panel1.SuspendLayout();
             panel3.SuspendLayout();
             panel5.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             panel9.SuspendLayout();
+            panel10.SuspendLayout();
+            divider5.SuspendLayout();
             panel4.SuspendLayout();
             leftpane.SuspendLayout();
             panel8.SuspendLayout();
@@ -133,6 +140,7 @@ namespace RGBControls.Controls
             // panel9
             // 
             panel9.BorderStyle = BorderStyle.FixedSingle;
+            panel9.Controls.Add(panel10);
             panel9.Controls.Add(panel4);
             panel9.Controls.Add(divider4);
             panel9.Dock = DockStyle.Fill;
@@ -140,6 +148,38 @@ namespace RGBControls.Controls
             panel9.Name = "panel9";
             panel9.Size = new Size(265, 1231);
             panel9.TabIndex = 1;
+            // 
+            // panel10
+            // 
+            panel10.Controls.Add(textBox1);
+            panel10.Controls.Add(divider5);
+            panel10.Dock = DockStyle.Fill;
+            panel10.Location = new Point(0, 334);
+            panel10.Name = "panel10";
+            panel10.Size = new Size(263, 895);
+            panel10.TabIndex = 2;
+            // 
+            // divider5
+            // 
+            divider5.Controls.Add(button8);
+            divider5.Dock = DockStyle.Top;
+            divider5.Location = new Point(0, 0);
+            divider5.Name = "divider5";
+            divider5.Orientation = AntdUI.TOrientation.Left;
+            divider5.Size = new Size(263, 34);
+            divider5.TabIndex = 0;
+            divider5.Text = "梁製造CSV";
+            // 
+            // button8
+            // 
+            button8.Dock = DockStyle.Right;
+            button8.Ghost = true;
+            button8.IconSvg = "SlidersOutlined";
+            button8.Location = new Point(221, 0);
+            button8.Name = "button8";
+            button8.Size = new Size(42, 34);
+            button8.TabIndex = 0;
+            button8.Click += button8_Click;
             // 
             // panel4
             // 
@@ -332,6 +372,7 @@ namespace RGBControls.Controls
             // 
             // panel2
             // 
+            panel2.Controls.Add(button9);
             panel2.Controls.Add(button7);
             panel2.Controls.Add(button4);
             panel2.Controls.Add(button3);
@@ -342,6 +383,28 @@ namespace RGBControls.Controls
             panel2.Name = "panel2";
             panel2.Size = new Size(1359, 55);
             panel2.TabIndex = 7;
+            // 
+            // button9
+            // 
+            button9.IconSvg = "FileExcelOutlined";
+            button9.Location = new Point(839, 6);
+            button9.Name = "button9";
+            button9.Size = new Size(157, 43);
+            button9.TabIndex = 8;
+            button9.Text = "梁製造CSV";
+            button9.Type = AntdUI.TTypeMini.Primary;
+            button9.Click += button9_Click;
+            // 
+            // button7
+            // 
+            button7.IconSvg = "FileExcelOutlined";
+            button7.Location = new Point(635, 6);
+            button7.Name = "button7";
+            button7.Size = new Size(198, 43);
+            button7.TabIndex = 7;
+            button7.Text = "輸出接続";
+            button7.Type = AntdUI.TTypeMini.Error;
+            button7.Click += button7_Click;
             // 
             // button4
             // 
@@ -387,16 +450,14 @@ namespace RGBControls.Controls
             button1.Type = AntdUI.TTypeMini.Primary;
             button1.Click += button1_Click;
             // 
-            // button7
+            // textBox1
             // 
-            button7.IconSvg = "FileExcelOutlined";
-            button7.Location = new Point(635, 6);
-            button7.Name = "button7";
-            button7.Size = new Size(198, 43);
-            button7.TabIndex = 7;
-            button7.Text = "輸出接続";
-            button7.Type = AntdUI.TTypeMini.Error;
-            button7.Click += button7_Click;
+            textBox1.Dock = DockStyle.Fill;
+            textBox1.Location = new Point(0, 34);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(263, 861);
+            textBox1.TabIndex = 1;
             // 
             // Sub
             // 
@@ -412,6 +473,9 @@ namespace RGBControls.Controls
             panel5.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             panel9.ResumeLayout(false);
+            panel10.ResumeLayout(false);
+            panel10.PerformLayout();
+            divider5.ResumeLayout(false);
             panel4.ResumeLayout(false);
             leftpane.ResumeLayout(false);
             panel8.ResumeLayout(false);
@@ -454,5 +518,10 @@ namespace RGBControls.Controls
         private AntdUI.Button button5;
         private AntdUI.Button button6;
         private AntdUI.Button button7;
+        private Panel panel10;
+        private AntdUI.Divider divider5;
+        private AntdUI.Button button8;
+        private AntdUI.Button button9;
+        private TextBox textBox1;
     }
 }
