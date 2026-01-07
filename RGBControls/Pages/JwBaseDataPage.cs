@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwServices;
 using JwShapeCommon;
 using Sunny.UI;
 using System;
@@ -21,7 +22,9 @@ namespace RGBJWMain.Pages
             InitializeComponent();
         }
 
-        private void uiSymbolButton1_Click(object sender, EventArgs e)
+        public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
+
+        private async void uiSymbolButton1_Click(object sender, EventArgs e)
         {
             UIEditOption option = new UIEditOption();
             option.AutoLabelWidth = true;
@@ -48,8 +51,7 @@ namespace RGBJWMain.Pages
                 //materialData.UnitPrice = Convert.ToDecimal(frm["UnitPrice"].ToString());
                 materialData.MaterialType = (MaterialType)(frm["MaterialType"]);
                 //materialData.Remark = "";
-                this.dbContext.JwMaterialTypeDatas.Add(materialData);
-                this.dbContext.SaveChanges();
+                await jwqitaService.AddJwMaterialTypeDataAsync(materialData);
             }
         }
 
@@ -71,22 +73,20 @@ namespace RGBJWMain.Pages
             return true;
         }
 
-        private void JwBaseDataPage_Load(object sender, EventArgs e)
+        private async void JwBaseDataPage_Load(object sender, EventArgs e)
         {
             this.InitData();
 
-            this.dbContext.Database.EnsureCreated();
+            var lst = await jwqitaService.GetJwMaterialTypeDatasAsync();
 
-            this.dbContext.JwMaterialTypeDatas.Load();
-
-            this.jwMaterialTypeDataBindingSource.DataSource = dbContext.JwMaterialTypeDatas.Local.ToBindingList();
+            this.jwMaterialTypeDataBindingSource.DataSource = lst;
             uiSymbolButton2.Enabled = false;
         }
 
         private JwMaterialTypeData selectedmain;
         bool hasselected = false;   
 
-        private void uiDataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private async void uiDataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -96,7 +96,7 @@ namespace RGBJWMain.Pages
                     selectedmain = uiDataGridView1.Rows[e.RowIndex].DataBoundItem as JwMaterialTypeData;
                     if (selectedmain != null)
                     {
-                        this.dbContext.Entry(selectedmain).Collection(e => e.JwMaterialDatas).Load();
+                        await jwqitaService.LoadSubDataAsync(selectedmain);
                         uiSymbolButton2.Enabled = true;
                         hasselected = true;
                     }
@@ -104,7 +104,7 @@ namespace RGBJWMain.Pages
             }
         }
 
-        private void uiSymbolButton2_Click(object sender, EventArgs e)
+        private async void uiSymbolButton2_Click(object sender, EventArgs e)
         {
             if(hasselected)
             {
@@ -142,8 +142,7 @@ namespace RGBJWMain.Pages
                     materialData.JwMaterialTypeData = selectedmain;
                     materialData.JwMaterialTypeDataId = selectedmain.Id;
                     materialData.Remark = "";
-                    this.dbContext.JwMaterialDatas.Add(materialData);
-                    this.dbContext.SaveChanges();
+                    await jwqitaService.AddJwMaterialDataAsync(materialData);
                 }
             }
         }

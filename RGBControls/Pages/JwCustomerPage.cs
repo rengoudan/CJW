@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwServices;
 using JwShapeCommon;
 using Microsoft.EntityFrameworkCore;
 using RGBJWMain.Forms;
@@ -23,14 +24,14 @@ namespace RGBJWMain.Pages
             base.InitData();
         }
 
-        protected override void OnLoad(EventArgs e)
+        public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
+
+        protected async override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            this.dbContext.Database.EnsureCreated();
+            var customers = await jwqitaService.GetAllJwCustomerDatasAsync(null);
 
-            this.dbContext.JwCustomerDatas.Load();
-
-            this.jwCustomerDataBindingSource.DataSource = dbContext.JwCustomerDatas.Local.ToBindingList();
+            this.jwCustomerDataBindingSource.DataSource = customers;
         }
 
         private void uiDataGridView1_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
@@ -156,7 +157,7 @@ namespace RGBJWMain.Pages
             }
         }
 
-        private void uiSymbolButton1_Click(object sender, EventArgs e)
+        private async void uiSymbolButton1_Click(object sender, EventArgs e)
         {
             UIEditOption option = new UIEditOption();
             option.AutoLabelWidth = true;
@@ -184,8 +185,7 @@ namespace RGBJWMain.Pages
                 customerdata.CompanyAddress = frm["CompanyAddress"].ToString();
                 customerdata.Contact = frm["Contact"].ToString();
                 customerdata.Telephone = frm["Telephone"].ToString();
-                this.dbContext.JwCustomerDatas.Add(customerdata);
-                this.dbContext.SaveChanges();
+                await jwqitaService.AddJwCustomerDataAsync(customerdata);
             }
         }
 

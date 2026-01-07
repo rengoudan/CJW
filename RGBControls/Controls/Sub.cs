@@ -112,14 +112,16 @@ namespace RGBControls.Controls
             this.jwCanvasControl1.Invalidate();
         }
 
+        JwCanvas _thisCanvas;
+
         private void Sub_Load(object sender, EventArgs e)
         {
             try
             {
                 if (_subdata != null)
                 {
-                    JwCanvas jwc = _subdata.DataToCanvas();
-                    JwCanvasDraw canvasDraw = new JwCanvasDraw(jwc);
+                    _thisCanvas = _subdata.DataToCanvas();
+                    JwCanvasDraw canvasDraw = new JwCanvasDraw(_thisCanvas);
                     this.jwCanvasControl1.CanvasDraw = canvasDraw;
                     //this.jwShowBeams1.ShowBeams = true;
                     //this.jwShowBeams1.ShowDownB = true;
@@ -135,7 +137,7 @@ namespace RGBControls.Controls
                     this.lianjietable.DataSource = _subdata.JwLianjieDatas;
 
                     this.bbgtable.DataSource = _subdata.JwLinkPartDatas;
-                    var str = jwc.ToProcessCsv();
+                    var str = _thisCanvas.ToProcessCsv();
                     this.textBox1.Text = str;
                 }
             }
@@ -657,7 +659,8 @@ namespace RGBControls.Controls
                 JwFileConsts.CsvZxJianju = settingsForm.Zxjianju;
                 JwFileConsts.CsvZxNum = settingsForm.Zxnum;
                 JwFileConsts.CsvYTiaozheng = settingsForm.Ytiaozheng;
-                Refresh();
+                var str = _thisCanvas.ToProcessCsv();
+                this.textBox1.Text = str;
             }
         }
 

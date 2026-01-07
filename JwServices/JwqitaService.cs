@@ -16,6 +16,12 @@ namespace JwServices
         {
         }
 
+        public async Task LoadSubDataAsync(JwMaterialTypeData maindata)
+        {
+            using var context = CreateContext();
+            await LoadCollectionAsync(context, maindata, p => p.JwMaterialDatas);
+        }
+
         /// <summary>
         /// 获取预算
         /// </summary>
@@ -25,10 +31,20 @@ namespace JwServices
             return await GetAllAsync<JwBudgetMainData>(predicate);
         }
 
+        public async Task<List<JwCustomerData>> GetAllJwCustomerDatasAsync(Expression<Func<JwCustomerData, bool>>? predicate)
+        {
+            return await GetAllAsync<JwCustomerData>(predicate);
+        }
+
         public async Task<List<JwMaterialData>> GetMaterialDataAsync()
         {
             return await GetAllAsync<JwMaterialData>(includes: new Expression<Func<JwMaterialData, object>>[]
             { p => p.JwMaterialTypeData});
+        }
+
+        public async Task<List<JwMaterialTypeData>> GetJwMaterialTypeDatasAsync(Expression<Func<JwMaterialTypeData, bool>>? predicate=null)
+        {
+            return await GetAllAsync(predicate);
         }
 
         public async Task<List<JwCustDesignConstData>> GetConstDatasAsync()
@@ -68,6 +84,21 @@ namespace JwServices
         {
             await AddAsync<JwCustDesignConstData>(data);
         }   
+
+        public async Task AddJwCustomerDataAsync(JwCustomerData data)
+        {
+            await AddAsync(data);
+        }
+
+        public async Task AddJwMaterialTypeDataAsync(JwMaterialTypeData data)
+        {
+            await AddAsync(data);
+        }
+
+        public async Task AddJwMaterialDataAsync(JwMaterialData data)
+        {
+            await AddAsync(data);
+        }
 
         public async Task UpdateJwCustDesignConstDataAsync(JwCustDesignConstData data)
         {

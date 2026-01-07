@@ -160,7 +160,7 @@ namespace JwShapeCommon
             foreach (var item in Beams)
             {
                 
-                sb.Append(item.ToProcessCsv());
+                sb.Append(item.ToProcessCsv(JwProjectSubData.FloorName,JwProjectSubData.DefaultBeamXHName));
                 
             }
             //foreach (var item in ExcelSubDatas)

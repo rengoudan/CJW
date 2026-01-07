@@ -36,6 +36,7 @@ namespace RGBControls.Controls
             tableLayoutPanel1 = new TableLayoutPanel();
             panel9 = new Panel();
             panel10 = new Panel();
+            textBox1 = new TextBox();
             divider5 = new AntdUI.Divider();
             button8 = new AntdUI.Button();
             panel4 = new Panel();
@@ -61,7 +62,6 @@ namespace RGBControls.Controls
             button3 = new AntdUI.Button();
             button2 = new AntdUI.Button();
             button1 = new AntdUI.Button();
-            textBox1 = new TextBox();
             panel1.SuspendLayout();
             panel3.SuspendLayout();
             panel5.SuspendLayout();
@@ -158,6 +158,16 @@ namespace RGBControls.Controls
             panel10.Name = "panel10";
             panel10.Size = new Size(263, 895);
             panel10.TabIndex = 2;
+            // 
+            // textBox1
+            // 
+            textBox1.Dock = DockStyle.Fill;
+            textBox1.Location = new Point(0, 34);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.ScrollBars = ScrollBars.Both;
+            textBox1.Size = new Size(263, 861);
+            textBox1.TabIndex = 1;
             // 
             // divider5
             // 
@@ -449,15 +459,6 @@ namespace RGBControls.Controls
             button1.Text = "輸出梁JW";
             button1.Type = AntdUI.TTypeMini.Primary;
             button1.Click += button1_Click;
-            // 
-            // textBox1
-            // 
-            textBox1.Dock = DockStyle.Fill;
-            textBox1.Location = new Point(0, 34);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(263, 861);
-            textBox1.TabIndex = 1;
             // 
             // Sub
             // 

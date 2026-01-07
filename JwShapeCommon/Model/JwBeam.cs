@@ -1138,6 +1138,7 @@ namespace JwShapeCommon
 
             var tops= JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RelativeStartDistance).ToList();
             double ry = JwFileConsts.Kongjing / 2;
+            ry = ry - JwFileConsts.CsvYTiaozheng;
             if(rights.Count>0)
             {
                 sb.Append("右面穴\r\n");   
@@ -1159,7 +1160,77 @@ namespace JwShapeCommon
             }
             
             double cy = 100 - JwFileConsts.Kongjing / 2;
+            cy = cy + JwFileConsts.CsvYTiaozheng;
             if(tops.Count>0)
+            {
+                sb.Append("上面穴\r\n");
+                foreach (var h in tops)
+                {
+                    sb.Append(h.ToCsvString(cy));
+                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
+                }
+            }
+            sb.Append("END\r\n");
+            sb.Append("\r\n");
+            //sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", Gongqu, Liangfuhao, Louceng, "H-200x100x5.5x8", SingleBeamLength.ToString("0.0"), benshu));
+            //sb.Append("0, 0, 0, , 0, 0\r\n");
+            //绘制上  对应csv的 右
+
+            //foreach(var jfm in jwBeamMarks)
+            //{
+            //    if(jfm.HasAppend&&jfm.AppendHole!=null)
+            //    {
+            //        sb.Append(string.Format("1, {0}, {1}, , {2}, {3}\r\n", jfm.Point.X.ToString("0.00"), jfm.Point.Y.ToString("0.00"), jfm.AppendHole.KongNum, jfm.AppendHole.SuoShuMian.ToString("D")));
+            //    }
+            //    else
+            //    {
+            //        sb.Append(string.Format("1, {0}, {1}, , {2}, {3}\r\n", jfm.Point.X.ToString("0.00"), jfm.Point.Y.ToString("0.00"), 0, 0));
+            //    }
+            //}
+
+            //绘制center 对应csv的 top
+
+            //绘制下 对应csv的 left
+
+            return sb.ToString();
+        }
+
+        public string ToProcessCsv(string jiebie,string fuhao)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("START\r\n");
+            sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", this.GongQu, fuhao, jiebie, "H-200x100x5.5x8", Length, "1"));
+            sb.Append("0, 0, 0, , 0, 0\r\n");
+            var rights = JwHoleMachinings.Where(t => t.HasRight).OrderBy(t => t.RelativeStartDistance).ToList();
+
+            var lefts = JwHoleMachinings.Where(t => t.HasLeft).OrderBy(t => t.RelativeStartDistance).ToList();
+
+            var tops = JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RelativeStartDistance).ToList();
+            double ry = JwFileConsts.Kongjing / 2;
+            ry = ry - JwFileConsts.CsvYTiaozheng;
+            if (rights.Count > 0)
+            {
+                sb.Append("右面穴\r\n");
+                foreach (var h in rights)
+                {
+                    sb.Append(h.ToCsvString(-ry));
+                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
+
+                }
+            }
+            if (lefts.Count > 0)
+            {
+                sb.Append("左面穴\r\n");
+                foreach (var h in lefts)
+                {
+                    sb.Append(h.ToCsvString(-ry));
+                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
+                }
+            }
+
+            double cy = 100 - JwFileConsts.Kongjing / 2;
+            cy = cy + JwFileConsts.CsvYTiaozheng;
+            if (tops.Count > 0)
             {
                 sb.Append("上面穴\r\n");
                 foreach (var h in tops)
