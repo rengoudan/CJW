@@ -32,6 +32,20 @@ namespace JwServices
             return await query.ToListAsync(); 
         }
 
+        protected  List<T> GetAll<T>(Expression<Func<T, bool>>? predicate = null,
+          Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+          params Expression<Func<T, object>>[] includes) where T : class
+        {
+            using var context = CreateContext();
+            IQueryable<T> query = context.Set<T>();
+            foreach (var include in includes) query = query.Include(include);
+            if (predicate != null)
+                query = query.Where(predicate);
+            if (orderBy != null)
+                query = orderBy(query);
+            return query.ToList();
+        }
+
         // ✅ 获取单个实体（可选包含）
         protected async Task<T?> GetByIdAsync<T>( object id, params Expression<Func<T, object>>[] includes ) where T : class 
         { 

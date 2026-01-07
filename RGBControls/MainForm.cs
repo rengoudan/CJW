@@ -39,7 +39,7 @@ namespace RGBControls
             uiNavBar1.CreateNode(AddPage(new NewProjectMainPage(this), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwBudgePage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwCustomerPage(), ++pageIndex));
-            uiNavBar1.CreateNode(AddPage(new JwBaseDataPage(), ++pageIndex));
+            uiNavBar1.CreateNode(AddPage(new NewBaseDataPage(), ++pageIndex));
             
         }
 

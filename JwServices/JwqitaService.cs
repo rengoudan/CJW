@@ -42,6 +42,13 @@ namespace JwServices
             { p => p.JwMaterialTypeData});
         }
 
+        public List<JwMaterialData> GetMaterialData(Expression<Func<JwMaterialData, bool>>? predicate = null)
+        {
+            return  GetAll<JwMaterialData>(predicate, includes: new Expression<Func<JwMaterialData, object>>[]
+            { p => p.JwMaterialTypeData});
+        }
+        
+
         public async Task<List<JwMaterialTypeData>> GetJwMaterialTypeDatasAsync(Expression<Func<JwMaterialTypeData, bool>>? predicate=null)
         {
             return await GetAllAsync(predicate);
