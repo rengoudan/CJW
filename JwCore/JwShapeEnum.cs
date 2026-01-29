@@ -188,4 +188,10 @@ namespace JwCore
         Reduce = -1,
         Add = 1
     }
+
+    public enum LianjieParsingMethod
+    {
+        OnBeam = 0,
+        CenterPoint = 1,
+    }
 }

@@ -50,6 +50,11 @@ namespace JwCore
 
         public int LianjieColorNumber { get; set; }
 
+        /// <summary>
+        /// 链接解析方式 考虑是否用枚举 0为败方 1为中心点
+        /// </summary>
+        public int LianjieParsingMethod { get; set; }
+
         public long? JwCustomerDataId { get; set; }
         public virtual JwCustomerData? JwCustomerData { get; set; } = null!;
 
