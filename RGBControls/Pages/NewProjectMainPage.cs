@@ -205,6 +205,7 @@ namespace RGBControls.Pages
             {
                 if (selectedsubData != null)
                 {
+                    
                     if (AntdUI.Modal.open(this, "ヒント", "プロジェクトデータをすべてエクスポートするかどうか") == DialogResult.OK)
                     {
                         await Progress(async () => { await SaveSubBeams(selectedsubData); });
@@ -236,6 +237,11 @@ namespace RGBControls.Pages
             {
                 if (selectedsubData != null)
                 {
+                    if(selectedsubData.JwLianjieDatas.Count==0)
+                    {
+                        UIMessageBox.ShowError("この階にはブレースデータがありません");
+                        return;
+                    }
                     await Progress(async () => { await SaveSubCanvasLines(selectedsubData); });
                     //SaveSubCanvasLines(selectedsubData);
                 }
@@ -672,7 +678,7 @@ namespace RGBControls.Pages
         #endregion
 
         #region 新增项目
-
+        public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
         private async void button1_Click(object sender, EventArgs e)
         {
             UIEditOption option = new UIEditOption();
@@ -684,7 +690,10 @@ namespace RGBControls.Pages
             //option.AddText("JwCustomerDataId", "顧客", null, false);
             //option.AddText("Telephone", "電話", null, false);
 
-            var cuslst = dbContext.JwCustomerDatas.ToList();
+
+            //GetAllJwCustomerDatasAsync
+            var cdlst=await jwqitaService.GetAllJwCustomerDatasAsync(null);
+            var cuslst = cdlst;
 
             option.AddCombobox("JwCustomerDataId", "顧客", cuslst, "CompanyName", "Id", 0);
             //option.AddCombobox("Info", "关联", infoList, "Name", "Id", "2");
@@ -705,6 +714,7 @@ namespace RGBControls.Pages
                 customerdata.JwCustomerDataId = Convert.ToInt64(frm["JwCustomerDataId"].ToString());
                 //customerdata.Telephone = frm["Telephone"].ToString();
                 await JwProjectMainService.AddMainData(customerdata);
+                await ReloadData();
             }
         }
 

@@ -265,6 +265,11 @@ namespace RGBControls.Controls
         {
             if (_subdata != null)
             {
+                if(_subdata.JwLianjieDatas.Count==0)
+                {
+                    UIMessageBox.ShowWarning("接続部品データがありません。");
+                    return;
+                }
                 await Progress(async () => { await SaveSubCanvasLines(_subdata); });
                 //SaveSubCanvasLines(selectedsubData);
             }
@@ -547,27 +552,27 @@ namespace RGBControls.Controls
 
         private async Task ExcelExporter()
         {
-
-            var materdatas = await jwqitaService.GetMaterialDataAsync();
-            FileStream file = new FileStream(@"lianjietemplate.xlsx", FileMode.Open, FileAccess.Read);
-            XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
-            ISheet XSSFSheet = hssfworkbook.GetSheetAt(0);
-            DocumentSummaryInformation dsi = PropertySetFactory.CreateDocumentSummaryInformation();
-            dsi.Company = "RGB COMPANY";
-            //hssfworkbook.se.DocumentSummaryInformation = dsi;
-
-            //create a entry of SummaryInformation
-            SummaryInformation si = PropertySetFactory.CreateSummaryInformation();
-            si.Subject = "Quotation";
-            string filename = string.Format("{0}.xlsx", _subdata.FloorName);
-            //FileDto files = new FileDto(filename, MimeTypeNames.ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet);
-            //var workbook = new XSSFWorkbook();
-            int i = 1;
-            //var subss = mainData.JwBudgetSubDatas.OrderBy(t => t.MaterialType).ToList();
             if (_subdata != null)
             {
                 if (_subdata.JwLianjieDatas.Count > 0)
                 {
+                    var materdatas = await jwqitaService.GetMaterialDataAsync();
+                    FileStream file = new FileStream(@"lianjietemplate.xlsx", FileMode.Open, FileAccess.Read);
+                    XSSFWorkbook hssfworkbook = new XSSFWorkbook(file);
+                    ISheet XSSFSheet = hssfworkbook.GetSheetAt(0);
+                    DocumentSummaryInformation dsi = PropertySetFactory.CreateDocumentSummaryInformation();
+                    dsi.Company = "RGB COMPANY";
+                    //hssfworkbook.se.DocumentSummaryInformation = dsi;
+
+                    //create a entry of SummaryInformation
+                    SummaryInformation si = PropertySetFactory.CreateSummaryInformation();
+                    si.Subject = "Quotation";
+                    string filename = string.Format("{0}.xlsx", _subdata.FloorName);
+                    //FileDto files = new FileDto(filename, MimeTypeNames.ApplicationVndOpenxmlformatsOfficedocumentSpreadsheetmlSheet);
+                    //var workbook = new XSSFWorkbook();
+                    int i = 1;
+                    //var subss = mainData.JwBudgetSubDatas.OrderBy(t => t.MaterialType).ToList();
+
                     var ljs = _subdata.JwLianjieDatas;
 
                     var ljgs = ljs.GroupBy(t => t.Length).ToList();
@@ -603,35 +608,40 @@ namespace RGBControls.Controls
                     IRow c3 = XSSFSheet.GetRow(8 + i + 2);
                     c3.GetCell(4).SetCellValue(alllength);
 
-                }
-
-                string compname = _subdata.JwProjectMainData.JwCustomerData?.CompanyName;
-                IRow c0 = XSSFSheet.GetRow(0);
-                c0.GetCell(0).SetCellValue(compname);
-                c0.GetCell(5).SetCellValue(DateTime.Now.ToShortDateString());
-                string siteadr = _subdata.JwProjectMainData.SiteAddress;
-                if (!string.IsNullOrEmpty(siteadr))
-                {
-                    XSSFSheet.GetRow(4).GetCell(0).SetCellValue(siteadr);
-                }
-
-                XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(9, 8 + i - 1, 0, 0));
 
 
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
-                saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", _subdata.JwProjectMainData.ProjectName, _subdata.FloorName);
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                    string compname = _subdata.JwProjectMainData.JwCustomerData?.CompanyName;
+                    IRow c0 = XSSFSheet.GetRow(0);
+                    c0.GetCell(0).SetCellValue(compname);
+                    c0.GetCell(5).SetCellValue(DateTime.Now.ToShortDateString());
+                    string siteadr = _subdata.JwProjectMainData.SiteAddress;
+                    if (!string.IsNullOrEmpty(siteadr))
                     {
-                        hssfworkbook.Write(stream);
-                        //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
+                        XSSFSheet.GetRow(4).GetCell(0).SetCellValue(siteadr);
                     }
-                }
-                UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
-            }
 
+                    XSSFSheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(9, 8 + i - 1, 0, 0));
+
+
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
+                    saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", _subdata.JwProjectMainData.ProjectName, _subdata.FloorName);
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                        {
+                            hssfworkbook.Write(stream);
+                            //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
+                        }
+                    }
+                    UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
+                }
+                else
+                {
+                    UIMessageBox.ShowWarning("エクスポートする接続部品データがありません");
+                }
+            }
+        
         }
 
         private async void button6_Click(object sender, EventArgs e)
