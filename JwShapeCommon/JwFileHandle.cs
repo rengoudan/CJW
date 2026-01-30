@@ -3377,6 +3377,7 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 先判断成对出现的线条
+        /// JwFileConsts.LianjieParsingMethod 两种检索解析方法
         /// </summary>
         private void parsenLianjie()
         {
@@ -3432,6 +3433,7 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 对成对的 交叉线进一步筛选
+        /// JwFileConsts.LianjieParsingMethod
         /// </summary>
         private void findlianjie()
         {

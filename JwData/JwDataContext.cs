@@ -42,15 +42,17 @@ namespace JwData
 
         public DbSet<JwCustomerData> JwCustomerDatas { get; set; }
 
-        public DbSet<JwLine> JwLines { get;set; } 
+        public DbSet<JwLine> JwLines { get;set; }
+
+       
+
+        public JwDataContext(DbContextOptions<JwDataContext> options) : base(options) 
+        { }
 
         //public JwDataContext()
         //{
         //    DbPath = Environment.CurrentDirectory + @"\jwdata.db";
         //}
-
-        public JwDataContext(DbContextOptions<JwDataContext> options) : base(options) 
-        { }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{

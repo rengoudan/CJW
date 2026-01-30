@@ -75,7 +75,6 @@
             uiButton1.Size = new Size(100, 35);
             uiButton1.TabIndex = 0;
             uiButton1.Text = "セーブ";
-            uiButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiButton1.Click += uiButton1_Click;
             // 
             // uiNearSpliteMax
@@ -431,12 +430,12 @@
             uiComboBox5.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiComboBox5.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uiComboBox5.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uiComboBox5.Location = new Point(420, 600);
+            uiComboBox5.Location = new Point(367, 600);
             uiComboBox5.Margin = new Padding(4, 5, 4, 5);
             uiComboBox5.MinimumSize = new Size(63, 0);
             uiComboBox5.Name = "uiComboBox5";
             uiComboBox5.Padding = new Padding(0, 0, 30, 2);
-            uiComboBox5.Size = new Size(119, 29);
+            uiComboBox5.Size = new Size(172, 29);
             uiComboBox5.SymbolSize = 24;
             uiComboBox5.TabIndex = 14;
             uiComboBox5.TextAlignment = ContentAlignment.MiddleLeft;

@@ -1,4 +1,6 @@
-﻿using JwShapeCommon.Jwbase;
+﻿using JwCore;
+using JwShapeCommon.Jwbase;
+using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,6 +22,8 @@ namespace JwShapeCommon
         public static double CsvZxJianju = 0.0;
         public static double CsvYTiaozheng= 0.0;
         #endregion
+
+        public static LianjieParsingMethod LianjieParsingMethod = LianjieParsingMethod.OnBeam;;
 
         /// <summary>
         /// 单位为mm 实际的宽度

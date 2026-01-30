@@ -123,12 +123,12 @@ namespace RGBJWMain
                     }
                     else
                     {
-                        Application.Run(new FMain());
+                        Application.Run(new MainForm());
                     }
                 }
                 else
                 {
-                    Application.Run(new FMain());
+                    Application.Run(new MainForm());
                 }
             };
 

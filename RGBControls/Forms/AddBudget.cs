@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -32,10 +31,10 @@ namespace RGBJWMain.Forms
 
         private void AddBudget_Load(object sender, EventArgs e)
         {
-            dbContext = ContextFactory.GetContext();
-            this.dbContext.Database.EnsureCreated();
+            //dbContext = ContextFactory.GetContext();
+            //this.dbContext.Database.EnsureCreated();
 
-            this.dbContext.JwMaterialDatas.Load();
+            
             //this.bindingSource1.DataSource=this.dbContext.JwMaterialDatas.Local.ToBindingList();
             var lst = this.dbContext.JwMaterialDatas.ToList();
             lst.Add(new JwMaterialData { Id = "-1", MaterialName = "予算項目を選択", MaterialParameter = "" });

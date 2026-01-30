@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="FMain.cs" />
+    <Compile Remove="FMain.Designer.cs" />
     <Compile Remove="Forms\AddBudget.cs" />
     <Compile Remove="Forms\AddBudget.Designer.cs" />
     <Compile Remove="Forms\Base.cs" />
@@ -49,6 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="FMain.resx" />
     <EmbeddedResource Remove="Forms\AddBudget.resx" />
     <EmbeddedResource Remove="Forms\Base.resx" />
     <EmbeddedResource Remove="Forms\BaseDataForm.resx" />
@@ -99,9 +102,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="FMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

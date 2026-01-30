@@ -39,10 +39,10 @@ namespace RGBJWMain.Pages
         {
             if (GlobalEvent.GetGlobalEvent().SetNewPages != null)
             {
-                TestsPage tp = new TestsPage();
+                //TestsPage tp = new TestsPage();
 
                 SetNewPageArgs ag = new SetNewPageArgs();
-                ag.NewPage = tp;
+                //ag.NewPage = tp;
                 ag.PageId = 1;
 
                 GlobalEvent.GetGlobalEvent().SetNewPages(this, ag);

@@ -133,6 +133,7 @@ namespace RGBJWMain.Forms
                     {
                         data.JwCustomerDataId = JwCustomer.Id;
                     }
+                    jwCustDesignConstData.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
                     await jwqitaService.AddJwCustDesignConstDataAsync(data);
                 }
                 else
@@ -157,6 +158,7 @@ namespace RGBJWMain.Forms
 
                     var z7 = uiComboBox4.SelectedItem as JwColor;
                     jwCustDesignConstData.LianjieColorNumber = z7.ColorNumber;
+                    jwCustDesignConstData.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
                     if (JwCustomer != null)
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
@@ -188,7 +190,7 @@ namespace RGBJWMain.Forms
                     var z7 = uiComboBox4.SelectedItem as JwColor;
                     jwCustDesignConstData.LianjieColorNumber = z7.ColorNumber;
 
-
+                    jwCustDesignConstData.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
                     if (JwCustomer != null)
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
@@ -238,7 +240,8 @@ namespace RGBJWMain.Forms
             propn.MaterialData = uiComboBox3.SelectedItem as JwMaterialData;
             JwFileConsts.MaxBeamScope = JwFileConsts.MaxBeamScope + uiDoubleUpDown1.Value;
 
-            
+            JwFileConsts.LianjieParsingMethod= (LianjieParsingMethod)uiComboBox5.SelectedValue;
+
             DialogResult = DialogResult.OK;
         }
 
@@ -280,7 +283,7 @@ namespace RGBJWMain.Forms
             uiComboBox4.DataSource = ls;
             uiComboBox4.DisplayMember = "JwColorName";
             uiComboBox4.ValueMember = "ColorNumber";
-
+            uiComboBox5.DataSource = Enum.GetValues(typeof(LianjieParsingMethod));
 
             if (JwCustomer != null)
             {
@@ -297,6 +300,7 @@ namespace RGBJWMain.Forms
                     uiNearSpliteMax.Value = z.NearSpliteMax;
                     uidownpillarcolor.SelectedValue = z.DownPillarColorNumber;
                     uiComboBox4.SelectedValue = z.LianjieColorNumber;
+                    uiComboBox5.SelectedItem = z.LianjieParsingMethod;
                 }
             }
             if (isloadbyparse)
