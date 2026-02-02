@@ -1927,6 +1927,8 @@ namespace JwShapeCommon
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
                                         var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c };
+                                        //2026年2月2日 增加接触点位置 
+                                        jwt.JieChuPoint = new JWPoint(c.Center, l.Center);
                                         Touchs.Add(jwt); 
                                         //处理端部孔组信息  JwKongZu类
 
@@ -2056,6 +2058,7 @@ namespace JwShapeCommon
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
                                         var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c };
+                                        jwt.JieChuPoint = new JWPoint(c.Center, l.Center);
                                         Touchs.Add(jwt); ;
                                         //处理端部孔组信息  JwKongZu类
 
@@ -2182,6 +2185,7 @@ namespace JwShapeCommon
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
                                         var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r };
+                                        jwt.JieChuPoint = new JWPoint(l.Center, r.Center);
                                         Touchs.Add(jwt) ;
                                         //处理端部孔组信息  JwKongZu类
                                         //胜方
@@ -2285,6 +2289,7 @@ namespace JwShapeCommon
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
                                         var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r };
+                                        jwt.JieChuPoint = new JWPoint(l.Center, r.Center);
                                         Touchs.Add(jwt) ;
                                         //处理端部孔组信息  JwKongZu类
 
@@ -3464,6 +3469,27 @@ namespace JwShapeCommon
                 LianjieSingles.Add(jwLianjies);
             }
         }
+
+        private void processCenterChengdui(JwChengduiXian jwChengduiXian)
+        {
+            //JwLianjieSingle jwLianjie = findBeam(xian);
+            //if (jwLianjie.IsCreateSuccess)
+            //{
+            //    LianjieSingles.Add(jwLianjie);
+            //}
+        }
+
+        private JwLianjieSingle findCenter(JwXian xian)
+        {
+            var f = Touchs.First(t => xian.Pone.IsEqualsWithError(t.JieChuPoint));
+            if(f!=null)
+            {
+                var pinbeam = f.WinnerBeam;
+
+            }
+
+        }
+
 
         /// <summary>
         /// 线的的两个点  使用字典存放 点 和 jwtouch  如果是两个 说明为链接线

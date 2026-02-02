@@ -27,6 +27,8 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 接触点  
+        /// 用来解决中心点交叉线绘制方法
+        /// 定义为 胜方梁内的 由胜方梁和败方梁中心线交叉得到的点
         /// </summary>
         public JWPoint JieChuPoint { get; set; }
 
