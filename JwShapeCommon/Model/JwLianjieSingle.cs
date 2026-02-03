@@ -129,6 +129,9 @@ namespace JwShapeCommon.Model
     /// </summary>
     public class JwPointBeam
     {
+        public JwPointBeam()
+        {
+        }
         /// <summary>
         /// 
         /// </summary>

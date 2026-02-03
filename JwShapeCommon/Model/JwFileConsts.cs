@@ -23,7 +23,7 @@ namespace JwShapeCommon
         public static double CsvYTiaozheng= 0.0;
         #endregion
 
-        public static LianjieParsingMethod LianjieParsingMethod = LianjieParsingMethod.OnBeam;;
+        public static LianjieParsingMethod LianjieParsingMethod = LianjieParsingMethod.OnBeam;
 
         /// <summary>
         /// 单位为mm 实际的宽度

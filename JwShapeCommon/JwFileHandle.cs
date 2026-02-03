@@ -3442,11 +3442,23 @@ namespace JwShapeCommon
         /// </summary>
         private void findlianjie()
         {
-            foreach(var p in _tempchengduixians)
+            if (JwFileConsts.LianjieParsingMethod == LianjieParsingMethod.CenterPoint)
             {
-                //判断 duixian 是否是链接交叉 符合这些特性
-                processChengduiXian(p);
+                foreach (var p in _tempchengduixians)
+                {
+                    //判断 duixian 是否是链接交叉 符合这些特性
+                    processCenterChengdui(p);
+                }
             }
+            else if (JwFileConsts.LianjieParsingMethod == LianjieParsingMethod.OnBeam)
+            {
+                foreach (var p in _tempchengduixians)
+                {
+                    //判断 duixian 是否是链接交叉 符合这些特性
+                    processChengduiXian(p);
+                }
+            }
+            
         }
 
         public List<JwLianjieSingle> LianjieSingles = new List<JwLianjieSingle>();
@@ -3458,6 +3470,7 @@ namespace JwShapeCommon
         /// <param name="jwChengduiXian"></param>
         private void processChengduiXian(JwChengduiXian jwChengduiXian)
         {
+            
             JwLianjieSingle jwLianjie = findBeam(jwChengduiXian.XianOne);
             if (jwLianjie.IsCreateSuccess)
             {
@@ -3477,17 +3490,155 @@ namespace JwShapeCommon
             //{
             //    LianjieSingles.Add(jwLianjie);
             //}
+            JwLianjieSingle jwLianjie=findCenter(jwChengduiXian.XianOne);
+            if (jwLianjie.IsCreateSuccess)
+            {
+                LianjieSingles.Add(jwLianjie);
+            }
+            JwLianjieSingle jwLianjie1= findCenter(jwChengduiXian.XianTwo);
+
+            if (jwLianjie1.IsCreateSuccess)
+            {
+                LianjieSingles.Add(jwLianjie1);
+            }
         }
 
+        /// <summary>
+        /// 暂时缺少对*4*2的判断
+        /// </summary>
+        /// <param name="xian"></param>
+        /// <returns></returns>
         private JwLianjieSingle findCenter(JwXian xian)
         {
+            JwLianjieSingle jwLianjieSingle = new JwLianjieSingle();
+            jwLianjieSingle.IsCreateSuccess = false;
             var f = Touchs.First(t => xian.Pone.IsEqualsWithError(t.JieChuPoint));
-            if(f!=null)
+            double banjing = JwFileConsts.EllipseSpacing / (2 * JwFileConsts.JwScale);
+            double realy = 0;
+            double realx = 0;
+            double endrealy = 0;
+            double endrealx = 0;
+            if (f!=null)
             {
-                var pinbeam = f.WinnerBeam;
+                var l=Touchs.First(t=>xian.Ptwo.IsEqualsWithError(t.JieChuPoint));
+                if(l!=null)
+                {
+                    jwLianjieSingle.IsCreateSuccess = true;
+                    //说明为中心连接
+                    var pinbeam = f.WinnerBeam;
+                    if (pinbeam.DirectionType == BeamDirectionType.Horizontal)
+                    {
+                        //判断孔上下 所以比对Y值
+                        if (xian.Ptwo.Y > pinbeam.Center)
+                        {
+                            //水平梁上方
+                            realy = pinbeam.Center + banjing;
+                        }
+                        else
+                        {
+                            realy = pinbeam.Center - banjing;
+                            //水平梁下方
+                        }
+                        if (xian.Ptwo.X > xian.Pone.X)
+                        {
+                            //垂直梁右侧
+                            realx = f.LoserBeam.Center + (84 / JwFileConsts.JwScale);
+                        }
+                        else
+                        {
+                            //垂直梁左侧
+                            realx = f.LoserBeam.Center - (84 / JwFileConsts.JwScale);
+                        }
+                    }
+                    else
+                    {
+                        //垂直梁
+                        if (xian.Ptwo.X > pinbeam.Center)
+                        {
+                            //垂直梁右侧
+                            realx = pinbeam.Center + banjing;
+                        }
+                        else
+                        {
+                            //垂直梁左侧
+                            realx = pinbeam.Center - banjing;
+                        }
+                        if (xian.Ptwo.Y > xian.Pone.Y)
+                        {
+                            //水平梁上方
+                            realy = f.LoserBeam.Center + (84 / JwFileConsts.JwScale);
+                        }
+                        else
+                        {
+                            //水平梁下方
+                            realy = f.LoserBeam.Center - (84 / JwFileConsts.JwScale);
+                        }
+                    }
+                    if(l.WinnerBeam.DirectionType==BeamDirectionType.Horizontal)
+                    {
+                        //判断孔上下 所以比对Y值
+                        if (xian.Pone.Y > l.WinnerBeam.Center)
+                        {
+                            //水平梁上方
+                            endrealy = l.WinnerBeam.Center + banjing;
+                        }
+                        else
+                        {
+                            endrealy = l.WinnerBeam.Center - banjing;
+                            //水平梁下方
+                        }
+                        if (xian.Pone.X > xian.Ptwo.X)
+                        {
+                            //垂直梁右侧
+                            endrealx = l.LoserBeam.Center + (84 / JwFileConsts.JwScale);
+                        }
+                        else
+                        {
+                            //垂直梁左侧
+                            endrealx = l.LoserBeam.Center - (84 / JwFileConsts.JwScale);
+                        }
+                    }
+                    else
+                    {
+                        //垂直梁
+                        if (xian.Pone.X > l.WinnerBeam.Center)
+                        {
+                            //垂直梁右侧
+                            endrealx = l.WinnerBeam.Center + banjing;
+                        }
+                        else
+                        {
+                            //垂直梁左侧
+                            endrealx = l.WinnerBeam.Center - banjing;
+                        }
+                        if (xian.Pone.Y > xian.Ptwo.Y)
+                        {
+                            //水平梁上方
+                            endrealy = l.LoserBeam.Center + (84 / JwFileConsts.JwScale);
+                        }
+                        else
+                        {
+                            //水平梁下方
+                            endrealy = l.LoserBeam.Center - (84 / JwFileConsts.JwScale);
+                        }
+                    }
+                    jwLianjieSingle.Start = new JwPointBeam
+                    {
+                        RealPoint = new JWPoint(realx, realy)
+                    };
+                    jwLianjieSingle.End = new JwPointBeam
+                    {
+                        RealPoint = new JWPoint(endrealx, endrealy)
+                    };
+                    jwLianjieSingle.IsCreateSuccess = true;
+                    
+                }
+                else
+                {
 
+                }
             }
-
+            return jwLianjieSingle;
         }
 
 
