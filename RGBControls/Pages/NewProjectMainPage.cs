@@ -122,7 +122,7 @@ namespace RGBControls.Pages
             GlobalEvent.GetGlobalEvent().RefreshDataEvent -= GlobalEvent_RefreshDataEvent;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
             if (projectmaintable.SelectedIndex > 0)
             {
@@ -138,7 +138,7 @@ namespace RGBControls.Pages
                     var f = new OpenFileDialog();
                     f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
                     if (f.ShowDialog() != DialogResult.OK) return;
-                    OpenFile(f.FileName, selectedmaindata);
+                    await OpenFile(f.FileName, selectedmaindata);
                 }
             }
         }
@@ -739,7 +739,7 @@ namespace RGBControls.Pages
 
         #region jww读取回调
 
-        void OpenFile(String path, JwProjectMainData data)
+        async Task OpenFile(String path, JwProjectMainData data)
         {
             try
             {
@@ -756,7 +756,7 @@ namespace RGBControls.Pages
                         FileParseForm parseForm = new FileParseForm(model);
                         if (parseForm.ShowDialog() == DialogResult.OK)
                         {
-                            this.projectmaintable.Refresh();
+                            await ReloadData();
                         }
                         //var s = model.FloorName;
                     }

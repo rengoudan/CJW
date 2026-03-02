@@ -896,12 +896,17 @@ namespace JwShapeCommon
                 else if (_beam.StartTelosType == KongzuType.G)
                 {
                     var hx = (float)(90 / JwFileConsts.JwScale);
+                    var bchx = hx + (float)(56 / JwFileConsts.JwScale);
                     createhole(hx, tcy + halfbj);
                     createhole(hx,tcy - halfbj);
+                    createhole(bchx, tcy + halfbj);
+                    createhole(bchx, tcy - halfbj);
                     createhole(hx,ccy + halfbj);
                     createhole(hx,ccy - halfbj);
                     createhole(hx,bcy + halfbj);
                     createhole(hx,bcy - halfbj);
+                    createhole(bchx, bcy + halfbj);
+                    createhole(bchx, bcy - halfbj);
                     if (h.HasBhLinkHole)
                     {
                         double hxf = hx + JwFileConsts.Kongjing / JwFileConsts.JwScale;
@@ -984,12 +989,17 @@ namespace JwShapeCommon
                 else if (_beam.EndTelosType == KongzuType.G)
                 {
                     var hx = (float)(endzb - 90 / JwFileConsts.JwScale);
+                    var bchx = hx - (float)(56 / JwFileConsts.JwScale);
                     createhole(hx, tcy + halfbj);
                     createhole(hx, tcy - halfbj);
+                    createhole(bchx, tcy + halfbj);
+                    createhole(bchx, tcy - halfbj);
                     createhole(hx, ccy + halfbj);
                     createhole(hx, ccy - halfbj);
                     createhole(hx, bcy + halfbj);
                     createhole(hx, bcy - halfbj);
+                    createhole(bchx, bcy + halfbj);
+                    createhole(bchx, bcy - halfbj);
                     if (h.HasPreLinkHole)
                     {
                         double hxf = hx - JwFileConsts.Kongjing / JwFileConsts.JwScale;

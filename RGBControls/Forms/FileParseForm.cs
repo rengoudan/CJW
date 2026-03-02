@@ -182,6 +182,7 @@ namespace RGBJWMain.Forms
         {
             if (_jwFileHandle != null)
             {
+                this.ShowProcessForm(200);
                 _jwFileHandle.CreateData();
                 if (_jwFileHandle._subData != null)
                 {
@@ -198,6 +199,7 @@ namespace RGBJWMain.Forms
                 }
             }
             DialogResult = DialogResult.OK;
+            this.HideProcessForm();
         }
 
         private void SaveData()

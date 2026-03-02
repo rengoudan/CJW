@@ -609,6 +609,8 @@ namespace RGBJWMain.Controls
                         {
                             SelectedBeam = beam.JwSquareBase as JwBeam;
                             NewJwBeamForm jsForm = new NewJwBeamForm(SelectedBeam);
+                            //JwSingleBeamForm jwSingleBeamDraw = new JwSingleBeamForm(SelectedBeam);
+                            //jwSingleBeamDraw.Show();
                             jsForm.IsNewBeam = IsNewCanvas;
                             jsForm.Show();
                         }

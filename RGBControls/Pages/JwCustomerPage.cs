@@ -29,6 +29,11 @@ namespace RGBJWMain.Pages
         protected async override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+          await reloaddata();
+        }
+
+        private async Task reloaddata()
+        {
             var customers = await jwqitaService.GetAllJwCustomerDatasAsync(null);
 
             this.jwCustomerDataBindingSource.DataSource = customers;
@@ -186,6 +191,7 @@ namespace RGBJWMain.Pages
                 customerdata.Contact = frm["Contact"].ToString();
                 customerdata.Telephone = frm["Telephone"].ToString();
                 await jwqitaService.AddJwCustomerDataAsync(customerdata);
+                await reloaddata();
             }
         }
 

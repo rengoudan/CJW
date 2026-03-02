@@ -128,12 +128,12 @@ namespace RGBJWMain.Forms
                     data.DownPillarColorNumber = z6.ColorNumber;
 
                     var z7 = uiComboBox4.SelectedItem as JwColor;
-                    jwCustDesignConstData.LianjieColorNumber = z7.ColorNumber;
+                    data.LianjieColorNumber = z7.ColorNumber;
                     if (JwCustomer != null)
                     {
                         data.JwCustomerDataId = JwCustomer.Id;
                     }
-                    jwCustDesignConstData.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
+                    data.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
                     await jwqitaService.AddJwCustDesignConstDataAsync(data);
                 }
                 else
@@ -198,42 +198,48 @@ namespace RGBJWMain.Forms
                     await jwqitaService.UpdateJwCustDesignConstDataAsync(jwCustDesignConstData);
                 }
             }
-            if ((int)uiCbBeamcolor.SelectedValue != -1)
-            {
-                JwFileConsts.BeamParseColor = uiCbBeamcolor.SelectedItem as JwColor;
-            }
-            if ((int)uiCbTextColor.SelectedValue != -1)
-            {
-                JwFileConsts.BeamSymbolTextColor = uiCbTextColor.SelectedItem as JwColor;
-            }
-            if ((int)uiCbSplitcolor.SelectedValue != -1)
-            {
-                JwFileConsts.BeamSplitParseColor = uiCbSplitcolor.SelectedItem as JwColor;
-            }
-            if ((int)uiCbpillarcolor.SelectedValue != -1)
-            {
-                JwFileConsts.BeamPillarParseColor = uiCbpillarcolor.SelectedItem as JwColor;
-            }
-
-            if ((int)uiComboBox2.SelectedValue != -1)
-            {
-                JwFileConsts.PillarPenStyle = uiComboBox2.SelectedItem as JwPenStyle;
-            }
-
-            if ((int)uiComboBox1.SelectedValue != -1)
-            {
-                JwFileConsts.SplitPenStyle = uiComboBox1.SelectedItem as JwPenStyle;
-            }
-            if ((int)uidownpillarcolor.SelectedValue != -1){
-                var qq= uidownpillarcolor.SelectedItem as JwColor;
-                JwFileConsts.BRParseColore = qq.ColorNumber;
-            }
-            if ((int)uiComboBox4.SelectedValue != -1)
-            {
+            //if ((int)uiCbBeamcolor.SelectedValue != -1)
+            //{
                 
-                JwFileConsts.LianjieParseColor = uiComboBox4.SelectedItem as JwColor;
-            }
-            
+            //}
+            JwFileConsts.BeamParseColor = uiCbBeamcolor.SelectedItem as JwColor;
+            //if ((int)uiCbTextColor.SelectedValue != -1)
+            //{
+
+            //}
+            JwFileConsts.BeamSymbolTextColor = uiCbTextColor.SelectedItem as JwColor;
+            //if ((int)uiCbSplitcolor.SelectedValue != -1)
+            //{
+
+            //}
+            JwFileConsts.BeamSplitParseColor = uiCbSplitcolor.SelectedItem as JwColor;
+            //if ((int)uiCbpillarcolor.SelectedValue != -1)
+            //{
+
+            //}
+            JwFileConsts.BeamPillarParseColor = uiCbpillarcolor.SelectedItem as JwColor;
+            //if ((int)uiComboBox2.SelectedValue != -1)
+            //{
+
+            //}
+            JwFileConsts.PillarPenStyle = uiComboBox2.SelectedItem as JwPenStyle;
+
+            //if ((int)uiComboBox1.SelectedValue != -1)
+            //{
+
+            //}
+            JwFileConsts.SplitPenStyle = uiComboBox1.SelectedItem as JwPenStyle;
+            //if ((int)uidownpillarcolor.SelectedValue != -1){
+
+            //}
+            var qq = uidownpillarcolor.SelectedItem as JwColor;
+            JwFileConsts.BRParseColore = qq.ColorNumber;
+            //if ((int)uiComboBox4.SelectedValue != -1)
+            //{
+
+
+            //}
+            JwFileConsts.LianjieParseColor = uiComboBox4.SelectedItem as JwColor;
 
             JwFileConsts.NearSpliteMax = uiNearSpliteMax.Value;
             propn.FloorName = uiTextBox1.Text;
