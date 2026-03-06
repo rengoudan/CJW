@@ -378,17 +378,34 @@ namespace JwShapeCommon
         {
             return Math.Min(Pone.Y,Ptwo.Y);
         }
+        public static bool operator ==(JwXian? left, JwXian? right)
+        {
+            if (ReferenceEquals(left, right)) return true;
+            if (ReferenceEquals(left, null) || ReferenceEquals(right, null)) return false;
 
+            // 这里使用已有的比较逻辑（不要再次调用 operator==）
+            return left.GetXianPoints().Except(right.GetXianPoints(), new JwPointComparint()).Count() == 0;
+        }
 
-        /// <summary>
-        /// 线判定不区分起始点 点集合排除cout为0
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator ==(JwXian left, JwXian right) => left.GetXianPoints().Except(right.GetXianPoints(),new JwPointComparint()).Count()==0;
+        public static bool operator !=(JwXian? left, JwXian? right) => !(left == right);
 
-        public static bool operator !=(JwXian left, JwXian right) => !(left == right);
+        public override bool Equals(object? obj) => obj is JwXian other && this == other;
+
+        public override int GetHashCode()
+        {
+            // 根据你的业务选择合适的哈希实现，避免使用 GetXianString() 的潜在问题
+            return (Pone?.GetPointString() ?? "").GetHashCode() ^ (Ptwo?.GetPointString() ?? "").GetHashCode();
+        }
+
+        ///// <summary>
+        ///// 线判定不区分起始点 点集合排除cout为0
+        ///// </summary>
+        ///// <param name="left"></param>
+        ///// <param name="right"></param>
+        ///// <returns></returns>
+        //public static bool operator ==(JwXian left, JwXian right) => left.GetXianPoints().Except(right.GetXianPoints(),new JwPointComparint()).Count()==0;
+
+        //public static bool operator !=(JwXian left, JwXian right) => !(left == right);
 
         public string GetXianString()
         {

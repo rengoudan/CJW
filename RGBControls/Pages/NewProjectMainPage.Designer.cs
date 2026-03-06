@@ -112,16 +112,16 @@
             button1.IconSvg = "PlusOutlined";
             button1.Location = new Point(131, 6);
             button1.Name = "button1";
-            button1.Size = new Size(112, 34);
+            button1.Size = new Size(150, 34);
             button1.TabIndex = 1;
-            button1.Text = "增";
+            button1.Text = "工事を追加";
             button1.Type = AntdUI.TTypeMini.Primary;
             button1.Click += button1_Click;
             // 
             // button2
             // 
             button2.IconSvg = "UploadOutlined";
-            button2.Location = new Point(249, 6);
+            button2.Location = new Point(287, 6);
             button2.Name = "button2";
             button2.Size = new Size(188, 34);
             button2.TabIndex = 2;
@@ -132,11 +132,11 @@
             // button3
             // 
             button3.IconSvg = "BgColorsOutlined";
-            button3.Location = new Point(447, 4);
+            button3.Location = new Point(485, 4);
             button3.Name = "button3";
             button3.Size = new Size(188, 34);
             button3.TabIndex = 3;
-            button3.Text = "テストカラー";
+            button3.Text = "識別色確認";
             button3.Type = AntdUI.TTypeMini.Primary;
             button3.Click += button3_Click;
             // 
@@ -145,7 +145,7 @@
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(1422, 865);
             Name = "NewProjectMainPage";
-            Text = "プロジェクト";
+            Text = "工事一覧";
             FormClosed += NewProjectMainPage_FormClosed;
             Load += NewProjectMainPage_Load;
             panel1.ResumeLayout(false);

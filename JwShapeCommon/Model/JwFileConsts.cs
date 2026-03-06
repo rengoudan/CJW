@@ -26,6 +26,11 @@ namespace JwShapeCommon
         public static LianjieParsingMethod LianjieParsingMethod = LianjieParsingMethod.OnBeam;
 
         /// <summary>
+        /// 2026年3月7日 增加 柱子识别方式 目前有两种 1.通过图形 2.线围成闭合的形状
+        /// </summary>
+        public static PillarDrawingMethod PillarDrawingMethod = PillarDrawingMethod.Shape;
+
+        /// <summary>
         /// 单位为mm 实际的宽度
         /// </summary>
         public static double KWidth = 1000;

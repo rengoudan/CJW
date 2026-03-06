@@ -194,4 +194,11 @@ namespace JwCore
         OnBeam = 0,
         CenterPoint = 1,
     }
+
+    public enum PillarDrawingMethod
+    {
+        Line = 0,
+        Shape = 1
+    }
+
 }

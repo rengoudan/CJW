@@ -54,6 +54,8 @@
             uiComboBox4 = new Sunny.UI.UIComboBox();
             uiMarkLabel11 = new Sunny.UI.UIMarkLabel();
             uiComboBox5 = new Sunny.UI.UIComboBox();
+            uiMarkLabel12 = new Sunny.UI.UIMarkLabel();
+            uiComboBox6 = new Sunny.UI.UIComboBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -61,7 +63,7 @@
             // 
             panel1.Controls.Add(uiButton1);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 683);
+            panel1.Location = new Point(0, 754);
             panel1.Name = "panel1";
             panel1.Size = new Size(622, 53);
             panel1.TabIndex = 0;
@@ -80,7 +82,7 @@
             // uiNearSpliteMax
             // 
             uiNearSpliteMax.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiNearSpliteMax.Location = new Point(420, 357);
+            uiNearSpliteMax.Location = new Point(420, 419);
             uiNearSpliteMax.Margin = new Padding(4, 5, 4, 5);
             uiNearSpliteMax.Maximum = 100D;
             uiNearSpliteMax.Minimum = 0D;
@@ -97,7 +99,7 @@
             // 
             uiMarkLabel5.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel5.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel5.Location = new Point(84, 363);
+            uiMarkLabel5.Location = new Point(84, 425);
             uiMarkLabel5.Name = "uiMarkLabel5";
             uiMarkLabel5.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel5.Size = new Size(168, 23);
@@ -112,7 +114,7 @@
             uiComboBox2.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiComboBox2.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uiComboBox2.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uiComboBox2.Location = new Point(290, 238);
+            uiComboBox2.Location = new Point(290, 300);
             uiComboBox2.Margin = new Padding(4, 5, 4, 5);
             uiComboBox2.MinimumSize = new Size(63, 0);
             uiComboBox2.Name = "uiComboBox2";
@@ -132,7 +134,7 @@
             uiComboBox1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiComboBox1.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uiComboBox1.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uiComboBox1.Location = new Point(290, 299);
+            uiComboBox1.Location = new Point(290, 361);
             uiComboBox1.Margin = new Padding(4, 5, 4, 5);
             uiComboBox1.MinimumSize = new Size(63, 0);
             uiComboBox1.Name = "uiComboBox1";
@@ -152,7 +154,7 @@
             uiCbSplitcolor.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiCbSplitcolor.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uiCbSplitcolor.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uiCbSplitcolor.Location = new Point(420, 299);
+            uiCbSplitcolor.Location = new Point(420, 361);
             uiCbSplitcolor.Margin = new Padding(4, 5, 4, 5);
             uiCbSplitcolor.MinimumSize = new Size(63, 0);
             uiCbSplitcolor.Name = "uiCbSplitcolor";
@@ -168,7 +170,7 @@
             // 
             uiMarkLabel4.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel4.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel4.Location = new Point(84, 299);
+            uiMarkLabel4.Location = new Point(84, 361);
             uiMarkLabel4.Name = "uiMarkLabel4";
             uiMarkLabel4.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel4.Size = new Size(168, 23);
@@ -183,7 +185,7 @@
             uiCbpillarcolor.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiCbpillarcolor.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uiCbpillarcolor.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uiCbpillarcolor.Location = new Point(420, 238);
+            uiCbpillarcolor.Location = new Point(420, 300);
             uiCbpillarcolor.Margin = new Padding(4, 5, 4, 5);
             uiCbpillarcolor.MinimumSize = new Size(63, 0);
             uiCbpillarcolor.Name = "uiCbpillarcolor";
@@ -199,7 +201,7 @@
             // 
             uiMarkLabel3.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel3.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel3.Location = new Point(84, 238);
+            uiMarkLabel3.Location = new Point(84, 300);
             uiMarkLabel3.Name = "uiMarkLabel3";
             uiMarkLabel3.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel3.Size = new Size(168, 23);
@@ -297,7 +299,7 @@
             // 
             uiMarkLabel7.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel7.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel7.Location = new Point(84, 420);
+            uiMarkLabel7.Location = new Point(84, 482);
             uiMarkLabel7.Name = "uiMarkLabel7";
             uiMarkLabel7.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel7.Size = new Size(168, 23);
@@ -312,7 +314,7 @@
             uiComboBox3.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiComboBox3.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uiComboBox3.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uiComboBox3.Location = new Point(367, 414);
+            uiComboBox3.Location = new Point(367, 476);
             uiComboBox3.Margin = new Padding(4, 5, 4, 5);
             uiComboBox3.MinimumSize = new Size(63, 0);
             uiComboBox3.Name = "uiComboBox3";
@@ -327,7 +329,7 @@
             // 
             uiMarkLabel8.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel8.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel8.Location = new Point(84, 470);
+            uiMarkLabel8.Location = new Point(84, 532);
             uiMarkLabel8.Name = "uiMarkLabel8";
             uiMarkLabel8.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel8.Size = new Size(168, 23);
@@ -342,7 +344,7 @@
             uidownpillarcolor.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uidownpillarcolor.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uidownpillarcolor.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uidownpillarcolor.Location = new Point(420, 464);
+            uidownpillarcolor.Location = new Point(420, 526);
             uidownpillarcolor.Margin = new Padding(4, 5, 4, 5);
             uidownpillarcolor.MinimumSize = new Size(63, 0);
             uidownpillarcolor.Name = "uidownpillarcolor";
@@ -357,7 +359,7 @@
             // 
             uiMarkLabel9.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel9.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel9.Location = new Point(84, 516);
+            uiMarkLabel9.Location = new Point(84, 578);
             uiMarkLabel9.Name = "uiMarkLabel9";
             uiMarkLabel9.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel9.Size = new Size(168, 23);
@@ -368,7 +370,7 @@
             // uiDoubleUpDown1
             // 
             uiDoubleUpDown1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiDoubleUpDown1.Location = new Point(420, 510);
+            uiDoubleUpDown1.Location = new Point(420, 572);
             uiDoubleUpDown1.Margin = new Padding(4, 5, 4, 5);
             uiDoubleUpDown1.Maximum = 150D;
             uiDoubleUpDown1.Minimum = -100D;
@@ -385,7 +387,7 @@
             // 
             uiMarkLabel10.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel10.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel10.Location = new Point(84, 557);
+            uiMarkLabel10.Location = new Point(84, 619);
             uiMarkLabel10.Name = "uiMarkLabel10";
             uiMarkLabel10.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel10.Size = new Size(168, 23);
@@ -400,7 +402,7 @@
             uiComboBox4.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiComboBox4.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uiComboBox4.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uiComboBox4.Location = new Point(420, 557);
+            uiComboBox4.Location = new Point(420, 619);
             uiComboBox4.Margin = new Padding(4, 5, 4, 5);
             uiComboBox4.MinimumSize = new Size(63, 0);
             uiComboBox4.Name = "uiComboBox4";
@@ -415,7 +417,7 @@
             // 
             uiMarkLabel11.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiMarkLabel11.ForeColor = Color.FromArgb(48, 48, 48);
-            uiMarkLabel11.Location = new Point(84, 600);
+            uiMarkLabel11.Location = new Point(84, 662);
             uiMarkLabel11.Name = "uiMarkLabel11";
             uiMarkLabel11.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel11.Size = new Size(168, 23);
@@ -430,7 +432,7 @@
             uiComboBox5.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiComboBox5.ItemHoverColor = Color.FromArgb(155, 200, 255);
             uiComboBox5.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            uiComboBox5.Location = new Point(367, 600);
+            uiComboBox5.Location = new Point(367, 662);
             uiComboBox5.Margin = new Padding(4, 5, 4, 5);
             uiComboBox5.MinimumSize = new Size(63, 0);
             uiComboBox5.Name = "uiComboBox5";
@@ -441,10 +443,42 @@
             uiComboBox5.TextAlignment = ContentAlignment.MiddleLeft;
             uiComboBox5.Watermark = "";
             // 
+            // uiMarkLabel12
+            // 
+            uiMarkLabel12.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiMarkLabel12.ForeColor = Color.FromArgb(48, 48, 48);
+            uiMarkLabel12.Location = new Point(84, 241);
+            uiMarkLabel12.Name = "uiMarkLabel12";
+            uiMarkLabel12.Padding = new Padding(5, 0, 0, 0);
+            uiMarkLabel12.Size = new Size(168, 23);
+            uiMarkLabel12.TabIndex = 31;
+            uiMarkLabel12.Text = "柱識別方法";
+            uiMarkLabel12.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // uiComboBox6
+            // 
+            uiComboBox6.DataSource = null;
+            uiComboBox6.FillColor = Color.White;
+            uiComboBox6.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiComboBox6.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            uiComboBox6.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            uiComboBox6.Location = new Point(367, 235);
+            uiComboBox6.Margin = new Padding(4, 5, 4, 5);
+            uiComboBox6.MinimumSize = new Size(63, 0);
+            uiComboBox6.Name = "uiComboBox6";
+            uiComboBox6.Padding = new Padding(0, 0, 30, 2);
+            uiComboBox6.Size = new Size(172, 29);
+            uiComboBox6.SymbolSize = 24;
+            uiComboBox6.TabIndex = 15;
+            uiComboBox6.TextAlignment = ContentAlignment.MiddleLeft;
+            uiComboBox6.Watermark = "";
+            // 
             // CustomerDesignSetting
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(622, 736);
+            ClientSize = new Size(622, 807);
+            Controls.Add(uiComboBox6);
+            Controls.Add(uiMarkLabel12);
             Controls.Add(uiComboBox5);
             Controls.Add(uiMarkLabel11);
             Controls.Add(uiComboBox4);
@@ -505,5 +539,7 @@
         private Sunny.UI.UIComboBox uiComboBox4;
         private Sunny.UI.UIMarkLabel uiMarkLabel11;
         private Sunny.UI.UIComboBox uiComboBox5;
+        private Sunny.UI.UIMarkLabel uiMarkLabel12;
+        private Sunny.UI.UIComboBox uiComboBox6;
     }
 }

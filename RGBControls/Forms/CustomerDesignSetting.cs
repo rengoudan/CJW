@@ -134,6 +134,7 @@ namespace RGBJWMain.Forms
                         data.JwCustomerDataId = JwCustomer.Id;
                     }
                     data.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
+                    data.PillarDrawingMethod= (PillarDrawingMethod)uiComboBox6.SelectedValue;
                     await jwqitaService.AddJwCustDesignConstDataAsync(data);
                 }
                 else
@@ -159,6 +160,7 @@ namespace RGBJWMain.Forms
                     var z7 = uiComboBox4.SelectedItem as JwColor;
                     jwCustDesignConstData.LianjieColorNumber = z7.ColorNumber;
                     jwCustDesignConstData.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
+                    jwCustDesignConstData.PillarDrawingMethod = (PillarDrawingMethod)uiComboBox6.SelectedValue;
                     if (JwCustomer != null)
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
@@ -191,6 +193,7 @@ namespace RGBJWMain.Forms
                     jwCustDesignConstData.LianjieColorNumber = z7.ColorNumber;
 
                     jwCustDesignConstData.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
+                        jwCustDesignConstData.PillarDrawingMethod = (PillarDrawingMethod)uiComboBox6.SelectedValue;
                     if (JwCustomer != null)
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
@@ -247,7 +250,7 @@ namespace RGBJWMain.Forms
             JwFileConsts.MaxBeamScope = JwFileConsts.MaxBeamScope + uiDoubleUpDown1.Value;
 
             JwFileConsts.LianjieParsingMethod= (LianjieParsingMethod)uiComboBox5.SelectedValue;
-
+            JwFileConsts.PillarDrawingMethod = (PillarDrawingMethod)uiComboBox6.SelectedValue;
             DialogResult = DialogResult.OK;
         }
 
@@ -290,7 +293,8 @@ namespace RGBJWMain.Forms
             uiComboBox4.DisplayMember = "JwColorName";
             uiComboBox4.ValueMember = "ColorNumber";
             uiComboBox5.DataSource = Enum.GetValues(typeof(LianjieParsingMethod));
-
+            //PillarDrawingMethod
+            uiComboBox6.DataSource = Enum.GetValues(typeof(PillarDrawingMethod));
             if (JwCustomer != null)
             {
                 var z =await jwqitaService.FindCustDesignConstData(t => t.JwCustomerDataId == JwCustomer.Id);
@@ -307,6 +311,7 @@ namespace RGBJWMain.Forms
                     uidownpillarcolor.SelectedValue = z.DownPillarColorNumber;
                     uiComboBox4.SelectedValue = z.LianjieColorNumber;
                     uiComboBox5.SelectedItem = z.LianjieParsingMethod;
+                    uiComboBox6.SelectedItem = z.PillarDrawingMethod;
                 }
             }
             if (isloadbyparse)

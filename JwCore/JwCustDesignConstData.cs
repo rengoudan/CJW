@@ -55,6 +55,8 @@ namespace JwCore
         /// </summary>
         public LianjieParsingMethod LianjieParsingMethod { get; set; }
 
+        public PillarDrawingMethod PillarDrawingMethod { get; set; }
+
         public long? JwCustomerDataId { get; set; }
         public virtual JwCustomerData? JwCustomerData { get; set; } = null!;
 

@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Reflection.Metadata.BlobBuilder;
 using static System.Windows.Forms.AxHost;
+using static System.Windows.Forms.LinkLabel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace JwShapeCommon
@@ -81,6 +82,14 @@ namespace JwShapeCommon
         /// 连接线集合
         /// </summary>
         public List<JwwSen> LianjieLst = new List<JwwSen>();
+
+        /// <summary>
+        /// 2026年3月7日 增加柱子识别方式 通过线围成闭合的形状 目前只处理矩形柱子 后续增加其他形状
+        /// </summary>
+        public List<JwwSen> PillarLines=new List<JwwSen>();
+
+        public List<JwXian> PillarXians = new List<JwXian>();
+
 
         public List<JwwSolid> SolidLst = new List<JwwSolid>();
 
@@ -325,7 +334,15 @@ namespace JwShapeCommon
             ChangePillarFromJwwSolid();//处理文件solid
             ChangeQieGeSolis();//读取切割点内容
             CreateQieGeBeams();//生成具体的beam
-            ParseSquareCreatePillar();//对处处理的pillar 精加工
+            if (JwFileConsts.PillarDrawingMethod == PillarDrawingMethod.Line)
+            {
+                ParsePillarsByXians();
+            }
+            else
+            {
+
+            }
+                ParseSquareCreatePillar();//对处处理的pillar 精加工
             judgePillarBeam();
             //parsePillarBeam();
             panduanBlockGuishu();
@@ -418,6 +435,11 @@ namespace JwShapeCommon
                 //2025年5月20日
                 LianjieLst = SenLst.Where(t => t.m_nPenColor == JwFileConsts.LianjieParseColor.ColorNumber).ToList();
 
+                //2026年3月7日
+                if(JwFileConsts.PillarDrawingMethod == PillarDrawingMethod.Line)
+                {
+                    PillarLines = SenLst.Where(t => t.m_nPenColor == JwFileConsts.BeamPillarParseColor.ColorNumber).ToList();
+                }
 
             }
 
@@ -573,6 +595,18 @@ namespace JwShapeCommon
                 if (Mians.Count > 0)
                 {
                     PareBeamByMian();
+                }
+            }
+            if(PillarLines.Count > 0)
+            {
+                foreach(var sen in PillarLines)
+                {
+                    JWPoint ps = new JWPoint(sen.m_start_x, sen.m_start_y);
+                    JWPoint pe = new JWPoint(sen.m_end_x, sen.m_end_y);
+                    JwXian j = new JwXian(ps, pe);
+                    PillarXians.Add(j);
+                    //beampoints.AddRange(j.GetXianPoints());
+                    //JwAllPoints.Add(ps);
                 }
             }
         }
@@ -917,6 +951,18 @@ namespace JwShapeCommon
 
             }
             //_tempBeams= _tempBeams.Distinct(new beam)
+        }
+
+        /// <summary>
+        /// 2026年3月7日 根据线段生成柱子 目前是根据矩形的线段生成 后续增加根据单线生成柱子
+        /// </summary>
+        private void ParsePillarsByXians()
+        {
+            if (PillarXians.Count > 0)
+            {
+                var extractor = new PillarFeatureExtractor(squareSideLength: 1);
+                var pillars = extractor.Extract(PillarXians);
+            }
         }
 
         /// <summary>
