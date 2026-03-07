@@ -77,6 +77,7 @@
             uiButton1.Size = new Size(100, 35);
             uiButton1.TabIndex = 0;
             uiButton1.Text = "セーブ";
+            uiButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiButton1.Click += uiButton1_Click;
             // 
             // uiNearSpliteMax
@@ -104,7 +105,7 @@
             uiMarkLabel5.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel5.Size = new Size(168, 23);
             uiMarkLabel5.TabIndex = 21;
-            uiMarkLabel5.Text = "分割点";
+            uiMarkLabel5.Text = "継手記号";
             uiMarkLabel5.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiComboBox2
@@ -175,7 +176,7 @@
             uiMarkLabel4.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel4.Size = new Size(168, 23);
             uiMarkLabel4.TabIndex = 17;
-            uiMarkLabel4.Text = "分割点";
+            uiMarkLabel4.Text = "継手記号";
             uiMarkLabel4.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiCbpillarcolor
@@ -206,7 +207,7 @@
             uiMarkLabel3.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel3.Size = new Size(168, 23);
             uiMarkLabel3.TabIndex = 16;
-            uiMarkLabel3.Text = "柱識別";
+            uiMarkLabel3.Text = "柱";
             uiMarkLabel3.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiCbTextColor
@@ -266,7 +267,7 @@
             uiMarkLabel1.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel1.Size = new Size(168, 23);
             uiMarkLabel1.TabIndex = 11;
-            uiMarkLabel1.Text = "梁ペイントカラー";
+            uiMarkLabel1.Text = "梁輪郭線";
             uiMarkLabel1.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiMarkLabel6
@@ -304,7 +305,7 @@
             uiMarkLabel7.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel7.Size = new Size(168, 23);
             uiMarkLabel7.TabIndex = 25;
-            uiMarkLabel7.Text = "梁モデル";
+            uiMarkLabel7.Text = "モジュール";
             uiMarkLabel7.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiComboBox3
@@ -334,7 +335,7 @@
             uiMarkLabel8.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel8.Size = new Size(168, 23);
             uiMarkLabel8.TabIndex = 26;
-            uiMarkLabel8.Text = "下段柱";
+            uiMarkLabel8.Text = "下階柱記号";
             uiMarkLabel8.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uidownpillarcolor
@@ -392,7 +393,7 @@
             uiMarkLabel10.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel10.Size = new Size(168, 23);
             uiMarkLabel10.TabIndex = 29;
-            uiMarkLabel10.Text = "リンク";
+            uiMarkLabel10.Text = "ブレース";
             uiMarkLabel10.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiComboBox4
@@ -422,7 +423,7 @@
             uiMarkLabel11.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel11.Size = new Size(168, 23);
             uiMarkLabel11.TabIndex = 30;
-            uiMarkLabel11.Text = "接続線";
+            uiMarkLabel11.Text = "ブレース起点";
             uiMarkLabel11.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiComboBox5

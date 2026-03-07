@@ -401,7 +401,7 @@ namespace RGBControls.Controls
             button9.Name = "button9";
             button9.Size = new Size(157, 43);
             button9.TabIndex = 8;
-            button9.Text = "梁製造CSV";
+            button9.Text = "梁レシピCSV";
             button9.Type = AntdUI.TTypeMini.Primary;
             button9.Click += button9_Click;
             // 
@@ -412,7 +412,7 @@ namespace RGBControls.Controls
             button7.Name = "button7";
             button7.Size = new Size(198, 43);
             button7.TabIndex = 7;
-            button7.Text = "輸出接続";
+            button7.Text = "ブレースExcel";
             button7.Type = AntdUI.TTypeMini.Error;
             button7.Click += button7_Click;
             // 
@@ -434,7 +434,7 @@ namespace RGBControls.Controls
             button3.Name = "button3";
             button3.Size = new Size(142, 46);
             button3.TabIndex = 5;
-            button3.Text = "番付図下JW";
+            button3.Text = "下F孔伏図JW";
             button3.Type = AntdUI.TTypeMini.Primary;
             button3.Click += button3_Click;
             // 
@@ -445,7 +445,7 @@ namespace RGBControls.Controls
             button2.Name = "button2";
             button2.Size = new Size(142, 46);
             button2.TabIndex = 4;
-            button2.Text = "番付図上JW";
+            button2.Text = "上F孔伏図JW";
             button2.Type = AntdUI.TTypeMini.Primary;
             button2.Click += button2_Click;
             // 
@@ -456,7 +456,7 @@ namespace RGBControls.Controls
             button1.Name = "button1";
             button1.Size = new Size(142, 46);
             button1.TabIndex = 3;
-            button1.Text = "輸出梁JW";
+            button1.Text = "梁図JW";
             button1.Type = AntdUI.TTypeMini.Primary;
             button1.Click += button1_Click;
             // 
