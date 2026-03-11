@@ -11,6 +11,8 @@ namespace JwShapeCommon
     /// <summary>
     /// 业务特有柱 包含k
     /// 标注为矩形特有属性
+    /// 2026年3月9日简化识别进一步抽象将柱同一属性记录为正方形中心点，在解析识别的时候就输出正方形中心点
+    /// 
     /// </summary>
     public class JwPillar: JwSquareBase
     {
@@ -21,6 +23,13 @@ namespace JwShapeCommon
         public int BlocksCount { get; set; }
 
         public List<JWPoint> Points { get; set; }
+
+        public JWPoint PointA { get; set; }
+
+        public JWPoint PointB { get; set; }
+
+        public double Distance { get; set; }
+
 
         /// <summary>
         /// 是否有匹配到的标注
@@ -40,13 +49,39 @@ namespace JwShapeCommon
         /// </summary>
         public bool HasBeam { get; set; }
 
+        /// <summary>
+        /// 2026年3月9日添加K柱类型 按照距离区分
+        /// </summary>
+        public KPillarType kPillarType { get; set; }
+
+        public PillarCreateFrom CreateFrom { get; set; }
 
         public JwPillar() 
         { 
             Id=Guid.NewGuid().ToString();
             Blocks = new List<JwBlock>();
             Points=new List<JWPoint>();
+            CreateFrom = PillarCreateFrom.Shape;
         }
+
+        public JwPillar(JWPoint a,JWPoint b,double distance)
+        {
+            Id = Guid.NewGuid().ToString();
+            PointA = a;
+            PointB = b;
+            Distance = distance;
+            CreateFrom = PillarCreateFrom.Sen;
+            if (distance == 0)
+            {
+                BaseType = PillarBaseType.SinglePillar;
+            }
+            else
+            {
+                BaseType = PillarBaseType.KPillar;
+            }
+
+        }
+
 
         /// <summary>
         /// 组成柱的 四边形的中心点集合

@@ -27,12 +27,12 @@ namespace JwShapeCommon
             _minSegmentLength = minSegmentLength;
         }
 
-        public List<PillarFeature> Extract(List<JwXian> inputSegments, bool debug = false)
+        public List<JwPillar> Extract(List<JwXian> inputSegments, bool debug = false)
         {
-            if (inputSegments == null || inputSegments.Count == 0) return new List<PillarFeature>();
+            if (inputSegments == null || inputSegments.Count == 0) return new List<JwPillar>();
 
             var clean = PreprocessSegments(inputSegments, debug);
-            if (clean.Count == 0) return new List<PillarFeature>();
+            if (clean.Count == 0) return new List<JwPillar>();
 
             var mls = BuildMLS(clean);
 
@@ -324,9 +324,9 @@ namespace JwShapeCommon
         }
 
         // ------------------ 简化的分组逻辑（仅两种情况） ------------------
-        private List<PillarFeature> GroupSquaresByLongLines(List<Polygon> squares, List<LineString> mergedLines, Geometry remainingLines, bool debug = false)
+        private List<JwPillar> GroupSquaresByLongLines(List<Polygon> squares, List<LineString> mergedLines, Geometry remainingLines, bool debug = false)
         {
-            var result = new List<PillarFeature>();
+            var result = new List<JwPillar>();
             if (squares == null || squares.Count == 0) return result;
             if (mergedLines == null) mergedLines = new List<LineString>();
 
@@ -390,13 +390,8 @@ namespace JwShapeCommon
                                     // 确保两条线分别连接两个正方（端点分布）
                                     if (ConnectsTwoSquaresByEndpoints(l1, l2, s1.Edges, s2.Edges))
                                     {
-                                        var pf = new PillarFeature
-                                        {
-                                            Center1 = s1.Center,
-                                            Center2 = s2.Center,
-                                            SquareSideLength = _squareSideLength
-                                        };
-                                        pf.ComputeAngleAndOrientation();
+                                        double d = Math.Round(s1.Center.Distance(s2.Center), 1);
+                                        var pf = new JwPillar(s1.Center.ToJwPoint(), s2.Center.ToJwPoint(), d);
                                         result.Add(pf);
                                         foundPair = true;
                                     }
@@ -455,20 +450,44 @@ namespace JwShapeCommon
                     {
                         if (RectEndsContainedInSquares(rect, s1.Poly, s2.Poly))
                         {
-                            var pf = new PillarFeature
-                            {
-                                Center1 = s1.Center,
-                                Center2 = s2.Center,
-                                SquareSideLength = _squareSideLength
-                            };
-                            pf.ComputeAngleAndOrientation();
-                            result.Add(pf);
+                            double d = Math.Round(s1.Center.Distance(s2.Center), 1);
+                            var pf = new JwPillar(s1.Center.ToJwPoint(), s2.Center.ToJwPoint(), d);
                             break;
                         }
                     }
                 }
             }
 
+            // ============================================================
+            // ① 新增：独立正方形（没有任何线连接） → 也输出 PillarFeature
+            // ============================================================
+            foreach (var s in squareInfos)
+            {
+                bool hasConnection = false;
+
+                foreach (var ls in mergedLines)
+                {
+                    if (ls == null) continue;
+                    var a = ls.GetCoordinateN(0);
+                    var b = ls.GetCoordinateN(ls.NumPoints - 1);
+
+                    // 任意端点落在该正方形边上 → 说明它不是独立的
+                    if (PointOnAnyEdge(a, s.Edges) || PointOnAnyEdge(b, s.Edges))
+                    {
+                        hasConnection = true;
+                        break;
+                    }
+                }
+
+                if (!hasConnection)
+                {
+                    // 作为独立 PillarFeature 输出
+                    var pf = new JwPillar(s.Center.ToJwPoint(), s.Center.ToJwPoint(), 0);
+                    result.Add(pf);
+                    if (debug)
+                        Console.WriteLine($"[Group] 独立正方形输出 PillarFeature @ {s.Center}");
+                }
+            }
             return result;
         }
 

@@ -1155,7 +1155,12 @@ namespace JwShapeCommon
 
 
         }
-      
+
+        /// <summary>
+        /// 2026年3月11日 两种识别pillar
+        /// tempsquareid 目前不明确 add里面是block的id 
+        /// 但是后面比对的是pillar的id 需要统一
+        /// </summary>
         public void ParseSquareCreatePillar()
         {
             var quchong = RectangleBlocks.Distinct(new JwBlockComparint()).ToList();
@@ -1274,6 +1279,11 @@ namespace JwShapeCommon
             {
                 if (!tempsquareid.Contains(item8.Id))
                 {
+                    var zfx = item8.Blocks.Where(t => t.Iszhengfangxing).Select(t => t.CenterPoint).Distinct(new JwPointComparint()).ToList();
+                    item8.PointA = zfx.First();
+                    item8.PointB = zfx.Last();
+                    var jl = Math.Round(JwExtend.Distance(item8.PointA, item8.PointB), 2);
+                    item8.Distance=jl*JwFileConsts.JwScale;
                     Pillars.Add(item8);
                 }
             }

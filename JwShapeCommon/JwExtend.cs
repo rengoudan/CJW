@@ -894,5 +894,10 @@ namespace JwShapeCommon
             }
             return angleInDegrees;
         }
+
+        public static JWPoint ToJwPoint(this Coordinate coordinate)
+        {
+            return new JWPoint(coordinate.X, coordinate.Y);
+        }
     }
 }

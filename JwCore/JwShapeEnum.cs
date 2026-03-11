@@ -161,6 +161,25 @@ namespace JwCore
     }
 
     /// <summary>
+    /// 2026年3月9日添加K柱类型 按照距离区分
+    /// 
+    /// </summary>
+    public enum KPillarType
+    {
+        A900 = 0,
+        A910 = 1,
+    }
+
+    /// <summary>
+    /// 0 形状 1 线
+    /// </summary>
+    public enum PillarCreateFrom
+    {
+        Shape = 0,
+        Sen = 1
+    }
+
+    /// <summary>
     /// 指示孔源自 哪 柱 上面 G 中间 链接？待确定影响哪里
     /// </summary>
     public enum HoleCreateFrom
