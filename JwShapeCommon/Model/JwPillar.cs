@@ -3,6 +3,7 @@ using RGB.Jw.JW;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,15 +60,28 @@ namespace JwShapeCommon
         public JwPillar() 
         { 
             Id=Guid.NewGuid().ToString();
+
             Blocks = new List<JwBlock>();
             Points=new List<JWPoint>();
             CreateFrom = PillarCreateFrom.Shape;
         }
 
+        /// <summary>
+        /// 2026年3月15日 还差一个中间的矩形 没绘制
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="distance"></param>
         public JwPillar(JWPoint a,JWPoint b,double distance)
         {
             Id = Guid.NewGuid().ToString();
+            Blocks = new List<JwBlock>();
             PointA = a;
+            var ba = new JwBlock(a);
+            Blocks.Add(ba);
+            var bb= new JwBlock(b);
+            Blocks.Add(bb);
             PointB = b;
             Distance = distance;
             CreateFrom = PillarCreateFrom.Sen;
@@ -79,8 +93,24 @@ namespace JwShapeCommon
             {
                 BaseType = PillarBaseType.KPillar;
             }
-
+            CenterPoint=new JWPoint((a.X+b.X)/2,(a.Y+b.Y)/2);
+            CenterPoints.Add(a);
+            CenterPoints.Add(b);
+            Points = new List<JWPoint>();
+            Points.AddRange(ba.BlockPoint);
+            Points.AddRange(bb.BlockPoint);
+            TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+            TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+            BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();
+            BottomRight = Points.OrderByDescending(t => t.X).ThenBy(t => t.Y).ToList().First();
+            Width = TopRight.X - TopLeft.X;
+            Height = TopLeft.Y - BottomLeft.Y;
         }
+
+        //private JwBlock createBlockbycp(JWPoint c)
+        //{
+
+        //}
 
 
         /// <summary>

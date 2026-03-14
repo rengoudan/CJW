@@ -52,6 +52,27 @@ namespace JwShapeCommon
             Id = Guid.NewGuid().ToString();
         }
 
+        /// <summary>
+        /// 柱以后只关心中心点
+        /// </summary>
+        /// <param name="cp"></param>
+        public JwBlock(JWPoint cp)
+        {
+            Id=Guid.NewGuid().ToString();
+            ZhengfangCenter = cp;
+            createbycp(cp);
+        }
+
+        private void createbycp(JWPoint cp)
+        {
+            double half = (100 / JwFileConsts.JwScale)/2;
+            TopLeft= new JWPoint(cp.X - half, cp.Y + half);
+                TopRight= new JWPoint(cp.X + half, cp.Y + half);
+                BottomLeft = new JWPoint(cp.X - half, cp.Y - half);
+                BottomRight = new JWPoint(cp.X + half, cp.Y - half);
+            BlockPoint=new List<JWPoint>{ TopLeft,TopRight,BottomLeft,BottomRight};
+                ShapeType = JwBlockShapeType.Triangular;
+        }
 
         /// <summary>
         /// 使用jwwsolid进行初始化 标识方块
