@@ -30,6 +30,9 @@ namespace JwShapeCommon
 
         public bool Iszhengfangxing { get; set; }
 
+        /// <summary>
+        /// 正方形和矩形的中心点
+        /// </summary>
         public JWPoint ZhengfangCenter { get; set; }
 
         public JwPillar? ParentPillar;
@@ -54,6 +57,7 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 柱以后只关心中心点
+        /// 生成正方形模块
         /// </summary>
         /// <param name="cp"></param>
         public JwBlock(JWPoint cp)
@@ -65,13 +69,44 @@ namespace JwShapeCommon
 
         private void createbycp(JWPoint cp)
         {
-            double half = (100 / JwFileConsts.JwScale)/2;
-            TopLeft= new JWPoint(cp.X - half, cp.Y + half);
-                TopRight= new JWPoint(cp.X + half, cp.Y + half);
-                BottomLeft = new JWPoint(cp.X - half, cp.Y - half);
-                BottomRight = new JWPoint(cp.X + half, cp.Y - half);
-            BlockPoint=new List<JWPoint>{ TopLeft,TopRight,BottomLeft,BottomRight};
-                ShapeType = JwBlockShapeType.Triangular;
+            Iszhengfangxing = true;
+            double half = (100 / JwFileConsts.JwScale) / 2;
+            TopLeft = new JWPoint(cp.X - half, cp.Y + half);
+            TopRight = new JWPoint(cp.X + half, cp.Y + half);
+            BottomLeft = new JWPoint(cp.X - half, cp.Y - half);
+            BottomRight = new JWPoint(cp.X + half, cp.Y - half);
+            BlockPoint = new List<JWPoint> { TopLeft, TopRight, BottomLeft, BottomRight };
+            ShapeType = JwBlockShapeType.Square;
+        }
+
+        public JwBlock(JWPoint cp,double distance,BeamDirectionType direct)
+        {
+            Id = Guid.NewGuid().ToString();
+            ZhengfangCenter = cp;
+            createrectangle(cp, distance, direct);  
+        }
+
+        private void createrectangle(JWPoint cp, double distance, BeamDirectionType direct)
+        {
+            Iszhengfangxing = true;
+            double half = (100 / JwFileConsts.JwScale) / 4;//宽
+            double _widthhalf = distance / 2;
+            if (direct == BeamDirectionType.Horizontal)
+            {
+                TopLeft = new JWPoint(cp.X - _widthhalf, cp.Y + half);
+                TopRight=new JWPoint(cp.X + _widthhalf, cp.Y + half);
+               BottomLeft= new JWPoint(cp.X - _widthhalf, cp.Y - half); 
+                BottomRight=new JWPoint(cp.X + _widthhalf, cp.Y - half);
+            }
+            else
+            {
+                TopLeft= new JWPoint(cp.X-half, cp.Y + _widthhalf);
+                TopRight= new JWPoint(cp.X + half, cp.Y + _widthhalf);
+                BottomLeft= new JWPoint(cp.X - half, cp.Y - _widthhalf);
+                BottomRight= new JWPoint(cp.X + half, cp.Y - _widthhalf);
+            }
+            BlockPoint = new List<JWPoint> { TopLeft, TopRight, BottomLeft, BottomRight };
+            ShapeType = JwBlockShapeType.Rectangle;
         }
 
         /// <summary>

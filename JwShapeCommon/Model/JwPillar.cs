@@ -85,20 +85,33 @@ namespace JwShapeCommon
             PointB = b;
             Distance = distance;
             CreateFrom = PillarCreateFrom.Sen;
+            Points = new List<JWPoint>();
             if (distance == 0)
             {
                 BaseType = PillarBaseType.SinglePillar;
+                CenterPoint=new JWPoint(a.X,a.Y);
+                CenterPoints.Add(CenterPoint);
+                Points.AddRange(ba.BlockPoint);
             }
             else
             {
                 BaseType = PillarBaseType.KPillar;
+                CenterPoint = new JWPoint((a.X + b.X) / 2, (a.Y + b.Y) / 2);
+                CenterPoints.Add(a);
+                CenterPoints.Add(b);
+                Points.AddRange(ba.BlockPoint);
+                Points.AddRange(bb.BlockPoint);
+                if(JwExtend.DoubleEqual(a.X,b.X))
+                {
+                    DirectionType = BeamDirectionType.Vertical;
+                }
+                else if(JwExtend.DoubleEqual(a.Y,b.Y))
+                {
+                    DirectionType = BeamDirectionType.Horizontal;
+                }
+                var jx=new JwBlock(CenterPoint,distance,DirectionType);
+                Blocks.Add(jx);
             }
-            CenterPoint=new JWPoint((a.X+b.X)/2,(a.Y+b.Y)/2);
-            CenterPoints.Add(a);
-            CenterPoints.Add(b);
-            Points = new List<JWPoint>();
-            Points.AddRange(ba.BlockPoint);
-            Points.AddRange(bb.BlockPoint);
             TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
             TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
             BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();

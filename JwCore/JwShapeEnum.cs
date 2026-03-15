@@ -76,9 +76,22 @@ namespace JwCore
     /// </summary>
     public enum JwBlockShapeType
     {
+        /// <summary>
+        /// 三角形
+        /// </summary>
         Triangular = 0,
+        /// <summary>
+        /// 正方形
+        /// </summary>
         Square = 1,
+        /// <summary>
+        /// 多边形
+        /// </summary>
         Polygon = 2,
+        /// <summary>
+        /// 矩形
+        /// </summary>
+        Rectangle = 3
     }
     /// <summary>
     /// 描述识别的文字的 类型

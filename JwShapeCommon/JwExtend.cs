@@ -899,5 +899,13 @@ namespace JwShapeCommon
         {
             return new JWPoint(coordinate.X, coordinate.Y);
         }
+
+        public static bool DoubleEqual(double a, double b)
+        {
+            const double eps = 1e-4;
+            return Math.Abs(a - b) < eps;
+        }
+
+
     }
 }
