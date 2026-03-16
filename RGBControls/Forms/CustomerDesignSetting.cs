@@ -104,6 +104,11 @@ namespace RGBJWMain.Forms
 
         //}
 
+        /// <summary>
+        /// 2026年3月17日添加的kpillartype 不保存了
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void uiButton1_Click(object sender, EventArgs e)
         {
             if (JwCustomer != null && jwCustDesignConstData == null)
@@ -251,6 +256,7 @@ namespace RGBJWMain.Forms
 
             JwFileConsts.LianjieParsingMethod= (LianjieParsingMethod)uiComboBox5.SelectedValue;
             JwFileConsts.PillarDrawingMethod = (PillarDrawingMethod)uiComboBox6.SelectedValue;
+            JwFileConsts.Ktype= (KPillarType)uiComboBox7.SelectedValue;
             DialogResult = DialogResult.OK;
         }
 
@@ -295,6 +301,7 @@ namespace RGBJWMain.Forms
             uiComboBox5.DataSource = Enum.GetValues(typeof(LianjieParsingMethod));
             //PillarDrawingMethod
             uiComboBox6.DataSource = Enum.GetValues(typeof(PillarDrawingMethod));
+            uiComboBox7.DataSource = Enum.GetValues(typeof(KPillarType));
             if (JwCustomer != null)
             {
                 var z =await jwqitaService.FindCustDesignConstData(t => t.JwCustomerDataId == JwCustomer.Id);

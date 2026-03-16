@@ -219,6 +219,7 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 2026年3月16日 针对pointa b进行修改
+        /// 原来记录的point位左上角 现在改为记录中心点 以便于后续标注关联
         /// </summary>
         /// <returns></returns>
         public JwPillarData ToPillarData()
@@ -228,7 +229,8 @@ namespace JwShapeCommon
             data.BaseType = this.BaseType;
             data.Height = this.Height;
             data.Width = this.Width;
-            data.Location = this.TopLeft.ToPoint();
+            //data.Location = this.TopLeft.ToPoint();
+            data.Location=this.CenterPoint.ToPoint();
             if (!string.IsNullOrEmpty(this.TagName)){
                 data.TaggTitle = this.TagName;
             }
@@ -239,31 +241,37 @@ namespace JwShapeCommon
            
             if(data.BaseType==PillarBaseType.KPillar)
             {
-                if (this.Blocks.Count == 3)
-                {
-                    //可以增加两个属性  标识 todata flag 及 errmsg 后期做
-                    List<JwBlock> zlst;
-                    if(this.DirectionType==BeamDirectionType.Horizontal)
-                    {
-                        zlst = this.Blocks.OrderBy(t => t.TopLeft.X).ToList();
-                    }
-                    else
-                    {
-                        zlst=this.Blocks.OrderByDescending(t=>t.TopLeft.Y).ToList();
-                    }
-                    var fb = zlst.First();
-                    data.FirstLocation = fb.TopLeft.ToPoint();
-                    data.FirstHeight=fb.Height; 
-                    data.FirstWidth=fb.Width;
-                    var cb = zlst[1];
-                    data.CenterLocation = cb.TopLeft.ToPoint();
-                    data.CenterHeight = cb.Height;
-                    data.CenterWidth = cb.Width;
-                    var lb = zlst.Last();
-                    data.LastLocation = lb.TopLeft.ToPoint();
-                    data.LastHeight = lb.Height;
-                    data.LastWidth = lb.Width;
-                }
+                //2026年3月17日 剔除不使用
+                //if (this.Blocks.Count == 3)
+                //{
+                //    //可以增加两个属性  标识 todata flag 及 errmsg 后期做
+                //    List<JwBlock> zlst;
+                //    if(this.DirectionType==BeamDirectionType.Horizontal)
+                //    {
+                //        zlst = this.Blocks.OrderBy(t => t.TopLeft.X).ToList();
+                //    }
+                //    else
+                //    {
+                //        zlst=this.Blocks.OrderByDescending(t=>t.TopLeft.Y).ToList();
+                //    }
+                //    var fb = zlst.First();
+                //    data.FirstLocation = fb.TopLeft.ToPoint();
+                //    data.FirstHeight=fb.Height; 
+                //    data.FirstWidth=fb.Width;
+                //    var cb = zlst[1];
+                //    data.CenterLocation = cb.TopLeft.ToPoint();
+                //    data.CenterHeight = cb.Height;
+                //    data.CenterWidth = cb.Width;
+                //    var lb = zlst.Last();
+                //    data.LastLocation = lb.TopLeft.ToPoint();
+                //    data.LastHeight = lb.Height;
+                //    data.LastWidth = lb.Width;
+                //}
+                data.DirectionType=this.DirectionType;
+                data.FirstLocation=this.PointA.ToPoint();
+                data.LastLocation=this.PointB.ToPoint();
+                data.CenterLocation=this.CenterPoint.ToPoint();
+                data.CenterWidth=this.Distance;//
             }
             return data;
         }

@@ -87,6 +87,7 @@ namespace RGBControls.Pages
                 option.AddText("UnitName", "単位", null, true);
 
                 option.AddDouble("UnitPrice", "単価", 0);
+                option.AddDouble("NumParameter", "数値パラメータ", 0);
                 option.AddText("Remark", "摘  要", null, true);
                 //var matype = JwExtend.CreateBindList<MaterialType>();
 
@@ -108,6 +109,7 @@ namespace RGBControls.Pages
                     materialData.UnitName = frm["UnitName"].ToString();
                     materialData.UnitPrice = Convert.ToDecimal(frm["UnitPrice"].ToString());
                     materialData.MaterialType = _selected.MaterialType;
+                    materialData.NumParameter = Convert.ToDouble(frm["NumParameter"].ToString());
                     //materialData.JwMaterialTypeData = _selected;
                     materialData.JwMaterialTypeDataId = _selected.Id;
                     materialData.Remark = "";

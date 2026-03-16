@@ -2958,7 +2958,7 @@ namespace JwShapeCommon
                     lg = lg + jians + jiane;
                     //2024年12月9日
                     beam.XXLength = Math.Round((beam.EndCenter - beam.StartCenter) * JwFileConsts.JwScale, 0);
-                    int mkkk = 900;
+                    int mkkk = (int)JwFileConsts.Ktype;
                     if (MarkBeam.HasValue)
                     {
                         mkkk=MarkBeam.Value;

@@ -38,6 +38,11 @@ namespace JwCore
         public string UnitName { get; set; }
 
         /// <summary>
+        /// 备用数值参数 默认为0
+        /// </summary>
+        public double NumParameter { get; set; }
+
+        /// <summary>
         /// 可以用枚举 梁 柱 金物
         /// </summary>
         public MaterialType MaterialType { get; set; }

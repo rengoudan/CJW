@@ -118,6 +118,7 @@ namespace RGBJWMain.Pages
                 option.AddText("UnitName", "単位", null, true);
                 
                 option.AddDouble("UnitPrice", "単価", 0);
+                option.AddDouble("NumParameter", "数値パラメータ", 0);
                 option.AddText("Remark", "摘  要", null, true);
                 //var matype = JwExtend.CreateBindList<MaterialType>();
 
@@ -141,6 +142,7 @@ namespace RGBJWMain.Pages
                     materialData.MaterialType = selectedmain.MaterialType;
                     materialData.JwMaterialTypeData = selectedmain;
                     materialData.JwMaterialTypeDataId = selectedmain.Id;
+                    materialData.NumParameter = Convert.ToDouble(frm["NumParameter"].ToString());
                     materialData.Remark = "";
                     await jwqitaService.AddJwMaterialDataAsync(materialData);
                 }

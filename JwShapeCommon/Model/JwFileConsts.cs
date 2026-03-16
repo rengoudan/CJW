@@ -30,6 +30,8 @@ namespace JwShapeCommon
         /// </summary>
         public static PillarDrawingMethod PillarDrawingMethod = PillarDrawingMethod.Shape;
 
+        public static KPillarType Ktype = KPillarType.A900;
+
         /// <summary>
         /// 单位为mm 实际的宽度
         /// </summary>

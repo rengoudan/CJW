@@ -179,8 +179,8 @@ namespace JwCore
     /// </summary>
     public enum KPillarType
     {
-        A900 = 0,
-        A910 = 1,
+        A900 = 900,
+        A910 = 910,
     }
 
     /// <summary>

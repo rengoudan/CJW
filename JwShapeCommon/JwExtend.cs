@@ -85,6 +85,29 @@ namespace JwShapeCommon
             return reobj;
         }
 
+        /// <summary>
+        /// 2026年3月17日 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static JwPillar DataToJwPillar(this JwPillarData data)
+        {
+            if(data.BaseType== PillarBaseType.KPillar)
+            {
+                JWPoint la=new JWPoint(data.FirstLocation!.X, data.FirstLocation!.Y);
+                JWPoint lb=new JWPoint(data.LastLocation!.X, data.LastLocation!.Y);
+                double ds = data.CenterWidth.HasValue ? data.CenterWidth.Value : 0;
+                JwPillar pillar = new JwPillar(la, lb, ds);
+                return pillar;
+            }
+            else
+            {
+                JWPoint l=new JWPoint(data.Location.X, data.Location.Y);
+                JwPillar pillar = new JwPillar(l, l, 0);
+                return pillar;
+            }
+        }
+
         public static JwBeamVertical DataToJw(this JwBeamVerticalData data)
         {
             JwBeamVertical vertical = new JwBeamVertical
@@ -256,21 +279,22 @@ namespace JwShapeCommon
             {
                 foreach (var bp in data.JwPillarDatas)
                 {
-                    var jwbm = bp.DataToJw<JwPillar>();
-                    jwbm.PillarCode = bp.PillarCode;
-                    jwbm.Id = bp.Id;
-                    jwbm.BaseType = bp.BaseType;
-                    jwbm.Blocks = new List<JwBlock>();
-                    if (jwbm.BaseType == PillarBaseType.KPillar)
-                    {
-                        jwbm.Blocks.Add(bp.FirstLocation.DataToJwBlock(bp.FirstWidth.Value, bp.FirstHeight.Value, bp.Scale));
-                        jwbm.Blocks.Add(bp.CenterLocation.DataToJwBlock(bp.CenterWidth.Value, bp.CenterHeight.Value, bp.Scale));
-                        jwbm.Blocks.Add(bp.LastLocation.DataToJwBlock(bp.LastWidth.Value, bp.LastHeight.Value, bp.Scale));
-                    }
-                    else
-                    {
-                        jwbm.Blocks.Add(bp.Location.DataToJwBlock(bp.Width, bp.Height, bp.Scale));
-                    }
+                    //var jwbm = bp.DataToJw<JwPillar>();
+                    //jwbm.PillarCode = bp.PillarCode;
+                    //jwbm.Id = bp.Id;
+                    //jwbm.BaseType = bp.BaseType;
+                    //jwbm.Blocks = new List<JwBlock>();
+                    //if (jwbm.BaseType == PillarBaseType.KPillar)
+                    //{
+                    //    jwbm.Blocks.Add(bp.FirstLocation.DataToJwBlock(bp.FirstWidth.Value, bp.FirstHeight.Value, bp.Scale));
+                    //    jwbm.Blocks.Add(bp.CenterLocation.DataToJwBlock(bp.CenterWidth.Value, bp.CenterHeight.Value, bp.Scale));
+                    //    jwbm.Blocks.Add(bp.LastLocation.DataToJwBlock(bp.LastWidth.Value, bp.LastHeight.Value, bp.Scale));
+                    //}
+                    //else
+                    //{
+                    //    jwbm.Blocks.Add(bp.Location.DataToJwBlock(bp.Width, bp.Height, bp.Scale));
+                    //}
+                    var jwbm = bp.DataToJwPillar();
                     reobj.Pillars.Add(jwbm);
                 }
             }
