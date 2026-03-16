@@ -18,7 +18,7 @@ namespace JwShapeCommon
     public class JwPillar: JwSquareBase
     {
         //public string Id { get; set; }
-        public string PillarCode { get; set; }
+        public string PillarCode { get; set; } = "";
         public List<JwBlock> Blocks { get; set; }
 
         public int BlocksCount { get; set; }
@@ -216,6 +216,11 @@ namespace JwShapeCommon
             JisuanWidthHeight();
         }
 
+
+        /// <summary>
+        /// 2026年3月16日 针对pointa b进行修改
+        /// </summary>
+        /// <returns></returns>
         public JwPillarData ToPillarData()
         {
             JwPillarData data = new JwPillarData();

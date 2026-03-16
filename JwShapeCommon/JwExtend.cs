@@ -170,6 +170,8 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 数据转canvas
+        /// 2026年3月16日 pillar转jwpillar需要重构
+        /// 只需要中心点来生成jwblock
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
