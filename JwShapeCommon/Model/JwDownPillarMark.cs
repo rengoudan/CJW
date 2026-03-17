@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JwCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,20 @@ namespace JwShapeCommon.Model
         public string GetXianString()
         {
             return "x";
+        }
+
+        public JwDownPillarData ToData()
+        {
+            var data = new JwDownPillarData();
+            data.Id = Id;
+            data.Location = new NetTopologySuite.Geometries.Point(CenterPoint.X, CenterPoint.Y);
+            data.LineAS = new NetTopologySuite.Geometries.Point(Line1.Pone.X, Line1.Pone.Y);
+            data.LineAE = new NetTopologySuite.Geometries.Point(Line1.Ptwo.X, Line1.Ptwo.Y);
+            data.LineBS = new NetTopologySuite.Geometries.Point(Line2.Pone.X, Line2.Pone.Y);
+            data.LineBE = new NetTopologySuite.Geometries.Point(Line2.Ptwo.X, Line2.Ptwo.Y);
+            data.HasBeam = HasBeam;
+            data.HasPillar = HasPillar;
+            return data;
         }
 
     }

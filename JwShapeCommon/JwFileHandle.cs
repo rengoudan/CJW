@@ -228,6 +228,8 @@ namespace JwShapeCommon
 
         public List<JwLianjieData> _lianjieDatas = new List<JwLianjieData>();
 
+        public List<JwDownPillarData> _downPillarDatas=new List<JwDownPillarData>();
+
         public List<JwLinkPart> AllLinkPart = new List<JwLinkPart>();
 
         public List<JwLinkPart> IndependentLinkPart = new List<JwLinkPart>();
@@ -1785,6 +1787,10 @@ namespace JwShapeCommon
 
         public List<JwBeamVerticalData> _jwbvdatas = new List<JwBeamVerticalData>();
 
+        /// <summary>
+        /// 2026年3月17日  发现未存储下方柱解析出的数据 增加之
+        /// 由于需要重新绘制到jw里 所以需要存储交叉线数据
+        /// </summary>
         public async void CreateData()
         {
             _subData = new JwProjectSubData();
@@ -1884,6 +1890,16 @@ namespace JwShapeCommon
 
                 }
             }
+            if(DownPillarMarks.Count> 0)
+            {
+                foreach(var mark in DownPillarMarks)
+                {
+                    JwDownPillarData markData = mark.ToData();
+                    markData.JwProjectSubDataId = _subData.Id;
+                    _downPillarDatas.Add(markData);
+                }
+            }
+
         }
 
         /// <summary>
@@ -2959,10 +2975,6 @@ namespace JwShapeCommon
                     //2024年12月9日
                     beam.XXLength = Math.Round((beam.EndCenter - beam.StartCenter) * JwFileConsts.JwScale, 0);
                     int mkkk = (int)JwFileConsts.Ktype;
-                    if (MarkBeam.HasValue)
-                    {
-                        mkkk=MarkBeam.Value;
-                    }
                     var mkkkk = mkkk / 2;
                     double y = lg % mkkkk;
 
@@ -3244,32 +3256,9 @@ namespace JwShapeCommon
                         }
                     }
                 }
-
-                var kpillars = Pillars.Where(t => t.BaseType == PillarBaseType.KPillar).ToList();
-                if (kpillars.Count() > 0)
-                {
-                    var llst = kpillars.Select(t =>
-                    {
-                        if (t.DirectionType == BeamDirectionType.Horizontal)
-                        {
-                            return t.Width;
-                        }
-                        else
-                        {
-                            return t.Height;
-                        }
-                    }).ToList();
-                    double defaultl = llst.First();
-                    var kltype = Math.Round(defaultl * _scale, 0);
-                    MarkBeam = Convert.ToInt32(kltype) - 100;
-
-                }
-
-
+                //2026年3月17日
+                MarkBeam = (int)JwFileConsts.Ktype;
             }
-
-
-
         }
 
 
@@ -3335,11 +3324,7 @@ namespace JwShapeCommon
                 {
                     b.Height = Math.Round(bml / JwFileConsts.JwScale, 2);
                 }
-                int mkkk = 900;
-                if (MarkBeam.HasValue)
-                {
-                    mkkk = MarkBeam.Value;
-                }
+                int mkkk =(int)JwFileConsts.Ktype;
                 var mkkkk = mkkk / 2;
                 double y = b.XXLength % mkkkk;
 
@@ -3359,9 +3344,13 @@ namespace JwShapeCommon
 
             foreach (var group in grouped)
             {
-                char suffix = 'a';
+                char suffix = 'A';
                 foreach (var beam in group)
                 {
+                    if(suffix=='I'|| suffix == 'O')
+                    {
+                        suffix++;
+                    }
                     beam.BeamCode = $"{group.Key}{suffix}";
                     suffix++;
                 }
@@ -3370,6 +3359,7 @@ namespace JwShapeCommon
 
         List<JwDownPillarMark> tempmarks;
 
+        List<JwDownPillarMark> DownPillarMarks = new List<JwDownPillarMark>();
 
         /// <summary>
         /// 2026年3月15日 将使用block的地方替换为centerpoint
@@ -3461,9 +3451,10 @@ namespace JwShapeCommon
             var blocks = Pillars.Select(t => t.Blocks).ToList();//所有pillar 的block
             List<JwBlock> alb= new List<JwBlock>();
             List<JWPoint> alcp = new List<JWPoint>();
+            DownPillarMarks = centermarks;
 
-            
-            foreach(var p in Pillars)
+
+            foreach (var p in Pillars)
             {
                 alcp.AddRange(p.CenterPoints);
             }

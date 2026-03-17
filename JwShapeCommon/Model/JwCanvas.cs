@@ -60,6 +60,8 @@ namespace JwShapeCommon
 
         public List<JwLinkPart> LinkParts { get; set; }
 
+        public List<JwDownPillarMark> JwDownPillarDatas { get; set; }
+
         public int BBCount { get; set; }
 
         public int BGCount { get; set; }

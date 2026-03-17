@@ -118,6 +118,7 @@ namespace JwShapeCommon
             BottomRight = Points.OrderByDescending(t => t.X).ThenBy(t => t.Y).ToList().First();
             Width = TopRight.X - TopLeft.X;
             Height = TopLeft.Y - BottomLeft.Y;
+            this.kPillarType = JwFileConsts.Ktype;
         }
 
         //private JwBlock createBlockbycp(JWPoint c)

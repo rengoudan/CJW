@@ -108,6 +108,26 @@ namespace JwShapeCommon
             }
         }
 
+        /// <summary>
+        /// 2026年3月17日
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static JwDownPillarMark DataToJwDownPillar(this JwDownPillarData data)
+        {
+            JwDownPillarMark pillar = new JwDownPillarMark
+            {
+                Id=data.Id,
+                Line1 = new JwXian(data.LineAS.ToJwPoint(), data.LineAE.ToJwPoint()),
+                Line2 = new JwXian(data.LineBS.ToJwPoint(), data.LineBE.ToJwPoint()),
+                CenterPoint=data.Location.ToJwPoint(),
+                IsInBeamCenter=true,
+                HasBeam = data.HasBeam,
+                HasPillar = data.HasPillar
+            };
+            return pillar;
+        }
+
         public static JwBeamVertical DataToJw(this JwBeamVerticalData data)
         {
             JwBeamVertical vertical = new JwBeamVertical
@@ -298,6 +318,17 @@ namespace JwShapeCommon
                     reobj.Pillars.Add(jwbm);
                 }
             }
+            //2026年3月17日 增加downpillar数据转换
+            if (data.JwDownPillarDatas.Count>0)
+            {
+                reobj.JwDownPillarDatas = new List<JwDownPillarMark>();
+                foreach(var dp in data.JwDownPillarDatas)
+                {
+                    var jwdp = dp.DataToJwDownPillar();
+                    reobj.JwDownPillarDatas.Add(jwdp);
+                }
+            }
+
             reobj.LinkParts = new List<JwLinkPart>();
             if (data.JwLinkPartDatas.Count > 0)
             {
@@ -925,6 +956,12 @@ namespace JwShapeCommon
         {
             return new JWPoint(coordinate.X, coordinate.Y);
         }
+
+        public static JWPoint ToJwPoint(this Point point)
+        {
+            return new JWPoint(point.X, point.Y);
+        }
+
 
         public static bool DoubleEqual(double a, double b)
         {
