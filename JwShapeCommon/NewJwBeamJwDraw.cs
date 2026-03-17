@@ -389,12 +389,17 @@ namespace JwShapeCommon
                 else if (_beam.StartTelosType == KongzuType.G)
                 {
                     var hx = (float)(90 / JwFileConsts.JwScale);
+                    var hyx = hx+ (float)(56/JwFileConsts.JwScale);
                     _createsinglehole(hx, (float)tcy);
                     _createsinglehole(hx, (float)tcy, true);
+                    _createsinglehole(hyx, (float)tcy);
+                    _createsinglehole(hyx, (float)tcy, true);
                     _createsinglehole(hx, (float)ccy);
                     _createsinglehole(hx, (float)ccy, true);
                     _createsinglehole(hx, (float)bcy);
                     _createsinglehole(hx, (float)bcy, true);
+                    _createsinglehole(hyx, (float)bcy);
+                    _createsinglehole(hyx, (float)bcy, true);
                 }
                 else
                 {
@@ -474,12 +479,17 @@ namespace JwShapeCommon
                 else if (_beam.EndTelosType == KongzuType.G)
                 {
                     var hx = (float)(endzb - 90 / JwFileConsts.JwScale);
+                    var hyx = hx - (float)(56 / JwFileConsts.JwScale);
                     _createsinglehole(hx, (float)tcy);
                     _createsinglehole(hx, (float)tcy, true);
+                    _createsinglehole(hyx, (float)tcy);
+                    _createsinglehole(hyx, (float)tcy, true);
                     _createsinglehole(hx, (float)ccy);
                     _createsinglehole(hx, (float)ccy, true);
                     _createsinglehole(hx, (float)bcy);
                     _createsinglehole(hx, (float)bcy, true);
+                    _createsinglehole(hyx, (float)bcy);
+                    _createsinglehole(hyx, (float)bcy, true);
                 }
                 else
                 {
@@ -896,6 +906,7 @@ namespace JwShapeCommon
                 else if (_beam.StartTelosType == KongzuType.G)
                 {
                     var hx = (float)(90 / JwFileConsts.JwScale);
+                    //var thx = (float)((90+56) / JwFileConsts.JwScale);
                     var bchx = hx + (float)(56 / JwFileConsts.JwScale);
                     createhole(hx, tcy + halfbj);
                     createhole(hx,tcy - halfbj);

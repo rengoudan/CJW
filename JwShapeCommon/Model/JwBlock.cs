@@ -360,6 +360,23 @@ namespace JwShapeCommon
             return "y";
         }
 
+        public JwwData ToJwwData()
+        {
+            JwwSolid solid = new JwwSolid();
+            solid.m_nLayer = (int)DrawShapeType.Pillar + 1;
+            solid.m_start_x = TopLeft.X;
+            solid.m_start_y = TopLeft.Y;
+            solid.m_end_x = TopRight.X;
+            solid.m_end_y = TopRight.Y;
+            solid.m_DPoint2_x= BottomRight.X;
+            solid.m_DPoint2_y= BottomRight.Y;
+            solid.m_DPoint3_x=BottomLeft.X;
+            solid.m_DPoint3_y= BottomLeft.Y;
+           
+            solid.m_nPenColor = (int)DrawShapeType.Pillar;
+            return solid;
+        }
+
     }
 
     public class JwBlockComparint : IEqualityComparer<JwBlock>

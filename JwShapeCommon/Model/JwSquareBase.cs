@@ -80,12 +80,13 @@ namespace JwShapeCommon
         {
             var sen = new JwwSen();
             //sen.m_nPenWidth=1/
-            sen.m_nPenColor = 2;
+            //sen.m_nPenColor = 2;
             sen.m_start_x = p1.X;
             sen.m_start_y = p1.Y;
             sen.m_end_x = Math.Round(p2.X, 6);
             sen.m_end_y = Math.Round(p2.Y, 6);
-            sen.m_nPenColor = 5;
+            sen.m_nLayer = (int)DrawShapeType.Beam + 1;
+            sen.m_nPenColor = (int)DrawShapeType.Beam;
             sen.m_nPenStyle = 1;
             sen.m_nPenWidth = 0;
             return sen;

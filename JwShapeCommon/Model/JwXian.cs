@@ -1,10 +1,12 @@
 ﻿using JwCore;
+using JwwHelper;
 using NetTopologySuite.Algorithm;
 using NetTopologySuite.Geometries;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -587,6 +589,22 @@ namespace JwShapeCommon
             relst.Add(this.Pone);
             relst.Add(this.Ptwo);
             return relst.OrderBy(t => t.Y).ToList();
+        }
+
+        public JwwData ToJwwData(DrawShapeType shapeType)
+        {
+            var sen = new JwwSen();
+            //sen.m_nPenWidth=1/
+            //sen.m_nPenColor = 2;
+            sen.m_start_x = Pone.X;
+            sen.m_start_y = Pone.Y;
+            sen.m_end_x = Ptwo.X;
+            sen.m_end_y = Ptwo.Y;
+            sen.m_nLayer =(short)((int)shapeType + 1);
+            sen.m_nPenColor = (short)((int)shapeType);
+            sen.m_nPenStyle = 1;
+            sen.m_nPenWidth = 0;
+            return sen;
         }
 
     }

@@ -1758,6 +1758,8 @@ namespace JwShapeCommon
                 jwCanvas = new JwCanvas(TopLeft, TopRight, BottomLeft, BottomRight, Beams, JwAllPoints, Width, Height, Pillars, ParentQieGeBeam);
                 jwCanvas.LinkParts = AllLinkPart;
                 jwCanvas.LianjieSingles = this.LianjieSingles;
+                jwCanvas.JwDownPillarDatas = this.DownPillarMarks;
+                //jwCanvas
                 return jwCanvas;
             }
             else

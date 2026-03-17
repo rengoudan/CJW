@@ -25,9 +25,13 @@ namespace JwShapeCommon
         public List<float> FuzhuYs = new List<float>();
         public List<LinkDrawModel> links = new List<LinkDrawModel>();
 
+        public List<JwDownPillarDrawModel> DownPillarMarks = new List<JwDownPillarDrawModel>();
+
         public List<ControlText> Texts = new List<ControlText>();
 
         public List<ControlLine> LianjieLines = new List<ControlLine>();
+
+        public List<JwDownPillarDrawModel> DownPillars = new List<JwDownPillarDrawModel>();
 
         public void Draw(int wwidth, int wheight, int xoffset, int yoffset)
         {
@@ -161,6 +165,15 @@ namespace JwShapeCommon
                             cline.DrawEnd = jpend.ToPointF();
                             LianjieLines.Add(cline);
                         }
+                    }
+                }
+
+                if (jwCanvas.JwDownPillarDatas.Count > 0)
+                {
+                    foreach(var dp in jwCanvas.JwDownPillarDatas)
+                    {
+                        JwDownPillarDraw jwDown= new JwDownPillarDraw(dp);
+                        DownPillars.Add(jwDown.Change(_minbeilv, axisX, axisY));
                     }
                 }
             }

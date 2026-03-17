@@ -360,9 +360,6 @@ namespace RGBJWMain.Controls
                             }
 
                         }
-                        
-
-
                         //pe.Graphics.DrawRectangle(pens, (int)beam.TopLeft.X, (int)beam.TopLeft.Y, (int)beam.Width, (int)beam.Height);
                     }
                 }
@@ -391,7 +388,7 @@ namespace RGBJWMain.Controls
             if (CanvasDraw != null)
             {
 
-                if(CanvasDraw.Texts.Count > 0)
+                if (CanvasDraw.Texts.Count > 0)
                 {
                     if (_showmsg)
                     {
@@ -428,9 +425,9 @@ namespace RGBJWMain.Controls
                             pe.Graphics.DrawLine(penx, 0, y, Width, y);//箭头 s 点和 pr点
                         }
                     }
-                    
+
                 }
-                if(_showGoujian)
+                if (_showGoujian)
                 {
                     if (CanvasDraw.links.Count > 0)
                     {
@@ -440,7 +437,7 @@ namespace RGBJWMain.Controls
                         foreach (var link in CanvasDraw.links)
                         {
                             var txtx = link.Bounds.First().Location.X;
-                            var txty= link.Bounds.First().Location.Y;
+                            var txty = link.Bounds.First().Location.Y;
                             string showtxt = "";
                             if (link.LinkPart.GouJianType == GouJianType.B)
                             {
@@ -456,7 +453,7 @@ namespace RGBJWMain.Controls
                             {
                                 txty -= 18;
                             }
-                            if(link.LinkPart.Directed == TaggDirect.Down)
+                            if (link.LinkPart.Directed == TaggDirect.Down)
                             {
                                 txty += 18;
                             }
@@ -492,28 +489,28 @@ namespace RGBJWMain.Controls
                                     {
                                         pe.Graphics.FillRectangle(bush, b.Location.X, b.Location.Y, b.Width, b.Height);
                                     }
-                                    
+
                                 }
-                                
-                                
+
+
                             }
-                            if(_showGoujiantext)
+                            if (_showGoujiantext)
                             {
                                 using var font = new Font("Arial", 12, FontStyle.Regular);
                                 pe.Graphics.DrawString(showtxt, font, Color.Yellow, txtx, txty);
                             }
-                            
+
                             // pe.Graphics.FillPolygon(bush, link.Polygon.ToArray());//箭头 s 点和 pr点
                         }
                     }
                 }
-                if(CanvasDraw.LianjieLines.Count > 0)
+                if (CanvasDraw.LianjieLines.Count > 0)
                 {
-                    foreach(var ljl in CanvasDraw.LianjieLines)
+                    foreach (var ljl in CanvasDraw.LianjieLines)
                     {
                         if (ljl.IsSelected)
                         {
-                                pe.Graphics.DrawLine(penljselected, ljl.DrawStart, ljl.DrawEnd);
+                            pe.Graphics.DrawLine(penljselected, ljl.DrawStart, ljl.DrawEnd);
                         }
                         else
                         {
@@ -521,9 +518,19 @@ namespace RGBJWMain.Controls
                         }
                     }
                 }
-                
+
+                //绘制下方柱
+                if (CanvasDraw.DownPillars.Count > 0)
+                {
+                    foreach (var dp in CanvasDraw.DownPillars)
+                    {
+                        Brush bush = new SolidBrush(Color.Blue);
+                        pe.Graphics.DrawLine(penjt, dp.LineAS, dp.LineAE);
+                        pe.Graphics.DrawLine(penjt, dp.LineBS, dp.LineBE);
+                    }
+
+                }
             }
-            
             
         }
 

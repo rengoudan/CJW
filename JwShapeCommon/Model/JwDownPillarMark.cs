@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwwHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,13 @@ namespace JwShapeCommon.Model
             return data;
         }
 
+        public List<JwwData> ToJwwData()
+        {
+            List<JwwData> jd = new List<JwwData>();
+            jd.Add(Line1.ToJwwData(DrawShapeType.DownPillar));
+            jd.Add(Line2.ToJwwData(DrawShapeType.DownPillar));
+            return jd;
+        }
     }
 
 

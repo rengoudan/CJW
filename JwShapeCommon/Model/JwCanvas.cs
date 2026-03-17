@@ -226,6 +226,22 @@ namespace JwShapeCommon
             {
                 jd.AddRange(OthersDatas);
             }
+            if (Pillars.Count > 0)
+            {
+                foreach(var zhu in Pillars)
+                {
+                    jd.AddRange(zhu.ToJwwData());
+                }
+            }
+
+            if(JwDownPillarDatas.Count>0)
+            {
+                foreach(var zhu in JwDownPillarDatas)
+                {
+                    jd.AddRange(zhu.ToJwwData());
+                }
+            }
+
             return jd;
         }
 
@@ -280,6 +296,7 @@ namespace JwShapeCommon
                 sen.m_end_y = e.Auxiliary; 
                 sen.m_nPenStyle = 2;
                 sen.m_nPenWidth = 0;
+                sen.m_nLayer = (int)DrawShapeType.None+1;
                 OthersDatas.Add(sen);
             }
             else
@@ -292,6 +309,7 @@ namespace JwShapeCommon
                 sen.m_end_y = BottomLeft.Y - 200;
                 sen.m_nPenStyle = 2;
                 sen.m_nPenWidth = 0;
+                sen.m_nLayer = (int)DrawShapeType.None + 1;
                 OthersDatas.Add(sen);
             }
         }

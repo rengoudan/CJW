@@ -6,6 +6,7 @@ using NetTopologySuite.Geometries;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.Arm;
@@ -1333,7 +1334,7 @@ namespace JwShapeCommon
             jd.Add(CreateSenByTwoPoint(BottomLeft, BottomRight));
             //填充文字
             JwwMoji jwwMoji = new JwwMoji();
-            jwwMoji.m_nPenColor = 1;
+            jwwMoji.m_nPenColor = (int)DrawShapeType.Beam;
             jwwMoji.m_start_x = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.X + Width / 2) : (TopLeft.X - 70 / JwFileConsts.JwScale);
             jwwMoji.m_start_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale) : (TopRight.Y - Height / 2);
             jwwMoji.m_string = this.BeamCode;
@@ -1346,6 +1347,7 @@ namespace JwShapeCommon
             jwwMoji.m_dSizeY = 3;
             jwwMoji.m_nPenColor = 4;
             jwwMoji.m_nPenStyle = 5;
+            jwwMoji.m_nLayer = (int)DrawShapeType.Text + 1;
             jd.Add(jwwMoji);
             //绘制中心辅助线
             if (GlobalEvent.GetGlobalEvent().DrawAuxiliaryLineEvent != null)
@@ -1414,6 +1416,7 @@ namespace JwShapeCommon
             enko.m_bZenEnFlg = 1;
             enko.m_start_x = x;
             enko.m_start_y = y;
+            enko.m_nLayer= (int)DrawShapeType.Beam + 1;
             return enko;
         }
 
