@@ -180,6 +180,23 @@ namespace JwShapeCommon
         {
             return string.Format("{0}-{1}-{2}", TaggDirect, JiaohuiZhi,QieGeZhi);
         }
+
+        public JwCutting ToData()
+        {
+            JwCutting cutting = new JwCutting();
+            if (IsDirected)
+            {
+                cutting.FirstPoint= Points[0].ToPoint();
+                cutting.SecondPoint= Points[1].ToPoint();
+                cutting.ThirdPoint= Points[2].ToPoint();
+                return cutting;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
     }
 
     public class JwDirectedComparint : IEqualityComparer<JwDirected>

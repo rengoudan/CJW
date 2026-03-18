@@ -293,6 +293,13 @@ namespace JwServices
                     await AddAsync<JwDownPillarData>(dp);
                 }
             }
+            if (fileHandle._cuttingDatas.Count > 0)
+            {
+                foreach (var d in fileHandle._cuttingDatas)
+                {
+                    await AddAsync<JwCutting>(d);
+                }
+            }
 
             var md =await GetByIdAsync<JwProjectMainData>(fileHandle.ProjectPathModel.MainData.Id);
             md.BCount += fileHandle._subData.BCount;
@@ -331,6 +338,7 @@ namespace JwServices
             await LoadCollectionAsync(context, subdata, p => p.JwLinkPartDatas); 
             await LoadCollectionAsync(context, subdata, p => p.JwLianjieDatas);
             await LoadCollectionAsync(context,subdata, p => p.JwDownPillarDatas);
+            await LoadCollectionAsync(context, subdata, p => p.JwCuttings);
         }
 
         public async Task LoadBeamCollectionAsync(JwBeamData beamdata) 

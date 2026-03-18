@@ -62,6 +62,8 @@ namespace JwShapeCommon
 
         public List<JwDownPillarMark> JwDownPillarDatas { get; set; }
 
+        public List<JwDirected> Directeds { get; set; }
+
         public int BBCount { get; set; }
 
         public int BGCount { get; set; }

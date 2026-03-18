@@ -20,6 +20,7 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -1759,6 +1760,7 @@ namespace JwShapeCommon
                 jwCanvas.LinkParts = AllLinkPart;
                 jwCanvas.LianjieSingles = this.LianjieSingles;
                 jwCanvas.JwDownPillarDatas = this.DownPillarMarks;
+                jwCanvas.Directeds = this.Directeds;
                 //jwCanvas
                 return jwCanvas;
             }
@@ -1788,6 +1790,8 @@ namespace JwShapeCommon
         public List<JwHoleData> _holeDatas = new List<JwHoleData>();
 
         public List<JwBeamVerticalData> _jwbvdatas = new List<JwBeamVerticalData>();
+
+        public List<JwCutting> _cuttingDatas = new List<JwCutting>();
 
         /// <summary>
         /// 2026年3月17日  发现未存储下方柱解析出的数据 增加之
@@ -1901,7 +1905,15 @@ namespace JwShapeCommon
                     _downPillarDatas.Add(markData);
                 }
             }
-
+            if(Directeds.Count > 0)
+            {
+                foreach(var d in Directeds)
+                {
+                    JwCutting cutting=d.ToData();
+                    cutting.JwProjectSubDataId = _subData.Id;
+                    _cuttingDatas.Add(cutting);
+                }
+            }
         }
 
         /// <summary>
@@ -3453,7 +3465,7 @@ namespace JwShapeCommon
             var blocks = Pillars.Select(t => t.Blocks).ToList();//所有pillar 的block
             List<JwBlock> alb= new List<JwBlock>();
             List<JWPoint> alcp = new List<JWPoint>();
-            DownPillarMarks = centermarks;
+            DownPillarMarks = tempmarks;
 
 
             foreach (var p in Pillars)

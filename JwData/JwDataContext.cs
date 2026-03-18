@@ -13,6 +13,8 @@ namespace JwData
     {
         public string DbPath { get; set; }
 
+        public DbSet<JwCutting> JwCuttings { get; set; }
+
         public DbSet<JwDownPillarData> JwDownPillarDatas { get; set; }
 
         public DbSet<JwLianjieData> JwLianjieDatas { get; set; }

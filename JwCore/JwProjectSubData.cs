@@ -58,5 +58,7 @@ namespace JwCore
         public virtual ObservableCollectionListSource<JwLianjieData> JwLianjieDatas { get; } = new();
 
         public virtual ObservableCollectionListSource<JwDownPillarData> JwDownPillarDatas { get; } = new();
+
+        public virtual ObservableCollectionListSource<JwCutting> JwCuttings { get; } = new();
     }
 }

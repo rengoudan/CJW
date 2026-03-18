@@ -45,6 +45,7 @@ namespace JwShapeCommon
                 links.Clear();
                 Texts.Clear();
                 LianjieLines.Clear();
+                DownPillars.Clear();
                 var wb = Math.Round((double)(wwidth - xoffset) / jwCanvas.Width, 2);
                 var hb = Math.Round((double)(wheight - yoffset) / jwCanvas.Height, 2);
                 var _minbeilv = wb > hb ? hb : wb;
