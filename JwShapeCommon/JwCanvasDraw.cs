@@ -13,7 +13,7 @@ namespace JwShapeCommon
     {
         public JwCanvas jwCanvas;
 
-        public JwCanvasDraw( JwCanvas _jwCanvas)
+        public JwCanvasDraw(JwCanvas _jwCanvas)
         {
             this.jwCanvas = _jwCanvas;
         }
@@ -33,6 +33,11 @@ namespace JwShapeCommon
 
         public List<JwDownPillarDrawModel> DownPillars = new List<JwDownPillarDrawModel>();
 
+        /// <summary>
+        /// 2026年3月19日增加切割绘制
+        /// </summary>
+        public List<JwCuttingDraw> CuttingDraws = new List<JwCuttingDraw>();
+
         public void Draw(int wwidth, int wheight, int xoffset, int yoffset)
         {
 
@@ -46,6 +51,7 @@ namespace JwShapeCommon
                 Texts.Clear();
                 LianjieLines.Clear();
                 DownPillars.Clear();
+                CuttingDraws.Clear();
                 var wb = Math.Round((double)(wwidth - xoffset) / jwCanvas.Width, 2);
                 var hb = Math.Round((double)(wheight - yoffset) / jwCanvas.Height, 2);
                 var _minbeilv = wb > hb ? hb : wb;
@@ -53,7 +59,7 @@ namespace JwShapeCommon
                 var cy = (wheight) / 2;
                 var axisX = cx - jwCanvas.CenterPoint.X * _minbeilv;
                 var axisY = cy + jwCanvas.CenterPoint.Y * _minbeilv;
-                foreach(var bm in jwCanvas.Beams)
+                foreach (var bm in jwCanvas.Beams)
                 {
                     JwDrawShape beamsp = new JwDrawShape(bm);
                     controls.AddRange(beamsp.Change(_minbeilv, axisX, axisY));
@@ -80,18 +86,18 @@ namespace JwShapeCommon
                     //        links.Add(lkdraw.Change(_minbeilv, axisX, axisY));
                     //    }
                     //}
-                    
+
                 }
                 if (jwCanvas.Pillars != null)
                 {
                     foreach (var pll in jwCanvas.Pillars)
                     {
                         JwDrawShape parentpll = new JwDrawShape(pll);
-                        var q=parentpll.Change(_minbeilv, axisX, axisY);
+                        var q = parentpll.Change(_minbeilv, axisX, axisY);
 
                         foreach (var blp in pll.Blocks)
                         {
-                            blp.Id=pll.Id;
+                            blp.Id = pll.Id;
                             JwDrawShape bz = new JwDrawShape(blp);
                             bz.ParentSquare = pll;
                             //bz.Id = pll.Id;
@@ -115,11 +121,11 @@ namespace JwShapeCommon
                 //        }
                 //    }
                 //}
-                if(jwCanvas.LinkParts != null)
+                if (jwCanvas.LinkParts != null)
                 {
-                    if(jwCanvas.LinkParts.Count > 0)
+                    if (jwCanvas.LinkParts.Count > 0)
                     {
-                        foreach(var lk in jwCanvas.LinkParts)
+                        foreach (var lk in jwCanvas.LinkParts)
                         {
                             var lkdraw = new JwLinkDraw(lk);
 
@@ -127,31 +133,31 @@ namespace JwShapeCommon
                         }
                     }
                 }
-                if (!jwCanvas.IsFromData&& jwCanvas.LianjieSingles != null && jwCanvas.LianjieSingles.Count > 0)
+                if (!jwCanvas.IsFromData && jwCanvas.LianjieSingles != null && jwCanvas.LianjieSingles.Count > 0)
                 {
-                    foreach(var zlianjie in jwCanvas.LianjieSingles)
+                    foreach (var zlianjie in jwCanvas.LianjieSingles)
                     {
                         //生成controlline
                         ControlLine cline = new ControlLine();
 
                         JWPoint jpstart = new JWPoint(zlianjie.Start.RealPoint.X, zlianjie.Start.RealPoint.Y);
                         jpstart.Zoom(_minbeilv);
-                        jpstart.ChangeAxis(axisX,axisY);
+                        jpstart.ChangeAxis(axisX, axisY);
                         cline.Id = zlianjie.Id;
-                        cline.DrawStart= jpstart.ToPointF();
+                        cline.DrawStart = jpstart.ToPointF();
                         JWPoint jpend = new JWPoint(zlianjie.End.RealPoint.X, zlianjie.End.RealPoint.Y);
                         jpend.Zoom(_minbeilv);
                         jpend.ChangeAxis(axisX, axisY);
                         cline.DrawEnd = jpend.ToPointF();
-                        
+
                         LianjieLines.Add(cline);
                     }
                 }
                 if (jwCanvas.IsFromData)
                 {
-                    if(jwCanvas.LianjieLsts.Count > 0)
+                    if (jwCanvas.LianjieLsts.Count > 0)
                     {
-                        foreach(var jlj in jwCanvas.LianjieLsts)
+                        foreach (var jlj in jwCanvas.LianjieLsts)
                         {
                             //生成controlline
                             ControlLine cline = new ControlLine();
@@ -171,10 +177,19 @@ namespace JwShapeCommon
 
                 if (jwCanvas.JwDownPillarDatas.Count > 0)
                 {
-                    foreach(var dp in jwCanvas.JwDownPillarDatas)
+                    foreach (var dp in jwCanvas.JwDownPillarDatas)
                     {
-                        JwDownPillarDraw jwDown= new JwDownPillarDraw(dp);
+                        JwDownPillarDraw jwDown = new JwDownPillarDraw(dp);
                         DownPillars.Add(jwDown.Change(_minbeilv, axisX, axisY));
+                    }
+                }
+                if (jwCanvas.Directeds.Count > 0)
+                {
+                    foreach (var d in jwCanvas.Directeds)
+                    {
+                        JwCuttingDraw directedDraw = new JwCuttingDraw(d);
+                        directedDraw.Change(_minbeilv, axisX, axisY);
+                        CuttingDraws.Add(directedDraw);
                     }
                 }
             }

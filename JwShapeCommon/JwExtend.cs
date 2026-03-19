@@ -355,6 +355,19 @@ namespace JwShapeCommon
                     reobj.LianjieLsts.Add(jlj);
                 }
             }
+            reobj.Directeds=new List<JwDirected>();
+            if (data.JwCuttings.Count>0)
+            {
+                foreach(var cutting in data.JwCuttings)
+                {
+                    List<JWPoint> points = new List<JWPoint>();
+                    points.Add(cutting.FirstPoint.ToJwPoint());
+                    points.Add(cutting.SecondPoint.ToJwPoint());
+                    points.Add(cutting.ThirdPoint.ToJwPoint());
+                    JwDirected ct = new JwDirected(points);
+                    reobj.Directeds.Add(ct);
+                }
+            }
             reobj.IsFromData = true;
             reobj.JwProjectSubData = data;
             return reobj;

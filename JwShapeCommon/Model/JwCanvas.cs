@@ -244,6 +244,14 @@ namespace JwShapeCommon
                 }
             }
 
+            if(Directeds.Count>0)
+            {
+                foreach(var dd in Directeds)
+                {
+                    jd.Add(dd.ToJwwData());
+                }
+            }
+
             return jd;
         }
 

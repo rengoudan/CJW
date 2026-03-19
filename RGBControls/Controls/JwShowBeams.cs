@@ -242,6 +242,29 @@ namespace RGBJWMain.Controls
             }
         }
 
+        private bool _showCutting;
+        public bool ShowCutting
+        {
+            get => _showCutting;
+            set
+            {
+                _showCutting = value;
+                Invalidate();
+            }
+        }
+
+        private bool _showDownPillar;
+
+        public bool ShowDownPillar
+        {
+            get => _showDownPillar;
+            set
+            {
+                _showDownPillar = value;
+                Invalidate();
+            }
+        }
+
         private bool _showFuzhu;
         public bool ShowFuzhu
         {
@@ -325,9 +348,9 @@ namespace RGBJWMain.Controls
 
         private void drawControls(PaintEventArgs pe)
         {
-            if(_bounds != null)
+            if (_bounds != null)
             {
-                if(_showBeams)
+                if (_showBeams)
                 {
                     foreach (var b in _bounds)
                     {
@@ -363,13 +386,13 @@ namespace RGBJWMain.Controls
                         //pe.Graphics.DrawRectangle(pens, (int)beam.TopLeft.X, (int)beam.TopLeft.Y, (int)beam.Width, (int)beam.Height);
                     }
                 }
-                if(_showPillar)
+                if (_showPillar)
                 {
                     foreach (var b in _bounds)
                     {
                         if (b.ShapeType == DrawShapeType.Pillar)
                         {
-                            if(b.IsSelected)
+                            if (b.IsSelected)
                             {
                                 Brush bush = new SolidBrush(Color.AliceBlue);
                                 pe.Graphics.FillRectangle(bush, b.DrawRectangleF.Location.X, b.DrawRectangleF.Location.Y, b.DrawRectangleF.Width, b.DrawRectangleF.Height);
@@ -379,11 +402,11 @@ namespace RGBJWMain.Controls
                                 Brush bush = new SolidBrush(Color.Yellow);
                                 pe.Graphics.FillRectangle(bush, b.DrawRectangleF.Location.X, b.DrawRectangleF.Location.Y, b.DrawRectangleF.Width, b.DrawRectangleF.Height);
                             }
-                           
+
                         }
                     }
                 }
-                
+
             }
             if (CanvasDraw != null)
             {
@@ -518,20 +541,34 @@ namespace RGBJWMain.Controls
                         }
                     }
                 }
-
-                //绘制下方柱
-                if (CanvasDraw.DownPillars.Count > 0)
+                if (_showDownPillar)
                 {
-                    foreach (var dp in CanvasDraw.DownPillars)
+                    //绘制下方柱
+                    if (CanvasDraw.DownPillars.Count > 0)
                     {
-                        Brush bush = new SolidBrush(Color.Blue);
-                        pe.Graphics.DrawLine(penjt, dp.LineAS, dp.LineAE);
-                        pe.Graphics.DrawLine(penjt, dp.LineBS, dp.LineBE);
+                        foreach (var dp in CanvasDraw.DownPillars)
+                        {
+                            Brush bush = new SolidBrush(Color.Blue);
+                            pe.Graphics.DrawLine(penjt, dp.LineAS, dp.LineAE);
+                            pe.Graphics.DrawLine(penjt, dp.LineBS, dp.LineBE);
+                        }
+
+                    }
+                }
+                
+                if (_showCutting)
+                {
+                    if (CanvasDraw.CuttingDraws.Count > 0)
+                    {
+                        Brush bushdirect = new SolidBrush(Color.Purple);
+                        foreach (var cd in CanvasDraw.CuttingDraws)
+                        {
+                            pe.Graphics.FillPolygon(bushdirect, cd.Polygon.ToArray());
+                        }
                     }
 
                 }
             }
-            
         }
 
         protected override void OnAutoSizeChanged(EventArgs e)

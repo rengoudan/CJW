@@ -31,6 +31,8 @@
             panel1 = new Panel();
             jwShowBeams1 = new JwShowBeams();
             panel2 = new Panel();
+            uiSwitch4 = new Sunny.UI.UISwitch();
+            uiLabel8 = new Sunny.UI.UILabel();
             uiLabel1 = new Sunny.UI.UILabel();
             uiSwitch1 = new Sunny.UI.UISwitch();
             uiSwitch2 = new Sunny.UI.UISwitch();
@@ -45,6 +47,8 @@
             uiLabel4 = new Sunny.UI.UILabel();
             uiLabel6 = new Sunny.UI.UILabel();
             uiGoujian = new Sunny.UI.UISwitch();
+            uiLabel9 = new Sunny.UI.UILabel();
+            uiSwitch5 = new Sunny.UI.UISwitch();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
@@ -66,7 +70,7 @@
             jwShowBeams1.CanvasDraw = null;
             jwShowBeams1.Dock = DockStyle.Fill;
             jwShowBeams1.HasItems = false;
-            jwShowBeams1.Location = new Point(0, 66);
+            jwShowBeams1.Location = new Point(0, 115);
             jwShowBeams1.Margin = new Padding(5, 4, 5, 4);
             jwShowBeams1.Name = "jwShowBeams1";
             jwShowBeams1.SelectedBeam = null;
@@ -79,12 +83,16 @@
             jwShowBeams1.ShowGoujiantext = false;
             jwShowBeams1.Showmsg = false;
             jwShowBeams1.ShowPillar = false;
-            jwShowBeams1.Size = new Size(2224, 1031);
+            jwShowBeams1.Size = new Size(2224, 982);
             jwShowBeams1.TabIndex = 2;
             jwShowBeams1.Text = "jwShowBeams1";
             // 
             // panel2
             // 
+            panel2.Controls.Add(uiSwitch5);
+            panel2.Controls.Add(uiLabel9);
+            panel2.Controls.Add(uiSwitch4);
+            panel2.Controls.Add(uiLabel8);
             panel2.Controls.Add(uiLabel1);
             panel2.Controls.Add(uiSwitch1);
             panel2.Controls.Add(uiSwitch2);
@@ -103,9 +111,35 @@
             panel2.Location = new Point(0, 0);
             panel2.Margin = new Padding(5, 4, 5, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(2224, 66);
+            panel2.Size = new Size(2224, 115);
             panel2.TabIndex = 1;
             panel2.MouseDown += panel2_MouseDown;
+            // 
+            // uiSwitch4
+            // 
+            uiSwitch4.ActiveText = "On";
+            uiSwitch4.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSwitch4.InActiveText = "Off";
+            uiSwitch4.Location = new Point(147, 63);
+            uiSwitch4.Margin = new Padding(5, 4, 5, 4);
+            uiSwitch4.MinimumSize = new Size(2, 1);
+            uiSwitch4.Name = "uiSwitch4";
+            uiSwitch4.Size = new Size(80, 41);
+            uiSwitch4.TabIndex = 19;
+            uiSwitch4.Text = "uiSwitch4";
+            uiSwitch4.ValueChanged += uiSwitch4_ValueChanged;
+            // 
+            // uiLabel8
+            // 
+            uiLabel8.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiLabel8.ForeColor = Color.FromArgb(48, 48, 48);
+            uiLabel8.Location = new Point(5, 64);
+            uiLabel8.Margin = new Padding(5, 0, 5, 0);
+            uiLabel8.Name = "uiLabel8";
+            uiLabel8.Size = new Size(144, 40);
+            uiLabel8.TabIndex = 18;
+            uiLabel8.Text = "継手記号:";
+            uiLabel8.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiLabel1
             // 
@@ -288,6 +322,32 @@
             uiGoujian.Text = "uiSwitch2";
             uiGoujian.ValueChanged += uiGoujian_ValueChanged;
             // 
+            // uiLabel9
+            // 
+            uiLabel9.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiLabel9.ForeColor = Color.FromArgb(48, 48, 48);
+            uiLabel9.Location = new Point(315, 64);
+            uiLabel9.Margin = new Padding(5, 0, 5, 0);
+            uiLabel9.Name = "uiLabel9";
+            uiLabel9.Size = new Size(98, 40);
+            uiLabel9.TabIndex = 20;
+            uiLabel9.Text = "下階柱:";
+            uiLabel9.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // uiSwitch5
+            // 
+            uiSwitch5.ActiveText = "On";
+            uiSwitch5.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSwitch5.InActiveText = "Off";
+            uiSwitch5.Location = new Point(431, 64);
+            uiSwitch5.Margin = new Padding(5, 4, 5, 4);
+            uiSwitch5.MinimumSize = new Size(2, 1);
+            uiSwitch5.Name = "uiSwitch5";
+            uiSwitch5.Size = new Size(80, 41);
+            uiSwitch5.TabIndex = 21;
+            uiSwitch5.Text = "uiSwitch5";
+            uiSwitch5.ValueChanged += uiSwitch5_ValueChanged;
+            // 
             // JwCanvasControl
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
@@ -323,5 +383,9 @@
         private Sunny.UI.UISwitch uiSwitch3;
         private Sunny.UI.UILabel uiLabel7;
         private JwShowBeams jwShowBeams1;
+        private Sunny.UI.UISwitch uiSwitch4;
+        private Sunny.UI.UILabel uiLabel8;
+        private Sunny.UI.UISwitch uiSwitch5;
+        private Sunny.UI.UILabel uiLabel9;
     }
 }

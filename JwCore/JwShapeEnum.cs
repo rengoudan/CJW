@@ -57,9 +57,10 @@ namespace JwCore
         Block = 2,
         Pillar = 3,
         Hole = 4,
-        LinkPart= 5,
+        LinkPart = 5,
         DownPillar = 6,
-        Text=7
+        Text = 7,
+        Cutting = 8
     }
 
     /// <summary>

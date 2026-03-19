@@ -1,5 +1,6 @@
 ﻿using JwCore;
 using JwwHelper;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,25 @@ namespace JwShapeCommon
                 IsDirected = true;
             }
             
+        }
+
+        /// <summary>
+        /// 2026年3月19日
+        /// </summary>
+        /// <param name="points"></param>
+        public JwDirected(List<JWPoint> points)
+        {
+            Points = new List<JWPoint>();
+            foreach(var p in points)
+            {
+                Points.Add(new JWPoint(p.X, p.Y));
+            }
+            
+            if (Points.Count == 3)
+            {
+                parse();
+                IsDirected = true;
+            }
         }
 
         public JwDirected(JwwBlock block,List<JwwSolid> solids)
@@ -184,6 +204,7 @@ namespace JwShapeCommon
         public JwCutting ToData()
         {
             JwCutting cutting = new JwCutting();
+            cutting.Id = Guid.NewGuid().ToString();
             if (IsDirected)
             {
                 cutting.FirstPoint= Points[0].ToPoint();
@@ -196,6 +217,22 @@ namespace JwShapeCommon
                 return null;
             }
 
+        }
+
+        public JwwData ToJwwData()
+        {
+            JwwSolid solid = new JwwSolid();
+            solid.m_nLayer = (int)DrawShapeType.Cutting + 1;
+            solid.m_nPenColor = (int)DrawShapeType.Cutting;
+            solid.m_start_x= Points[0].X;
+            solid.m_start_y= Points[0].Y;
+            solid.m_end_x= Points[1].X;
+            solid.m_end_y= Points[1].Y;
+            solid.m_DPoint2_x= Points[2].X;
+            solid.m_DPoint2_y= Points[2].Y;
+            solid.m_DPoint3_x= Points[2].X;
+            solid.m_DPoint3_y= Points[2].Y;
+            return solid;
         }
     }
 

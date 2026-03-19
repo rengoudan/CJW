@@ -25,7 +25,7 @@ namespace RGBJWMain.Controls
             // 在窗体的构造函数或 Load 事件中添加：
             //this.Resize += (s, e) =>
             //{
-                
+
             //};
             this.Resize += JwCanvasControl_Resize;
         }
@@ -37,9 +37,9 @@ namespace RGBJWMain.Controls
 
         bool isleftdown = false;
 
-        public bool IsNewCanvas = false;    
+        public bool IsNewCanvas = false;
 
-        
+
         private void JwCanvasControl_MouseDown(object? sender, MouseEventArgs e)
         {
             isleftdown = false;
@@ -71,7 +71,9 @@ namespace RGBJWMain.Controls
                     uiGoujian.Active = true;
                     uiSwitch2.Active = true;
                     uiSDown.Active = true;
-                    jwShowBeams1.IsNewCanvas= IsNewCanvas;
+                    uiSwitch4.Active = true;
+                    uiSwitch5.Active = true;
+                    jwShowBeams1.IsNewCanvas = IsNewCanvas;
                     jwShowBeams1.CanvasDraw = _canvasDraw;
 
                     Invalidate();
@@ -208,6 +210,18 @@ namespace RGBJWMain.Controls
         private void panel2_MouseDown(object sender, MouseEventArgs e)
         {
 
+        }
+
+        private void uiSwitch4_ValueChanged(object sender, bool value)
+        {
+            jwShowBeams1.ShowCutting = value;
+            uiSwitch4.Invalidate();
+        }
+
+        private void uiSwitch5_ValueChanged(object sender, bool value)
+        {
+            jwShowBeams1.ShowDownPillar = value;
+            uiSwitch5.Invalidate();
         }
     }
 }

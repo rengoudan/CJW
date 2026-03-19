@@ -1760,7 +1760,9 @@ namespace JwShapeCommon
                 jwCanvas.LinkParts = AllLinkPart;
                 jwCanvas.LianjieSingles = this.LianjieSingles;
                 jwCanvas.JwDownPillarDatas = this.DownPillarMarks;
-                jwCanvas.Directeds = this.Directeds;
+                jwCanvas.Directeds = this.
+                    
+                    ;
                 //jwCanvas
                 return jwCanvas;
             }
@@ -1910,8 +1912,11 @@ namespace JwShapeCommon
                 foreach(var d in Directeds)
                 {
                     JwCutting cutting=d.ToData();
-                    cutting.JwProjectSubDataId = _subData.Id;
-                    _cuttingDatas.Add(cutting);
+                    if(cutting != null)
+                    {
+                        cutting.JwProjectSubDataId = _subData.Id;
+                        _cuttingDatas.Add(cutting);
+                    }
                 }
             }
         }
