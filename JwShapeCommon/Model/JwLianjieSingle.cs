@@ -50,20 +50,28 @@ namespace JwShapeCommon.Model
         /// </summary>
         public bool IsAddOrReduce { get; set; }
 
+        /// <summary>
+        /// 标记成对
+        /// </summary>
+        public string GroupId { get; set; }
+
+        /// <summary>
+        /// 2026年3月20日 增加长度 方便取max
+        /// </summary>
+        public double Length { get; set; }
+
         public JwLianjieData ToDbData()
         {
             JwLianjieData lianjieData = new JwLianjieData();
             lianjieData.Id = Id;
             lianjieData.Start=new Point(Start.RealPoint.X, Start.RealPoint.Y);
             lianjieData.End = new Point(End.RealPoint.X, End.RealPoint.Y);
-            //lianjieData.Id=Guid.NewGuid().ToString();
-            // = 12;
-            var slq = JwExtend.Distance(Start.RealPoint, End.RealPoint);
-            
-            var dl = Math.Round(slq, 1) * JwFileConsts.JwScale;
-            dl = dl - 220;//减部件长度
-            lianjieData.Length = Math.Round(dl, 0);
-
+            ////lianjieData.Id=Guid.NewGuid().ToString();
+            //// = 12;
+            ////var slq = JwExtend.Distance(Start.RealPoint, End.RealPoint);
+            //var dl = Math.Round(Length, 1) * JwFileConsts.JwScale;
+            //dl = dl - 220;//减部件长度
+            lianjieData.Length = Length;
             return lianjieData;
         }
 

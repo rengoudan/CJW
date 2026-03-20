@@ -53,6 +53,8 @@ namespace JwShapeCommon
 
         public bool IsLianjie { get; set; }
 
+        public string GroupId { get; set; }
+
     }
 
     public class JwQiegeZu

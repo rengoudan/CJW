@@ -1,5 +1,6 @@
 ﻿using JwCore;
 using JwShapeCommon;
+using NPOI.SS.Formula.Functions;
 using RGBJWMain.Forms;
 using Sunny.UI;
 using System;
@@ -534,10 +535,12 @@ namespace RGBJWMain.Controls
                         if (ljl.IsSelected)
                         {
                             pe.Graphics.DrawLine(penljselected, ljl.DrawStart, ljl.DrawEnd);
+                            DrawLineWithLength(pe.Graphics, penljselected, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite,ljl.Distance);
                         }
                         else
                         {
                             pe.Graphics.DrawLine(penlj, ljl.DrawStart, ljl.DrawEnd);
+                            DrawLineWithLength(pe.Graphics, penlj, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite, ljl.Distance);
                         }
                     }
                 }
@@ -569,6 +572,49 @@ namespace RGBJWMain.Controls
 
                 }
             }
+        }
+
+        private void DrawLineWithLength(Graphics g, Pen pen, PointF p1, PointF p2, Font font, Brush textBrush,double length)
+        {
+            // 2. 计算线段长度
+            float dx = p2.X - p1.X;
+            float dy = p2.Y - p1.Y;
+            float len = (float)Math.Sqrt(dx * dx + dy * dy);
+
+            // 3. 线段中点
+            PointF center = new PointF(
+                (p1.X + p2.X) / 2f,
+                (p1.Y + p2.Y) / 2f
+            );
+
+            // 4. 线段角度（弧度 -> 角度）
+            float angle = (float)(Math.Atan2(dy, dx) * 180.0 / Math.PI);
+
+            // 5. 保存原始变换
+            Matrix oldTransform = g.Transform.Clone();
+
+            // 6. 平移到中心点，再旋转到线的方向
+            g.TranslateTransform(center.X, center.Y);
+            g.RotateTransform(angle);
+
+            // 7. 在局部坐标系中绘制文字（沿 X 轴方向），居中对齐
+            string text = length.ToString("0.##"); // 可根据需要格式化
+
+
+            var offset=10f;
+
+            using (StringFormat sf = new StringFormat())
+            {
+                sf.Alignment = StringAlignment.Center;      // 水平居中
+                sf.LineAlignment = StringAlignment.Center;  // 垂直居中
+                
+                // 在 (0, 0) 画文字，因为已经把原点移到线段中心
+                // 如果想让文字稍微偏离线（比如在线上方一点），可以把 Y 改成负值，比如 new PointF(0, -5)
+                g.DrawString(text, font, textBrush, new PointF(-2 * offset, -offset), sf);
+            }
+
+            // 8. 恢复变换
+            g.Transform = oldTransform;
         }
 
         protected override void OnAutoSizeChanged(EventArgs e)

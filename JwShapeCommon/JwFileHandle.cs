@@ -1760,9 +1760,7 @@ namespace JwShapeCommon
                 jwCanvas.LinkParts = AllLinkPart;
                 jwCanvas.LianjieSingles = this.LianjieSingles;
                 jwCanvas.JwDownPillarDatas = this.DownPillarMarks;
-                jwCanvas.Directeds = this.
-                    
-                    ;
+                jwCanvas.Directeds = this.Directeds;
                 //jwCanvas
                 return jwCanvas;
             }
@@ -3707,6 +3705,7 @@ namespace JwShapeCommon
             {
                 foreach (var p in _tempchengduixians)
                 {
+                    p.GroupId= Guid.NewGuid().ToString();
                     //判断 duixian 是否是链接交叉 符合这些特性
                     processCenterChengdui(p);
                 }
@@ -3715,6 +3714,7 @@ namespace JwShapeCommon
             {
                 foreach (var p in _tempchengduixians)
                 {
+                    p.GroupId = Guid.NewGuid().ToString();
                     //判断 duixian 是否是链接交叉 符合这些特性
                     processChengduiXian(p);
                 }
@@ -3727,21 +3727,29 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 2025年6月5日 暂时走不下去
+        /// 成对取max的length为双方的长度
         /// </summary>
         /// <param name="jwChengduiXian"></param>
         private void processChengduiXian(JwChengduiXian jwChengduiXian)
         {
-            
+            double maxlg = 0;
             JwLianjieSingle jwLianjie = findBeam(jwChengduiXian.XianOne);
             if (jwLianjie.IsCreateSuccess)
             {
+                jwLianjie.GroupId = jwChengduiXian.GroupId;
                 LianjieSingles.Add(jwLianjie);
+                maxlg=Math.Max(maxlg, jwLianjie.Length);
+
             }
             JwLianjieSingle jwLianjies = findBeam(jwChengduiXian.XianTwo);
             if (jwLianjies.IsCreateSuccess)
             {
+                jwLianjies.GroupId = jwChengduiXian.GroupId;
                 LianjieSingles.Add(jwLianjies);
+                maxlg = Math.Max(maxlg, jwLianjies.Length);
             }
+            jwLianjies.Length = maxlg;
+            jwLianjie.Length = maxlg;
         }
 
         private void processCenterChengdui(JwChengduiXian jwChengduiXian)
@@ -3751,17 +3759,24 @@ namespace JwShapeCommon
             //{
             //    LianjieSingles.Add(jwLianjie);
             //}
+            double maxlg = 0;
             JwLianjieSingle jwLianjie=findCenter(jwChengduiXian.XianOne);
             if (jwLianjie.IsCreateSuccess)
             {
+                jwLianjie.GroupId = jwChengduiXian.GroupId;
                 LianjieSingles.Add(jwLianjie);
+                maxlg = Math.Max(maxlg, jwLianjie.Length);
             }
             JwLianjieSingle jwLianjie1= findCenter(jwChengduiXian.XianTwo);
 
             if (jwLianjie1.IsCreateSuccess)
             {
                 LianjieSingles.Add(jwLianjie1);
+                jwLianjie1.GroupId = jwChengduiXian.GroupId;
+                maxlg = Math.Max(maxlg, jwLianjie1.Length);
             }
+            jwLianjie.Length = maxlg;
+            jwLianjie1.Length = maxlg;
         }
 
         /// <summary>
@@ -3959,7 +3974,10 @@ namespace JwShapeCommon
                     };
                     jwLianjieSingle.IsCreateSuccess = true;
                     //var pdlst = l.WinnerBeam.Holes.Where(t => t.HoleCenter < point.Y).OrderByDescending(t => t.HoleCenter).ToList();
-
+                    var lg=JwExtend.Distance(jwLianjieSingle.Start.RealPoint, jwLianjieSingle.End.RealPoint);
+                    var dl = Math.Round(lg, 1) * JwFileConsts.JwScale;
+                    dl = dl - 220;//减部件长度
+                    jwLianjieSingle.Length = Math.Round(dl, 0);
                 }
                 else
                 {
@@ -4087,6 +4105,11 @@ namespace JwShapeCommon
                 jwLianjieSingle.End = end;
                 //jwLianjieSingle.DirectionType = lianjiewindirect;
                 jwLianjieSingle.IsCreateSuccess = true;
+                //2026年3月20日 增加距离判断
+                var slq = JwExtend.Distance(start.RealPoint, end.RealPoint);
+                var dl = Math.Round(slq, 1) * JwFileConsts.JwScale;
+                dl = dl - 220;//减部件长度
+                jwLianjieSingle.Length = Math.Round(dl, 0);
             }
             return jwLianjieSingle;
         }

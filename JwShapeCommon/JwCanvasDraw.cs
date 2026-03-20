@@ -149,6 +149,7 @@ namespace JwShapeCommon
                         jpend.Zoom(_minbeilv);
                         jpend.ChangeAxis(axisX, axisY);
                         cline.DrawEnd = jpend.ToPointF();
+                        cline.Distance= zlianjie.Length;
 
                         LianjieLines.Add(cline);
                     }
@@ -170,6 +171,7 @@ namespace JwShapeCommon
                             jpend.Zoom(_minbeilv);
                             jpend.ChangeAxis(axisX, axisY);
                             cline.DrawEnd = jpend.ToPointF();
+                            cline.Distance=jlj.Length;
                             LianjieLines.Add(cline);
                         }
                     }
