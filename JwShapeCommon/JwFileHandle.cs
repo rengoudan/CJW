@@ -3281,6 +3281,8 @@ namespace JwShapeCommon
 
         private void Revision()
         {
+            int mkkk = (int)JwFileConsts.Ktype;
+            var mkkkk = mkkk / 2;
             foreach (var b in Beams)
             {
                 if (b.DirectionType == BeamDirectionType.Horizontal)
@@ -3341,15 +3343,14 @@ namespace JwShapeCommon
                 {
                     b.Height = Math.Round(bml / JwFileConsts.JwScale, 2);
                 }
-                int mkkk =(int)JwFileConsts.Ktype;
-                var mkkkk = mkkk / 2;
+                
                 double y = b.XXLength % mkkkk;
 
                 int q = (int)b.XXLength / mkkkk;
                 var zmu = NormalizePrefix(s, e);
                 if (y == 0)
                 {
-                    b.BeamCode = string.Format("{0}{1}", zmu, q);
+                    b.BeamCode = string.Format("{0}{1}A", zmu, q);
                 }
                 else
                 {
@@ -3368,7 +3369,8 @@ namespace JwShapeCommon
                     {
                         suffix++;
                     }
-                    beam.BeamCode = $"{group.Key}{suffix}";
+                    //beam.BeamCode= beam.BeamCode.TrimEnd('A');
+                    beam.BeamCode = $"{group.Key.TrimEnd('A')}{suffix}";
                     suffix++;
                 }
             }
