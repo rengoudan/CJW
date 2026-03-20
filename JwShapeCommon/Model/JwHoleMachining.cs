@@ -47,5 +47,18 @@ namespace JwShapeCommon.Model
             return string.Format("{3},絶対,先端,{0},{1},1,{2},1,0.0,\r\n", RelativeStartDistance.ToString("0.0"), y.ToString("0.0"), "0.0", JwFileConsts.EllipseDiameter.ToString("0.0"));
             //return $"{Id},{RelativeStartDistance},{HasLeft},{HasRight},{HasTop}";
         }
+
+        public JwHoleMachining GTopBottomAddHole(bool isadd)
+        {
+            var offset=JwFileConsts.Kongjing/JwFileConsts.JwScale;
+            JwHoleMachining result = new JwHoleMachining();
+            result.Id = Guid.NewGuid().ToString();
+            result.RelativeStartDistance = isadd ? this.RelativeStartDistance + offset : this.RelativeStartDistance - offset;
+            result.RealLocation=isadd? this.RealLocation + offset : this.RealLocation - offset;
+            result.HasLeft = true;
+            result.HasRight = true;
+            result.HasTop = false;
+            return result;
+        }
     }
 }

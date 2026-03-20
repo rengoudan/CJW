@@ -1103,6 +1103,18 @@ namespace JwShapeCommon
                         {
                             JwHoleMachinings.Add(jwweileft);
                         }
+                        //2026年3月20日如果是开始 上下增加一组孔 x+offset
+                        if (isstart)
+                        {
+                            var addg = machiningsingle.GTopBottomAddHole(true);
+                            JwHoleMachinings.Add(addg);
+                        }
+                        //2026年3月20日如果是开始 上下增加一组孔 x-offset
+                        if (isend)
+                        {
+                            var addg = machiningsingle.GTopBottomAddHole(false);
+                            JwHoleMachinings.Add(addg);
+                        }
 
                         break;
                     default:
@@ -1363,7 +1375,7 @@ namespace JwShapeCommon
             this.AbsolutePD = this.DirectionType == BeamDirectionType.Horizontal ? TopLeft.X :BottomLeft.Y;
             if (istop)
             {
-                var tops= JwHoleMachinings.Where(t => t.HasLeft).OrderBy(t => t.RelativeStartDistance).ToList();
+                var tops= JwHoleMachinings.Where(t => t.HasRight).OrderBy(t => t.RelativeStartDistance).ToList();
                 if(tops.Count>0)
                 {
                     foreach(var th in tops)
@@ -1383,7 +1395,7 @@ namespace JwShapeCommon
             }
             else
             {
-                var bottoms = JwHoleMachinings.Where(t => t.HasRight).OrderBy(t => t.RelativeStartDistance).ToList();
+                var bottoms = JwHoleMachinings.Where(t => t.HasLeft).OrderBy(t => t.RelativeStartDistance).ToList();
                 if (bottoms.Count > 0)
                 {
                     foreach (var bh in bottoms)

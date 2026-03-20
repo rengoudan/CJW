@@ -409,7 +409,8 @@ namespace RGBControls.Controls
                 //{
                 //    a.AddData(b);
                 //}
-                a.Write(foldPath + "\\" + data.FloorName + ".jww");
+                var filename= string.Format("{0}上F孔伏図", data.FloorName);
+                a.Write(foldPath + "\\" + filename + ".jww");
             }
         }
 
@@ -450,7 +451,8 @@ namespace RGBControls.Controls
                 //{
                 //    a.AddData(b);
                 //}
-                a.Write(foldPath + "\\" + data.FloorName + ".jww");
+                var filename = string.Format("{0}下F孔伏図", data.FloorName);
+                a.Write(foldPath + "\\" + filename + ".jww");
             }
         }
         private async Task SaveSubCanvasLines(JwProjectSubData data)

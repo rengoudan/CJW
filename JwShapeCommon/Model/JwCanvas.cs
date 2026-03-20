@@ -210,6 +210,8 @@ namespace JwShapeCommon
         /// <summary>
         /// 绘制带孔的施工图
         /// 将孔的绘制下放至beam里
+        /// top不绘制支撑
+        /// G端上下为4孔
         /// </summary>
         /// <returns></returns>
         public List<JwwData> DrawShigong(bool istop)
