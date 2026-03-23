@@ -145,6 +145,20 @@ namespace JwServices
             return re;
         }
 
+        public async Task DeletMain(long mainId)
+        {
+            var maindata = await GetByIdAsync<JwProjectMainData>(mainId);
+            if (maindata != null)
+            {
+                var subdatas = await GetAllAsync<JwProjectSubData>(p => p.JwProjectMainDataId == mainId);
+                foreach (var sub in subdatas)
+                {
+                    await DeleteSubData(sub.Id);
+                }
+                await DeleteAsync<JwProjectMainData>(mainId);
+            }
+        }
+
         public async Task DeleteSubData(string subId)
         {
             var subdata = await GetByIdAsync<JwProjectSubData>(subId, p => p.JwProjectMainData);

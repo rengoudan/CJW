@@ -44,6 +44,9 @@ namespace RGBControls.Pages
 
         AntdUI.IContextMenuStripItem[] menulist = { };
 
+
+        IContextMenuStripItem[] mainmenulist = { };
+
         JwProjectSubData selectedsubData;
 
         JwProjectMainData _selectedMainData;
@@ -89,6 +92,12 @@ namespace RGBControls.Pages
                 new AntdUI.ContextMenuStripItem("梁製造CSV", ""),
                 new AntdUI.ContextMenuStripItem("消去", ""),
             };
+
+            mainmenulist = new IContextMenuStripItem[]
+            {
+                new ContextMenuStripItem("消去","")
+            };
+
             GlobalEvent.GetGlobalEvent().UpdateCodeEvent.Subscribe(JwProjectMainPage_UpdateCodeEvent);
             GlobalEvent.GetGlobalEvent().RefreshDataEvent += GlobalEvent_RefreshDataEvent;
             base.InitData();
@@ -278,6 +287,29 @@ namespace RGBControls.Pages
                         });
                     }
                         
+                }
+            }
+        }
+
+        private  async void contextMenuStrip2_Opening(ContextMenuStripItem e)
+        {
+            if (e.Text.Equals("消去"))
+            {
+                if (projectmaintable.SelectedIndex > 0)
+                {
+                    var selectedmaindata = this.projectmaintable[projectmaintable.SelectedIndex - 1].record as JwProjectMainData;
+                    if (selectedmaindata != null)
+                    {
+                        var tishimsg = string.Format("選択したプロジェクト {0} を削除しますか？", selectedmaindata.ProjectName);
+                        if (AntdUI.Modal.open(this, "ヒント", tishimsg) == DialogResult.OK)
+                        {
+                            await Progress(async () =>
+                            {
+                                //await JwProjectMainService.DeleteMainData(selectedmaindata.Id);
+                                //await ReloadData();
+                            });
+                        }
+                    }
                 }
             }
         }

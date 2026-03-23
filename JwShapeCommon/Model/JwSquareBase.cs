@@ -123,7 +123,13 @@ namespace JwShapeCommon
 
         public bool Contains(double x, double y) => TopLeft.X <= x && x <= TopLeft.X + Width && TopLeft.Y >= y && y >= TopLeft.Y - Height;
 
-        public bool Contains(JWPoint pt) => Contains(pt.X, pt.Y);
+        public bool Contains(JWPoint pt) {
+            if(object.Equals(pt, null))
+            {
+                return false;
+            }
+            return Contains(pt.X, pt.Y);
+        } 
 
         /// <summary>
         /// 可以扩大范围

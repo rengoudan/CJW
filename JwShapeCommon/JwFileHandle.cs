@@ -1286,8 +1286,8 @@ namespace JwShapeCommon
                     var zfx = item8.Blocks.Where(t => t.Iszhengfangxing).Select(t => t.CenterPoint).Distinct(new JwPointComparint()).ToList();
                     item8.PointA = zfx.First();
                     item8.PointB = zfx.Last();
-                    var jl = Math.Round(JwExtend.Distance(item8.PointA, item8.PointB), 2);
-                    item8.Distance=jl*JwFileConsts.JwScale;
+                    //var jl = Math.Round(JwExtend.Distance(item8.PointA, item8.PointB), 2);
+                    //item8.Distance=jl*JwFileConsts.JwScale;
                     Pillars.Add(item8);
                 }
             }
@@ -2509,89 +2509,92 @@ namespace JwShapeCommon
             {
                 foreach (var a in zfxblockcenter)
                 {
-
-                    if (b.Contains(a))
+                    if (!object.Equals(a,null))
                     {
-                        //yiguishublocks.Add(a.Id);
-                        b.ZhuBlocks.Add(new JwBlock(a));
-                        //b.ZhuBlocks.Add(JwShapeHelper.CreateNewBlock(a));
-                        JwLinkPart jbb = new JwLinkPart();
-                        jbb.Directed = b.DirectionType == BeamDirectionType.Horizontal ? TaggDirect.Up : TaggDirect.Left;
-                        jbb.BujianName = "B";
-                        jbb.GouJianType = GouJianType.B;
-                        //jbb.BjCenterPoint = new JWPoint
-                        //{
-                        //    X = Math.Round(a.CenterPoint.X, 0),
-                        //    Y = Math.Round(a.CenterPoint.Y, 0)
-                        //};
-                        jbb.BjCenterPoint = new JWPoint
+                        if (b.Contains(a))
                         {
-                            X = Math.Round(a.X, 6),
-                            Y = Math.Round(a.Y, 6)
-                        };
-                        jbb.ParentBeam = b;
-                        jbb.BeamId = b.Id;
+                            //yiguishublocks.Add(a.Id);
+                            b.ZhuBlocks.Add(new JwBlock(a));
+                            //b.ZhuBlocks.Add(JwShapeHelper.CreateNewBlock(a));
+                            JwLinkPart jbb = new JwLinkPart();
+                            jbb.Directed = b.DirectionType == BeamDirectionType.Horizontal ? TaggDirect.Up : TaggDirect.Left;
+                            jbb.BujianName = "B";
+                            jbb.GouJianType = GouJianType.B;
+                            //jbb.BjCenterPoint = new JWPoint
+                            //{
+                            //    X = Math.Round(a.CenterPoint.X, 0),
+                            //    Y = Math.Round(a.CenterPoint.Y, 0)
+                            //};
+                            jbb.BjCenterPoint = new JWPoint
+                            {
+                                X = Math.Round(a.X, 6),
+                                Y = Math.Round(a.Y, 6)
+                            };
+                            jbb.ParentBeam = b;
+                            jbb.BeamId = b.Id;
 
-                        //JwKongZu kongzu = new JwKongZu
-                        //{
-                        //    KongNum = 4,
-                        //    SuoShuMian = KongzuSuoshuMian.All,
-                        //    Position = jbb.BjCenterPoint,
-                        //    Sourec = KongzuSuoshuMian.Center,
-                        //    BeamId = b.Id,
-                        //    Type = KongzuType.B
-                        //};
-                        ////r.Kongzus.Add(bfkongzu);
-                        //b.AddHole(kongzu);
-                        var bhs = b.Holes.Where(t => t.Location.IsEqualsWithError(jbb.BjCenterPoint));
-                        if (bhs.Count() > 0)
-                        {
+                            //JwKongZu kongzu = new JwKongZu
+                            //{
+                            //    KongNum = 4,
+                            //    SuoShuMian = KongzuSuoshuMian.All,
+                            //    Position = jbb.BjCenterPoint,
+                            //    Sourec = KongzuSuoshuMian.Center,
+                            //    BeamId = b.Id,
+                            //    Type = KongzuType.B
+                            //};
+                            ////r.Kongzus.Add(bfkongzu);
+                            //b.AddHole(kongzu);
+                            var bhs = b.Holes.Where(t => t.Location.IsEqualsWithError(jbb.BjCenterPoint));
+                            if (bhs.Count() > 0)
+                            {
 
-                        }
-                        else
-                        {
-                            b.AddAnyHole(jbb.BjCenterPoint, HoleCreateFrom.Pillar);
-                        }
-                        //IsEqualsWithError
-                        if (AllLinkPart.Where(t => t.BjCenterPoint.IsEqualsWithError(jbb.BjCenterPoint)).Count() == 0)
-                        //if (AllLinkPart.Where(t => t.BjCenterPoint == jbb.BjCenterPoint).Count()== 0)
-                        {
-                            b.LinkParts.Add(jbb);
-                            AllLinkPart.Add(jbb);
-                            JwLinkPart jb1 = new JwLinkPart();
-                            jb1.BujianName = "B";
-                            jb1.GouJianType = GouJianType.B;
-                            jb1.BeamId = b.Id;
-                            jb1.Directed = b.DirectionType == BeamDirectionType.Horizontal ? TaggDirect.Down : TaggDirect.Right;
-                            jb1.BjCenterPoint = jbb.BjCenterPoint;
-                            jb1.ParentBeam = b;
-                            b.LinkParts.Add(jb1);
-                            AllLinkPart.Add(jb1);
-                        }
+                            }
+                            else
+                            {
+                                b.AddAnyHole(jbb.BjCenterPoint, HoleCreateFrom.Pillar);
+                            }
+                            //IsEqualsWithError
+                            if (AllLinkPart.Where(t => t.BjCenterPoint.IsEqualsWithError(jbb.BjCenterPoint)).Count() == 0)
+                            //if (AllLinkPart.Where(t => t.BjCenterPoint == jbb.BjCenterPoint).Count()== 0)
+                            {
+                                b.LinkParts.Add(jbb);
+                                AllLinkPart.Add(jbb);
+                                JwLinkPart jb1 = new JwLinkPart();
+                                jb1.BujianName = "B";
+                                jb1.GouJianType = GouJianType.B;
+                                jb1.BeamId = b.Id;
+                                jb1.Directed = b.DirectionType == BeamDirectionType.Horizontal ? TaggDirect.Down : TaggDirect.Right;
+                                jb1.BjCenterPoint = jbb.BjCenterPoint;
+                                jb1.ParentBeam = b;
+                                b.LinkParts.Add(jb1);
+                                AllLinkPart.Add(jb1);
+                            }
 
-                        //如果存在BG构建 但是没有B匹配 
-                        //    if (b.LinkParts.Where(t => t.BjCenterPoint == jbb.BjCenterPoint && t.BujianName == "BG").Count() > 0)
-                        //{
-                        //    b.LinkParts.Add(jbb);
-                        //    AllLinkPart.Add(jbb);
-                        //}
-                        //else
-                        //{
-                        //    b.LinkParts.Add(jbb);
-                        //    AllLinkPart.Add(jbb);
-                        //    JwLinkPart jb1 = new JwLinkPart();
-                        //    jb1.BujianName = "B";
-                        //    jb1.BeamId = b.Id;
-                        //    jb1.BjCenterPoint = new JWPoint
-                        //    {
-                        //        X = Math.Round(a.CenterPoint.X, 2),
-                        //        Y = Math.Round(a.CenterPoint.Y, 2)
-                        //    };
-                        //    jb1.ParentBeam = b;
-                        //    b.LinkParts.Add(jb1);
-                        //    AllLinkPart.Add(jb1);
-                        //}
+                            //如果存在BG构建 但是没有B匹配 
+                            //    if (b.LinkParts.Where(t => t.BjCenterPoint == jbb.BjCenterPoint && t.BujianName == "BG").Count() > 0)
+                            //{
+                            //    b.LinkParts.Add(jbb);
+                            //    AllLinkPart.Add(jbb);
+                            //}
+                            //else
+                            //{
+                            //    b.LinkParts.Add(jbb);
+                            //    AllLinkPart.Add(jbb);
+                            //    JwLinkPart jb1 = new JwLinkPart();
+                            //    jb1.BujianName = "B";
+                            //    jb1.BeamId = b.Id;
+                            //    jb1.BjCenterPoint = new JWPoint
+                            //    {
+                            //        X = Math.Round(a.CenterPoint.X, 2),
+                            //        Y = Math.Round(a.CenterPoint.Y, 2)
+                            //    };
+                            //    jb1.ParentBeam = b;
+                            //    b.LinkParts.Add(jb1);
+                            //    AllLinkPart.Add(jb1);
+                            //}
+                        }
                     }
+                        
                 }
                 //foreach (var a in zfxblocks)
                 //{
