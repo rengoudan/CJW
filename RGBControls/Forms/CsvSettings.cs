@@ -19,29 +19,27 @@ namespace RGBControls.Forms
         {
             InitializeComponent();
             this.form = form;
-            input1.TextChanged += Input1_TextChanged;
-            input2.TextChanged += Input2_TextChanged;
-            input3.TextChanged += Input3_TextChanged;
-            input4.TextChanged += Input4_TextChanged;
             input1.Text = JwFileConsts.CsvHxNum.ToString();
             input2.Text = JwFileConsts.CsvHxJianju.ToString();
             input3.Text = JwFileConsts.CsvZxNum.ToString();
             input4.Text = JwFileConsts.CsvZxJianju.ToString();
+            input5.Text = JwFileConsts.EllipseDiameter.ToString();
+            input1.TextChanged += Input1_TextChanged;
+            input2.TextChanged += Input2_TextChanged;
+            input3.TextChanged += Input3_TextChanged;
+            input4.TextChanged += Input4_TextChanged;
             
             input5.TextChanged += Input5_TextChanged;
-            input5.Text = JwFileConsts.EllipseDiameter.ToString();
+            //
         }
 
         private void Input5_TextChanged(object? sender, EventArgs e)
         {
-            if (input5.Text.IsNumber())
+            try
             {
                 _kongjing = Convert.ToDouble(input5.Text);
             }
-            else
-            {
-                
-            }
+            catch { }
         }
 
         private int _hxnum;
@@ -106,14 +104,15 @@ namespace RGBControls.Forms
 
         private void Input2_TextChanged(object? sender, EventArgs e)
         {
-            if (input2.Text.IsNumber())
+            try
             {
                 _hxjianju = Convert.ToDouble(input2.Text);
             }
-            else
+            catch
             {
                 _hxjianju = 0.0;
             }
+            
         }
 
 
@@ -131,11 +130,11 @@ namespace RGBControls.Forms
 
         private void Input4_TextChanged(object? sender, EventArgs e)
         {
-            if (input4.Text.IsNumber())
+            try
             {
                 _zxjianju = Convert.ToDouble(input4.Text);
             }
-            else
+            catch
             {
                 _zxjianju = 0.0;
             }

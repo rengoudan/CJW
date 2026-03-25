@@ -482,10 +482,10 @@ namespace RGBControls.Pages
                     config.Text = AntdUI.Localization.Get("Processing", "処理") + " " + i + "%";
                     Thread.Sleep(20);
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 config.Value = null;
                 config.Text = AntdUI.Localization.Get("PleaseWait", "お待ちください。...");
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
             }, () =>
             {
                 System.Diagnostics.Debug.WriteLine("仕上げる");
