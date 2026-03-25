@@ -39,6 +39,7 @@
             panel3 = new Panel();
             uiTextBox1 = new Sunny.UI.UITextBox();
             divider1 = new AntdUI.Divider();
+            uiSymbolButton2 = new Sunny.UI.UISymbolButton();
             panel1.SuspendLayout();
             panel5.SuspendLayout();
             panel2.SuspendLayout();
@@ -59,6 +60,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(uiSymbolButton2);
             panel1.Controls.Add(pageHeader1);
             panel1.Controls.Add(panel5);
             panel1.Controls.Add(uiSymbolButton1);
@@ -124,8 +126,7 @@
             uiSymbolButton1.Size = new Size(202, 36);
             uiSymbolButton1.Symbol = 558052;
             uiSymbolButton1.TabIndex = 0;
-            uiSymbolButton1.Text = "輸出JWW";
-            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton1.Text = "梁図JW";
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // panel2
@@ -176,6 +177,19 @@
             divider1.TabIndex = 0;
             divider1.Text = "プレビューCSV";
             // 
+            // uiSymbolButton2
+            // 
+            uiSymbolButton2.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton2.Location = new Point(512, 68);
+            uiSymbolButton2.MinimumSize = new Size(1, 1);
+            uiSymbolButton2.Name = "uiSymbolButton2";
+            uiSymbolButton2.Size = new Size(198, 36);
+            uiSymbolButton2.Symbol = 261891;
+            uiSymbolButton2.TabIndex = 32;
+            uiSymbolButton2.Text = "梁レシピCSV";
+            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton2.Click += uiSymbolButton2_Click;
+            // 
             // NewJwBeamForm
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
@@ -209,5 +223,6 @@
         private AntdUI.Select select7;
         private AntdUI.Button button2;
         private AntdUI.PageHeader pageHeader1;
+        private Sunny.UI.UISymbolButton uiSymbolButton2;
     }
 }

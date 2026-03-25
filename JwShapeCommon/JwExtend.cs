@@ -8,6 +8,7 @@ using Newtonsoft.Json.Converters;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -982,6 +983,13 @@ namespace JwShapeCommon
             return Math.Abs(a - b) < eps;
         }
 
+        public static string GetDescription(this Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attr = field.GetCustomAttributes(typeof(DescriptionAttribute), false)
+                            .FirstOrDefault() as DescriptionAttribute;
+            return attr?.Description ?? value.ToString();
+        }
 
     }
 }

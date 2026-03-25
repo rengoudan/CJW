@@ -111,8 +111,8 @@ namespace JwShapeCommon
                 Center = (TopLeft.X + TopRight.X) / 2;
             }
             CenterPoint = new JWPoint();
-            CenterPoint.X = Math.Round((TopLeft.X + TopRight.X) / 2.0, 6);
-            CenterPoint.Y = Math.Round((TopLeft.Y + BottomLeft.Y) / 2.0, 6);
+            CenterPoint.X = Math.Round((TopLeft.X + TopRight.X) / 2.0, 1);
+            CenterPoint.Y = Math.Round((TopLeft.Y + BottomLeft.Y) / 2.0, 1);
         }
 
         // 计算两点之间的距离

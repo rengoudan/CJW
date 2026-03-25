@@ -161,6 +161,7 @@ namespace JwShapeCommon
                    var py = Math.Round(p.Y, 1);
                    Points.Add(new JWPoint(px, py)); 
                 }
+                block.JisuanWidthHeight();
                 //Points.AddRange(block.BlockPoint);
                 if (block.HasCenter)
                 {
@@ -188,6 +189,7 @@ namespace JwShapeCommon
             if (Blocks.Count == 3)
             {
                 this.BaseType = PillarBaseType.KPillar;
+                this.kPillarType = JwFileConsts.Ktype;
                 TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
                 TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
                 BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();

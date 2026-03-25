@@ -213,7 +213,7 @@ namespace RGBControls.Pages
             {
                 if (selectedsubData != null)
                 {
-                    
+
                     if (AntdUI.Modal.open(this, "ヒント", "プロジェクトデータをすべてエクスポートするかどうか") == DialogResult.OK)
                     {
                         await Progress(async () => { await SaveSubBeams(selectedsubData); });
@@ -245,7 +245,7 @@ namespace RGBControls.Pages
             {
                 if (selectedsubData != null)
                 {
-                    if(selectedsubData.JwLianjieDatas.Count==0)
+                    if (selectedsubData.JwLianjieDatas.Count == 0)
                     {
                         UIMessageBox.ShowError("この階にはブレースデータがありません");
                         return;
@@ -277,7 +277,7 @@ namespace RGBControls.Pages
                 {
                     if (selectedsubData.JwBeamDatas.Count > 0)
                     {
-                        foreach(var b in selectedsubData.JwBeamDatas)
+                        foreach (var b in selectedsubData.JwBeamDatas)
                         {
                             await JwProjectMainService.LoadBeamCollectionAsync(b);
                         }
@@ -286,30 +286,26 @@ namespace RGBControls.Pages
                             ExportCsv(selectedsubData);
                         });
                     }
-                        
+
                 }
             }
         }
 
-        private  async void contextMenuStrip2_Opening(ContextMenuStripItem e)
+        private async void contextMenuStrip2_Opening(ContextMenuStripItem e)
         {
             if (e.Text.Equals("消去"))
             {
-                if (projectmaintable.SelectedIndex > 0)
+                if (_selectedMainData!=null)
                 {
-                    var selectedmaindata = this.projectmaintable[projectmaintable.SelectedIndex - 1].record as JwProjectMainData;
-                    if (selectedmaindata != null)
-                    {
-                        var tishimsg = string.Format("選択したプロジェクト {0} を削除しますか？", selectedmaindata.ProjectName);
+                        var tishimsg = string.Format("選択したプロジェクト {0} を削除しますか？", _selectedMainData.ProjectName);
                         if (AntdUI.Modal.open(this, "ヒント", tishimsg) == DialogResult.OK)
                         {
                             await Progress(async () =>
                             {
-                                //await JwProjectMainService.DeleteMainData(selectedmaindata.Id);
-                                //await ReloadData();
+                                await JwProjectMainService.DeletMain(_selectedMainData.Id);
+                                await ReloadData();
                             });
-                        }
-                    }
+                        }   
                 }
             }
         }
@@ -354,7 +350,26 @@ namespace RGBControls.Pages
                         subsForm.ShowDialog();
                     }
                 });
-                
+
+            }
+        }
+
+        private void projectmaintable_CellClick(object sender, TableClickEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (e.RowIndex > 0)
+                {
+                    _selectedMainData = projectmaintable[e.RowIndex - 1].record as JwProjectMainData;
+                    if (_selectedMainData != null)
+                    {
+                        AntdUI.ContextMenuStrip.open(this, it =>
+                        {
+                            contextMenuStrip2_Opening(it);
+                        }, mainmenulist);
+                    }
+                    projectmaintable.SelectedIndex = e.RowIndex;
+                }
             }
         }
 
@@ -404,17 +419,17 @@ namespace RGBControls.Pages
                     //showJw.jwCanvas = canvas;
                     //showJw.ShowDialog();
                     Sub sub = new Sub(z);
-                    ShowSubForm subForm = new ShowSubForm(z,sub);
+                    ShowSubForm subForm = new ShowSubForm(z, sub);
                     subForm.WindowState = FormWindowState.Maximized;
-                    
+
                     //sub.Dock= DockStyle.Fill;
 
                     ////sub.AutoSize = true;
                     //subForm.Controls.Add(sub);
                     //sub.BringToFront();
                     //sub.Focus();
-                    
-                    
+
+
                     subForm.ShowDialog();
                 }
 
@@ -438,8 +453,17 @@ namespace RGBControls.Pages
                     this.table1.DataSource = _selectedMainData.JwProjectSubDatas.ToList();
                     this.table1.Refresh();
                 }
+                else
+                {
+                    this.table1.DataSource = null;
+                    this.table1.Refresh();
+                }
             }
-
+            else
+            {
+                this.table1.DataSource = null; 
+                this.table1.Refresh();
+            }
         }
 
 
@@ -723,7 +747,7 @@ namespace RGBControls.Pages
 
 
             //GetAllJwCustomerDatasAsync
-            var cdlst=await jwqitaService.GetAllJwCustomerDatasAsync(null);
+            var cdlst = await jwqitaService.GetAllJwCustomerDatasAsync(null);
             var cuslst = cdlst;
 
             option.AddCombobox("JwCustomerDataId", "顧客", cuslst, "CompanyName", "Id", 0);
@@ -1028,5 +1052,6 @@ namespace RGBControls.Pages
 
         #endregion
 
+       
     }
 }

@@ -73,6 +73,7 @@
             projectmaintable.Name = "projectmaintable";
             projectmaintable.Size = new Size(1422, 381);
             projectmaintable.TabIndex = 0;
+            projectmaintable.CellClick += projectmaintable_CellClick;
             projectmaintable.CellDoubleClick += projectmaintable_CellDoubleClick;
             projectmaintable.SelectIndexChanged += projectmaintable_SelectIndexChanged;
             // 

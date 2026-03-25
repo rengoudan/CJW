@@ -39,6 +39,8 @@
             input4 = new AntdUI.Input();
             label5 = new AntdUI.Label();
             uiDoubleUpDown1 = new Sunny.UI.UIDoubleUpDown();
+            label6 = new AntdUI.Label();
+            input5 = new AntdUI.Input();
             SuspendLayout();
             // 
             // label3
@@ -71,7 +73,7 @@
             label4.Name = "label4";
             label4.Size = new Size(167, 35);
             label4.TabIndex = 3;
-            label4.Text = "縦穴数";
+            label4.Text = "縦ピッチ";
             // 
             // divider1
             // 
@@ -137,10 +139,28 @@
             uiDoubleUpDown1.TextAlignment = ContentAlignment.MiddleCenter;
             uiDoubleUpDown1.ValueChanged += uiDoubleUpDown1_ValueChanged;
             // 
+            // label6
+            // 
+            label6.Location = new Point(3, 386);
+            label6.Name = "label6";
+            label6.Size = new Size(167, 35);
+            label6.TabIndex = 11;
+            label6.Text = "孔径";
+            // 
+            // input5
+            // 
+            input5.Location = new Point(173, 372);
+            input5.Name = "input5";
+            input5.Size = new Size(241, 49);
+            input5.TabIndex = 12;
+            input5.Text = "0.0";
+            // 
             // CsvSettings
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(input5);
+            Controls.Add(label6);
             Controls.Add(uiDoubleUpDown1);
             Controls.Add(label5);
             Controls.Add(input4);
@@ -170,5 +190,7 @@
         private AntdUI.Input input4;
         private AntdUI.Label label5;
         private Sunny.UI.UIDoubleUpDown uiDoubleUpDown1;
+        private AntdUI.Label label6;
+        private AntdUI.Input input5;
     }
 }

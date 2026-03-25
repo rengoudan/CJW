@@ -1,5 +1,9 @@
-﻿using JwShapeCommon.Jwbase;
+﻿using JwCore;
+using JwData;
+using JwServices;
 using JwShapeCommon;
+using JwShapeCommon.Jwbase;
+using NPOI.POIFS.Crypt.Dsig;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -10,10 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using JwCore;
-using JwData;
-using NPOI.POIFS.Crypt.Dsig;
-using JwServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RGBJWMain.Forms
 {
@@ -298,7 +299,13 @@ namespace RGBJWMain.Forms
             uiComboBox4.DataSource = ls;
             uiComboBox4.DisplayMember = "JwColorName";
             uiComboBox4.ValueMember = "ColorNumber";
-            uiComboBox5.DataSource = Enum.GetValues(typeof(LianjieParsingMethod));
+            var items = Enum.GetValues(typeof(LianjieParsingMethod))
+                .Cast<LianjieParsingMethod>()
+                .Select(e => new { Text = e.GetDescription(), Value = e })
+                .ToList();
+            uiComboBox5.DataSource = items;
+            uiComboBox5.DisplayMember = "Text";
+            uiComboBox5.ValueMember = "Value";
             //PillarDrawingMethod
             uiComboBox6.DataSource = Enum.GetValues(typeof(PillarDrawingMethod));
             uiComboBox7.DataSource = Enum.GetValues(typeof(KPillarType));

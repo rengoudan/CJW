@@ -1,4 +1,5 @@
-﻿using JwShapeCommon;
+﻿using JwCore;
+using JwShapeCommon;
 using RGBControls.Classes;
 using Sunny.UI;
 using System;
@@ -40,10 +41,10 @@ namespace RGBJWMain.Forms
                 this.newSingleBeamControl1.ShowBeam = this._jwbeam;
                 var csvshow = this._jwbeam.ToProcessCsv();
                 this.uiTextBox1.Text = csvshow;
-                if(!string.IsNullOrEmpty(this._jwbeam.GongQu))
+                if (!string.IsNullOrEmpty(this._jwbeam.GongQu))
                 {
                     this.select7.SelectedValue = this._jwbeam.GongQu;
-                }   
+                }
             }
         }
 
@@ -99,7 +100,7 @@ namespace RGBJWMain.Forms
             {
                 if (IsNewBeam)
                 {
-                    if(GlobalEvent.GetGlobalEvent().UpdateNewGongQuEvent != null)
+                    if (GlobalEvent.GetGlobalEvent().UpdateNewGongQuEvent != null)
                     {
                         var args = new UpdateCodeArgs()
                         {
@@ -128,5 +129,48 @@ namespace RGBJWMain.Forms
                 this.SuccessModal("1つ選択してください");
             }
         }
+
+        private void uiSymbolButton2_Click(object sender, EventArgs e)
+        {
+            if (this._jwbeam!=null)
+            {
+                ExportCsv(this._jwbeam);
+            }
+        }
+
+        private void ExportCsv(JwBeam data)
+        {
+            
+                var csvstr = data.ToProcessCsv();
+                if (!string.IsNullOrEmpty(csvstr))
+                {
+                    SaveFileDialog saveDataSend = new SaveFileDialog();
+                    // Environment.SpecialFolder.MyDocuments 表示在我的文档中
+                    saveDataSend.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);   // 获取文件路径
+                    saveDataSend.Filter = "*.csv|csv file";   // 设置文件类型为文本文件
+                    saveDataSend.DefaultExt = ".csv";   // 默认文件的拓展名
+                    saveDataSend.FileName = string.Format("{0}-3015-2.csv", data.BeamCode);   // 文件默认名
+                    if (saveDataSend.ShowDialog() == DialogResult.OK)   // 显示文件框，并且选择文件
+                    {
+                        string fName = saveDataSend.FileName;   // 获取文件名
+                                                                // 参数1：写入文件的文件名；参数2：写入文件的内容
+                        byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(csvstr);
+                        bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
+                        string q = Encoding.Default.GetString(bs);
+                        System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+                        AntdUI.Modal.open(new AntdUI.Modal.Config(this.ParentForm, "完了プロンプト", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
+                        {
+                            OnButtonStyle = (id, btn) =>
+                            {
+                                btn.BackExtend = "135, #6253E1, #04BEFE";
+                            },
+                            CancelText = null,
+                            OkText = "YES"
+                        });
+                    }
+                }
+            
+        }
+
     }
 }

@@ -1210,7 +1210,11 @@ namespace JwShapeCommon
             }
 
             var klst=_temppillars.Where(t=>t.BaseType==PillarBaseType.KPillar).ToList();
-
+            foreach(var  item in klst)
+            {
+                Pillars.Add(item);
+                tempsquareid.Add(item.Id);
+            }
             //var cllst = _temppillars.Where(t => t.BlocksCount > 3).ToList();
             //if (cllst.Count > 0)
             //{
@@ -1282,18 +1286,18 @@ namespace JwShapeCommon
                     Pillars.Add(item);
                 }
             }
-            foreach (JwPillar item8 in klst)
-            {
-                if (!tempsquareid.Contains(item8.Id))
-                {
-                    var zfx = item8.Blocks.Where(t => t.Iszhengfangxing).Select(t => t.CenterPoint).Distinct(new JwPointComparint()).ToList();
-                    item8.PointA = zfx.First();
-                    item8.PointB = zfx.Last();
-                    //var jl = Math.Round(JwExtend.Distance(item8.PointA, item8.PointB), 2);
-                    //item8.Distance=jl*JwFileConsts.JwScale;
-                    Pillars.Add(item8);
-                }
-            }
+            //foreach (JwPillar item8 in klst)
+            //{
+            //    if (!tempsquareid.Contains(item8.Id))
+            //    {
+            //        var zfx = item8.Blocks.Where(t => t.Iszhengfangxing).Select(t => t.CenterPoint).Distinct(new JwPointComparint()).ToList();
+            //        item8.PointA = zfx.First();
+            //        item8.PointB = zfx.Last();
+            //        //var jl = Math.Round(JwExtend.Distance(item8.PointA, item8.PointB), 2);
+            //        //item8.Distance=jl*JwFileConsts.JwScale;
+            //        Pillars.Add(item8);
+            //    }
+            //}
 
             //Pillars.AddRange(klst);
 
@@ -2479,24 +2483,24 @@ namespace JwShapeCommon
 
             List<JwBlock> zfxblocks = new List<JwBlock>();
             List<JWPoint> zfxblockcenter = new List<JWPoint>();
-
+            int sindex = 0;
+            int kindex = 0;
             foreach (var p in Pillars)
             {
                 if (p.BaseType == PillarBaseType.SinglePillar)
                 {
                     //zfxblocks.AddRange(p.Blocks);
                     zfxblockcenter.Add(p.PointA);
+                    sindex++;
+                    p.PillarCode = string.Format("単柱-{0}", sindex);
                 }
                 if (p.BaseType == PillarBaseType.KPillar)
                 {
-                    //foreach(var b in p.Blocks)
-                    //{
-                    //    if (b.Iszhengfangxing)
-                    //    {
-                    //        zfxblocks.Add(b);
-                    //    }
-                    //}
-                    zfxblockcenter.AddRange(p.CenterPoints);
+                    kindex++;
+                    p.PillarCode = string.Format("K柱-{0}", kindex);
+                    zfxblockcenter.Add(p.PointA);
+                    zfxblockcenter.Add(p.PointB);
+                    //zfxblockcenter.AddRange(p.CenterPoints);
                 }
                 //if(p.BaseType)
             }

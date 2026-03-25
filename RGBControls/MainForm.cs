@@ -54,6 +54,7 @@ namespace RGBControls
                 JwFileConsts.CsvHxNum = settingsForm.Hxnum; 
                 JwFileConsts.CsvZxJianju = settingsForm.Zxjianju;
                 JwFileConsts.CsvZxNum = settingsForm.Zxnum;
+                JwFileConsts.EllipseDiameter = settingsForm.Kongjing;
                 Refresh();
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -227,7 +228,10 @@ namespace JwCore
 
     public enum LianjieParsingMethod
     {
+        [Description("梁端部")]
         OnBeam = 0,
+
+        [Description("通り芯交点")]
         CenterPoint = 1,
     }
 

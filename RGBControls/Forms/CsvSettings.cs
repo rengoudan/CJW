@@ -27,7 +27,21 @@ namespace RGBControls.Forms
             input2.Text = JwFileConsts.CsvHxJianju.ToString();
             input3.Text = JwFileConsts.CsvZxNum.ToString();
             input4.Text = JwFileConsts.CsvZxJianju.ToString();
+            
+            input5.TextChanged += Input5_TextChanged;
+            input5.Text = JwFileConsts.EllipseDiameter.ToString();
+        }
 
+        private void Input5_TextChanged(object? sender, EventArgs e)
+        {
+            if (input5.Text.IsNumber())
+            {
+                _kongjing = Convert.ToDouble(input5.Text);
+            }
+            else
+            {
+                
+            }
         }
 
         private int _hxnum;
@@ -66,6 +80,15 @@ namespace RGBControls.Forms
             set
             {
                 _ytiaozheng = value;
+            }
+        }
+        private double _kongjing;
+        public double Kongjing
+        {
+            get { return _kongjing; }
+            set
+            {
+                _kongjing = value;
             }
         }
 

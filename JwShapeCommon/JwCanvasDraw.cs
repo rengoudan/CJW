@@ -176,8 +176,8 @@ namespace JwShapeCommon
                         }
                     }
                 }
-
-                if (jwCanvas.JwDownPillarDatas.Count > 0)
+                
+                if (jwCanvas.JwDownPillarDatas?.Count > 0)
                 {
                     foreach (var dp in jwCanvas.JwDownPillarDatas)
                     {
@@ -185,7 +185,7 @@ namespace JwShapeCommon
                         DownPillars.Add(jwDown.Change(_minbeilv, axisX, axisY));
                     }
                 }
-                if (jwCanvas.Directeds.Count > 0)
+                if (jwCanvas.Directeds?.Count > 0)
                 {
                     foreach (var d in jwCanvas.Directeds)
                     {
