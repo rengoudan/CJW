@@ -1188,17 +1188,17 @@ namespace JwShapeCommon
                     }
                 }
                 PillarCount = _temppillars.Count();
-                if (PillarCount > 0)
-                {
-                    HasPillar = true;
-                    int pcout = 0;
-                    foreach (var item in _temppillars)
-                    {
-                        item.Blocks = item.Blocks.Distinct(new JwBlockComparint()).ToList();
-                        item.PillarCode = string.Format("{0}-{1}", item.DirectionType.ToString(), pcout + 1);
-                        pcout++;
-                    }
-                }
+                //if (PillarCount > 0)
+                //{
+                //    HasPillar = true;
+                //    int pcout = 0;
+                //    foreach (var item in _temppillars)
+                //    {
+                //        item.Blocks = item.Blocks.Distinct(new JwBlockComparint()).ToList();
+                        
+                //        pcout++;
+                //    }
+                //}
             }
 
             if (_temppillars?.Count > 0)
@@ -1208,69 +1208,72 @@ namespace JwShapeCommon
                     item.squareParse();
                 }
             }
-            var cllst = _temppillars.Where(t => t.BlocksCount > 3).ToList();
-            if (cllst.Count > 0)
-            {
-                foreach (var item in cllst)
-                {
-                    var xg = item.Blocks.GroupBy(t => t.CenterPoint.X);
-                    var yg = item.Blocks.GroupBy(t => t.CenterPoint.Y);
-                    int cxg = xg.Count();
-                    int cyg= yg.Count();
-                    if (cxg > cyg)
-                    {
-                        if (cyg == 1)
-                        {
-                            item.Blocks = item.Blocks.Distinct(new JwBlockComparint()).ToList();
-                            if (item.Blocks.Count == 3)
-                            {
-                                item.BaseType = PillarBaseType.KPillar;
-                                Pillars.Add(item);
-                                tempsquareid.Add(item.Id);
-                            }
-                            //break;
-                        }
-                        foreach (var item6 in yg)
-                        {
-                            List<JwBlock> list5 = item6.Distinct(new JwBlockComparint()).ToList();
-                            if (list5.Count == 3)
-                            {
-                                item.Blocks = list5;
-                                item.BaseType = PillarBaseType.KPillar;
-                                Pillars.Add(item);
-                                tempsquareid.Add(item.Id);
-                                break;
-                            }
-                        }
-                    }
-                    if (cxg == 1)
-                    {
-                        item.Blocks = item.Blocks.Distinct(new JwBlockComparint()).ToList();
-                        if (item.Blocks.Count == 3)
-                        {
-                            item.BaseType = (PillarBaseType)1;
-                            Pillars.Add(item);
-                            tempsquareid.Add(item.Id);
-                        }
-                    }
-                    foreach(var item7 in xg)
-                    {
-                        List<JwBlock> list6 = item7.Distinct(new JwBlockComparint()).ToList();
-                        if (list6.Count == 3)
-                        {
-                            item.Blocks = list6;
-                            item.BaseType = (PillarBaseType)1;
-                            Pillars.Add(item);
-                            tempsquareid.Add(item.Id);
-                            break;
-                        }
-                    }
 
-                }
-            }
+            var klst=_temppillars.Where(t=>t.BaseType==PillarBaseType.KPillar).ToList();
+
+            //var cllst = _temppillars.Where(t => t.BlocksCount > 3).ToList();
+            //if (cllst.Count > 0)
+            //{
+            //    foreach (var item in cllst)
+            //    {
+            //        var xg = item.Blocks.GroupBy(t => t.CenterPoint.X);
+            //        var yg = item.Blocks.GroupBy(t => t.CenterPoint.Y);
+            //        int cxg = xg.Count();
+            //        int cyg= yg.Count();
+            //        if (cxg > cyg)
+            //        {
+            //            if (cyg == 1)
+            //            {
+            //                item.Blocks = item.Blocks.Distinct(new JwBlockComparint()).ToList();
+            //                if (item.Blocks.Count == 3)
+            //                {
+            //                    item.BaseType = PillarBaseType.KPillar;
+            //                    Pillars.Add(item);
+            //                    tempsquareid.Add(item.Id);
+            //                }
+            //                //break;
+            //            }
+            //            foreach (var item6 in yg)
+            //            {
+            //                List<JwBlock> list5 = item6.Distinct(new JwBlockComparint()).ToList();
+            //                if (list5.Count == 3)
+            //                {
+            //                    item.Blocks = list5;
+            //                    item.BaseType = PillarBaseType.KPillar;
+            //                    Pillars.Add(item);
+            //                    tempsquareid.Add(item.Id);
+            //                    break;
+            //                }
+            //            }
+            //        }
+            //        if (cxg == 1)
+            //        {
+            //            item.Blocks = item.Blocks.Distinct(new JwBlockComparint()).ToList();
+            //            if (item.Blocks.Count == 3)
+            //            {
+            //                item.BaseType = (PillarBaseType)1;
+            //                Pillars.Add(item);
+            //                tempsquareid.Add(item.Id);
+            //            }
+            //        }
+            //        foreach(var item7 in xg)
+            //        {
+            //            List<JwBlock> list6 = item7.Distinct(new JwBlockComparint()).ToList();
+            //            if (list6.Count == 3)
+            //            {
+            //                item.Blocks = list6;
+            //                item.BaseType = (PillarBaseType)1;
+            //                Pillars.Add(item);
+            //                tempsquareid.Add(item.Id);
+            //                break;
+            //            }
+            //        }
+
+            //    }
+            //}
 
             var sinlelst = _temppillars.Where(t => t.BaseType == PillarBaseType.SinglePillar).ToList();
-            var klst = _temppillars.Where(t => t.BaseType ==PillarBaseType.KPillar).ToList();
+            var klsts = _temppillars.Where(t => t.BaseType ==PillarBaseType.KPillar).ToList();
             foreach (var item in sinlelst)
             {
                 var z = klst.Where(t => t.Contains(item.CenterPoint)).Count();

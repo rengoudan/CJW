@@ -147,7 +147,8 @@ namespace JwShapeCommon
         public void squareParse()
         {
             int izhengfangcou = 0;
-
+            Blocks= Blocks.Distinct(new JwBlockComparint()).ToList();
+            BlocksCount=Blocks.Count;
             foreach (var block in Blocks)
             {
                 if (block.Iszhengfangxing)
@@ -243,6 +244,10 @@ namespace JwShapeCommon
                     }
                 }
 
+            }
+            if (Blocks.Count > 3)
+            {
+                this.BaseType = PillarBaseType.None;
             }
             BlocksCount = Blocks.Count;
             JisuanWidthHeight();

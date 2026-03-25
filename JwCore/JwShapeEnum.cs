@@ -173,7 +173,8 @@ namespace JwCore
     public enum PillarBaseType
     {
         SinglePillar = 0,
-        KPillar = 1
+        KPillar = 1,
+        None= 2,
     }
 
     /// <summary>
