@@ -1,7 +1,9 @@
 ﻿ using JwShapeCommon;
+using JwSharedConfig.Config;
 using MathNet.Numerics;
 using RGBControls.Forms;
 using RGBControls.Pages;
+using RGBJWMain;
 using RGBJWMain.Pages;
 using Sunny.UI;
 using System;
@@ -40,7 +42,12 @@ namespace RGBControls
             uiNavBar1.CreateNode(AddPage(new JwBudgePage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwCustomerPage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new NewBaseDataPage(), ++pageIndex));
-            
+            var config = AppConfigManager.Current;
+            JwFileConsts.CsvHxJianju = config.Csv.Hxjianju;
+            JwFileConsts.CsvHxNum = config.Csv.Hxnum;
+            JwFileConsts.CsvZxJianju = config.Csv.Zxjianju;
+            JwFileConsts.CsvZxNum = config.Csv.Zxnum;
+            JwFileConsts.EllipseDiameter = config.Csv.Kongjing;
         }
 
         
@@ -55,6 +62,15 @@ namespace RGBControls
                 JwFileConsts.CsvZxJianju = settingsForm.Zxjianju;
                 JwFileConsts.CsvZxNum = settingsForm.Zxnum;
                 JwFileConsts.EllipseDiameter = settingsForm.Kongjing;
+                var config = AppConfigManager.Current;
+
+                config.Csv.Hxnum = JwFileConsts.CsvHxNum;
+                config.Csv.Hxjianju=JwFileConsts.CsvHxJianju;
+                config.Csv.Zxjianju = JwFileConsts.CsvZxJianju;
+                config.Csv.Zxnum= JwFileConsts.CsvZxNum;
+                config.Csv.Kongjing = JwFileConsts.EllipseDiameter;
+                //config.Database.TimeoutSeconds = 60;
+                AppConfigManager.Save();
                 Refresh();
             }
         }

@@ -1,4 +1,5 @@
 ﻿using JwShapeCommon;
+using JwSharedConfig.Config;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -19,11 +20,17 @@ namespace RGBControls.Forms
         {
             InitializeComponent();
             this.form = form;
-            input1.Text = JwFileConsts.CsvHxNum.ToString();
-            input2.Text = JwFileConsts.CsvHxJianju.ToString();
-            input3.Text = JwFileConsts.CsvZxNum.ToString();
-            input4.Text = JwFileConsts.CsvZxJianju.ToString();
-            input5.Text = JwFileConsts.EllipseDiameter.ToString();
+            var config = AppConfigManager.Current;
+            this.Hxnum = config.Csv.Hxnum;
+            this.Hxjianju= config.Csv.Hxjianju;
+            this.Zxnum = config.Csv.Zxnum;
+            this.Zxjianju=config.Csv.Zxjianju;
+            this.Kongjing= config.Csv.Kongjing;
+            input1.Text = this.Hxnum.ToString();
+            input2.Text = this.Hxjianju.ToString();
+            input3.Text = this.Zxnum.ToString();
+            input4.Text = this.Zxjianju.ToString();
+            input5.Text = this.Kongjing.ToString();
             input1.TextChanged += Input1_TextChanged;
             input2.TextChanged += Input2_TextChanged;
             input3.TextChanged += Input3_TextChanged;

@@ -378,7 +378,7 @@ namespace RGBControls.Controls
             dialog.Description = "";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                string foldPath = dialog.SelectedPath + "\\" + data.FloorName;
+                string foldPath = dialog.SelectedPath;// + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
                 {
                     Directory.CreateDirectory(foldPath);
@@ -409,7 +409,7 @@ namespace RGBControls.Controls
                 //{
                 //    a.AddData(b);
                 //}
-                var filename= string.Format("{0}上F孔伏図", data.FloorName);
+                var filename= string.Format("{0} 上F孔伏図", data.FloorName);
                 a.Write(foldPath + "\\" + filename + ".jww");
             }
         }
@@ -420,7 +420,7 @@ namespace RGBControls.Controls
             dialog.Description = "";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                string foldPath = dialog.SelectedPath + "\\" + data.FloorName;
+                string foldPath = dialog.SelectedPath;// + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
                 {
                     Directory.CreateDirectory(foldPath);
@@ -451,7 +451,7 @@ namespace RGBControls.Controls
                 //{
                 //    a.AddData(b);
                 //}
-                var filename = string.Format("{0}下F孔伏図", data.FloorName);
+                var filename = string.Format("{0} 下F孔伏図", data.FloorName);
                 a.Write(foldPath + "\\" + filename + ".jww");
             }
         }

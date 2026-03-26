@@ -579,7 +579,7 @@ namespace RGBControls.Pages
             dialog.Description = "";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                string foldPath = dialog.SelectedPath + "\\" + data.FloorName;
+                string foldPath = dialog.SelectedPath;// + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
                 {
                     Directory.CreateDirectory(foldPath);
@@ -610,7 +610,7 @@ namespace RGBControls.Pages
                 //{
                 //    a.AddData(b);
                 //}
-                a.Write(foldPath + "\\" + data.FloorName + ".jww");
+                a.Write(foldPath + "\\" + data.FloorName + " 上F孔伏図.jww");
             }
         }
 
@@ -620,7 +620,7 @@ namespace RGBControls.Pages
             dialog.Description = "";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                string foldPath = dialog.SelectedPath + "\\" + data.FloorName;
+                string foldPath = dialog.SelectedPath;// + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
                 {
                     Directory.CreateDirectory(foldPath);
@@ -651,7 +651,7 @@ namespace RGBControls.Pages
                 //{
                 //    a.AddData(b);
                 //}
-                a.Write(foldPath + "\\" + data.FloorName + ".jww");
+                a.Write(foldPath + "\\" + data.FloorName + " 下F孔伏図.jww");
             }
         }
         private async Task SaveSubCanvasLines(JwProjectSubData data)
