@@ -579,6 +579,16 @@ namespace JwShapeCommon
         /// </summary>
         public bool IsQiegeBeam = false;
 
+        /// <summary>
+        /// 2026年3月28日 是否有败方G
+        /// </summary>
+        public bool HasBFG = false;
+
+        /// <summary>
+        /// 同上 在选择查看梁的时候 如果上面的属性为true则允许设置此
+        /// </summary>
+        public BaiFangGTBDistanceType BaiFangGTBDistance = BaiFangGTBDistanceType.A35;
+
         public List<JwBeamVertical> Baifangs= new List<JwBeamVertical>();
 
         public List<JwKongZu> Kongzus=new List<JwKongZu>();

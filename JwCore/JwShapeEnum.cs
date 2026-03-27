@@ -235,10 +235,23 @@ namespace JwCore
         CenterPoint = 1,
     }
 
+    /// <summary>
+    /// 柱解析类型 现状轮廓 或者实体形状
+    /// </summary>
     public enum PillarDrawingMethod
     {
         Line = 0,
         Shape = 1
+    }
+
+    /// <summary>
+    /// 败方top和bottom面G端距离
+    /// 默认为35
+    /// </summary>
+    public enum BaiFangGTBDistanceType
+    {
+        A29 = 29,
+        A35 = 35,
     }
 
 }
