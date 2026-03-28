@@ -54,6 +54,17 @@ namespace JwCore
         /// </summary>
         public double EndCenter { get; set; }
 
+        /// <summary>
+        /// 2026年3月28日 是否有败方G
+        /// </summary>
+        public bool HasBFG { get; set; }
+
+        /// <summary>
+        /// 同上 在选择查看梁的时候 如果上面的属性为true则允许设置此
+        /// </summary>
+        public BaiFangGTBDistanceType BaiFangGTBDistance { get; set; } = BaiFangGTBDistanceType.A35;
+
+
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
 
         public ObservableCollectionListSource<JwHoleData> JwHoles { get; } = new();

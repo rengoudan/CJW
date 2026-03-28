@@ -30,6 +30,10 @@
         {
             newSingleBeamControl1 = new RGBJWMain.Controls.NewSingleBeamControl();
             panel1 = new Panel();
+            panel4 = new Panel();
+            select1 = new AntdUI.Select();
+            button1 = new AntdUI.Button();
+            uiSymbolButton2 = new Sunny.UI.UISymbolButton();
             pageHeader1 = new AntdUI.PageHeader();
             panel5 = new Panel();
             select7 = new AntdUI.Select();
@@ -39,8 +43,8 @@
             panel3 = new Panel();
             uiTextBox1 = new Sunny.UI.UITextBox();
             divider1 = new AntdUI.Divider();
-            uiSymbolButton2 = new Sunny.UI.UISymbolButton();
             panel1.SuspendLayout();
+            panel4.SuspendLayout();
             panel5.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -60,6 +64,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(panel4);
             panel1.Controls.Add(uiSymbolButton2);
             panel1.Controls.Add(pageHeader1);
             panel1.Controls.Add(panel5);
@@ -70,6 +75,53 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1562, 111);
             panel1.TabIndex = 1;
+            // 
+            // panel4
+            // 
+            panel4.Controls.Add(select1);
+            panel4.Controls.Add(button1);
+            panel4.Location = new Point(732, 64);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(249, 40);
+            panel4.TabIndex = 31;
+            panel4.Text = "panel4";
+            // 
+            // select1
+            // 
+            select1.AllowClear = true;
+            select1.Dock = DockStyle.Fill;
+            select1.JoinMode = AntdUI.TJoinMode.Left;
+            select1.LocalizationPlaceholderText = "Select.{id}";
+            select1.Location = new Point(0, 0);
+            select1.Name = "select1";
+            select1.PlaceholderText = "選ぶG";
+            select1.Size = new Size(199, 40);
+            select1.TabIndex = 0;
+            // 
+            // button1
+            // 
+            button1.Dock = DockStyle.Right;
+            button1.IconSvg = "CheckOutlined";
+            button1.JoinMode = AntdUI.TJoinMode.Right;
+            button1.Location = new Point(199, 0);
+            button1.Name = "button1";
+            button1.Size = new Size(50, 40);
+            button1.TabIndex = 1;
+            button1.Type = AntdUI.TTypeMini.Primary;
+            button1.Click += button1_Click;
+            // 
+            // uiSymbolButton2
+            // 
+            uiSymbolButton2.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton2.Location = new Point(512, 68);
+            uiSymbolButton2.MinimumSize = new Size(1, 1);
+            uiSymbolButton2.Name = "uiSymbolButton2";
+            uiSymbolButton2.Size = new Size(198, 36);
+            uiSymbolButton2.Symbol = 261891;
+            uiSymbolButton2.TabIndex = 32;
+            uiSymbolButton2.Text = "梁レシピCSV";
+            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // pageHeader1
             // 
@@ -177,19 +229,6 @@
             divider1.TabIndex = 0;
             divider1.Text = "プレビューCSV";
             // 
-            // uiSymbolButton2
-            // 
-            uiSymbolButton2.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            uiSymbolButton2.Location = new Point(512, 68);
-            uiSymbolButton2.MinimumSize = new Size(1, 1);
-            uiSymbolButton2.Name = "uiSymbolButton2";
-            uiSymbolButton2.Size = new Size(198, 36);
-            uiSymbolButton2.Symbol = 261891;
-            uiSymbolButton2.TabIndex = 32;
-            uiSymbolButton2.Text = "梁レシピCSV";
-            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            uiSymbolButton2.Click += uiSymbolButton2_Click;
-            // 
             // NewJwBeamForm
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
@@ -204,6 +243,7 @@
             Text = "NewJwBeamForm";
             Shown += NewJwBeamForm_Shown;
             panel1.ResumeLayout(false);
+            panel4.ResumeLayout(false);
             panel5.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel3.ResumeLayout(false);
@@ -224,5 +264,8 @@
         private AntdUI.Button button2;
         private AntdUI.PageHeader pageHeader1;
         private Sunny.UI.UISymbolButton uiSymbolButton2;
+        private Panel panel4;
+        private AntdUI.Select select1;
+        private AntdUI.Button button1;
     }
 }

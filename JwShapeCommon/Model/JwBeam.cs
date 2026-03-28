@@ -626,6 +626,9 @@ namespace JwShapeCommon
             data.StartCenter=this.StartCenter;
             data.EndCenter=this.EndCenter;
             data.GongQu = this.GongQu;
+            data.HasBFG=this.HasBFG;
+            data.BaiFangGTBDistance=this.BaiFangGTBDistance;
+
             return data;
         }
 

@@ -264,6 +264,8 @@ namespace JwShapeCommon
                     jwbm.StartCenter = bm.StartCenter;
                     jwbm.EndCenter = bm.EndCenter;
                     jwbm.GongQu = bm.GongQu;
+                    jwbm.HasBFG = bm.HasBFG;
+                    jwbm.BaiFangGTBDistance= bm.BaiFangGTBDistance;
                     //jwbm.HasEndSide=bm.has
                     if (bm.JwHoles.Count > 0)
                     {
