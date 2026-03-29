@@ -2060,6 +2060,8 @@ namespace JwShapeCommon
                                         c.AddAnyHole(pflocation, HoleCreateFrom.JieChuG, null, true, false);
                                         c.HasStartSide = true;
                                         c.StartTelosType = KongzuType.G;
+                                        c.HasBFG = true;
+                                        c.BaiFangGTBDistance = BaiFangGTBDistanceType.A35;
                                         c.StartSide = new JwBeamSide
                                         {
                                             KongZu = c.Holes.Last(),
@@ -2176,7 +2178,8 @@ namespace JwShapeCommon
                                             KongZu = c.Holes.Last(),
                                             SideType = KongzuType.G,
                                         };
-
+                                        c.HasBFG = true;
+                                        c.BaiFangGTBDistance = BaiFangGTBDistanceType.A35;
                                         JwLinkPart jbb = new JwLinkPart();
                                         jbb.Directed = TaggDirect.Down;
                                         jbb.GouJianType = GouJianType.BG;
@@ -2299,7 +2302,8 @@ namespace JwShapeCommon
                                             KongZu = r.Holes.Last(),
                                             SideType = KongzuType.G
                                         };
-
+                                        r.HasBFG = true;
+                                        r.BaiFangGTBDistance = BaiFangGTBDistanceType.A35;
 
                                         JwLinkPart jbb = new JwLinkPart();
                                         jbb.Directed = TaggDirect.Left;
@@ -2405,6 +2409,8 @@ namespace JwShapeCommon
                                             KongZu = r.Holes.Last(),
                                             SideType = KongzuType.G,
                                         };
+                                        r.HasBFG = true;
+                                        r.BaiFangGTBDistance = BaiFangGTBDistanceType.A35;
 
 
 

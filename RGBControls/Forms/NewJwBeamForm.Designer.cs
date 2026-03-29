@@ -30,8 +30,8 @@
         {
             newSingleBeamControl1 = new RGBJWMain.Controls.NewSingleBeamControl();
             panel1 = new Panel();
+            uiComboBox1 = new Sunny.UI.UIComboBox();
             panel4 = new Panel();
-            select1 = new AntdUI.Select();
             button1 = new AntdUI.Button();
             uiSymbolButton2 = new Sunny.UI.UISymbolButton();
             pageHeader1 = new AntdUI.PageHeader();
@@ -64,6 +64,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(uiComboBox1);
             panel1.Controls.Add(panel4);
             panel1.Controls.Add(uiSymbolButton2);
             panel1.Controls.Add(pageHeader1);
@@ -76,27 +77,33 @@
             panel1.Size = new Size(1562, 111);
             panel1.TabIndex = 1;
             // 
+            // uiComboBox1
+            // 
+            uiComboBox1.DataSource = null;
+            uiComboBox1.FillColor = Color.White;
+            uiComboBox1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiComboBox1.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            uiComboBox1.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            uiComboBox1.Location = new Point(732, 69);
+            uiComboBox1.Margin = new Padding(4, 5, 4, 5);
+            uiComboBox1.MinimumSize = new Size(63, 0);
+            uiComboBox1.Name = "uiComboBox1";
+            uiComboBox1.Padding = new Padding(0, 0, 30, 2);
+            uiComboBox1.Size = new Size(203, 30);
+            uiComboBox1.SymbolSize = 24;
+            uiComboBox1.TabIndex = 2;
+            uiComboBox1.Text = "uiComboBox1";
+            uiComboBox1.TextAlignment = ContentAlignment.MiddleLeft;
+            uiComboBox1.Watermark = "";
+            // 
             // panel4
             // 
-            panel4.Controls.Add(select1);
             panel4.Controls.Add(button1);
             panel4.Location = new Point(732, 64);
             panel4.Name = "panel4";
             panel4.Size = new Size(249, 40);
             panel4.TabIndex = 31;
             panel4.Text = "panel4";
-            // 
-            // select1
-            // 
-            select1.AllowClear = true;
-            select1.Dock = DockStyle.Fill;
-            select1.JoinMode = AntdUI.TJoinMode.Left;
-            select1.LocalizationPlaceholderText = "Select.{id}";
-            select1.Location = new Point(0, 0);
-            select1.Name = "select1";
-            select1.PlaceholderText = "選ぶG";
-            select1.Size = new Size(199, 40);
-            select1.TabIndex = 0;
             // 
             // button1
             // 
@@ -241,6 +248,7 @@
             Name = "NewJwBeamForm";
             SizeGripStyle = SizeGripStyle.Show;
             Text = "NewJwBeamForm";
+            Load += NewJwBeamForm_Load;
             Shown += NewJwBeamForm_Shown;
             panel1.ResumeLayout(false);
             panel4.ResumeLayout(false);
@@ -265,7 +273,7 @@
         private AntdUI.PageHeader pageHeader1;
         private Sunny.UI.UISymbolButton uiSymbolButton2;
         private Panel panel4;
-        private AntdUI.Select select1;
         private AntdUI.Button button1;
+        private Sunny.UI.UIComboBox uiComboBox1;
     }
 }

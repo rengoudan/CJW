@@ -32,7 +32,7 @@ namespace RGBJWMain.Forms
             //this.Name = this._jwbeam.BeamCode;
             InitializeComponent();
             this.pageHeader1.Text = string.Format("梁预览-{0}", this._jwbeam.BeamCode);
-            this.select1.Visible = false;
+            this.uiComboBox1.Visible = false;
             this.button1.Visible = false;
         }
 
@@ -47,10 +47,7 @@ namespace RGBJWMain.Forms
                 {
                     this.select7.SelectedValue = this._jwbeam.GongQu;
                 }
-                if (this._jwbeam.HasBFG)
-                {
-
-                }
+                
             }
         }
 
@@ -181,6 +178,24 @@ namespace RGBJWMain.Forms
         private void button1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void NewJwBeamForm_Load(object sender, EventArgs e)
+        {
+            if(this._jwbeam != null)
+            {
+                if (this._jwbeam.HasBFG)
+                {
+                    //this.select1.Visible= true;
+                    this.uiComboBox1.Visible = true;
+                    this.button1.Visible = true;
+                    var lst = Enum.GetValues(typeof(BaiFangGTBDistanceType));
+                    //lst.Select(new SelectItem()
+                    this.uiComboBox1.DataSource = lst;
+                    this.uiComboBox1.SelectedItem = this._jwbeam.BaiFangGTBDistance;
+                    //this.select1.Items = new BaseCollection(lst);
+                }
+            }
         }
     }
 }
