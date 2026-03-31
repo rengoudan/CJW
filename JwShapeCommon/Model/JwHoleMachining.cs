@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JwCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,29 +33,48 @@ namespace JwShapeCommon.Model
         /// <summary>
         /// 工字梁下面
         /// </summary>
-        public bool HasRight { get; set; }  
+        public bool HasRight { get; set; }
 
         /// <summary>
         /// 工字梁中间
         /// </summary>
-        public bool HasTop { get; set; }  
-        
+        public bool HasTop { get; set; }
+
 
         public string ToCsvString(double y)
         {
-            
+
             //double ysjv = Math.Abs(Y) + .CsvYwucha;
             return string.Format("{3},絶対,先端,{0},{1},1,{2},1,0.0,\r\n", RelativeStartDistance.ToString("0.0"), y.ToString("0.0"), "0.0", JwFileConsts.EllipseDiameter.ToString("0.0"));
             //return $"{Id},{RelativeStartDistance},{HasLeft},{HasRight},{HasTop}";
         }
 
+        /// <summary>
+        /// 根据beam的baifangdistancetype
+        /// 右上左下
+        /// </summary>
+        /// <param name="isadd"></param>
+        /// <returns></returns>
         public JwHoleMachining GTopBottomAddHole(bool isadd)
         {
-            var offset=JwFileConsts.Kongjing/JwFileConsts.JwScale;
+            var offset = JwFileConsts.Kongjing / JwFileConsts.JwScale;
             JwHoleMachining result = new JwHoleMachining();
             result.Id = Guid.NewGuid().ToString();
             result.RelativeStartDistance = isadd ? this.RelativeStartDistance + offset : this.RelativeStartDistance - offset;
-            result.RealLocation=isadd? this.RealLocation + offset : this.RealLocation - offset;
+            result.RealLocation = isadd ? this.RealLocation + offset : this.RealLocation - offset;
+            result.HasLeft = true;
+            result.HasRight = true;
+            result.HasTop = false;
+            return result;
+        }
+
+        public JwHoleMachining GTopBottomAddHole(bool isadd, BaiFangGTBDistanceType baiFangGTB)
+        {
+            var offset = JwFileConsts.Kongjing / JwFileConsts.JwScale;
+            JwHoleMachining result = new JwHoleMachining();
+            result.Id = Guid.NewGuid().ToString();
+            result.RelativeStartDistance = isadd ? this.RelativeStartDistance + offset : this.RelativeStartDistance - offset;
+            result.RealLocation = isadd ? this.RealLocation + offset : this.RealLocation - offset;
             result.HasLeft = true;
             result.HasRight = true;
             result.HasTop = false;

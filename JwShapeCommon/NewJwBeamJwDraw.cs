@@ -907,15 +907,21 @@ namespace JwShapeCommon
                 {
                     var hx = (float)(90 / JwFileConsts.JwScale);
                     //var thx = (float)((90+56) / JwFileConsts.JwScale);
-                    var bchx = hx + (float)(56 / JwFileConsts.JwScale);
-                    createhole(hx, tcy + halfbj);
-                    createhole(hx,tcy - halfbj);
+                  
+                    var tbx = hx;
+                    if (_beam.BaiFangGTBDistance == BaiFangGTBDistanceType.A29)
+                    {
+                        tbx=tbx-(float)(6/JwFileConsts.JwScale);
+                    }
+                    var bchx = tbx + (float)(56 / JwFileConsts.JwScale);
+                    createhole(tbx, tcy + halfbj);
+                    createhole(tbx, tcy - halfbj);
                     createhole(bchx, tcy + halfbj);
                     createhole(bchx, tcy - halfbj);
                     createhole(hx,ccy + halfbj);
                     createhole(hx,ccy - halfbj);
-                    createhole(hx,bcy + halfbj);
-                    createhole(hx,bcy - halfbj);
+                    createhole(tbx, bcy + halfbj);
+                    createhole(tbx, bcy - halfbj);
                     createhole(bchx, bcy + halfbj);
                     createhole(bchx, bcy - halfbj);
                     if (h.HasBhLinkHole)
@@ -1000,15 +1006,21 @@ namespace JwShapeCommon
                 else if (_beam.EndTelosType == KongzuType.G)
                 {
                     var hx = (float)(endzb - 90 / JwFileConsts.JwScale);
-                    var bchx = hx - (float)(56 / JwFileConsts.JwScale);
-                    createhole(hx, tcy + halfbj);
-                    createhole(hx, tcy - halfbj);
+                    //var bchx = hx - (float)(56 / JwFileConsts.JwScale);
+                    var tbx = hx;
+                    if (_beam.BaiFangGTBDistance == BaiFangGTBDistanceType.A29)
+                    {
+                        tbx = tbx + (float)(6 / JwFileConsts.JwScale);
+                    }
+                    var bchx = tbx - (float)(56 / JwFileConsts.JwScale);
+                    createhole(tbx, tcy + halfbj);
+                    createhole(tbx, tcy - halfbj);
                     createhole(bchx, tcy + halfbj);
                     createhole(bchx, tcy - halfbj);
                     createhole(hx, ccy + halfbj);
                     createhole(hx, ccy - halfbj);
-                    createhole(hx, bcy + halfbj);
-                    createhole(hx, bcy - halfbj);
+                    createhole(tbx, bcy + halfbj);
+                    createhole(tbx, bcy - halfbj);
                     createhole(bchx, bcy + halfbj);
                     createhole(bchx, bcy - halfbj);
                     if (h.HasPreLinkHole)

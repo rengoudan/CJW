@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwServices;
 using JwShapeCommon;
 using RGBControls.Classes;
 using Sunny.UI;
@@ -19,6 +20,8 @@ namespace RGBJWMain.Forms
         private JwBeam _jwbeam;
 
         public bool IsNewBeam = false;
+
+        private JwProjectMainService _jwProjectMainService => ServiceFactory.GetInstance().CreateJwProjectMainService();
 
         public NewJwBeamForm()
         {
@@ -175,9 +178,18 @@ namespace RGBJWMain.Forms
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
+            if (IsNewBeam)
+            {
 
+            }
+            else
+            {
+                this._jwbeam.BaiFangGTBDistance = (BaiFangGTBDistanceType)this.uiComboBox1.SelectedItem;
+                //更新数据库
+                await _jwProjectMainService.UpdateBeamBFDistance(this._jwbeam.Id, (BaiFangGTBDistanceType)this.uiComboBox1.SelectedItem);
+            }
         }
 
         private void NewJwBeamForm_Load(object sender, EventArgs e)

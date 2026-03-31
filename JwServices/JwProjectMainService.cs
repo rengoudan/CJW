@@ -182,6 +182,16 @@ namespace JwServices
             }
         }
 
+        public async Task UpdateBeamBFDistance(string beamId, BaiFangGTBDistanceType baiFangGTB)
+        {
+            var beam = await GetByIdAsync<JwBeamData>(beamId);
+            if (beam != null)
+            {
+                beam.BaiFangGTBDistance = baiFangGTB;
+                await UpdateAsync<JwBeamData>(beam);
+            }
+        }
+
         /// <summary>
         /// 重新计算sub 和 main 的各类计数
         /// </summary>

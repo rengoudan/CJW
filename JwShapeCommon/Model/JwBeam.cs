@@ -1055,10 +1055,22 @@ namespace JwShapeCommon
                     Id = Id,
                     RelativeStartDistance = Math.Round((location - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = location,
-                    HasLeft = hole.HasTop,
-                    HasRight = hole.HasBottom,
+                    HasLeft = false,
+                    HasRight = false,
                     HasTop = hole.HasCenter
                 };
+
+
+                JwHoleMachining machiningsingletopbottomg = new JwHoleMachining
+                {
+                    Id = Id,
+                    RelativeStartDistance = Math.Round((location - ks), 2) * JwFileConsts.JwScale,
+                    RealLocation = location,
+                    HasLeft = true,
+                    HasRight = true,
+                    HasTop = false,
+                };
+
                 switch (hole.HoleType)
                 {
                     case KongzuType.BC:
@@ -1108,6 +1120,7 @@ namespace JwShapeCommon
                         break;
                     case KongzuType.G:
                         JwHoleMachinings.Add(machiningsingle);
+                       
                         if (hole.HasBhLinkHole)
                         {
                             JwHoleMachinings.Add(jwtouright);
@@ -1119,14 +1132,30 @@ namespace JwShapeCommon
                         //2026年3月20日如果是开始 上下增加一组孔 x+offset
                         if (isstart)
                         {
-                            var addg = machiningsingle.GTopBottomAddHole(true);
-                            JwHoleMachinings.Add(addg);
+                            if (this.BaiFangGTBDistance == BaiFangGTBDistanceType.A29)
+                            {
+                                machiningsingletopbottomg.RealLocation = machiningsingletopbottomg.RealLocation - 6 / JwFileConsts.JwScale;
+                         
+                            }
+                            var addgbt = machiningsingletopbottomg.GTopBottomAddHole(true);
+                            JwHoleMachinings.Add(machiningsingletopbottomg);
+                            JwHoleMachinings.Add(addgbt);
+                            //var addg = machiningsingle.GTopBottomAddHole(true);
+                            //JwHoleMachinings.Add(addg);
                         }
                         //2026年3月20日如果是开始 上下增加一组孔 x-offset
                         if (isend)
                         {
-                            var addg = machiningsingle.GTopBottomAddHole(false);
-                            JwHoleMachinings.Add(addg);
+                            if (this.BaiFangGTBDistance == BaiFangGTBDistanceType.A29)
+                            {
+                                machiningsingletopbottomg.RealLocation = machiningsingletopbottomg.RealLocation + 6 / JwFileConsts.JwScale;
+
+                            }
+                            var addgbt = machiningsingletopbottomg.GTopBottomAddHole(false);
+                            JwHoleMachinings.Add(machiningsingletopbottomg);
+                            JwHoleMachinings.Add(addgbt);
+                            //var addg = machiningsingle.GTopBottomAddHole(false);
+                            //JwHoleMachinings.Add(addg);
                         }
 
                         break;
@@ -1445,6 +1474,46 @@ namespace JwShapeCommon
             return enko;
         }
 
+        public List<JwwData> DrawToJwwwSingle()
+        {
+            double yconst = 4;
+            List<JwwData> jd = new List<JwwData>();
+            //填充线
+            double lg=this.Length/JwFileConsts.JwScale;
+            double xlg=this.XXLength/JwFileConsts.JwScale;
+            double bms = this.jwBeamMarks.Find(t => t.IsBeamStart).Coordinate;
+            double bme = this.jwBeamMarks.Find(t => t.IsBeamEnd).Coordinate;
+
+            //top
+
+            jd.Add(DrawSen(0, yconst + 2, true, lg));
+            jd.Add(DrawSen(0, yconst + 2, false, 1));
+            jd.Add(DrawSen(0, yconst + 1, true, lg));
+            jd.Add(DrawSen(lg, yconst + 2, false, 1));
+
+
+            jd.Add(CreateSenByTwoPoint(TopLeft, BottomLeft));
+            jd.Add(CreateSenByTwoPoint(TopRight, BottomRight));
+            jd.Add(CreateSenByTwoPoint(BottomLeft, BottomRight));
+            //填充文字
+            JwwMoji jwwMoji = new JwwMoji();
+            jwwMoji.m_nPenColor = 1;
+            jwwMoji.m_start_x = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.X + Width / 2) : (TopLeft.X - 70 / JwFileConsts.JwScale);
+            jwwMoji.m_start_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale) : (TopRight.Y - Height / 2);
+            jwwMoji.m_string = this.BeamCode;
+            jwwMoji.m_end_x = this.DirectionType == BeamDirectionType.Horizontal ? TopLeft.X : (TopLeft.X - 70 / JwFileConsts.JwScale);
+            jwwMoji.m_end_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale) : TopRight.Y;
+            //jwwMoji.m_nMojiShu += this.DirectionType == BeamDirectionType.Horizontal ? 1000 : 2000;
+            jwwMoji.m_degKakudo = this.DirectionType == BeamDirectionType.Horizontal ? 0 : 90;
+            jwwMoji.m_dKankaku = 0.2;
+            jwwMoji.m_dSizeX = 2;
+            jwwMoji.m_dSizeY = 3;
+            jwwMoji.m_nPenColor = 4;
+            jwwMoji.m_nPenStyle = 5;
+            jd.Add(jwwMoji);
+           
+            return jd;
+        }
     }
 
     public static class JwBeamExtensions

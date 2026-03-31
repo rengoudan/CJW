@@ -92,6 +92,32 @@ namespace JwShapeCommon
             return sen;
         }
 
+        public JwwSen DrawSen(double x,double y,bool isHorizontal,double distance)
+        {
+            var sen = new JwwSen();
+            //sen.m_nPenWidth=1/
+            //sen.m_nPenColor = 2;
+            if (isHorizontal)
+            {
+                sen.m_start_x = x;
+                sen.m_start_y = y;
+                sen.m_end_x = Math.Round(x+distance, 6);
+                sen.m_end_y = Math.Round(y, 6);
+            }
+            else
+            {
+                sen.m_start_x = x;
+                sen.m_start_y = y;
+                sen.m_end_x = Math.Round(x, 6);
+                sen.m_end_y = Math.Round(y-distance, 6);
+            }
+            
+            sen.m_nLayer = (int)DrawShapeType.Beam + 1;
+            sen.m_nPenColor = (int)DrawShapeType.Beam;
+            sen.m_nPenStyle = 1;
+            sen.m_nPenWidth = 0;
+            return sen;
+        }
 
         public BeamDirectionType DirectionType { get; set; }
 
