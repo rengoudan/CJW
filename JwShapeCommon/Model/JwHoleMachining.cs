@@ -1,9 +1,11 @@
 ﻿using JwCore;
+using JwwHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace JwShapeCommon.Model
 {
@@ -78,6 +80,44 @@ namespace JwShapeCommon.Model
             result.HasLeft = true;
             result.HasRight = true;
             result.HasTop = false;
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offset">为beamstart的coordrate</param>
+        /// <param name="cy">cy 为绘制的梁面的中心线的y</param>
+        /// <returns></returns>
+        public List<JwwData> DrawToJww(double offset,double cy)
+        {
+            var result = new List<JwwData>();
+            var banjing = JwFileConsts.EllipseDiameter / (2 * JwFileConsts.JwScale);
+            var halfy=JwFileConsts.EllipseSpacing/ (2 * JwFileConsts.JwScale);
+            JwwEnko enkoup = new JwwEnko();
+            enkoup.m_nPenColor = 2;
+            enkoup.m_dHankei = banjing;
+            enkoup.m_radKaishiKaku = 0;
+            enkoup.m_radEnkoKaku = 6.2831853;
+            enkoup.m_radKatamukiKaku = 0;
+            enkoup.m_dHenpeiRitsu = 1;
+            enkoup.m_bZenEnFlg = 1;
+            enkoup.m_start_x = this.RealLocation-offset;
+            enkoup.m_start_y = cy + halfy;
+            enkoup.m_nLayer = (int)DrawShapeType.Beam + 1;
+            result.Add(enkoup);
+            JwwEnko enkodown = new JwwEnko();
+            enkodown.m_nPenColor = 2;
+            enkodown.m_dHankei = banjing;
+            enkodown.m_radKaishiKaku = 0;
+            enkodown.m_radEnkoKaku = 6.2831853;
+            enkodown.m_radKatamukiKaku = 0;
+            enkodown.m_dHenpeiRitsu = 1;
+            enkodown.m_bZenEnFlg = 1;
+            enkodown.m_start_x = this.RealLocation - offset;
+            enkodown.m_start_y = cy - halfy;
+            enkodown.m_nLayer = (int)DrawShapeType.Beam + 1;
+            result.Add(enkodown);
             return result;
         }
     }

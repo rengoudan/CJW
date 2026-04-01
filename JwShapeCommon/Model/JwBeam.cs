@@ -1477,24 +1477,52 @@ namespace JwShapeCommon
         public List<JwwData> DrawToJwwwSingle()
         {
             double yconst = 4;
+            double topy=yconst+2;
+            double centery = yconst-4;
+            double bottomy = -yconst - 2;
+            double beamstartx = 0;
+            
             List<JwwData> jd = new List<JwwData>();
             //填充线
             double lg=this.Length/JwFileConsts.JwScale;
             double xlg=this.XXLength/JwFileConsts.JwScale;
             double bms = this.jwBeamMarks.Find(t => t.IsBeamStart).Coordinate;
             double bme = this.jwBeamMarks.Find(t => t.IsBeamEnd).Coordinate;
-
+            double constoffsetx = bms;
             //top
+            jd.Add(DrawSen(beamstartx, topy, true, lg));
+            jd.Add(DrawSen(beamstartx, topy, false, 1));
+            jd.Add(DrawSen(beamstartx, topy-1, true, lg));
+            jd.Add(DrawSen(lg, topy, false, 1));
+            var centertopy = topy - 1 / 2;
+            //center
+            jd.Add(DrawSen(beamstartx, centery, true, xlg));
+            jd.Add(DrawSen(beamstartx, centery, false, 1));
+            jd.Add(DrawSen(beamstartx, centery - 1, true, xlg));
+            jd.Add(DrawSen(lg, centery, false, 1));
+            var centercentery = centery - 1;
+            //bottom
+            jd.Add(DrawSen(beamstartx, bottomy, true, lg));
+            jd.Add(DrawSen( beamstartx, bottomy, false, 1));
+            jd.Add(DrawSen(beamstartx, bottomy - 1, true, lg));
+            jd.Add(DrawSen(lg, bottomy, false, 1));
+            var centerbottomy = bottomy - 1/2;
+            foreach(var jhm in this.JwHoleMachinings)
+            {
+                if (jhm.HasTop)
+                {
+                    jd.AddRange(jhm.DrawToJww(constoffsetx, centercentery));
+                }
+                if (jhm.HasRight)
+                {
+                    jd.AddRange(jhm.DrawToJww(constoffsetx, centertopy));
+                }
+                if (jhm.HasLeft)
+                {
+                    jd.AddRange(jhm.DrawToJww(constoffsetx, centerbottomy));
+                }   
+            }
 
-            jd.Add(DrawSen(0, yconst + 2, true, lg));
-            jd.Add(DrawSen(0, yconst + 2, false, 1));
-            jd.Add(DrawSen(0, yconst + 1, true, lg));
-            jd.Add(DrawSen(lg, yconst + 2, false, 1));
-
-
-            jd.Add(CreateSenByTwoPoint(TopLeft, BottomLeft));
-            jd.Add(CreateSenByTwoPoint(TopRight, BottomRight));
-            jd.Add(CreateSenByTwoPoint(BottomLeft, BottomRight));
             //填充文字
             JwwMoji jwwMoji = new JwwMoji();
             jwwMoji.m_nPenColor = 1;
