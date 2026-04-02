@@ -1481,7 +1481,7 @@ namespace JwShapeCommon
             double centery = yconst-4;
             double bottomy = -yconst - 2;
             double beamstartx = 0;
-            
+            var hodu = JwFileConsts.Lianghoudu / JwFileConsts.JwScale;
             List<JwwData> jd = new List<JwwData>();
             //填充线
             double lg=this.Length/JwFileConsts.JwScale;
@@ -1494,20 +1494,44 @@ namespace JwShapeCommon
             jd.Add(DrawSen(beamstartx, topy, false, 1));
             jd.Add(DrawSen(beamstartx, topy-1, true, lg));
             jd.Add(DrawSen(lg, topy, false, 1));
-            var centertopy = topy - 1 / 2;
+            var centertopy = topy - 1d / 2;
+            jd.Add(DrawSen(beamstartx,centertopy-hodu/2, true, lg, 2));
+                jd.Add(DrawSen(beamstartx, centertopy + hodu / 2, true, lg, 2));
+
+
             //center
-            jd.Add(DrawSen(beamstartx, centery, true, xlg));
-            jd.Add(DrawSen(beamstartx, centery, false, 1));
-            jd.Add(DrawSen(beamstartx, centery - 1, true, xlg));
-            jd.Add(DrawSen(lg, centery, false, 1));
-            var centercentery = centery - 1;
+            jd.Add(DrawSen(beamstartx, centery, true, lg));
+            jd.Add(DrawSen(beamstartx, centery, false, 2));
+            jd.Add(DrawSen(beamstartx, centery - 2, true, lg));
+            jd.Add(DrawSen(lg, centery, false, 2));
+            jd.Add(DrawSen(beamstartx, centery - hodu, true, lg, 2));
+            jd.Add(DrawSen(beamstartx, centery -2+ hodu, true, lg, 2));
+            var centercentery = centery - 1d;
+
+            JwwMoji duan = new JwwMoji();
+            duan.m_start_x = beamstartx - 2;
+            duan.m_start_y = (centery + centery - 2) * 3 / 4;
+            duan.m_string = this.HasStartSide ? this.StartTelosType.ToString() : "B";
+            duan.m_dSizeX = 200 / JwFileConsts.JwScale;
+            duan.m_dSizeY = 200 / JwFileConsts.JwScale;
+            jd.Add(duan);
+            JwwMoji duanend = new JwwMoji();
+            duanend.m_start_x = lg+3;
+            duanend.m_start_y = (centery + centery-2) * 3 / 4;
+            duanend.m_string = this.HasEndSide ? this.EndTelosType.ToString() : "B";
+            duanend.m_dSizeX = 200 / JwFileConsts.JwScale;
+            duanend.m_dSizeY = 200 / JwFileConsts.JwScale;
+            jd.Add(duanend);
+
             //bottom
             jd.Add(DrawSen(beamstartx, bottomy, true, lg));
             jd.Add(DrawSen( beamstartx, bottomy, false, 1));
             jd.Add(DrawSen(beamstartx, bottomy - 1, true, lg));
             jd.Add(DrawSen(lg, bottomy, false, 1));
-            var centerbottomy = bottomy - 1/2;
-            foreach(var jhm in this.JwHoleMachinings)
+            var centerbottomy = bottomy - 1d/2;
+            jd.Add(DrawSen(beamstartx, centerbottomy - hodu / 2, true, lg, 2));
+            jd.Add(DrawSen(beamstartx, centerbottomy + hodu / 2, true, lg, 2));
+            foreach (var jhm in this.JwHoleMachinings)
             {
                 if (jhm.HasTop)
                 {

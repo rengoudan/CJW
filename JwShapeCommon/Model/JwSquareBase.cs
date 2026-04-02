@@ -92,7 +92,7 @@ namespace JwShapeCommon
             return sen;
         }
 
-        public JwwSen DrawSen(double x,double y,bool isHorizontal,double distance)
+        public JwwSen DrawSen(double x,double y,bool isHorizontal,double distance,int ps=1)
         {
             var sen = new JwwSen();
             //sen.m_nPenWidth=1/
@@ -114,10 +114,12 @@ namespace JwShapeCommon
             
             sen.m_nLayer = (int)DrawShapeType.Beam + 1;
             sen.m_nPenColor = (int)DrawShapeType.Beam;
-            sen.m_nPenStyle = 1;
+            sen.m_nPenStyle = (byte)ps;
             sen.m_nPenWidth = 0;
             return sen;
         }
+
+
 
         public BeamDirectionType DirectionType { get; set; }
 

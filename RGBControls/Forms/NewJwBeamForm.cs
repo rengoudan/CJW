@@ -61,7 +61,8 @@ namespace RGBJWMain.Forms
                 var _jwDrawShape = new NewJwBeamJwDraw(_jwbeam);
                 //JwBeamJwDraw jwDraw = new JwBeamJwDraw(_beam);
                 _jwDrawShape.CreateBeam();
-                if (_jwDrawShape.Sens.Count > 0)
+                var lst = _jwbeam.DrawToJwwwSingle();
+                if (lst.Count > 0)
                 {
                     FolderBrowserDialog dialog = new FolderBrowserDialog();
                     dialog.Description = "";
@@ -78,7 +79,11 @@ namespace RGBJWMain.Forms
                         //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
                         //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
                         a.InitHeader("template.jww");
-                        foreach (var s in _jwDrawShape.Datas)
+                        //foreach (var s in _jwDrawShape.Datas)
+                        //{
+                        //    a.AddData(s);
+                        //}
+                        foreach(var s in lst)
                         {
                             a.AddData(s);
                         }
