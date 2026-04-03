@@ -1478,7 +1478,7 @@ namespace JwShapeCommon
         {
             double yconst = 4;
             double topy=yconst+2;
-            double centery = yconst-4;
+            double centery = yconst- yconst;
             double bottomy = -yconst - 2;
             double beamstartx = 0;
             var hodu = JwFileConsts.Lianghoudu / JwFileConsts.JwScale;
@@ -1547,23 +1547,121 @@ namespace JwShapeCommon
                 }   
             }
 
-            //填充文字
-            JwwMoji jwwMoji = new JwwMoji();
-            jwwMoji.m_nPenColor = 1;
-            jwwMoji.m_start_x = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.X + Width / 2) : (TopLeft.X - 70 / JwFileConsts.JwScale);
-            jwwMoji.m_start_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale) : (TopRight.Y - Height / 2);
-            jwwMoji.m_string = this.BeamCode;
-            jwwMoji.m_end_x = this.DirectionType == BeamDirectionType.Horizontal ? TopLeft.X : (TopLeft.X - 70 / JwFileConsts.JwScale);
-            jwwMoji.m_end_y = this.DirectionType == BeamDirectionType.Horizontal ? (TopLeft.Y + 70 / JwFileConsts.JwScale) : TopRight.Y;
-            //jwwMoji.m_nMojiShu += this.DirectionType == BeamDirectionType.Horizontal ? 1000 : 2000;
-            jwwMoji.m_degKakudo = this.DirectionType == BeamDirectionType.Horizontal ? 0 : 90;
-            jwwMoji.m_dKankaku = 0.2;
-            jwwMoji.m_dSizeX = 2;
-            jwwMoji.m_dSizeY = 3;
-            jwwMoji.m_nPenColor = 4;
-            jwwMoji.m_nPenStyle = 5;
-            jd.Add(jwwMoji);
-           
+            //梁长度显示
+            double lcdbottomy = bottomy - yconst;
+            jd.Add(chuizhifuzhuxian(beamstartx,lcdbottomy,yconst*0.9));
+            jd.Add(chuizhifuzhuxian(lg,lcdbottomy, yconst *0.9));
+            jd.AddRange(showprexindistance(beamstartx, lg, lcdbottomy));
+            //中心点间距
+
+            double startcente = this.StartCenter - constoffsetx;
+            double endcente = this.EndCenter - constoffsetx;
+
+            double downcentery = centery - yconst * 0.9;
+            jd.Add(chuizhifuzhuxian(startcente, downcentery, yconst * 0.9-1));
+            jd.Add(chuizhifuzhuxian(endcente, downcentery, yconst * 0.9-1));
+            jd.AddRange(showprexindistance(startcente, endcente, downcentery));
+            double zhongxinstartbj = centery - yconst * 0.8;
+            jd.Add(chuizhifuzhuxian(startcente, zhongxinstartbj, yconst * 0.8-1));
+            jd.Add(chuizhifuzhuxian(beamstartx, zhongxinstartbj, yconst * 0.8-1));
+            jd.AddRange(showprexindistance(startcente, beamstartx, zhongxinstartbj));
+            jd.Add(chuizhifuzhuxian(endcente, zhongxinstartbj, yconst * 0.8-1));
+            jd.Add(chuizhifuzhuxian(lg, zhongxinstartbj, yconst * 0.8-1));
+            jd.AddRange(showprexindistance(endcente, lg, zhongxinstartbj));
+
+            double cdrawy = centery - 1;
+            double cdrawendy = cdrawy + yconst;
+            double precenter = 0;
+            double ppp = 0;
+            int i = 0;
+            var zzlst = this.jwBeamMarks.OrderBy(t => t.Coordinate).ToList();
+            foreach (var jmark in zzlst)
+            {
+                if (jmark.IsCenter)
+                {
+                    jd.Add(chuizhifuzhuxian(jmark.Coordinate - constoffsetx, cdrawy, cdrawendy+1));
+                    if (i != 0)
+                    {
+                        jd.AddRange(showprexindistance(ppp, jmark.Coordinate - constoffsetx, cdrawy + cdrawendy+1));
+                    }
+                    ppp = jmark.Coordinate - constoffsetx;
+                }
+                jd.Add(chuizhifuzhuxian(jmark.Coordinate - constoffsetx, cdrawy, cdrawendy));
+                if (i != 0)
+                {
+                    jd.AddRange(showprexindistance(precenter, jmark.Coordinate - constoffsetx, cdrawy + cdrawendy));
+                }
+                precenter = jmark.Coordinate - constoffsetx;
+                i++;
+            }
+
+            return jd;
+        }
+
+        /// <summary>
+        /// 从下向上划线
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="starty"></param>
+        /// <param name="distance"></param>
+        private JwwData chuizhifuzhuxian(double x,double starty,double distance)
+        {
+            JwwSen sen1 = new JwwSen();
+            sen1.m_nPenStyle = 2;
+            sen1.m_nPenColor = 4;
+            sen1.m_start_x = x;
+            sen1.m_start_y = starty;
+            sen1.m_end_x = x;
+            sen1.m_end_y = starty + distance;
+            return sen1;
+        }
+
+        private List<JwwData> showprexindistance(double startx, double endy,double y, bool isbe = false)
+        {
+            List<JwwData> jd = new List<JwwData>();
+            JwwSunpou sunpou = new JwwSunpou();
+            //sunpou.m_nPenColor = 2;
+            //sunpou.m_nPenStyle = 1;
+            double sy = 0;
+            if (isbe)
+            {
+                sy = y - 0.5;
+            }
+            else
+            {
+                sy = y;
+            }
+            sunpou.m_Sen.m_nPenColor = (short)(isbe ? 4 : 2);
+            sunpou.m_Sen.m_nPenStyle = 2;
+            sunpou.m_Sen.m_start_x = startx;
+            sunpou.m_Sen.m_start_y = sy;
+            sunpou.m_Sen.m_end_y = sy;
+            sunpou.m_Sen.m_end_x = endy;
+
+            sunpou.m_Moji.m_string = string.Format("{0}", Math.Round(Math.Abs(endy - startx) * JwFileConsts.JwScale, 0));
+            double mjsx = 0;
+            var z = Math.Abs(endy - startx);
+            if (z >= 2)
+            {
+                mjsx = (endy + startx) / 2;
+            }
+            else
+            {
+                mjsx = startx;
+            }
+            sunpou.m_Moji.m_start_x = mjsx;
+            sunpou.m_Moji.m_start_y = sy;
+            sunpou.m_Moji.m_dSizeX = 0.5;
+            sunpou.m_Moji.m_dSizeY = 0.5;
+            jd.Add(sunpou);
+            JwwTen ten = new JwwTen();
+            ten.m_start_x = startx;
+            ten.m_start_y = sy;
+            jd.Add(ten);
+            JwwTen ten1 = new JwwTen();
+            ten1.m_start_x = endy;
+            ten1.m_start_y = sy;
+            jd.Add(ten1);
             return jd;
         }
     }
