@@ -50,6 +50,9 @@
     <Compile Update="Controls\RGBJwControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\SingleBeamShow.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Controls\RGBJwwShow.cs">
       <SubType>Component</SubType>
     </Compile>

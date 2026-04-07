@@ -1497,7 +1497,7 @@ namespace JwShapeCommon
             var centertopy = topy - 1d / 2;
             jd.Add(DrawSen(beamstartx,centertopy-hodu/2, true, lg, 2));
                 jd.Add(DrawSen(beamstartx, centertopy + hodu / 2, true, lg, 2));
-
+            var tdrawy= topy - 0.5;
 
             //center
             jd.Add(DrawSen(beamstartx, centery, true, lg));
@@ -1594,8 +1594,30 @@ namespace JwShapeCommon
                 precenter = jmark.Coordinate - constoffsetx;
                 i++;
             }
-
+            var jmtoplst=this.JwHoleMachinings.Where(t=>t.HasRight).OrderBy(t=>t.RealLocation).ToList();
+            var jmcenterlst=this.JwHoleMachinings.Where(t=>t.HasTop).OrderBy(t => t.RealLocation).ToList();
+            if (this.StartTelosType == KongzuType.G)
+            {
+                var ft = jmtoplst.First();
+                var fc= jmcenterlst.First();
+                jd.Add(chuizhifuzhuxian(fc.RealLocation - constoffsetx, cdrawy, cdrawendy));
+                jd.AddRange(showprexindistance(beamstartx, fc.RealLocation - constoffsetx, cdrawy + cdrawendy-1));
+                jd.Add(chuizhifuzhuxian(ft.RealLocation - constoffsetx, tdrawy, 2.5));
+                jd.Add(chuizhifuzhuxian(beamstartx, tdrawy,  2.5));
+                jd.AddRange(showprexindistance(ft.RealLocation - constoffsetx, beamstartx, tdrawy+2.5));
+            }
+            if(this.EndTelosType==KongzuType.G)
+            {
+                var bt = jmtoplst.Last();
+                var bc = jmcenterlst.Last();
+                jd.Add(chuizhifuzhuxian(bc.RealLocation - constoffsetx, cdrawy, cdrawendy));
+                jd.AddRange(showprexindistance(beamstartx, bc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
+                jd.Add(chuizhifuzhuxian(lg, tdrawy, 2.5));
+                jd.Add(chuizhifuzhuxian(bt.RealLocation-constoffsetx, tdrawy, 2.5));
+                jd.AddRange(showprexindistance(bt.RealLocation - constoffsetx, lg, tdrawy + 2.5));
+            }
             return jd;
+
         }
 
         /// <summary>
