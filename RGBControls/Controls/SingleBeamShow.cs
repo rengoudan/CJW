@@ -29,7 +29,7 @@ namespace RGBJWMain.Controls
             
             //if(sscale)
 
-            this.MouseWheel += RGBJwwShow_MouseClick;
+            //this.MouseWheel += RGBJwwShow_MouseClick;
             isdraw = false;
         }
 
@@ -181,12 +181,13 @@ namespace RGBJWMain.Controls
         List<double> ylst;
         public SingleBeamShow(List<JwwData> datas)
         {
+            this.BackColor = System.Drawing.Color.Black;
             xlst = new List<double>();
             ylst = new List<double>();
             _senlst = new List<JwwSen>();
             _enkolst = new List<JwwEnko>();
              _sunpoulst = new List<JwwSunpou>();
-
+            InitializeComponent();
             foreach (var data in datas)
             {
                 string typename = data.GetType().Name;
@@ -225,6 +226,10 @@ namespace RGBJWMain.Controls
             _maxx = xlst.Max() + 2;
             _miny = ylst.Min() - 2;
             _maxy = ylst.Max() + 2;
+            if(datas.Count>0)
+            {
+                isdraw = true;
+            }
         }
 
 
@@ -266,7 +271,6 @@ namespace RGBJWMain.Controls
         {
             Invalidate();
         }
-        System.Drawing.Font ftext = new System.Drawing.Font(FontFamily.GenericMonospace, 30F, FontStyle.Bold);
         private void drawBeams(PaintEventArgs pe)
         {
 
@@ -275,8 +279,8 @@ namespace RGBJWMain.Controls
             {
                 var wth = _maxx - _minx;
                 var hth = _maxy - _miny;
-                var wscale = Convert.ToSingle((this.Width - 20) / wth);
-                var hscale = Convert.ToSingle((this.Height - 20) / hth);
+                var wscale = Convert.ToSingle((this.Width ) / wth);
+                var hscale = Convert.ToSingle((this.Height) / hth);
                 var scale = Math.Min(wscale, hscale);
                 Matrix myMatrix = new Matrix(1, 0, 0, -1, 0, 0);
                 myMatrix.Scale(scale, scale);
@@ -291,16 +295,17 @@ namespace RGBJWMain.Controls
 
                 Pen myPen = new Pen(Color.GreenYellow, 1 / scale);
                 Pen myPen2 = new Pen(Color.Gray, 1 / scale);
+                //System.Drawing.Font ftext = new System.Drawing.Font(FontFamily.GenericMonospace, 10F/scale, FontStyle.Bold);
 
-                if (_sens != null)
+                if (_senlst != null)
                 {
-                    if (_sens.Count > 0)
+                    if (_senlst.Count > 0)
                     {
-                        foreach (var se in _sens)
+                        foreach (var se in _senlst)
                         {
                             if (se.m_nPenStyle == 2)
                             {
-                                var pen = new Pen(System.Drawing.Color.Red, 1 / scale);
+                                var pen = new Pen(System.Drawing.Color.Cyan, 1 / scale);
                                 pen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDotDot;
                                 z.DrawLine(pen, Convert.ToSingle(se.m_start_x), Convert.ToSingle(se.m_start_y), Convert.ToSingle(se.m_end_x), Convert.ToSingle(se.m_end_y));
                             }
@@ -327,17 +332,48 @@ namespace RGBJWMain.Controls
 
                 if(_sunpoulst?.Count>0)
                 {
-                    foreach(var sunpou in _sunpoulst)
+                    var pen = new Pen(Color.Cyan, 1 / scale);
+                    foreach (var sunpou in _sunpoulst)
                     {
-                        var pen = new Pen(System.Drawing.Color.Cyan, 1 / scale);
-                        z.DrawLine(pen, Convert.ToSingle(sunpou.m_Sen.m_start_x), Convert.ToSingle(sunpou.m_Sen.m_start_y), Convert.ToSingle(sunpou.m_Sen.m_end_x), Convert.ToSingle(sunpou.m_Sen.m_end_y));
+                        float x1 = (float)sunpou.m_Sen.m_start_x;
+                        float y1 = (float)sunpou.m_Sen.m_start_y;
+                        float x2 = (float)sunpou.m_Sen.m_end_x;
+                        float y2 = (float)sunpou.m_Sen.m_end_y;
 
-                        var smsg = sunpou.m_Moji.m_string;
-                        SolidBrush brushsolid = new SolidBrush(System.Drawing.Color.White);
-                        z.DrawString(smsg, ftext, brushsolid,new System.Drawing.PointF(Convert.ToSingle(sunpou.m_Moji.m_start_x),Convert.ToSingle(sunpou.m_Moji.m_start_y)));
+                        // 画线
+                        z.DrawLine(pen, x1, y1, x2, y2);
+
+                        // 点的半径（随 scale 缩放）
+                        float r = 3f / scale;
+
+                        // 画起点
+                        z.FillEllipse(Brushes.White, x1 - r, y1 - r, r * 2, r * 2);
+
+                        // 画终点
+                        z.FillEllipse(Brushes.White, x2 - r, y2 - r, r * 2, r * 2);
 
                     }
+                    z.ResetTransform();
+                    using var ftext = new Font(FontFamily.GenericMonospace, 10f, FontStyle.Bold);
+
+                    // 4. 把“模型坐标”的文字位置转换成屏幕坐标
+                    foreach (var sunpou in _sunpoulst)
+                    {
+                        var smsg = sunpou.m_Moji.m_string;
+                        using var brushsolid = new SolidBrush(Color.White);
+
+                        float tx = (float)sunpou.m_Moji.m_start_x; // 逻辑坐标
+                        float ty = (float)sunpou.m_Moji.m_start_y;
+
+                        float sx = Convert.ToSingle(scale * (tx - _minx));     // 映射到屏幕
+                        float sy = Convert.ToSingle(scale * (_maxy - ty));
+
+                        z.DrawString(smsg, ftext, brushsolid, new PointF(sx, sy));
+                    }
                 }
+
+
+
 
 
             }
@@ -349,59 +385,17 @@ namespace RGBJWMain.Controls
         private bool HasMouseDownPoint = false;
 
         private Point MouseDownPoint;
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-            {
-                return;
-            }
-            MouseDownPoint = new Point(e.X, e.Y);
-            HasMouseDownPoint = true;
-        }
-
+        
         bool isselectcolor = false;
         int selectedcolorint = -1;
-        protected override void OnClick(EventArgs e)
-        {
-           
-                var z = MouseDownPoint;
-                bool re = false;
-                isselectcolor = false;
-                
-                foreach (var beam in colorrectangles)
-                {
-                    if (beam.Value.Contains(z))
-                    {
-                    //beam.NeedReDraw = true;
-                    isselectcolor = true;
-                        re = true;
-                    selectedcolorint = beam.Key;
-                        break;
-                    }
-
-                }
-                if (re)
-                {
-                    Invalidate();
-
-                }
-            else
-            {
-                isselectcolor = false;
-                selectedcolorint = -1;
-                Invalidate();
-            }
-            
-            base.OnClick(e);
-        }
-
-
+        
         protected override void OnPaint(PaintEventArgs pe)
         {
-            
             base.OnPaint(pe);
-            drawBeams(pe);
-
+            if (isdraw)
+            {
+                drawBeams(pe);
+            }
         }
     }
 }

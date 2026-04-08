@@ -2975,10 +2975,12 @@ namespace JwShapeCommon
                         s = beam.StartTelosType == KongzuType.Center ? "B" : beam.StartTelosType.ToString();
                         if (beam.StartTelosType == KongzuType.B)
                         {
+                            
                             jians = -50;
                         }
                         if (beam.StartTelosType == KongzuType.G)
                         {
+                            beam.HasBFG = true;
                             jians = 55;
                         }
                         if (beam.StartTelosType == KongzuType.J)
@@ -2996,6 +2998,7 @@ namespace JwShapeCommon
                         }
                         if (beam.EndTelosType == KongzuType.G)
                         {
+                                beam.HasBFG = true;
                             jiane = 55;
                         }
                         if (beam.EndTelosType == KongzuType.J)

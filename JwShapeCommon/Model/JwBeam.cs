@@ -700,9 +700,10 @@ namespace JwShapeCommon
         /// 统一一下起始和结束 端口 2及端口所包含的hole 
         /// 2025年10月22日 起始点缺少prebeam
         /// </summary>
-        private void holeorder()
+        public void holeorder()
         {
             this.jwBeamMarks = new List<JwBeamMarkPoint>();
+            this.JwHoleMachinings = new List<JwHoleMachining>();
             if (this.DirectionType == BeamDirectionType.Horizontal)
             {
                 this.Holes = this.Holes.OrderBy(t => t.Location.X).ToList();
@@ -1134,8 +1135,14 @@ namespace JwShapeCommon
                         {
                             if (this.BaiFangGTBDistance == BaiFangGTBDistanceType.A29)
                             {
-                                machiningsingletopbottomg.RealLocation = machiningsingletopbottomg.RealLocation - 6 / JwFileConsts.JwScale;
-                         
+                                machiningsingletopbottomg.RealLocation = machiningsingle.RealLocation - 6 / JwFileConsts.JwScale;
+                                machiningsingletopbottomg.RelativeStartDistance = machiningsingle.RelativeStartDistance - 6 ;
+
+                            }
+                            else
+                            {
+                                machiningsingletopbottomg.RealLocation = machiningsingle.RealLocation;
+                                machiningsingletopbottomg.RelativeStartDistance = machiningsingle.RelativeStartDistance;
                             }
                             var addgbt = machiningsingletopbottomg.GTopBottomAddHole(true);
                             JwHoleMachinings.Add(machiningsingletopbottomg);
@@ -1148,10 +1155,16 @@ namespace JwShapeCommon
                         {
                             if (this.BaiFangGTBDistance == BaiFangGTBDistanceType.A29)
                             {
-                                machiningsingletopbottomg.RealLocation = machiningsingletopbottomg.RealLocation + 6 / JwFileConsts.JwScale;
+                                machiningsingletopbottomg.RealLocation = machiningsingle.RealLocation + 6 / JwFileConsts.JwScale;
+                                machiningsingletopbottomg.RelativeStartDistance = machiningsingle.RelativeStartDistance + 6;
 
                             }
-                            var addgbt = machiningsingletopbottomg.GTopBottomAddHole(false);
+                            else
+                            {
+                                machiningsingletopbottomg.RealLocation = machiningsingle.RealLocation;
+                                machiningsingletopbottomg.RelativeStartDistance = machiningsingle.RelativeStartDistance;
+                            }
+                                var addgbt = machiningsingletopbottomg.GTopBottomAddHole(false);
                             JwHoleMachinings.Add(machiningsingletopbottomg);
                             JwHoleMachinings.Add(addgbt);
                             //var addg = machiningsingle.GTopBottomAddHole(false);
@@ -1611,10 +1624,26 @@ namespace JwShapeCommon
                 var bt = jmtoplst.Last();
                 var bc = jmcenterlst.Last();
                 jd.Add(chuizhifuzhuxian(bc.RealLocation - constoffsetx, cdrawy, cdrawendy));
-                jd.AddRange(showprexindistance(beamstartx, bc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
+                jd.AddRange(showprexindistance(lg, bc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
                 jd.Add(chuizhifuzhuxian(lg, tdrawy, 2.5));
                 jd.Add(chuizhifuzhuxian(bt.RealLocation-constoffsetx, tdrawy, 2.5));
                 jd.AddRange(showprexindistance(bt.RealLocation - constoffsetx, lg, tdrawy + 2.5));
+            }
+            if(this.StartTelosType==KongzuType.J)
+            {
+                //var ft = jmtoplst.First();
+                var fc = jmcenterlst.First();
+                jd.Add(chuizhifuzhuxian(fc.RealLocation - constoffsetx, cdrawy, cdrawendy));
+                jd.AddRange(showprexindistance(beamstartx, fc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
+                //jd.Add(chuizhifuzhuxian(ft.RealLocation - constoffsetx, tdrawy, 2.5));
+                //jd.Add(chuizhifuzhuxian(beamstartx, tdrawy, 2.5));
+                //jd.AddRange(showprexindistance(ft.RealLocation - constoffsetx, beamstartx, tdrawy + 2.5));
+            }
+            if (this.EndTelosType == KongzuType.J)
+            {
+                var bc = jmcenterlst.Last();
+                jd.Add(chuizhifuzhuxian(bc.RealLocation - constoffsetx, cdrawy, cdrawendy));
+                jd.AddRange(showprexindistance(lg, bc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
             }
             return jd;
 

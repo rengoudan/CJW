@@ -2,6 +2,7 @@
 using JwServices;
 using JwShapeCommon;
 using RGBControls.Classes;
+using RGBJWMain.Controls;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -30,20 +31,36 @@ namespace RGBJWMain.Forms
 
         public NewJwBeamForm(JwBeam jwbeam)
         {
-            this._jwbeam = jwbeam;
-
+           
             //this.Name = this._jwbeam.BeamCode;
+           
             InitializeComponent();
+            this._jwbeam = jwbeam;
+            
             this.pageHeader1.Text = string.Format("梁预览-{0}", this._jwbeam.BeamCode);
             this.uiComboBox1.Visible = false;
             this.button1.Visible = false;
+            beamShow();
+
         }
+        private void beamShow()
+        {
+            this.panel6.Controls.Remove(_singleBeamShow);
+            var lst = this._jwbeam.DrawToJwwwSingle();
+            _singleBeamShow = new SingleBeamShow(lst);
+            _singleBeamShow.Dock = DockStyle.Fill;
+            this.panel6.Controls.Add(_singleBeamShow);
+            panel6.ResumeLayout(false);
+            ResumeLayout(false);
+        }
+
+        SingleBeamShow _singleBeamShow;
 
         private void NewJwBeamForm_Shown(object sender, EventArgs e)
         {
             if (this._jwbeam != null)
             {
-                this.newSingleBeamControl1.ShowBeam = this._jwbeam;
+                //this.newSingleBeamControl1.ShowBeam = this._jwbeam;
                 var csvshow = this._jwbeam.ToProcessCsv();
                 this.uiTextBox1.Text = csvshow;
                 if (!string.IsNullOrEmpty(this._jwbeam.GongQu))
@@ -192,6 +209,10 @@ namespace RGBJWMain.Forms
             else
             {
                 this._jwbeam.BaiFangGTBDistance = (BaiFangGTBDistanceType)this.uiComboBox1.SelectedItem;
+                this._jwbeam.holeorder();
+                beamShow();
+                var csvshow = this._jwbeam.ToProcessCsv();
+                this.uiTextBox1.Text = csvshow;
                 //更新数据库
                 await _jwProjectMainService.UpdateBeamBFDistance(this._jwbeam.Id, (BaiFangGTBDistanceType)this.uiComboBox1.SelectedItem);
             }

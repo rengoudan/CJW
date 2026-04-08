@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            newSingleBeamControl1 = new RGBJWMain.Controls.NewSingleBeamControl();
             panel1 = new Panel();
             uiComboBox1 = new Sunny.UI.UIComboBox();
             panel4 = new Panel();
@@ -43,24 +42,13 @@
             panel3 = new Panel();
             uiTextBox1 = new Sunny.UI.UITextBox();
             divider1 = new AntdUI.Divider();
+            panel6 = new Panel();
             panel1.SuspendLayout();
             panel4.SuspendLayout();
             panel5.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             SuspendLayout();
-            // 
-            // newSingleBeamControl1
-            // 
-            newSingleBeamControl1.BackColor = Color.Black;
-            newSingleBeamControl1.Dock = DockStyle.Top;
-            newSingleBeamControl1.Location = new Point(0, 0);
-            newSingleBeamControl1.Margin = new Padding(2);
-            newSingleBeamControl1.Name = "newSingleBeamControl1";
-            newSingleBeamControl1.ShowBeam = null;
-            newSingleBeamControl1.Size = new Size(1562, 563);
-            newSingleBeamControl1.TabIndex = 0;
-            newSingleBeamControl1.Text = "newSingleBeamControl1";
             // 
             // panel1
             // 
@@ -190,8 +178,8 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(panel6);
             panel2.Controls.Add(panel3);
-            panel2.Controls.Add(newSingleBeamControl1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 111);
             panel2.Name = "panel2";
@@ -236,6 +224,14 @@
             divider1.TabIndex = 0;
             divider1.Text = "プレビューCSV";
             // 
+            // panel6
+            // 
+            panel6.Dock = DockStyle.Fill;
+            panel6.Location = new Point(0, 0);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(1562, 519);
+            panel6.TabIndex = 2;
+            // 
             // NewJwBeamForm
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
@@ -259,8 +255,6 @@
         }
 
         #endregion
-
-        private Controls.NewSingleBeamControl newSingleBeamControl1;
         private Panel panel1;
         private Sunny.UI.UISymbolButton uiSymbolButton1;
         private Panel panel2;
@@ -275,5 +269,6 @@
         private Panel panel4;
         private AntdUI.Button button1;
         private Sunny.UI.UIComboBox uiComboBox1;
+        private Panel panel6;
     }
 }
