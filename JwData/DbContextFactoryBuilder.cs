@@ -28,6 +28,42 @@ namespace JwData
                     .LogTo(Console.WriteLine, LogLevel.Information); 
             } 
 
-            return new PooledDbContextFactory<JwDataContext>(optionsBuilder.Options); }
+            return new PooledDbContextFactory<JwDataContext>(optionsBuilder.Options); 
+        }
+
+        public static IDbContextFactory<JwDataContext>? CreateFactory(
+        string provider = "sqlite",
+        string? connectionString = null,
+        bool enableLogging = false)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<JwDataContext>();
+
+            if (provider.Equals("sqlite", StringComparison.OrdinalIgnoreCase))
+            {
+                var dbPath = Path.Combine(AppContext.BaseDirectory, "jwdata.db");
+                connectionString ??= $"Data Source={dbPath}";
+
+                optionsBuilder.UseSqlite(connectionString, x => x.UseNetTopologySuite());
+            }
+            else if (provider.Equals("sqlserver", StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.IsNullOrWhiteSpace(connectionString))
+                    throw new ArgumentException("SQL Server 连接字符串不能为空");
+
+                optionsBuilder.UseSqlServer(connectionString, x => x.UseNetTopologySuite());
+            }
+            else
+            {
+                throw new NotSupportedException($"不支持的数据库类型: {provider}");
+            }
+
+            if (enableLogging)
+            {
+                optionsBuilder.EnableSensitiveDataLogging()
+                    .LogTo(Console.WriteLine, LogLevel.Information);
+            }
+
+            return new PooledDbContextFactory<JwDataContext>(optionsBuilder.Options);
+        }
     }
 }

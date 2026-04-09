@@ -30,6 +30,23 @@ namespace JwServices
                 throw new InvalidOperationException("数据库工厂创建失败。"); 
         }
 
+        private ServiceFactory(string provider, string? connectionString, bool enableLogging)
+        {
+            _contextFactory = DbContextFactoryBuilder.CreateFactory(
+                provider: provider,
+                connectionString: connectionString,
+                enableLogging: enableLogging
+            ) ?? throw new InvalidOperationException("数据库工厂创建失败。");
+        }
+
+        /// <summary>
+        /// 初始化 ServiceFactory（必须在程序启动时调用一次）
+        /// </summary>
+        public static void Initialize(string provider, string? connectionString = null, bool enableLogging = true)
+        {
+            _instance = new ServiceFactory(provider, connectionString, enableLogging);
+        }
+
 
         public JwProjectMainService CreateJwProjectMainService() 
         { 
