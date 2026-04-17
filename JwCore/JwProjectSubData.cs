@@ -46,6 +46,11 @@ namespace JwCore
         /// </summary>
         public virtual int ExportCount { get; set; }
 
+        /// <summary>
+        /// 2026年4月17日 默认同一楼层为同一类型柱子
+        /// </summary>
+        public virtual KPillarType KPillarType { get; set; }
+
         public long JwProjectMainDataId { get; set; }
         public virtual JwProjectMainData JwProjectMainData { get; set; } = null!;
 

@@ -93,8 +93,10 @@ namespace RGBControls.Pages
                 new AntdUI.ContextMenuStripItem("消去", ""),
             };
 
+            //2026年4月17日 增加整个项目梁编号重新生成的功能
             mainmenulist = new IContextMenuStripItem[]
             {
+                new ContextMenuStripItem("統合ビーム番号付け",""),
                 new ContextMenuStripItem("消去","")
             };
 
@@ -291,6 +293,10 @@ namespace RGBControls.Pages
             }
         }
 
+        /// <summary>
+        /// maintable的右键菜单，增加了整个项目梁编号重新生成和删除项目的功能
+        /// </summary>
+        /// <param name="e"></param>
         private async void contextMenuStrip2_Opening(ContextMenuStripItem e)
         {
             if (e.Text.Equals("消去"))
@@ -307,6 +313,18 @@ namespace RGBControls.Pages
                             });
                         }   
                 }
+            }
+            if(e.Text.Equals("統合ビーム番号付け"))
+                {
+                    if (_selectedMainData != null)
+                    {
+                        await Progress(async () =>
+                        {
+                             await JwProjectMainService.UnifyBeamCode(_selectedMainData.Id);
+                            var msg = $"プロジェクト {_selectedMainData.ProjectName} の梁番号を再生成しました。";
+                            this.SuccessModal(msg);
+                        });
+                    }
             }
         }
 

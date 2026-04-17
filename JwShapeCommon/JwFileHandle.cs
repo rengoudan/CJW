@@ -361,7 +361,7 @@ namespace JwShapeCommon
                 var errbeamstr = string.Format("色番号{0}は柱を識別できません", JwFileConsts.BeamPillarParseColor.ColorNumber);
                 SendMsg(errbeamstr);
             }
-            panduanBeamduankou();
+            //panduanBeamduankou();//好像已经没什么用了
             var qqqq = _jwwmojitaggs;
             var qqqqq = Pillars.Where(t => t.HasTag).ToList();
 
@@ -1822,6 +1822,7 @@ namespace JwShapeCommon
             _subData.Width = Width.Value;
             _subData.Height = Height.Value;
             _subData.Scale = this._scale;
+            _subData.KPillarType = JwFileConsts.Ktype;
             if (this.MarkBeam.HasValue)
             {
                 _subData.MarkBeam = this.MarkBeam;
@@ -3369,15 +3370,17 @@ namespace JwShapeCommon
                 var zmu = NormalizePrefix(s, e);
                 if (y == 0)
                 {
-                    b.BeamCode = string.Format("{0}{1}A", zmu, q);
+                    b.InitialBeamCode = string.Format("{0}{1}", zmu, q);
+                    //b.BeamCode = string.Format("{0}{1}A", zmu, q);
                 }
                 else
                 {
-                    b.BeamCode = string.Format("{0}{1}+{2}", zmu, q, Math.Round(y, 0));
+                    b.InitialBeamCode = string.Format("{0}{1}+{2}", zmu, q, Math.Round(y, 0));
+                    //b.BeamCode = string.Format("{0}{1}+{2}", zmu, q, Math.Round(y, 0));
                 }
             }
             //2025年12月7日 针对相同的梁符号进行abcd后缀处理
-            var grouped = Beams.GroupBy(t => t.BeamCode).Where(g => g.Count() > 1);
+            var grouped = Beams.GroupBy(t => t.InitialBeamCode).Where(g => g.Count() > 1);
 
             foreach (var group in grouped)
             {

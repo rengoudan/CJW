@@ -242,7 +242,7 @@ namespace JwShapeCommon
 
             reobj.HorizontalBeamsCount = data.HorizontalBeamsCount;
             reobj.VerticalBeamsCount = data.VerticalBeamsCount;
-
+            reobj.KPillarType = data.KPillarType;
             reobj.Beams = new List<JwBeam>();
             if (data.BeamCount > 0)
             {
@@ -266,6 +266,7 @@ namespace JwShapeCommon
                     jwbm.GongQu = bm.GongQu;
                     jwbm.HasBFG = bm.HasBFG;
                     jwbm.BaiFangGTBDistance= bm.BaiFangGTBDistance;
+                    jwbm.InitialBeamCode = bm.InitialBeamCode;
                     //jwbm.HasEndSide=bm.has
                     if (bm.JwHoles.Count > 0)
                     {
@@ -373,6 +374,8 @@ namespace JwShapeCommon
             }
             reobj.IsFromData = true;
             reobj.JwProjectSubData = data;
+            //增加逻辑 动态生成beamcode 好像不需要
+            //reobj.Revision();
             return reobj;
         }
 

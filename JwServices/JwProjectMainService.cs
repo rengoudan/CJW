@@ -3,6 +3,7 @@ using JwShapeCommon;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -343,6 +344,33 @@ namespace JwServices
             md.ParsedQuantity += 1;
             await UpdateAsync<JwProjectMainData>(md);
         }
+
+        public async Task UnifyBeamCode(long mainid)
+        {
+            var lstsub= await GetAllAsync<JwProjectSubData>(p => p.JwProjectMainDataId == mainid);
+            var subidlst = lstsub.Select(t => t.Id).ToList();
+            var lstbeam = await GetAllAsync<JwBeamData>(p => subidlst.Contains(p.JwProjectSubDataId));
+            //原有梁的的正常编号需要存储 或者动态按照规则生成编号
+            var grouped = lstbeam.GroupBy(t => t.InitialBeamCode).Where(g => g.Count() > 1);
+
+            foreach (var group in grouped)
+            {
+                char suffix = 'A';
+                foreach (var beam in group)
+                {
+                    if (suffix == 'I' || suffix == 'O')
+                    {
+                        suffix++;
+                    }
+                    //beam.BeamCode= beam.BeamCode.TrimEnd('A');
+                    beam.BeamCode = $"{group.Key.TrimEnd('A')}{suffix}";
+                    await UpdateAsync<JwBeamData>(beam);
+                    suffix++;
+                }
+            }
+        }
+
+
 
 
         #region 加载导航集合等

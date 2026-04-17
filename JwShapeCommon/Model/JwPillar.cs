@@ -52,7 +52,7 @@ namespace JwShapeCommon
         public bool HasBeam { get; set; }
 
         /// <summary>
-        /// 2026年3月9日添加K柱类型 按照距离区分
+        /// 2026年3月9日添加K柱类型 按照距离区分 理论上同一楼层 这个应该相同
         /// </summary>
         public KPillarType kPillarType { get; set; }
 

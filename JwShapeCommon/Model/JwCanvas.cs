@@ -90,6 +90,8 @@ namespace JwShapeCommon
 
         public bool IsFromData = false;
 
+        public KPillarType KPillarType { get; set; }
+
         public JwCanvas() { }
 
         public JwCanvas(JWPoint? topLeft,JWPoint? topRight,JWPoint? bottomLeft,JWPoint? bottomRight, List<JwBeam> _beams, List<JWPoint> _points,double? width,double? height,List<JwPillar> pillars,List<JwBeam> _parentbeams) 
@@ -323,6 +325,28 @@ namespace JwShapeCommon
                 sen.m_nPenWidth = 0;
                 sen.m_nLayer = (int)DrawShapeType.None + 1;
                 OthersDatas.Add(sen);
+            }
+        }
+
+        public void Revision()
+        {
+            
+            //2025年12月7日 针对相同的梁符号进行abcd后缀处理
+            var grouped = Beams.GroupBy(t => t.InitialBeamCode).Where(g => g.Count() > 1);
+
+            foreach (var group in grouped)
+            {
+                char suffix = 'A';
+                foreach (var beam in group)
+                {
+                    if (suffix == 'I' || suffix == 'O')
+                    {
+                        suffix++;
+                    }
+                    //beam.BeamCode= beam.BeamCode.TrimEnd('A');
+                    beam.BeamCode = $"{group.Key.TrimEnd('A')}{suffix}";
+                    suffix++;
+                }
             }
         }
     }

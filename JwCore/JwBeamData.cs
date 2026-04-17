@@ -59,6 +59,8 @@ namespace JwCore
         /// </summary>
         public bool HasBFG { get; set; }
 
+        public string InitialBeamCode { get; set; } = "";
+
         /// <summary>
         /// 同上 在选择查看梁的时候 如果上面的属性为true则允许设置此
         /// </summary>

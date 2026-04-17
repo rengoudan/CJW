@@ -38,6 +38,11 @@ namespace JwShapeCommon
 
         public virtual string BeamCode { get; set; }
 
+        /// <summary>
+        /// 2026年4月17日 初始beamcode 由端 及900/910 单一逻辑生成
+        /// </summary>
+        public string InitialBeamCode { get; set; }
+
         public bool HasQiegeStart { get; set; }
 
         /// <summary>
