@@ -3370,7 +3370,7 @@ namespace JwShapeCommon
                 var zmu = NormalizePrefix(s, e);
                 if (y == 0)
                 {
-                    b.InitialBeamCode = string.Format("{0}{1}", zmu, q);
+                    b.InitialBeamCode = string.Format("{0}{1}A", zmu, q);
                     //b.BeamCode = string.Format("{0}{1}A", zmu, q);
                 }
                 else
@@ -3380,20 +3380,44 @@ namespace JwShapeCommon
                 }
             }
             //2025年12月7日 针对相同的梁符号进行abcd后缀处理
-            var grouped = Beams.GroupBy(t => t.InitialBeamCode).Where(g => g.Count() > 1);
+            //var grouped = Beams.GroupBy(t => t.InitialBeamCode).Where(g => g.Count() > 1);
 
-            foreach (var group in grouped)
+            //foreach (var group in grouped)
+            //{
+            //    char suffix = 'A';
+            //    foreach (var beam in group)
+            //    {
+            //        if(suffix=='I'|| suffix == 'O')
+            //        {
+            //            suffix++;
+            //        }
+            //        //beam.BeamCode= beam.BeamCode.TrimEnd('A');
+            //        beam.BeamCode = $"{group.Key.TrimEnd('A')}{suffix}";
+            //        suffix++;
+            //    }
+            //}
+            //2026年4月18日 修改梁符号
+            var grouped = Beams.GroupBy(t => t.InitialBeamCode).ToList();
+            foreach(var group in grouped)
             {
-                char suffix = 'A';
-                foreach (var beam in group)
+                if (group.Count() == 1)
                 {
-                    if(suffix=='I'|| suffix == 'O')
+                    group.First().BeamCode = group.Key;
+                }
+                else
+                {
+                    var subGroups = group
+        .GroupBy(b => b.GetBeamSignature())
+        .ToList();
+                    for(int i=0;i<subGroups.Count;i++)
                     {
-                        suffix++;
+                        string code = group.Key;
+                        if (i > 0)
+                            code += ((char)('A' + (i - 1))).ToString();
+
+                        foreach (var b in subGroups[i])
+                            b.BeamCode = code;
                     }
-                    //beam.BeamCode= beam.BeamCode.TrimEnd('A');
-                    beam.BeamCode = $"{group.Key.TrimEnd('A')}{suffix}";
-                    suffix++;
                 }
             }
         }

@@ -1720,6 +1720,70 @@ namespace JwShapeCommon
             jd.Add(ten1);
             return jd;
         }
+
+        // ============================
+        // 入口：获取梁的最终指纹（方向无关）
+        // ============================
+        public string GetBeamSignature()
+        {
+            string forward = GetBeamForwardSignature();
+            string reverse = GetBeamReverseSignature();
+
+            // 取字典序最小的作为最终指纹（方向无关）
+            return string.Compare(forward, reverse, StringComparison.Ordinal) < 0
+                ? forward
+                : reverse;
+        }
+
+        // ============================
+        // 正向指纹：Start → End
+        // ============================
+        private string GetBeamForwardSignature()
+        {
+            double len = Math.Round(this.Length, 3);
+
+            var holes = this.JwHoleMachinings
+                .OrderBy(h => h.RelativeStartDistance)
+                .Select(h => GetHoleSignature(h))
+                .ToList();
+
+            string holeSig = string.Join(",", holes);
+
+            return $"{this.StartTelosType}-{this.EndTelosType}|{holeSig}";
+        }
+
+        // ============================
+        // 反向指纹：End → Start
+        // ============================
+        private  string GetBeamReverseSignature()
+        {
+            double len = Math.Round(this.Length, 3);
+
+            var holes = this.JwHoleMachinings
+                .Select(h => new
+                {
+                    Pos = Math.Round(len - h.RelativeStartDistance, 3),
+                    h.HasLeft,
+                    h.HasRight,
+                    h.HasTop
+                })
+                .OrderBy(h => h.Pos)
+                .Select(h => $"{h.Pos}|{(h.HasLeft ? 1 : 0)}{(h.HasRight ? 1 : 0)}{(h.HasTop ? 1 : 0)}")
+                .ToList();
+
+            string holeSig = string.Join(",", holes);
+
+            return $"{this.EndTelosType}-{this.StartTelosType}|{holeSig}";
+        }
+
+        // ============================
+        // 单个孔的指纹
+        // ============================
+        private  string GetHoleSignature(JwHoleMachining h)
+        {
+            return $"{Math.Round(h.RelativeStartDistance, 3)}|" +
+                   $"{(h.HasLeft ? 1 : 0)}{(h.HasRight ? 1 : 0)}{(h.HasTop ? 1 : 0)}";
+        }
     }
 
     public static class JwBeamExtensions
