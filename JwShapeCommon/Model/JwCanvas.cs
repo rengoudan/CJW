@@ -228,11 +228,11 @@ namespace JwShapeCommon
             //{
             //    jd.AddRange(lj.DrawToJww());
             //}
-            if (OthersDatas.Count > 0)
+            if (OthersDatas?.Count > 0)
             {
                 jd.AddRange(OthersDatas);
             }
-            if (Pillars.Count > 0)
+            if (Pillars?.Count > 0)
             {
                 foreach(var zhu in Pillars)
                 {
@@ -240,7 +240,7 @@ namespace JwShapeCommon
                 }
             }
 
-            if(JwDownPillarDatas.Count>0)
+            if(JwDownPillarDatas?.Count>0)
             {
                 foreach(var zhu in JwDownPillarDatas)
                 {
@@ -248,7 +248,7 @@ namespace JwShapeCommon
                 }
             }
 
-            if(Directeds.Count>0)
+            if(Directeds?.Count>0)
             {
                 foreach(var dd in Directeds)
                 {

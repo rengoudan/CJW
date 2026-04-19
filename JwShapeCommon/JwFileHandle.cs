@@ -4157,7 +4157,7 @@ namespace JwShapeCommon
                 var slq = JwExtend.Distance(start.RealPoint, end.RealPoint);
                 var dl = Math.Round(slq, 1) * JwFileConsts.JwScale;
                 dl = dl - 220;//减部件长度
-                jwLianjieSingle.Length = Math.Round(dl, 0);
+                jwLianjieSingle.Length = Math.Round(dl / 10.0) * 10;
             }
             return jwLianjieSingle;
         }

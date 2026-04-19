@@ -121,6 +121,7 @@ namespace RGBControls.Controls
                 if (_subdata != null)
                 {
                     _thisCanvas = _subdata.DataToCanvas();
+                    JwFileConsts.JwScale = _subdata.Scale;
                     JwCanvasDraw canvasDraw = new JwCanvasDraw(_thisCanvas);
                     this.jwCanvasControl1.CanvasDraw = canvasDraw;
                     //this.jwShowBeams1.ShowBeams = true;
@@ -399,7 +400,9 @@ namespace RGBControls.Controls
                 //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
                 //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
                 //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
-                a.InitHeader("template.jww");
+                
+                a.InitHeader("template150.jww");
+                //a.Header.m_adScale = 160;
                 foreach (var s in lst)
                 {
                     a.AddData(s);
