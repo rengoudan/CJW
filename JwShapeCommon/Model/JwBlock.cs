@@ -133,6 +133,11 @@ namespace JwShapeCommon
             Id = Guid.NewGuid().ToString();
         }
 
+        /// <summary>
+        /// 2026年4月19日 同一个jwwblock 默认为同一个形状
+        /// </summary>
+        /// <param name="solid"></param>
+        /// <param name="block"></param>
         public JwBlock(JwwSolid solid,JwwBlock block)
         {
             var str = new JWPoint(solid.m_start_x, solid.m_start_y);

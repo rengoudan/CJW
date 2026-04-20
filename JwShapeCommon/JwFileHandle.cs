@@ -1051,7 +1051,7 @@ namespace JwShapeCommon
                                 //}
 
                                 //
-                                _tempblocks.Add(jb);
+                                //_tempblocks.Add(jb);
 
                                 //double wc = 200 / _scale;
                                 //if (max <= beammaxx + wc && mix >= beamminx - wc && may <= beammaxy + wc && miy >= beamminy - wc)
@@ -1354,13 +1354,16 @@ namespace JwShapeCommon
                         //如果相邻的情况下 再判断中心点的距离
                         //2025年2月28日 增加判断相邻的 中心点距离 
                         tempsquareid.Add(other.Id);
-                        if (blockdistanceisright(block, other))
-                        {
-                            
-                            other.ParentPillar = pillar;
-                            pillar.Blocks.Add(other);
-                            DiguigetXianglin(other, pillar);
-                        }
+                        //if (blockdistanceisright(block, other))
+                        //{
+
+                        //    other.ParentPillar = pillar;
+                        //    pillar.Blocks.Add(other);
+                        //    DiguigetXianglin(other, pillar);
+                        //}
+                        other.ParentPillar = pillar;
+                        pillar.Blocks.Add(other);
+                        DiguigetXianglin(other, pillar);
                     }
                 }
             }
@@ -1688,7 +1691,8 @@ namespace JwShapeCommon
             
             foreach (var beam in qiegebeams)
             {
-                Beams.AddRange(beam.BeamSplite());
+                //Beams.AddRange(beam.BeamSplite());
+                Beams.AddRange(beam.BeamSpliteDouble());
             }
             var wuqiegebeams = _tempBeams.Where(t => !t.IsParentBeam).ToList();
             ParentQieGeBeam = qiegebeams;
@@ -3298,7 +3302,9 @@ namespace JwShapeCommon
             }
         }
 
-
+        /// <summary>
+        /// 2026年4月20日只有是G或者J才进行修正 其他的按照实际测量值进行计算 待修改
+        /// </summary>
         private void Revision()
         {
             int mkkk = (int)JwFileConsts.Ktype;
@@ -3355,14 +3361,14 @@ namespace JwShapeCommon
                     //endx = xendx - 3 / JwFileConsts.JwScale;
                 }
                 b.WidthScale = bml;
-                if (b.DirectionType == BeamDirectionType.Horizontal)
-                {
-                    b.Width = Math.Round(bml / JwFileConsts.JwScale, 2);
-                }
-                if (b.DirectionType == BeamDirectionType.Vertical)
-                {
-                    b.Height = Math.Round(bml / JwFileConsts.JwScale, 2);
-                }
+                //if (b.DirectionType == BeamDirectionType.Horizontal)
+                //{
+                //    b.Width = Math.Round(bml / JwFileConsts.JwScale, 2);
+                //}
+                //if (b.DirectionType == BeamDirectionType.Vertical)
+                //{
+                //    b.Height = Math.Round(bml / JwFileConsts.JwScale, 2);
+                //}
                 
                 double y = b.XXLength % mkkkk;
 

@@ -217,7 +217,7 @@ namespace JwShapeCommon
                 if(qiegeend)
                 {
                     isdengyuend = true;
-                    TopRight = new JWPoint(end.X - 3 / JwFileConsts.JwScale, end.Y);
+                    TopRight = new JWPoint(end.X - 3d / JwFileConsts.JwScale, end.Y);
                     BottomRight = new JWPoint(TopRight.X, BottomLeft.Y);
                     qglst.Add(new JWPoint(end.X, parenbeam.CenterPoint.Y));
                     EndTelosType = KongzuType.J;
@@ -428,6 +428,191 @@ namespace JwShapeCommon
 
         }
 
+
+        public JwBeam(JwBeam parenbeam,double start,double end,bool qiegestart,bool qiegeend)
+        {
+            Id = Guid.NewGuid().ToString();
+            parenbeam.IsParentBeam = true;
+            double wc = 30 / JwFileConsts.JwScale;
+            List<JWPoint> qglst = new List<JWPoint>();
+            bool isdengyustart = false;
+            bool isdengyuend = false;
+            List<JwHole> yhs;
+            if (parenbeam.DirectionType == BeamDirectionType.Horizontal)
+            {
+                yhs = parenbeam.Holes.Where(t => t.Location.X > (start + wc) && t.Location.X < (end - wc) && !t.IsStart && !t.IsEnd).ToList();
+
+                this.Holes.AddRange(yhs);
+                double topy = parenbeam.TopLeft.Y;
+                double bottomy = parenbeam.BottomLeft.Y;
+                if (qiegestart)
+                {
+                    isdengyuend = true;
+                    var left=start+3d/ JwFileConsts.JwScale;
+                    TopLeft = new JWPoint(left, topy);
+
+                    BottomLeft = new JWPoint(left, bottomy);
+
+                    qglst.Add(new JWPoint(start, parenbeam.CenterPoint.Y));
+                    StartTelosType = KongzuType.J;
+                    HasStartSide = true;
+                    StartXinPoint = new JWPoint(start, parenbeam.Center);
+                    JWPoint kongzucenter = new JWPoint(start + JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale), parenbeam.CenterPoint.Y);
+                    //this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ,StartXinPoint,true,false);
+                    this.AddAnyHole(kongzucenter, start, true, false);
+                    this.HasQiegeStart = true;
+                    this.StartSide = new JwBeamSide
+                    {
+                        KongZu = this.Holes.Last(),
+                        SideType = KongzuType.J
+                    };
+                    StartCenter = start;//中心点为切割点 水平为 x
+                }
+                else
+                {
+                    TopLeft = new JWPoint(start,topy);
+                    BottomLeft = new JWPoint(start, bottomy);
+                    HasStartSide = true;
+                    StartTelosType = parenbeam.StartTelosType;
+                    StartCenter = parenbeam.StartCenter;//和父保持一致
+                    var z = parenbeam.Holes.Find(t => t.IsStart);
+                    var nfsh = Holes.Find(t => t.IsStart);
+                    if (z != null && nfsh == null)
+                    {
+                        Holes.Add(z);
+                    }
+                }
+                if (qiegeend)
+                {
+                    isdengyuend = true;
+                    var right=end-3d/ JwFileConsts.JwScale;
+                    TopRight = new JWPoint(right, topy);
+                    BottomRight = new JWPoint(right, bottomy);
+                    qglst.Add(new JWPoint(end, parenbeam.CenterPoint.Y));
+                    EndTelosType = KongzuType.J;
+                    HasEndSide = true;
+                    EndXinPoint = new JWPoint(end,parenbeam.CenterPoint.Y);
+                    JWPoint kongzucenter = new JWPoint(end - JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale), parenbeam.Center);
+                    this.AddAnyHole(kongzucenter, end, false, true);
+                    //this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ,EndXinPoint,false,true);
+                    this.HasQiegeEnd = true;
+                    this.EndSide = new JwBeamSide
+                    {
+                        KongZu = this.Holes.Last(),
+                        SideType = KongzuType.J
+                    };
+                    EndCenter = end;//中心点及为切割点
+                }
+                else
+                {
+                    TopRight = new JWPoint(end,topy);
+                    BottomRight = new JWPoint(end, bottomy);
+                    HasEndSide = true;
+                    EndTelosType = parenbeam.EndTelosType;
+                    EndCenter = parenbeam.EndCenter;//和父保持一致
+                    var lasth = parenbeam.Holes.Find(t => t.IsEnd);
+                    var nfsh = Holes.Find(t => t.IsEnd);
+
+                    if (lasth != null && nfsh == null)
+                    {
+                        Holes.Add(lasth);
+                    }
+                }
+            }
+            else
+            {
+                yhs = parenbeam.Holes.Where(t => t.Location.Y > (start + wc) && t.Location.Y < (end - wc) && !t.IsStart && !t.IsEnd).ToList();
+
+                this.Holes.AddRange(yhs);
+                var leftx=parenbeam.TopLeft.X;
+                var rightx=parenbeam.TopRight.X;
+                if (qiegestart)
+                {
+                    var bottomy=start+3d/ JwFileConsts.JwScale;
+                    BottomLeft = new JWPoint(leftx,bottomy);
+                    BottomRight = new JWPoint(rightx, bottomy);
+                    qglst.Add(new JWPoint(parenbeam.CenterPoint.X, start));
+                    StartTelosType = KongzuType.J;
+                    StartXinPoint = new JWPoint(parenbeam.CenterPoint.X, start);
+                    JWPoint kongzucenter = new JWPoint(parenbeam.CenterPoint.X, start + JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale));
+                    //this.AddAnyHole(kongzucenter, HoleCreateFrom.FengeJ,StartXinPoint,true,false);
+                    this.AddAnyHole(kongzucenter, start, true, false);
+                    this.HasStartSide = true;
+                    this.StartSide = new JwBeamSide
+                    {
+                        KongZu = this.Holes.Last(),
+                        SideType = KongzuType.J
+                    };
+                    StartCenter = start;
+                }
+                else
+                {
+                    BottomLeft = new JWPoint(leftx,start);
+                    BottomRight = new JWPoint(rightx,start);
+                    HasEndSide = true;
+                    StartTelosType = parenbeam.StartTelosType;
+                    StartCenter = parenbeam.StartCenter;
+                    var z = parenbeam.Holes.Find(t => t.IsStart);
+                    var nfsh = Holes.Find(t => t.IsStart);
+                    if (z != null && nfsh == null)
+                    {
+                        Holes.Add(z);
+                    }
+                }
+                if (qiegeend) 
+                {
+                    var topy=end-3d/ JwFileConsts.JwScale;
+                    TopLeft = new JWPoint(leftx, topy);
+                    TopRight = new JWPoint(rightx,topy);
+                    qglst.Add(new JWPoint(parenbeam.CenterPoint.X, end));
+                    EndTelosType = KongzuType.J;
+                    EndXinPoint = new JWPoint(parenbeam.Center, end);
+                    JWPoint kongzucenter = new JWPoint(parenbeam.Center, end - JwFileConsts.Kongjing / (2 * JwFileConsts.JwScale));
+
+                    this.AddAnyHole(kongzucenter, end, false, true);
+                    this.HasEndSide = true;
+                    this.EndSide = new JwBeamSide
+                    {
+                        KongZu = this.Holes.Last(),
+                        SideType = KongzuType.J
+                    };
+                    EndCenter = end;//终点为切割点
+                }
+                else
+                {
+                    TopLeft = new JWPoint(leftx,end);
+                    TopRight = new JWPoint(rightx,end);
+                    HasEndSide = true;
+                    EndTelosType = parenbeam.EndTelosType;
+                    EndCenter = parenbeam.EndCenter;
+                    var lasth = parenbeam.Holes.Find(t => t.IsEnd);
+                    var nfsh = Holes.Find(t => t.IsEnd);
+
+                    if (lasth != null && nfsh == null)
+                    {
+                        Holes.Add(lasth);
+                    }
+                }
+            }
+            IsQiegeBeam = true;
+            LinkParts = new List<JwLinkPart>();
+            BeamPillars = new List<JwPillar>();
+            ZhuBlocks = new List<JwBlock>();
+            JisuanWidthHeight();
+            foreach (var lk in parenbeam.LinkParts)
+            {
+                if (this.Contains(lk.BjCenterPoint))
+                {
+                    this.LinkParts.Add(lk);
+                }
+            }
+            JwLinkPart jbb = new JwLinkPart();
+            jbb.Directed = TaggDirect.Up;
+            jbb.GouJianType = GouJianType.BG;
+            jbb.BujianName = "BG";
+            var bflst = parenbeam.Baifangs.Where(t => t.Center >= start && t.Center <= end).ToList();
+            this.Baifangs.AddRange(bflst);
+        }
 
         private void desginScale()
         {
@@ -1970,6 +2155,190 @@ namespace JwShapeCommon
                 //}
             }
             
+            return relst;
+        }
+        public static List<JwBeam> BeamSpliteDouble(this JwBeam beam)
+        {
+            List<JwBeam> relst = new List<JwBeam>();
+            if (beam.HasQieGe)
+            {
+                beam.IsParentBeam = true;
+                if (beam.DirectionType == BeamDirectionType.Horizontal)
+                {
+                    //升序
+                    beam.QieGePoints = beam.QieGePoints.OrderBy(t => t.X).ToList();
+                    double startx = beam.TopLeft.X;
+                    List<double> qieges = new List<double>();
+                    for (int i = 0; i < beam.QieGePoints.Count; i++)
+                    {
+                        qieges.Add(beam.QieGePoints[i].X);
+                        var endx= beam.QieGePoints[i].X;
+                        var nb = new JwBeam(beam, startx, endx, qieges.Contains(startx), qieges.Contains(endx));
+                        JwQiegeZu qiegeZu = new JwQiegeZu { Qiegezb = endx, RJwBeam = nb };
+                        var pre = beam.jwQiegeZus.Last();
+                        if (pre != null)
+                        {
+                            pre.AJwBeam = nb;
+                        }
+                        beam.jwQiegeZus.Add(qiegeZu);
+                        int t = i + 1;
+                        nb.BeamCode = beam.BeamCode + "-" + t.ToString();
+                        relst.Add(nb);
+                        startx = endx;
+                    }
+                    var endright=beam.TopRight.X;
+                    var edp = new JwBeam(beam, startx, endright, true, false);
+                    var pres = beam.jwQiegeZus.Last();
+                    if (pres != null)
+                    {
+                        pres.AJwBeam = edp;
+                    }
+                    edp.BeamCode = beam.BeamCode + "-" + (beam.QieGePoints.Count + 1).ToString();
+                    relst.Add(edp);
+                }
+                if (beam.DirectionType == BeamDirectionType.Vertical)
+                {
+                    //左上 和左下 自下向上
+                    //升序
+                    //beam.QieGePoints = beam.QieGePoints.OrderByDescending(t => t.Y).ToList();
+                    beam.QieGePoints = beam.QieGePoints.OrderBy(t => t.Y).ToList();
+                    //JWPoint startp = beam.TopLeft;
+                    double starty = beam.BottomLeft.Y;
+                    List<double> qieges = new List<double>();
+                    for (int i = 0; i < beam.QieGePoints.Count; i++)
+                    {
+                        qieges.Add(beam.QieGePoints[i].Y);
+                        var endy=beam.QieGePoints[i].Y;
+                        var nb = new JwBeam(beam, starty, endy, qieges.Contains(starty), qieges.Contains(endy));
+                        int t = i + 1;
+                        nb.BeamCode = beam.BeamCode + "-" + t.ToString();
+                        JwQiegeZu qiegeZu = new JwQiegeZu { Qiegezb = endy, RJwBeam = nb };
+                        var pre = beam.jwQiegeZus.Last();
+                        if (pre != null)
+                        {
+                            pre.AJwBeam = nb;
+                        }
+                        beam.jwQiegeZus.Add(qiegeZu);
+                        relst.Add(nb);
+
+                        starty = endy;
+                    }
+                    var endtop=beam.TopLeft.Y;
+                    var endbeam = new JwBeam(beam, starty, endtop, true, false);
+                    endbeam.BeamCode = beam.BeamCode + "-" + (beam.QieGePoints.Count + 1).ToString();
+                    var pres = beam.jwQiegeZus.Last();
+                    if (pres != null)
+                    {
+                        pres.AJwBeam = endbeam;
+                    }
+
+                    relst.Add(endbeam);
+                }
+                //linkpart
+                var qiegecenterpoints = new List<JWPoint>();
+                foreach (var bp in beam.QieGePoints)
+                {
+                    if (beam.DirectionType == BeamDirectionType.Horizontal)
+                    {
+                        var z = new JWPoint(bp.X, beam.Center);
+                        qiegecenterpoints.Add(z);
+                        var existbb = beam.LinkParts.Where(t => t.BjCenterPoint.IsEqualsWithError(z) && t.Directed == TaggDirect.Up).ToList();
+                        if (existbb.Count == 0)
+                        {
+                            JwLinkPart jbb = new JwLinkPart();
+                            jbb.Directed = TaggDirect.Up;
+                            jbb.GouJianType = GouJianType.B;
+                            jbb.BujianName = "B";
+                            jbb.BjCenterPoint = z;
+                            jbb.ParentBeam = beam;
+                            jbb.BeamId = beam.Id;
+                            jbb.IsLianjie = true;
+                            beam.LinkParts.Add(jbb);
+                            if (GlobalEvent.GetGlobalEvent().AddLinkPartEvent != null)
+                            {
+                                GlobalEvent.GetGlobalEvent().AddLinkPartEvent(beam, new AddLinkPartArgs { LinkPart = jbb });
+                            }
+                        }
+                        else
+                        {
+                            existbb.ForEach(t => t.IsLianjie = true);
+                        }
+                        var existbbdown = beam.LinkParts.Where(t => t.BjCenterPoint.IsEqualsWithError(z) && t.Directed == TaggDirect.Down).ToList();
+                        if (existbbdown.Count == 0)
+                        {
+                            JwLinkPart jbb = new JwLinkPart();
+                            jbb.Directed = TaggDirect.Down;
+                            jbb.GouJianType = GouJianType.B;
+                            jbb.BujianName = "B";
+                            jbb.BjCenterPoint = z;
+                            jbb.ParentBeam = beam;
+                            jbb.BeamId = beam.Id;
+                            jbb.IsLianjie = true;
+                            beam.LinkParts.Add(jbb);
+                            if (GlobalEvent.GetGlobalEvent().AddLinkPartEvent != null)
+                            {
+                                GlobalEvent.GetGlobalEvent().AddLinkPartEvent(beam, new AddLinkPartArgs { LinkPart = jbb });
+                            }
+                        }
+                        else
+                        {
+                            existbbdown.ForEach(t => t.IsLianjie = true);
+                        }
+                    }
+                    else
+                    {
+                        var z = new JWPoint(beam.Center, bp.Y);
+                        qiegecenterpoints.Add(new JWPoint(beam.CenterPoint.X, bp.Y));
+                        var existbbleft = beam.LinkParts.Where(t => t.BjCenterPoint.IsEqualsWithError(z) && t.Directed == TaggDirect.Left).ToList();
+                        if (existbbleft.Count == 0)
+                        {
+                            JwLinkPart jbb = new JwLinkPart();
+                            jbb.Directed = TaggDirect.Left;
+                            jbb.GouJianType = GouJianType.B;
+                            jbb.BujianName = "B";
+                            jbb.BjCenterPoint = z;
+                            jbb.ParentBeam = beam;
+                            jbb.BeamId = beam.Id;
+                            jbb.IsLianjie = true;
+                            beam.LinkParts.Add(jbb);
+                            if (GlobalEvent.GetGlobalEvent().AddLinkPartEvent != null)
+                            {
+                                GlobalEvent.GetGlobalEvent().AddLinkPartEvent(beam, new AddLinkPartArgs { LinkPart = jbb });
+                            }
+                        }
+                        else
+                        {
+                            existbbleft.ForEach(t => t.IsLianjie = true);
+                        }
+                        var existbbright = beam.LinkParts.Where(t => t.BjCenterPoint.IsEqualsWithError(z) && t.Directed == TaggDirect.Right).ToList();
+                        if (existbbright.Count == 0)
+                        {
+                            JwLinkPart jbb = new JwLinkPart();
+                            jbb.Directed = TaggDirect.Right;
+                            jbb.GouJianType = GouJianType.B;
+                            jbb.BujianName = "B";
+                            jbb.BjCenterPoint = z;
+                            jbb.ParentBeam = beam;
+                            jbb.BeamId = beam.Id;
+                            jbb.IsLianjie = true;
+                            beam.LinkParts.Add(jbb);
+                            if (GlobalEvent.GetGlobalEvent().AddLinkPartEvent != null)
+                            {
+                                GlobalEvent.GetGlobalEvent().AddLinkPartEvent(beam, new AddLinkPartArgs { LinkPart = jbb });
+                            }
+                        }
+                        else
+                        {
+                            existbbright.ForEach(t => t.IsLianjie = true);
+                        }
+                    }
+                }
+                //foreach(var z in qiegecenterpoints)
+                //{
+                //    var existbb = beam.LinkParts.Where(t => t.BjCenterPoint == z && t.Directed == TaggDirect.Up).ToList();
+                //}
+            }
+
             return relst;
         }
     }

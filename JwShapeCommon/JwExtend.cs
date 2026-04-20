@@ -948,13 +948,19 @@ namespace JwShapeCommon
         {
             double angleRadians = block.m_radKaitenKaku;
 
+            double xb = block.m_dBairitsuX;
+            double yb = block.m_dBairitsuY;
+
             // 旋转公式
             double rotatedX = point.X * Math.Cos(angleRadians) - point.Y * Math.Sin(angleRadians);
             double rotatedY = point.X * Math.Sin(angleRadians) + point.Y * Math.Cos(angleRadians);
+            //double rotatedX = Math.Round(point.X,2) * Math.Cos(angleRadians) - point.Y * Math.Sin(angleRadians);
+            //double rotatedY = Math.Round(point.X,2) * Math.Sin(angleRadians) + point.Y * Math.Cos(angleRadians);
 
             // 平移
-            double newX = rotatedX + block.m_DPKijunTen_x;
-            double newY = rotatedY + block.m_DPKijunTen_y;
+            double newX = rotatedX*xb + block.m_DPKijunTen_x;
+            double newY = rotatedY*yb + block.m_DPKijunTen_y;
+            //return new JWPoint(Math.Round(newX,6), Math.Round(newY,6));
             return new JWPoint(newX, newY);
         }
 

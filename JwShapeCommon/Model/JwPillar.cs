@@ -161,12 +161,12 @@ namespace JwShapeCommon
                    var py = Math.Round(p.Y, 1);
                    Points.Add(new JWPoint(px, py)); 
                 }
-                block.JisuanWidthHeight();
-                //Points.AddRange(block.BlockPoint);
-                if (block.HasCenter)
+                if(!block.HasCenter)
                 {
-                    CenterPoints.Add(block.CenterPoint);
+                    block.JisuanWidthHeight();
                 }
+                CenterPoints.Add(block.CenterPoint);
+                //Points.AddRange(block.BlockPoint);
 
             }
             //
