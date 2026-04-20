@@ -3311,13 +3311,20 @@ namespace JwShapeCommon
             var mkkkk = mkkk / 2;
             foreach (var b in Beams)
             {
+                double wd = 0;
                 if (b.DirectionType == BeamDirectionType.Horizontal)
                 {
                     b.AbsolutePD = Math.Round(b.TopLeft.X, 6);//不用更改数据库从新生成间隔数据
+                    wd=b.TopRight.X - b.TopLeft.X;
+                    b.WidthScale = Math.Round(wd * JwFileConsts.JwScale, 0);
+                    b.Width = Math.Round(wd, 2);
                 }
                 else if(b.DirectionType==BeamDirectionType.Vertical)
                 {
                     b.AbsolutePD = Math.Round(b.BottomLeft.Y, 6);//不用更改数据库从新生成间隔数据
+                    wd=b.TopLeft.Y - b.BottomLeft.Y;
+                    b.HeightScale = Math.Round(wd * JwFileConsts.JwScale, 0);
+                    b.Height = Math.Round(wd, 2);
                 }
                 double xcd = 0;
                 foreach(var c in b.jwBeamMarks)
@@ -3326,41 +3333,42 @@ namespace JwShapeCommon
                 }
 
                 var s = b.StartTelosType == KongzuType.Center ? "B" : b.StartTelosType.ToString();
-               var e = b.EndTelosType == KongzuType.Center ? "B" : b.EndTelosType.ToString();
+                var e = b.EndTelosType == KongzuType.Center ? "B" : b.EndTelosType.ToString();
                 b.XXLength =Math.Round( Math.Round(xcd, 2) * JwFileConsts.JwScale,0);
                 double bml = b.XXLength;
-                if (b.StartTelosType == KongzuType.B)
-                {
-                    bml = bml + 50 ;
-                    
-                }
-                if (b.StartTelosType == KongzuType.G)
-                {
+                //if (b.StartTelosType == KongzuType.B)
+                //{
+                //    bml = bml + 50 ;
 
-                    bml = bml - 55;
-                    //startx = this.xstartx + 55 / JwFileConsts.JwScale;
-                }
-                if (b.StartTelosType == KongzuType.J)
-                {
-                    bml = bml - 3 ;
-                    //startx = this.xstartx + 3 / JwFileConsts.JwScale;
-                }
-                if (b.EndTelosType == KongzuType.B)
-                {
-                    bml = bml + 50;
-                    //endx = xendx + 50 / JwFileConsts.JwScale;
-                }
-                if (b.EndTelosType == KongzuType.G)
-                {
-                    bml = bml - 55;
-                    //endx = this.xendx - 55 / JwFileConsts.JwScale;
-                }
-                if (b.EndTelosType == KongzuType.J)
-                {
-                    bml = bml - 3 ;
-                    //endx = xendx - 3 / JwFileConsts.JwScale;
-                }
-                b.WidthScale = bml;
+                //}
+                //if (b.StartTelosType == KongzuType.G)
+                //{
+
+                //    bml = bml - 55;
+                //    //startx = this.xstartx + 55 / JwFileConsts.JwScale;
+                //}
+                //if (b.StartTelosType == KongzuType.J)
+                //{
+                //    bml = bml - 3 ;
+                //    //startx = this.xstartx + 3 / JwFileConsts.JwScale;
+                //}
+                //if (b.EndTelosType == KongzuType.B)
+                //{
+                //    bml = bml + 50;
+                //    //endx = xendx + 50 / JwFileConsts.JwScale;
+                //}
+                //if (b.EndTelosType == KongzuType.G)
+                //{
+                //    bml = bml - 55;
+                //    //endx = this.xendx - 55 / JwFileConsts.JwScale;
+                //}
+                //if (b.EndTelosType == KongzuType.J)
+                //{
+                //    bml = bml - 3 ;
+                //    //endx = xendx - 3 / JwFileConsts.JwScale;
+                //}
+
+                
                 //if (b.DirectionType == BeamDirectionType.Horizontal)
                 //{
                 //    b.Width = Math.Round(bml / JwFileConsts.JwScale, 2);
@@ -3369,7 +3377,7 @@ namespace JwShapeCommon
                 //{
                 //    b.Height = Math.Round(bml / JwFileConsts.JwScale, 2);
                 //}
-                
+
                 double y = b.XXLength % mkkkk;
 
                 int q = (int)b.XXLength / mkkkk;
