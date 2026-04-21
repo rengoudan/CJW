@@ -65,8 +65,10 @@ namespace JwCore
         /// 同上 在选择查看梁的时候 如果上面的属性为true则允许设置此
         /// </summary>
         public BaiFangGTBDistanceType BaiFangGTBDistance { get; set; } = BaiFangGTBDistanceType.A35;
-
-
+        /// <summary>
+        /// 2026年4月21日 增加梁指纹的概念
+        /// </summary>
+        public string BeamSignature { get; set; } = "";
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
 
         public ObservableCollectionListSource<JwHoleData> JwHoles { get; } = new();

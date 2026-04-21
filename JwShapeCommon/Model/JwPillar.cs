@@ -149,12 +149,10 @@ namespace JwShapeCommon
             int izhengfangcou = 0;
             Blocks= Blocks.Distinct(new JwBlockComparint()).ToList();
             BlocksCount=Blocks.Count;
+            var _zfcenters = new List<JWPoint>();
             foreach (var block in Blocks)
             {
-                if (block.Iszhengfangxing)
-                {
-                    izhengfangcou++;
-                }
+                
                 foreach(var p in block.BlockPoint)
                 {
                    var px = Math.Round(p.X, 1);
@@ -166,6 +164,11 @@ namespace JwShapeCommon
                     block.JisuanWidthHeight();
                 }
                 CenterPoints.Add(block.CenterPoint);
+                if (block.Iszhengfangxing)
+                {
+                    izhengfangcou++;
+                    _zfcenters.Add(block.CenterPoint);
+                }
                 //Points.AddRange(block.BlockPoint);
 
             }
@@ -190,61 +193,81 @@ namespace JwShapeCommon
             {
                 this.BaseType = PillarBaseType.KPillar;
                 this.kPillarType = JwFileConsts.Ktype;
-                TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
-                TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
-                BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();
-                BottomRight = Points.OrderByDescending(t => t.X).ThenBy(t => t.Y).ToList().First();
-                Width = TopRight.X - TopLeft.X;
-                Height = TopLeft.Y - BottomLeft.Y;
-                if (Width >= Height)
+                this.PointA = _zfcenters.First();
+                this.PointB = _zfcenters.Last();
+                if(this.PointB.X - this.PointA.X > this.PointB.Y - this.PointA.Y)
                 {
-                    //如果是水平的 可以强制所有中心点的Y为first的
                     DirectionType = BeamDirectionType.Horizontal;
-                    if (Blocks.Count > 1 && CenterPoints?.Count > 1)
+                    if(this.PointB.Y!=this.PointA.Y)
                     {
-                        var _tempps = CenterPoints.OrderBy(t => t.X).ToList();
-                        PillarInBeamCenterPoints.Add(_tempps.First());
-                        PillarInBeamCenterPoints.Add(_tempps.Last());
-                        this.PointA= _tempps.First();
-                        this.PointB= _tempps.Last();
-                        this.CenterPoint=_tempps[1];
-                        this.Distance = JwExtend.Distance(PointA, PointB);
-                        HasPillarBeamCenter = true;
-                    }
-                    else if (Blocks.Count == 1 && CenterPoints?.Count == 1)
-                    {
-                        PillarInBeamCenterPoints = CenterPoints;
-                        HasPillarBeamCenter = true;
-                    }
-                    else
-                    {
-                        HasPillarBeamCenter = false;
+                        this.PointB=new JWPoint(this.PointB.X, Math.Round(this.PointB.Y,2));
+                        this.PointA=new JWPoint(this.PointA.X, Math.Round(this.PointB.Y));
                     }
                 }
                 else
                 {
                     DirectionType = BeamDirectionType.Vertical;
-                    if (Blocks.Count > 1 && CenterPoints?.Count > 1)
+                    if(this.PointA.X!=this.PointB.X)
                     {
-                        var _tempps = CenterPoints.OrderBy(t => t.Y).ToList();
-                        PillarInBeamCenterPoints.Add(_tempps.First());
-                        PillarInBeamCenterPoints.Add(_tempps.Last());
-                        this.PointA = _tempps.First();
-                        this.PointB = _tempps.Last();
-                        this.CenterPoint = _tempps[1];
-                        this.Distance = JwExtend.Distance(PointA, PointB);
-                        HasPillarBeamCenter = true;
-                    }
-                    else if (Blocks.Count == 1 && CenterPoints?.Count == 1)
-                    {
-                        PillarInBeamCenterPoints = CenterPoints;
-                        HasPillarBeamCenter = true;
-                    }
-                    else
-                    {
-                        HasPillarBeamCenter = false;
+                        this.PointB=new JWPoint(Math.Round(this.PointB.X,2), this.PointB.Y);
+                        this.PointA=new JWPoint(Math.Round(this.PointA.X,2), this.PointB.Y);
                     }
                 }
+                //TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+                //TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+                //BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();
+                //BottomRight = Points.OrderByDescending(t => t.X).ThenBy(t => t.Y).ToList().First();
+                //Width = TopRight.X - TopLeft.X;
+                //Height = TopLeft.Y - BottomLeft.Y;
+                //if (Width >= Height)
+                //{
+                //    //如果是水平的 可以强制所有中心点的Y为first的
+                //    DirectionType = BeamDirectionType.Horizontal;
+                //    if (Blocks.Count > 1 && CenterPoints?.Count > 1)
+                //    {
+                //        var _tempps = CenterPoints.OrderBy(t => t.X).ToList();
+                //        PillarInBeamCenterPoints.Add(_tempps.First());
+                //        PillarInBeamCenterPoints.Add(_tempps.Last());
+                //        this.PointA= _tempps.First();
+                //        this.PointB= _tempps.Last();
+                //        this.CenterPoint=_tempps[1];
+                //        this.Distance = JwExtend.Distance(PointA, PointB);
+                //        HasPillarBeamCenter = true;
+                //    }
+                //    else if (Blocks.Count == 1 && CenterPoints?.Count == 1)
+                //    {
+                //        PillarInBeamCenterPoints = CenterPoints;
+                //        HasPillarBeamCenter = true;
+                //    }
+                //    else
+                //    {
+                //        HasPillarBeamCenter = false;
+                //    }
+                //}
+                //else
+                //{
+                //    DirectionType = BeamDirectionType.Vertical;
+                //    if (Blocks.Count > 1 && CenterPoints?.Count > 1)
+                //    {
+                //        var _tempps = CenterPoints.OrderBy(t => t.Y).ToList();
+                //        PillarInBeamCenterPoints.Add(_tempps.First());
+                //        PillarInBeamCenterPoints.Add(_tempps.Last());
+                //        this.PointA = _tempps.First();
+                //        this.PointB = _tempps.Last();
+                //        this.CenterPoint = _tempps[1];
+                //        this.Distance = JwExtend.Distance(PointA, PointB);
+                //        HasPillarBeamCenter = true;
+                //    }
+                //    else if (Blocks.Count == 1 && CenterPoints?.Count == 1)
+                //    {
+                //        PillarInBeamCenterPoints = CenterPoints;
+                //        HasPillarBeamCenter = true;
+                //    }
+                //    else
+                //    {
+                //        HasPillarBeamCenter = false;
+                //    }
+                //}
 
             }
             if (Blocks.Count > 3)

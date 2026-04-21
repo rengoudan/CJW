@@ -1246,8 +1246,8 @@ namespace JwShapeCommon
                     Id = Id,
                     RelativeStartDistance = Math.Round((location - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = location,
-                    HasLeft = false,
-                    HasRight = false,
+                    HasLeft = hole.HasTop,
+                    HasRight = hole.HasBottom,
                     HasTop = hole.HasCenter
                 };
 
@@ -1457,7 +1457,7 @@ namespace JwShapeCommon
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("START\r\n");
-            sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", this.GongQu, fuhao, jiebie, "H-200x100x5.5x8", Length, "1"));
+            sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", this.GongQu, this.BeamCode, jiebie, "H-200x100x5.5x8", Length, "1"));
             sb.Append("0, 0, 0, , 0, 0\r\n");
             var rights = JwHoleMachinings.Where(t => t.HasRight).OrderBy(t => t.RelativeStartDistance).ToList();
 

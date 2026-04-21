@@ -1841,6 +1841,7 @@ namespace JwShapeCommon
                         JwBeamData beamData = bm.ToDbData();
                         beamData.JwProjectSubDataId = _subData.Id;
                         beamData.FloorName = _floorName;
+                        beamData.BeamSignature = bm.GetBeamSignature();//
                         //beamData.x
 
                         if (bm.Holes.Count > 0)
@@ -2913,6 +2914,19 @@ namespace JwShapeCommon
                     //}
                 }
             }
+
+            ///2026年4月21日 针对切割位置上下 有柱的情况 暂时不处理 默认J 上下都有孔就可以了 简略方法
+            //if(ParentQieGeBeam?.Count>0)
+            //{
+            //    foreach(var qgb in ParentQieGeBeam)
+            //    {
+            //        foreach(var qiegezu in qgb.jwQiegeZus)
+            //        {
+            //            var qgpoint = qgb.DirectionType == BeamDirectionType.Horizontal ? new JWPoint(qiegezu.Qiegezb, qgb.Center) : new JWPoint(qgb.Center, qiegezu.Qiegezb);
+
+            //        }
+            //    }
+            //}
 
 
             var parentlsts= _tempBeams.Where(t => t.IsParentBeam).ToList();

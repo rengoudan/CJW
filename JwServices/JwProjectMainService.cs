@@ -351,21 +351,28 @@ namespace JwServices
             var subidlst = lstsub.Select(t => t.Id).ToList();
             var lstbeam = await GetAllAsync<JwBeamData>(p => subidlst.Contains(p.JwProjectSubDataId));
             //原有梁的的正常编号需要存储 或者动态按照规则生成编号
-            var grouped = lstbeam.GroupBy(t => t.InitialBeamCode).Where(g => g.Count() > 1);
+            var grouped = lstbeam.GroupBy(t => t.InitialBeamCode).ToList();
 
             foreach (var group in grouped)
             {
-                char suffix = 'A';
-                foreach (var beam in group)
+                if (group.Count() == 1)
                 {
-                    if (suffix == 'I' || suffix == 'O')
+                    group.First().BeamCode = group.Key;
+                }
+                else
+                {
+                    var subGroups = group
+        .GroupBy(b => b.BeamSignature)
+        .ToList();
+                    for (int i = 0; i < subGroups.Count; i++)
                     {
-                        suffix++;
+                        string code = group.Key;
+                        if (i > 0)
+                            code += ((char)('A' + (i - 1))).ToString();
+
+                        foreach (var b in subGroups[i])
+                            b.BeamCode = code;
                     }
-                    //beam.BeamCode= beam.BeamCode.TrimEnd('A');
-                    beam.BeamCode = $"{group.Key.TrimEnd('A')}{suffix}";
-                    await UpdateAsync<JwBeamData>(beam);
-                    suffix++;
                 }
             }
         }
