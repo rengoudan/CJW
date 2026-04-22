@@ -239,7 +239,7 @@ namespace JwShapeCommon
             reobj.KPillarCount = data.KPillarCount;
             reobj.SinglePillarCount = data.SinglePillarCount;
             reobj.Scale = string.IsNullOrEmpty(data.Biaochi) ? 0 : Convert.ToDouble(data.Biaochi);
-
+            JwFileConsts.JwScale= reobj.Scale;
             reobj.HorizontalBeamsCount = data.HorizontalBeamsCount;
             reobj.VerticalBeamsCount = data.VerticalBeamsCount;
             reobj.KPillarType = data.KPillarType;
@@ -1000,6 +1000,57 @@ namespace JwShapeCommon
             var attr = field.GetCustomAttributes(typeof(DescriptionAttribute), false)
                             .FirstOrDefault() as DescriptionAttribute;
             return attr?.Description ?? value.ToString();
+        }
+
+        public static double GetNearCenter(List<double> centers, double target)
+        {
+            if (centers == null || centers.Count == 0)
+                throw new ArgumentException("Center list cannot be null or empty.");
+            double nearest = centers[0];
+            double minDistance = Math.Abs(nearest - target);
+            foreach (var center in centers)
+            {
+                double distance = Math.Abs(center - target);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    nearest = center;
+                }
+            }
+            return nearest;
+        }
+
+        public static bool TryFindClosest(
+    List<double> list,
+    double target,
+    out double closest)
+        {
+            var maxDiff = JwFileConsts.PillarCenterMax / JwFileConsts.JwScale;
+            closest = default;
+
+            if (list == null || list.Count == 0)
+                return false;
+
+            double best = list[0];
+            double bestDiff = Math.Abs(best - target);
+
+            foreach (var x in list)
+            {
+                double diff = Math.Abs(x - target);
+                if (diff < bestDiff)
+                {
+                    bestDiff = diff;
+                    best = x;
+                }
+            }
+
+            if (bestDiff <= maxDiff)
+            {
+                closest = best;
+                return true;
+            }
+
+            return false;
         }
 
     }

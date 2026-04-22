@@ -336,7 +336,7 @@ namespace JwShapeCommon
 
             ChangePillarFromJwwSolid();//处理文件solid
             ChangeQieGeSolis();//读取切割点内容
-            CreateQieGeBeams();//生成具体的beam
+            
             if (JwFileConsts.PillarDrawingMethod == PillarDrawingMethod.Line)
             {
                 ParsePillarsByXians();
@@ -355,6 +355,7 @@ namespace JwShapeCommon
             ThirdExtendTextPillar();
             LastTextPillar();
             parseDownPillars();
+            CreateQieGeBeams();//生成具体的beam
             StatisticalBBGquantity();
             if (Pillars==null|| Pillars.Count == 0)
             {
@@ -918,6 +919,16 @@ namespace JwShapeCommon
         }
 
         /// <summary>
+        /// 存放 x坐标值
+        /// </summary>
+        private List<double> _chuzhiceneters=new List<double>();
+
+        /// <summary>
+        /// 存放 y坐标值
+        /// </summary>
+        private List<double> _shuipingceneters = new List<double>();
+
+        /// <summary>
         /// 临时beams生成
         /// </summary>
         private void PareBeamByMian()
@@ -926,7 +937,17 @@ namespace JwShapeCommon
             _tempBeams = new List<JwBeam>();
             foreach (var item in Mians)
             {
-                _tempBeams.Add(new JwBeam(item,true));
+                var b = new JwBeam(item, true);
+                if (b.DirectionType == BeamDirectionType.Horizontal)
+                {
+                    _shuipingceneters.Add(b.Center);
+                }
+                else
+                {
+                    _chuzhiceneters.Add(b.Center);
+                }
+
+                    _tempBeams.Add(b);
                 //_tempBeams.Add(new JwBeam(item));
                 //if (item.IsClosedLoop)
                 //{
@@ -1205,7 +1226,7 @@ namespace JwShapeCommon
             {
                 foreach (var item in _temppillars)
                 {
-                    item.squareParse();
+                    item.squareParse(_chuzhiceneters,_shuipingceneters);
                 }
             }
 
@@ -1215,67 +1236,7 @@ namespace JwShapeCommon
                 Pillars.Add(item);
                 tempsquareid.Add(item.Id);
             }
-            //var cllst = _temppillars.Where(t => t.BlocksCount > 3).ToList();
-            //if (cllst.Count > 0)
-            //{
-            //    foreach (var item in cllst)
-            //    {
-            //        var xg = item.Blocks.GroupBy(t => t.CenterPoint.X);
-            //        var yg = item.Blocks.GroupBy(t => t.CenterPoint.Y);
-            //        int cxg = xg.Count();
-            //        int cyg= yg.Count();
-            //        if (cxg > cyg)
-            //        {
-            //            if (cyg == 1)
-            //            {
-            //                item.Blocks = item.Blocks.Distinct(new JwBlockComparint()).ToList();
-            //                if (item.Blocks.Count == 3)
-            //                {
-            //                    item.BaseType = PillarBaseType.KPillar;
-            //                    Pillars.Add(item);
-            //                    tempsquareid.Add(item.Id);
-            //                }
-            //                //break;
-            //            }
-            //            foreach (var item6 in yg)
-            //            {
-            //                List<JwBlock> list5 = item6.Distinct(new JwBlockComparint()).ToList();
-            //                if (list5.Count == 3)
-            //                {
-            //                    item.Blocks = list5;
-            //                    item.BaseType = PillarBaseType.KPillar;
-            //                    Pillars.Add(item);
-            //                    tempsquareid.Add(item.Id);
-            //                    break;
-            //                }
-            //            }
-            //        }
-            //        if (cxg == 1)
-            //        {
-            //            item.Blocks = item.Blocks.Distinct(new JwBlockComparint()).ToList();
-            //            if (item.Blocks.Count == 3)
-            //            {
-            //                item.BaseType = (PillarBaseType)1;
-            //                Pillars.Add(item);
-            //                tempsquareid.Add(item.Id);
-            //            }
-            //        }
-            //        foreach(var item7 in xg)
-            //        {
-            //            List<JwBlock> list6 = item7.Distinct(new JwBlockComparint()).ToList();
-            //            if (list6.Count == 3)
-            //            {
-            //                item.Blocks = list6;
-            //                item.BaseType = (PillarBaseType)1;
-            //                Pillars.Add(item);
-            //                tempsquareid.Add(item.Id);
-            //                break;
-            //            }
-            //        }
-
-            //    }
-            //}
-
+            
             var sinlelst = _temppillars.Where(t => t.BaseType == PillarBaseType.SinglePillar).ToList();
             var klsts = _temppillars.Where(t => t.BaseType ==PillarBaseType.KPillar).ToList();
             foreach (var item in sinlelst)
@@ -1286,24 +1247,10 @@ namespace JwShapeCommon
                     Pillars.Add(item);
                 }
             }
-            //foreach (JwPillar item8 in klst)
-            //{
-            //    if (!tempsquareid.Contains(item8.Id))
-            //    {
-            //        var zfx = item8.Blocks.Where(t => t.Iszhengfangxing).Select(t => t.CenterPoint).Distinct(new JwPointComparint()).ToList();
-            //        item8.PointA = zfx.First();
-            //        item8.PointB = zfx.Last();
-            //        //var jl = Math.Round(JwExtend.Distance(item8.PointA, item8.PointB), 2);
-            //        //item8.Distance=jl*JwFileConsts.JwScale;
-            //        Pillars.Add(item8);
-            //    }
-            //}
-
-            //Pillars.AddRange(klst);
-
+            
             SinglePillarCount = Pillars.Where(t => t.Blocks.Count(q => q.Iszhengfangxing) == 1).Count();
             SendMsg(string.Format("singlepillarcount is {0}{1}", SinglePillarCount, Environment.NewLine));
-            KPillarCount = Pillars.Where(t => t.Blocks.Count == 3 && t.Blocks.Count(q => q.Iszhengfangxing) == 2).Count();
+            KPillarCount = Pillars.Where(t => t.BaseType== PillarBaseType.KPillar).Count();
             SendMsg(string.Format("KPillarCount is {0}{1}", KPillarCount, Environment.NewLine));
         }
 
@@ -4192,6 +4139,8 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 在判定touch上下左右的时候， 增加一层判断，判断beam的holes 距离此点的 置顶范围内
+        /// 理论上切割生成的beam hole和parent为同一组 理论上修改parent就可以
+        /// 
         /// </summary>
         /// <param name="touch"></param>
         /// <param name="point"></param>
@@ -4218,15 +4167,48 @@ namespace JwShapeCommon
                     var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter < point.Y).OrderByDescending(t => t.HoleCenter).ToList();
                     if (touch.WinnerBeam.HasQieGe)
                     {
-                        jwPointBeam.Direct = ZhengfuType.Reduce;
-                        touch.JwHoleG.HasPreLinkHole = true;
-                        var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
-                        if (f != null)
+                        if (pdlst.Count > 0)
                         {
-                            //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                            f.RJwBeam.holesorder();
-                            f.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                            var p = pdlst.First();
+                            var cha = Math.Abs(p.HoleCenter - point.Y) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                jwPointBeam.Direct = ZhengfuType.Reduce;
+                                touch.JwHoleG.HasPreLinkHole = true;
+                                var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc, 2));
+                                if (f != null)
+                                {
+                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                                    f.RJwBeam.holesorder();
+                                    f.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                                }
+                            }
+                            else
+                            {
+                                jwPointBeam.Direct = ZhengfuType.Reduce;
+                                double realy = p.HoleCenter - (84 / JwFileConsts.JwScale);
+                                jwPointBeam.RealPoint = new JWPoint(jwPointBeam.RealPoint.X, realy);
+                                p.HasPreLinkHole = true;
+                            }
+                            //获取需要添加 上下额外孔组的 孔组
+                            //var f = pdlst.First();
+                            //f.HasBhLinkHole = true;
                         }
+                        //else
+                        //{
+                        //    jwPointBeam.Direct = ZhengfuType.Reduce;
+                        //    touch.JwHoleG.HasPreLinkHole = true;
+                        //    var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc,2));
+                        //    if (f != null)
+                        //    {
+                        //        //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                        //        f.RJwBeam.holesorder();
+                        //        f.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                        //    }
+                        //}
+
                     }
                     else
                     {
@@ -4259,15 +4241,53 @@ namespace JwShapeCommon
                     
                     if (touch.WinnerBeam.HasQieGe)
                     {
-                        jwPointBeam.Direct = ZhengfuType.Add;
-                        touch.JwHoleG.HasBhLinkHole = true;
-                        var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
-                        if (f != null)
+                        if (pdlst.Count > 0)
                         {
-                            //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
-                            f.AJwBeam.holesorder();
-                            f.AJwBeam.Holes.First().HasBhLinkHole=true;
+                            var p = pdlst.First();
+                            var cha = Math.Abs(p.HoleCenter - point.Y) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                jwPointBeam.Direct = ZhengfuType.Add;
+                                touch.JwHoleG.HasBhLinkHole = true;
+                                var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc, 2));
+                                if (f != null)
+                                {
+                                    //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                                    f.AJwBeam.holesorder();
+                                    f.AJwBeam.Holes.First().HasBhLinkHole = true;
+                                }
+                            }
+                            else
+                            {
+                                jwPointBeam.Direct = ZhengfuType.Add;
+                                double realy = p.HoleCenter + (84 / JwFileConsts.JwScale);
+                                jwPointBeam.RealPoint = new JWPoint(jwPointBeam.RealPoint.X, realy);
+                                p.HasBhLinkHole = true;
+                            }
+                            //获取需要添加 上下额外孔组的 孔组
+                            //var f = pdlst.First();
+                            //f.HasBhLinkHole = true;
                         }
+                        //else
+                        //{
+                        //    //没有找到 说明在端部
+                        //    jwPointBeam.Direct = ZhengfuType.Add;
+                        //    touch.JwHoleG.HasBhLinkHole = true;
+
+                        //    jwPointBeam.Direct = ZhengfuType.Add;
+                        //    touch.JwHoleG.HasBhLinkHole = true;
+                        //    var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc,2));
+                        //    if (f != null)
+                        //    {
+                        //        //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                        //        f.AJwBeam.holesorder();
+                        //        f.AJwBeam.Holes.First().HasBhLinkHole = true;
+                        //    }
+
+                        //}
+
                     }
                     else
                     {
@@ -4308,15 +4328,50 @@ namespace JwShapeCommon
                     var pdlst = touch.WinnerBeam.Holes.Where(t => t.HoleCenter < point.X).OrderByDescending(t => t.HoleCenter).ToList();
                     if (touch.WinnerBeam.HasQieGe)
                     {
-                        jwPointBeam.Direct = ZhengfuType.Reduce;
-                        touch.JwHoleG.HasPreLinkHole = true;
-                        var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
-                        if (f != null)
+                        if (pdlst.Count > 0)
                         {
-                            //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                            f.RJwBeam.holesorder();
-                            f.RJwBeam.Holes.Last().HasPreLinkHole = true;   
+                            var p = pdlst.First();
+                            var cha = Math.Abs(p.HoleCenter - point.X) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                jwPointBeam.Direct = ZhengfuType.Reduce;
+                                touch.JwHoleG.HasPreLinkHole = true;
+                                var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc, 2));
+                                if (f != null)
+                                {
+                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                                    f.RJwBeam.holesorder();
+                                    f.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                                }
+                            }
+                            else
+                            {
+                                jwPointBeam.Direct = ZhengfuType.Reduce;
+                                double realX = p.HoleCenter - (84 / JwFileConsts.JwScale);
+                                jwPointBeam.RealPoint = new JWPoint(realX, jwPointBeam.RealPoint.Y);
+                            }
+                            //获取需要添加 上下额外孔组的 孔组
+                            //var f = pdlst.First();
+                            //f.HasBhLinkHole = true;
                         }
+                        //else
+                        //{
+                        //    //没有找到 说明在端部
+                        //    //jwPointBeam.Direct = ZhengfuType.Reduce;
+                        //    //touch.JwHoleG.HasPreLinkHole = true;
+                        //    jwPointBeam.Direct = ZhengfuType.Reduce;
+                        //    touch.JwHoleG.HasPreLinkHole = true;
+                        //    var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc,2));
+                        //    if (f != null)
+                        //    {
+                        //        //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                        //        f.RJwBeam.holesorder();
+                        //        f.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                        //    }
+                        //}
+                        
                     }
                     else
                     {
@@ -4357,16 +4412,46 @@ namespace JwShapeCommon
                     
                     if (touch.WinnerBeam.HasQieGe)
                     {
-                        touch.JwHoleG.HasBhLinkHole = true;
-                        var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == bfc);
-                        if (f != null)
+                        if (pdlst.Count > 0)
                         {
-                            //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
-                            f.AJwBeam.holesorder();
-                            f.AJwBeam.Holes.First().HasBhLinkHole = true;   
+                            var p = pdlst.First();
+                            var cha = Math.Abs(p.HoleCenter - point.X) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                jwPointBeam.Direct = ZhengfuType.Add;
+                                touch.JwHoleG.HasBhLinkHole = true;
+                                var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc, 2));
+                                if (f != null)
+                                {
+                                    //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                                    f.AJwBeam.holesorder();
+                                    f.AJwBeam.Holes.First().HasBhLinkHole = true;
+                                }
+                                //jwPointBeam.Direct = ZhengfuType.Add;
+                            }
+                            else
+                            {
+                                jwPointBeam.Direct = ZhengfuType.Add;
+                                //touch.JwHoleG.HasBhLinkHole = true;;
+                                double realX = p.HoleCenter + (84 / JwFileConsts.JwScale);
+                                jwPointBeam.RealPoint = new JWPoint(realX, jwPointBeam.RealPoint.Y);
+                                p.HasBhLinkHole = true;
+                            }
                         }
-                        jwPointBeam.Direct = ZhengfuType.Add;
-                       
+                        //else
+                        //{
+                        //    touch.JwHoleG.HasBhLinkHole = true;
+                        //    var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc,2));
+                        //    if (f != null)
+                        //    {
+                        //        //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
+                        //        f.AJwBeam.holesorder();
+                        //        f.AJwBeam.Holes.First().HasBhLinkHole = true;
+                        //    }
+                        //    jwPointBeam.Direct = ZhengfuType.Add;
+                        //}
                     }
                     else
                     {
@@ -4388,6 +4473,12 @@ namespace JwShapeCommon
                                 double realX = p.HoleCenter + (84 / JwFileConsts.JwScale);
                                 jwPointBeam.RealPoint = new JWPoint(realX, jwPointBeam.RealPoint.Y);
                             }
+                        }
+                        else
+                        {
+                            //没有找到 说明在端部
+                            jwPointBeam.Direct = ZhengfuType.Add;
+                            touch.JwHoleG.HasBhLinkHole = true;
                         }
                     }
                 }

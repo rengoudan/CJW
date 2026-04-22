@@ -356,7 +356,9 @@ namespace RGBControls.Controls
                             //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
                             //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
                             //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
-                            a.InitHeader("template.jww");
+                            var headerpath = string.Format("template{0}.jww", data.Biaochi);
+                            a.InitHeader(headerpath);
+                            //a.InitHeader("template.jww");
                             foreach (var s in jwDraw.Datas)
                             {
                                 a.AddData(s);
@@ -400,8 +402,9 @@ namespace RGBControls.Controls
                 //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
                 //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
                 //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
-                
-                a.InitHeader("template150.jww");
+                var headerpath = string.Format("template{0}.jww", data.Biaochi);
+                a.InitHeader(headerpath);
+                //a.InitHeader("template150.jww");
                 //a.Header.m_adScale = 160;
                 foreach (var s in lst)
                 {
@@ -444,7 +447,9 @@ namespace RGBControls.Controls
                 //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
                 //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
                 //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
-                a.InitHeader("template.jww");
+                var headerpath = string.Format("template{0}.jww", data.Biaochi);
+                a.InitHeader(headerpath);
+                //a.InitHeader("template.jww");
                 foreach (var s in lst)
                 {
                     a.AddData(s);
@@ -485,7 +490,9 @@ namespace RGBControls.Controls
                 //JwwHelper.dllと同じフォルダに"template.jww"が必要です。
                 //"template.jww"は適当なjwwファイルでそのファイルからjwwファイルのヘッダーをコピーします。
                 //Headerをプログラムから設定してもいいのですが、項目が多いので大変です。
-                a.InitHeader("template.jww");
+                var headerpath = string.Format("template{0}.jww", data.Biaochi);
+                a.InitHeader(headerpath);
+                //a.InitHeader("template.jww");
                 foreach (var s in lst)
                 {
                     a.AddData(s);

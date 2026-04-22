@@ -1,5 +1,6 @@
 ﻿using JwCore;
 using JwwHelper;
+using NetTopologySuite.Operation.Distance;
 using RGB.Jw.JW;
 using System;
 using System.Collections.Generic;
@@ -122,6 +123,13 @@ namespace JwShapeCommon
             this.kPillarType = JwFileConsts.Ktype;
         }
 
+        private void CreateBlockbycp(JWPoint c)
+        {
+            var block = new JwBlock(c);
+            Blocks.Add(block);
+            Points.AddRange(block.BlockPoint);
+        }
+
         //private JwBlock createBlockbycp(JWPoint c)
         //{
 
@@ -195,13 +203,21 @@ namespace JwShapeCommon
                 this.kPillarType = JwFileConsts.Ktype;
                 this.PointA = _zfcenters.First();
                 this.PointB = _zfcenters.Last();
-                if(this.PointB.X - this.PointA.X > this.PointB.Y - this.PointA.Y)
+                this.Points.Clear();
+                if(Math.Abs(this.PointB.X - this.PointA.X) > Math.Abs(this.PointB.Y - this.PointA.Y))
                 {
                     DirectionType = BeamDirectionType.Horizontal;
                     if(this.PointB.Y!=this.PointA.Y)
                     {
                         this.PointB=new JWPoint(this.PointB.X, Math.Round(this.PointB.Y,2));
-                        this.PointA=new JWPoint(this.PointA.X, Math.Round(this.PointB.Y));
+                        this.PointA=new JWPoint(this.PointA.X, this.PointB.Y);
+                        this.Blocks.Clear();
+                        CreateBlockbycp(this.PointA);
+                        CreateBlockbycp(this.PointB);
+                        this.CenterPoint = new JWPoint((this.PointA.X+this.PointB.X)/2d, this.PointA.Y);
+                        this.Distance=Math.Abs(PointB.X-PointA.X);
+                        var jx = new JwBlock(CenterPoint, this.Distance, DirectionType);
+                        Blocks.Add(jx);
                     }
                 }
                 else
@@ -210,64 +226,20 @@ namespace JwShapeCommon
                     if(this.PointA.X!=this.PointB.X)
                     {
                         this.PointB=new JWPoint(Math.Round(this.PointB.X,2), this.PointB.Y);
-                        this.PointA=new JWPoint(Math.Round(this.PointA.X,2), this.PointB.Y);
+                        this.PointA=new JWPoint(this.PointB.X, this.PointB.Y);
+                        this.Blocks.Clear();
+                        CreateBlockbycp(this.PointA);
+                        CreateBlockbycp(this.PointB);
+                        this.CenterPoint = new JWPoint( this.PointA.X, (this.PointA.Y + this.PointB.Y) / 2d);
+                        this.Distance = Math.Abs(PointB.Y - PointA.Y);
+                        var jx = new JwBlock(CenterPoint, this.Distance, DirectionType);
+                        Blocks.Add(jx);
                     }
                 }
-                //TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
-                //TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
-                //BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();
-                //BottomRight = Points.OrderByDescending(t => t.X).ThenBy(t => t.Y).ToList().First();
-                //Width = TopRight.X - TopLeft.X;
-                //Height = TopLeft.Y - BottomLeft.Y;
-                //if (Width >= Height)
-                //{
-                //    //如果是水平的 可以强制所有中心点的Y为first的
-                //    DirectionType = BeamDirectionType.Horizontal;
-                //    if (Blocks.Count > 1 && CenterPoints?.Count > 1)
-                //    {
-                //        var _tempps = CenterPoints.OrderBy(t => t.X).ToList();
-                //        PillarInBeamCenterPoints.Add(_tempps.First());
-                //        PillarInBeamCenterPoints.Add(_tempps.Last());
-                //        this.PointA= _tempps.First();
-                //        this.PointB= _tempps.Last();
-                //        this.CenterPoint=_tempps[1];
-                //        this.Distance = JwExtend.Distance(PointA, PointB);
-                //        HasPillarBeamCenter = true;
-                //    }
-                //    else if (Blocks.Count == 1 && CenterPoints?.Count == 1)
-                //    {
-                //        PillarInBeamCenterPoints = CenterPoints;
-                //        HasPillarBeamCenter = true;
-                //    }
-                //    else
-                //    {
-                //        HasPillarBeamCenter = false;
-                //    }
-                //}
-                //else
-                //{
-                //    DirectionType = BeamDirectionType.Vertical;
-                //    if (Blocks.Count > 1 && CenterPoints?.Count > 1)
-                //    {
-                //        var _tempps = CenterPoints.OrderBy(t => t.Y).ToList();
-                //        PillarInBeamCenterPoints.Add(_tempps.First());
-                //        PillarInBeamCenterPoints.Add(_tempps.Last());
-                //        this.PointA = _tempps.First();
-                //        this.PointB = _tempps.Last();
-                //        this.CenterPoint = _tempps[1];
-                //        this.Distance = JwExtend.Distance(PointA, PointB);
-                //        HasPillarBeamCenter = true;
-                //    }
-                //    else if (Blocks.Count == 1 && CenterPoints?.Count == 1)
-                //    {
-                //        PillarInBeamCenterPoints = CenterPoints;
-                //        HasPillarBeamCenter = true;
-                //    }
-                //    else
-                //    {
-                //        HasPillarBeamCenter = false;
-                //    }
-                //}
+                TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+                TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+                BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();
+                BottomRight = Points.OrderByDescending(t => t.X).ThenBy(t => t.Y).ToList().First();
 
             }
             if (Blocks.Count > 3)
@@ -275,9 +247,205 @@ namespace JwShapeCommon
                 this.BaseType = PillarBaseType.None;
             }
             BlocksCount = Blocks.Count;
-            JisuanWidthHeight();
+            //JisuanWidthHeight();
         }
 
+
+
+        public void squareParse(List<double> chuizhi,List<double> shuiping)
+        {
+            int izhengfangcou = 0;
+            Blocks = Blocks.Distinct(new JwBlockComparint()).ToList();
+            BlocksCount = Blocks.Count;
+            var _zfcenters = new List<JWPoint>();
+            foreach (var block in Blocks)
+            {
+                //CenterPoints.Add(block.CenterPoint);
+                if (block.Iszhengfangxing)
+                {
+                    izhengfangcou++;
+                    _zfcenters.Add(block.CenterPoint);
+                }
+            }
+            //
+            if (Blocks.Count == 1)
+            {
+                this.BaseType = PillarBaseType.SinglePillar;
+                this.PointA = Blocks[0].CenterPoint;
+                this.PointB = Blocks[0].CenterPoint;
+                this.Distance = 0;
+                this.Blocks.Clear();
+                CreateBlockbycp(this.PointA);
+                TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+                TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+                BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();
+                BottomRight = Points.OrderByDescending(t => t.X).ThenBy(t => t.Y).ToList().First();
+                Width = TopRight.X - TopLeft.X;
+                Height = TopLeft.Y - BottomLeft.Y;
+                this.CenterPoint = this.PointA;
+                //this.CenterPoint = Blocks[0].CenterPoint;
+            }
+            //去掉正方形 我觉得非必要
+            if (Blocks.Count == 3)
+            {
+                this.BaseType = PillarBaseType.KPillar;
+                this.kPillarType = JwFileConsts.Ktype;
+                this.PointA = _zfcenters.First();
+                this.PointB = _zfcenters.Last();
+                if (Math.Abs(this.PointB.X - this.PointA.X) > Math.Abs(this.PointB.Y - this.PointA.Y))
+                {
+                    DirectionType = BeamDirectionType.Horizontal;
+                    if (this.PointB.Y != this.PointA.Y)
+                    {
+                        if(shuiping?.Count>0)
+                        {
+                            double bn = 0;
+                            double an = 0;
+                            var bnr=JwExtend.TryFindClosest(shuiping, this.PointB.Y, out bn);
+                            var anr=JwExtend.TryFindClosest(shuiping, this.PointA.Y, out an);
+                            double y = 0;
+                            if(bnr && anr)
+                            {
+                                if (bn == an)
+                                {
+                                    y = bn;
+                                }
+                                else
+                                {
+                                    if (Math.Abs(bn - this.PointB.Y) < Math.Abs(an - this.PointA.Y))
+                                    {
+                                        y = bn;
+                                    }
+                                    else
+                                    {
+                                        y = an;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                y = this.PointA.Y;
+                            }
+                                this.PointA = new JWPoint(this.PointA.X, y);
+                            this.PointB = new JWPoint(this.PointB.X, y);
+
+                            this.Blocks.Clear();
+                            CreateBlockbycp(this.PointA);
+                            CreateBlockbycp(this.PointB);
+                            this.CenterPoint = new JWPoint((this.PointA.X + this.PointB.X) / 2d, this.PointA.Y);
+                            this.Distance = Math.Abs(PointB.X - PointA.X);
+                            var jx = new JwBlock(CenterPoint, this.Distance, DirectionType);
+                            Blocks.Add(jx);
+                        }
+                        else
+                        {
+                            //this.PointA = new JWPoint(this.PointA.X, y);
+                            this.PointB = new JWPoint(this.PointB.X, this.PointA.Y);
+
+                            this.Blocks.Clear();
+                            CreateBlockbycp(this.PointA);
+                            CreateBlockbycp(this.PointB);
+                            this.CenterPoint = new JWPoint((this.PointA.X + this.PointB.X) / 2d, this.PointA.Y);
+                            this.Distance = Math.Abs(PointB.X - PointA.X);
+                            var jx = new JwBlock(CenterPoint, this.Distance, DirectionType);
+                            Blocks.Add(jx);
+                        }
+                           
+                    }
+                    else
+                    {
+                        this.Blocks.Clear();
+                        CreateBlockbycp(this.PointA);
+                        CreateBlockbycp(this.PointB);
+                        this.CenterPoint = new JWPoint((this.PointA.X + this.PointB.X) / 2d, this.PointA.Y);
+                        this.Distance = Math.Abs(PointB.X - PointA.X);
+                        var jx = new JwBlock(CenterPoint, this.Distance, DirectionType);
+                        Blocks.Add(jx);
+                    }
+                }
+                else
+                {
+                    DirectionType = BeamDirectionType.Vertical;
+                    if (this.PointA.X != this.PointB.X)
+                    {
+                        if (chuizhi?.Count > 0)
+                        {
+                            double bn = 0;
+                            double an = 0;
+                            double x = 0;
+                            var bnr = JwExtend.TryFindClosest(chuizhi, this.PointB.X, out bn);
+                            var anr = JwExtend.TryFindClosest(chuizhi, this.PointA.X, out an);
+                            if (bnr && anr)
+                            {
+                                if (bn == an)
+                                {
+                                    x = bn;
+                                }
+                                else
+                                {
+                                    if (Math.Abs(bn - this.PointB.X) < Math.Abs(an - this.PointA.X))
+                                    {
+                                        x = bn;
+                                    }
+                                    else
+                                    {
+                                        x = an;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                x = this.PointA.X;
+                            }
+
+                            this.PointA = new JWPoint(x, this.PointA.Y);
+                            this.PointB = new JWPoint(x, this.PointB.Y);
+                            this.Blocks.Clear();
+                            CreateBlockbycp(this.PointA);
+                            CreateBlockbycp(this.PointB);
+                            this.CenterPoint = new JWPoint(this.PointA.X, (this.PointA.Y + this.PointB.Y) / 2d);
+                            this.Distance = Math.Abs(PointB.Y - PointA.Y);
+                            var jx = new JwBlock(CenterPoint, this.Distance, DirectionType);
+                            Blocks.Add(jx);
+                        }
+                        else
+                        {
+                            this.PointB = new JWPoint(this.PointA.X, this.PointB.Y);
+                            this.Blocks.Clear();
+                            CreateBlockbycp(this.PointA);
+                            CreateBlockbycp(this.PointB);
+                            this.CenterPoint = new JWPoint(this.PointA.X, (this.PointA.Y + this.PointB.Y) / 2d);
+                            this.Distance = Math.Abs(PointB.Y - PointA.Y);
+                            var jx = new JwBlock(CenterPoint, this.Distance, DirectionType);
+                            Blocks.Add(jx);
+                        }
+                    }
+                    else
+                    {
+                        
+                        this.Blocks.Clear();
+                        CreateBlockbycp(this.PointA);
+                        CreateBlockbycp(this.PointB);
+                        this.CenterPoint = new JWPoint(this.PointA.X, (this.PointA.Y + this.PointB.Y) / 2d);
+                        this.Distance = Math.Abs(PointB.Y - PointA.Y);
+                        var jx = new JwBlock(CenterPoint, this.Distance, DirectionType);
+                        Blocks.Add(jx);
+                    }
+                }
+                TopLeft = Points.OrderBy(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+                TopRight = Points.OrderByDescending(t => t.X).ThenByDescending(t => t.Y).ToList().First();
+                BottomLeft = Points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First();
+                BottomRight = Points.OrderByDescending(t => t.X).ThenBy(t => t.Y).ToList().First();
+                
+
+            }
+            if (Blocks.Count > 3)
+            {
+                this.BaseType = PillarBaseType.None;
+            }
+            BlocksCount = Blocks.Count;
+            //JisuanWidthHeight();
+        }
 
         /// <summary>
         /// 2026年3月16日 针对pointa b进行修改
