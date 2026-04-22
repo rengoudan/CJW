@@ -366,13 +366,7 @@ namespace JwShapeCommon
             var qqqq = _jwwmojitaggs;
             var qqqqq = Pillars.Where(t => t.HasTag).ToList();
 
-            if (HasBeam)
-            {
-                foreach (var item in Beams)
-                {
-                    SendMsg(item.ToString() + Environment.NewLine);
-                }
-            }
+            
 
             //生成beam 的每个标记位置点
 
@@ -382,7 +376,13 @@ namespace JwShapeCommon
 
             Revision();
 
-            
+            if (HasBeam)
+            {
+                foreach (var item in Beams)
+                {
+                    SendMsg(item.ToString() + Environment.NewLine);
+                }
+            }
         }
 
         int nownumber = -1;
@@ -2930,7 +2930,7 @@ namespace JwShapeCommon
             {
                 foreach(var beam in Beams) 
                 {
-                    double lg = Math.Round((beam.DirectionType == BeamDirectionType.Horizontal ? beam.Width : beam.Height)* JwFileConsts.JwScale, 0) ;
+                    double lg = Math.Round((beam.DirectionType == BeamDirectionType.Horizontal ? beam.Width : beam.Height) * JwFileConsts.JwScale, 0);
                     beam.Length = lg;
                     string s = "B";
                     double jians = -50;
@@ -3296,8 +3296,8 @@ namespace JwShapeCommon
                 var s = b.StartTelosType == KongzuType.Center ? "B" : b.StartTelosType.ToString();
                 var e = b.EndTelosType == KongzuType.Center ? "B" : b.EndTelosType.ToString();
                 b.XXLength =Math.Round( Math.Round(xcd, 2) * JwFileConsts.JwScale,0);
-                double bml = b.XXLength;
-                //if (b.StartTelosType == KongzuType.B)
+                b.Length = Math.Max(b.HeightScale, b.WidthScale);
+                    //if (b.StartTelosType == KongzuType.B)
                 //{
                 //    bml = bml + 50 ;
 
