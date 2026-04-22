@@ -132,6 +132,9 @@
     <None Update="template.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="template100.jww">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="template150.jww">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

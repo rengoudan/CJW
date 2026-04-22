@@ -342,34 +342,34 @@ namespace RGBControls.Pages
         /// <param name="e"></param>
         private async void projectmaintable_CellDoubleClick(object sender, TableClickEventArgs e)
         {
-            if (e.RowIndex > 0)
-            {
-                ////WarningMsg("読み込み中");
-                await Progress(async () =>
-                {
-                    var z = projectmaintable[e.RowIndex - 1].record as JwProjectMainData;
-                    await JwProjectMainService.LoadSubDataAsync(z);
-                    if (z.JwProjectSubDatas.Count > 0)
-                    {
-                        foreach (var sub in z.JwProjectSubDatas)
-                        {
-                            await JwProjectMainService.LoadSubCollectionAsync(sub);
-                            if (sub.JwBeamDatas.Count > 0)
-                            {
-                                foreach (var bd in sub.JwBeamDatas)
-                                {
-                                    await JwProjectMainService.LoadBeamCollectionAsync(bd);
-                                }
-                            }
-                        }
-                        //ProjectDetail detail = new ProjectDetail(z);
-                        //detail.Show();
-                        SubsForm subsForm = new SubsForm(z);
-                        subsForm.ShowDialog();
-                    }
-                });
+            //if (e.RowIndex > 0)
+            //{
+            //    ////WarningMsg("読み込み中");
+            //    await Progress(async () =>
+            //    {
+            //        var z = projectmaintable[e.RowIndex - 1].record as JwProjectMainData;
+            //        await JwProjectMainService.LoadSubDataAsync(z);
+            //        if (z.JwProjectSubDatas.Count > 0)
+            //        {
+            //            foreach (var sub in z.JwProjectSubDatas)
+            //            {
+            //                await JwProjectMainService.LoadSubCollectionAsync(sub);
+            //                if (sub.JwBeamDatas.Count > 0)
+            //                {
+            //                    foreach (var bd in sub.JwBeamDatas)
+            //                    {
+            //                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
+            //                    }
+            //                }
+            //            }
+            //            //ProjectDetail detail = new ProjectDetail(z);
+            //            //detail.Show();
+            //            SubsForm subsForm = new SubsForm(z);
+            //            subsForm.ShowDialog();
+            //        }
+            //    });
 
-            }
+            //}
         }
 
         private void projectmaintable_CellClick(object sender, TableClickEventArgs e)

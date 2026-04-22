@@ -3644,7 +3644,7 @@ namespace JwShapeCommon
 
         List<JwXian> Lianjies;
 
-        private void lianjiexianByJwwsen()
+        private void lianjiexianByJwwsen() 
         {
             Lianjies = new List<JwXian>();
             if (LianjieLst.Count > 0)
