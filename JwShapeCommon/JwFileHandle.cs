@@ -987,6 +987,10 @@ namespace JwShapeCommon
                 Pillars = new List<JwPillar>();
                 var extractor = new PillarFeatureExtractor(squareSideLength: 1);
                 Pillars = extractor.Extract(PillarXians);
+                SinglePillarCount = Pillars.Where(t => t.BaseType==PillarBaseType.SinglePillar).Count();
+                SendMsg(string.Format("singlepillarcount is {0}{1}", SinglePillarCount, Environment.NewLine));
+                KPillarCount = Pillars.Where(t => t.BaseType == PillarBaseType.KPillar).Count();
+                SendMsg(string.Format("KPillarCount is {0}{1}", KPillarCount, Environment.NewLine));
             }
         }
 
