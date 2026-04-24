@@ -58,6 +58,8 @@
             uiComboBox6 = new Sunny.UI.UIComboBox();
             uiMarkLabel13 = new Sunny.UI.UIMarkLabel();
             uiComboBox7 = new Sunny.UI.UIComboBox();
+            uiMarkLabel14 = new Sunny.UI.UIMarkLabel();
+            uiComboBox8 = new Sunny.UI.UIComboBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -65,7 +67,7 @@
             // 
             panel1.Controls.Add(uiButton1);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 754);
+            panel1.Location = new Point(0, 809);
             panel1.Name = "panel1";
             panel1.Size = new Size(622, 53);
             panel1.TabIndex = 0;
@@ -79,6 +81,7 @@
             uiButton1.Size = new Size(100, 35);
             uiButton1.TabIndex = 0;
             uiButton1.Text = "セーブ";
+            uiButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiButton1.Click += uiButton1_Click;
             // 
             // uiNearSpliteMax
@@ -505,10 +508,42 @@
             uiComboBox7.TextAlignment = ContentAlignment.MiddleLeft;
             uiComboBox7.Watermark = "";
             // 
+            // uiMarkLabel14
+            // 
+            uiMarkLabel14.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiMarkLabel14.ForeColor = Color.FromArgb(48, 48, 48);
+            uiMarkLabel14.Location = new Point(84, 771);
+            uiMarkLabel14.Name = "uiMarkLabel14";
+            uiMarkLabel14.Padding = new Padding(5, 0, 0, 0);
+            uiMarkLabel14.Size = new Size(168, 23);
+            uiMarkLabel14.TabIndex = 33;
+            uiMarkLabel14.Text = "ブレース起点";
+            uiMarkLabel14.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // uiComboBox8
+            // 
+            uiComboBox8.DataSource = null;
+            uiComboBox8.FillColor = Color.White;
+            uiComboBox8.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiComboBox8.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            uiComboBox8.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            uiComboBox8.Location = new Point(420, 765);
+            uiComboBox8.Margin = new Padding(4, 5, 4, 5);
+            uiComboBox8.MinimumSize = new Size(63, 0);
+            uiComboBox8.Name = "uiComboBox8";
+            uiComboBox8.Padding = new Padding(0, 0, 30, 2);
+            uiComboBox8.Size = new Size(119, 29);
+            uiComboBox8.SymbolSize = 24;
+            uiComboBox8.TabIndex = 13;
+            uiComboBox8.TextAlignment = ContentAlignment.MiddleLeft;
+            uiComboBox8.Watermark = "";
+            // 
             // CustomerDesignSetting
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(622, 807);
+            ClientSize = new Size(622, 862);
+            Controls.Add(uiComboBox8);
+            Controls.Add(uiMarkLabel14);
             Controls.Add(uiComboBox7);
             Controls.Add(uiMarkLabel13);
             Controls.Add(uiComboBox6);
@@ -577,5 +612,7 @@
         private Sunny.UI.UIComboBox uiComboBox6;
         private Sunny.UI.UIMarkLabel uiMarkLabel13;
         private Sunny.UI.UIComboBox uiComboBox7;
+        private Sunny.UI.UIMarkLabel uiMarkLabel14;
+        private Sunny.UI.UIComboBox uiComboBox8;
     }
 }

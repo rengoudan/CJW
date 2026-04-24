@@ -258,6 +258,9 @@ namespace RGBJWMain.Forms
             JwFileConsts.LianjieParsingMethod= (LianjieParsingMethod)uiComboBox5.SelectedValue;
             JwFileConsts.PillarDrawingMethod = (PillarDrawingMethod)uiComboBox6.SelectedValue;
             JwFileConsts.Ktype= (KPillarType)uiComboBox7.SelectedValue;
+
+            JwFileConsts.EWaiKongColor=uiComboBox8.SelectedItem as JwColor;
+
             DialogResult = DialogResult.OK;
         }
 
@@ -309,6 +312,11 @@ namespace RGBJWMain.Forms
             //PillarDrawingMethod
             uiComboBox6.DataSource = Enum.GetValues(typeof(PillarDrawingMethod));
             uiComboBox7.DataSource = Enum.GetValues(typeof(KPillarType));
+
+            uiComboBox8.DataSource = ls;
+            uiComboBox8.DisplayMember = "JwColorName";
+            uiComboBox8.ValueMember = "ColorNumber";
+
             if (JwCustomer != null)
             {
                 var z =await jwqitaService.FindCustDesignConstData(t => t.JwCustomerDataId == JwCustomer.Id);

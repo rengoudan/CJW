@@ -23,6 +23,8 @@ namespace JwShapeCommon
         public static double CsvYTiaozheng= 0.0;
         #endregion
 
+        public static JwColor EWaiKongColor;
+
         public static double PillarCenterMax = 8;
 
         public static LianjieParsingMethod LianjieParsingMethod = LianjieParsingMethod.OnBeam;

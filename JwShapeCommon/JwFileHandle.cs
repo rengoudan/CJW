@@ -238,6 +238,12 @@ namespace JwShapeCommon
         public List<JwBeam> _baifanglianjie = new List<JwBeam>();
 
         public int GouJianZongshu { get; set; }
+
+        /// <summary>
+        /// 额外添加孔的线结合
+        /// </summary>
+        public List<JwwSen> EwaiSensLst = new List<JwwSen>();
+
         #endregion
 
         #region 构造函数
@@ -4488,7 +4494,60 @@ namespace JwShapeCommon
             return jwPointBeam;
         }
 
+        private void ewaikongHandle()
+        {
+            ewaikongXians();
+            if (_jwewaikong.Count > 0)
+            {
 
+                for (int i = 0; i < _jwewaikong.Count; i++)
+                {
+                    var nowxian = _jwewaikong[i];
+                    if (!nowxian.IsSelected)
+                    {
+                        for (int j = i + 1; j < _jwewaikong.Count; j++)
+                        {
+                            JwLineIntersector lineIntersector = new JwLineIntersector();
+                            var erxian = _jwewaikong[j];
+                            if (!nowxian.IsSelected && !erxian.IsSelected)
+                            {
+                                if (lineIntersector.ComputeIntersect(nowxian, erxian) == 1)
+                                {
+                                    nowxian.IsSelected = true;
+                                    erxian.IsSelected = true;
+                                    //JwChengduiXian z = new JwChengduiXian
+                                    //{
+                                    //    XianOne = nowxian,
+                                    //    XianTwo = erxian
+                                    //};
+                                    //z.Xians = new List<JwXian> { nowxian, erxian };
+                                    //_tempchengduixians.Add(z);
+                                    break;
+                                }
+                            }
+
+                        }
+                        nowxian.IsSelected = true;
+                    }
+                }
+            }
+        }
+
+        List<JwXian> _jwewaikong;
+        private void ewaikongXians()
+        {
+            _jwewaikong = new List<JwXian>();
+            if (EwaiSensLst.Count > 0)
+            {
+                foreach (var sen in EwaiSensLst)
+                {
+                    JWPoint ps = new JWPoint(sen.m_start_x, sen.m_start_y);
+                    JWPoint pe = new JWPoint(sen.m_end_x, sen.m_end_y);
+                    JwXian j = new JwXian(ps, pe);
+                    _jwewaikong.Add(j);
+                }
+            }
+        }
         private void judgehole(JwTouch touch, JWPoint point, bool isstart)
         {
 
