@@ -534,7 +534,13 @@ namespace JwShapeCommon
                     }
                     else
                     {
-                        fh.changeByOther(HoleCreateFrom.Pillar);
+                        if (createFrom == HoleCreateFrom.JieChu)
+                        {
+                            fh.KongNum = 4;
+                            fh.HasTop = true;
+                            fh.HasBottom = true;
+                        }
+                        hh = fh;
                     }
                 }
             }
