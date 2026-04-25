@@ -1362,6 +1362,17 @@ namespace JwShapeCommon
                         }
 
                         break;
+                    case KongzuType.AddedHole:
+                        JwHoleMachinings.Add(machiningsingle);
+                        if (hole.HasBhLinkHole)
+                        {
+                            JwHoleMachinings.Add(preright);
+                        }
+                        if (hole.HasPreLinkHole)
+                        {
+                            JwHoleMachinings.Add(preleft);
+                        }
+                        break;
                     default:
                         JwHoleMachinings.Add(machiningleft);
                         JwHoleMachinings.Add(machiningright);

@@ -86,6 +86,7 @@ namespace JwShapeCommon.Model
             {
                 HoleType = KongzuType.Center;
                 IsFromPillar = true;
+                
             }
             switch (firstCreateFrom)
             {
@@ -117,6 +118,14 @@ namespace JwShapeCommon.Model
                     HasTop = true;
                     HasBottom = true;   
                     KongNum = 4;
+                    break;
+                case HoleCreateFrom.AddedHole:
+                    HasCenter = true;
+                    HasTop = true;
+                    HasBottom = true;
+                    KongNum = 2;
+                    HoleType = KongzuType.AddedHole;
+                    IsFromPillar = false;
                     break;
             }
         }

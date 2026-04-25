@@ -372,11 +372,12 @@ namespace JwShapeCommon
             var qqqq = _jwwmojitaggs;
             var qqqqq = Pillars.Where(t => t.HasTag).ToList();
 
-            
+
 
             //生成beam 的每个标记位置点
 
             //createBeamAbsolutePD();
+            ewaikongHandle();
 
             parsenLianjie();//寻找连接线
 
@@ -444,9 +445,10 @@ namespace JwShapeCommon
 
                 //2025年5月20日
                 LianjieLst = SenLst.Where(t => t.m_nPenColor == JwFileConsts.LianjieParseColor.ColorNumber).ToList();
-
+                //2026年4月25日
+                EwaiSensLst=SenLst.Where(t => t.m_nPenColor == JwFileConsts.EWaiKongColor.ColorNumber).ToList();
                 //2026年3月7日
-                if(JwFileConsts.PillarDrawingMethod == PillarDrawingMethod.Line)
+                if (JwFileConsts.PillarDrawingMethod == PillarDrawingMethod.Line)
                 {
                     PillarLines = SenLst.Where(t => t.m_nPenColor == JwFileConsts.BeamPillarParseColor.ColorNumber).ToList();
                 }
@@ -4498,8 +4500,16 @@ namespace JwShapeCommon
             return jwPointBeam;
         }
 
+        private List<JwAddedHoleMark> _tempaddmarks = new List<JwAddedHoleMark>();
+
+        public List<JwAddedHoleMark> AddMarks;
+
+        /// <summary>
+        /// 前提 默认此处无孔
+        /// </summary>
         private void ewaikongHandle()
         {
+            AddMarks=new List<JwAddedHoleMark>();
             ewaikongXians();
             if (_jwewaikong.Count > 0)
             {
@@ -4519,13 +4529,12 @@ namespace JwShapeCommon
                                 {
                                     nowxian.IsSelected = true;
                                     erxian.IsSelected = true;
-                                    //JwChengduiXian z = new JwChengduiXian
-                                    //{
-                                    //    XianOne = nowxian,
-                                    //    XianTwo = erxian
-                                    //};
-                                    //z.Xians = new List<JwXian> { nowxian, erxian };
-                                    //_tempchengduixians.Add(z);
+                                    JwAddedHoleMark jwAdded=new JwAddedHoleMark();
+                                    jwAdded.Id = Guid.NewGuid().ToString();
+                                    jwAdded.CenterPoint = lineIntersector.IntersectionPoint;
+                                    jwAdded.Line1 = nowxian;
+                                    jwAdded.Line2 = erxian;
+                                    _tempaddmarks.Add(jwAdded);
                                     break;
                                 }
                             }
@@ -4534,6 +4543,40 @@ namespace JwShapeCommon
                         nowxian.IsSelected = true;
                     }
                 }
+
+                if (Beams?.Count > 0 && _tempaddmarks.Count > 0)
+                {
+                    foreach (var beam in Beams)
+                    {
+                        var bno = _tempaddmarks.Where(t => !t.HasBeam).ToList();
+                        if (bno?.Count > 0)
+                        {
+                            foreach (var bq in bno)
+                            {
+                                if (beam.Contains(bq.CenterPoint))
+                                {
+                                    bq.HasBeam = true;
+                                    bq.OwerBeam  = beam;
+                                    JWPoint holeCenter;
+                                    if (beam.DirectionType == BeamDirectionType.Horizontal)
+                                    {
+                                        holeCenter = new JWPoint(bq.CenterPoint.X, beam.Center);
+                                    }
+                                    else
+                                    {
+                                        holeCenter = new JWPoint(beam.Center, bq.CenterPoint.Y);
+                                    }
+                                    bq.HoleCenter = holeCenter;
+                                    beam.AddAnyHoleReturn(bq.HoleCenter, HoleCreateFrom.AddedHole, bq.CenterPoint);
+                                    //暂时只增加了孔 没有增加金物的逻辑
+                                    AddMarks.Add(bq);
+                                }
+
+                            }
+                        }
+                    }
+                }
+
             }
         }
 

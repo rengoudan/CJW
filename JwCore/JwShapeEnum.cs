@@ -61,7 +61,8 @@ namespace JwCore
         LinkPart = 5,
         DownPillar = 6,
         Text = 7,
-        Cutting = 8
+        Cutting = 8,
+        AddedHole = 9
     }
 
     /// <summary>
@@ -160,7 +161,8 @@ namespace JwCore
         J = 2,
         G = 3,
         BC = 4,
-        BP = 5
+        BP = 5,
+        AddedHole = 6,
     }
 
     public enum KongzuSuoshuMian
@@ -205,7 +207,8 @@ namespace JwCore
         Pillar = 0,
         JieChuG = 1,
         FengeJ = 2,
-        JieChu=3//指 胜方 打孔
+        JieChu=3,//指 胜方 打孔
+        AddedHole = 4,//指标识额外需要增加的孔
     }
 
     /// <summary>

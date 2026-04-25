@@ -489,7 +489,8 @@ namespace JwShapeCommon
         }
 
         /// <summary>
-        /// 2025年6月24日 返回jwhole 
+        /// 2025年6月24日 返回jwhole
+        /// 2026年4月25日 增加addedhole的实现 额外增加孔
         /// </summary>
         /// <param name="beam"></param>
         /// <param name="location"></param>

@@ -13,6 +13,8 @@ namespace JwData
     {
         public string DbPath { get; set; }
 
+        public DbSet<JwAddedHoleMarkData> JwAddedHoleMarkDatas { get; set; }
+
         public DbSet<JwCutting> JwCuttings { get; set; }
 
         public DbSet<JwDownPillarData> JwDownPillarDatas { get; set; }
@@ -53,16 +55,16 @@ namespace JwData
         public JwDataContext(DbContextOptions<JwDataContext> options) : base(options) 
         { }
 
-        //public JwDataContext()
-        //{
-        //    DbPath = Environment.CurrentDirectory + @"\jwdata.db";
-        //}
+        public JwDataContext()
+        {
+            DbPath = Environment.CurrentDirectory + @"\jwdata.db";
+        }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    base.OnConfiguring(optionsBuilder);
-        //    optionsBuilder.UseSqlite($"Data Source={DbPath}", x => x.UseNetTopologySuite());
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseSqlite($"Data Source={DbPath}", x => x.UseNetTopologySuite());
+        }
 
     }
 }
