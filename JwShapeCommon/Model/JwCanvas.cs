@@ -88,6 +88,8 @@ namespace JwShapeCommon
 
         public List<JwLianjie> LianjieLsts = new List<JwLianjie>();
 
+        public List<JwAddedHoleMark> AddedHoleMarks = new List<JwAddedHoleMark>();
+
         public bool IsFromData = false;
 
         public KPillarType KPillarType { get; set; }

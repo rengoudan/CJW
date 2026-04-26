@@ -1763,6 +1763,8 @@ namespace JwShapeCommon
 
         public List<JwCutting> _cuttingDatas = new List<JwCutting>();
 
+        public List<JwAddedHoleMarkData> _addMarkDatas = new List<JwAddedHoleMarkData>();
+
         /// <summary>
         /// 2026年3月17日  发现未存储下方柱解析出的数据 增加之
         /// 由于需要重新绘制到jw里 所以需要存储交叉线数据
@@ -1887,6 +1889,15 @@ namespace JwShapeCommon
                         cutting.JwProjectSubDataId = _subData.Id;
                         _cuttingDatas.Add(cutting);
                     }
+                }
+            }
+            if(AddMarks?.Count > 0)
+            {
+                foreach(var m in AddMarks)
+                {
+                    JwAddedHoleMarkData markData = m.ToData();
+                    markData.JwProjectSubDataId = _subData.Id;
+                    _addMarkDatas.Add(markData);
                 }
             }
         }

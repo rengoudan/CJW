@@ -325,6 +325,13 @@ namespace JwServices
                     await AddAsync<JwCutting>(d);
                 }
             }
+            if(fileHandle._addMarkDatas.Count > 0)
+            {
+                foreach (var m in fileHandle._addMarkDatas)
+                {
+                    await AddAsync<JwAddedHoleMarkData>(m);
+                }
+            }
 
             var md =await GetByIdAsync<JwProjectMainData>(fileHandle.ProjectPathModel.MainData.Id);
             md.BCount += fileHandle._subData.BCount;
@@ -398,6 +405,7 @@ namespace JwServices
             await LoadCollectionAsync(context, subdata, p => p.JwLianjieDatas);
             await LoadCollectionAsync(context,subdata, p => p.JwDownPillarDatas);
             await LoadCollectionAsync(context, subdata, p => p.JwCuttings);
+            await LoadCollectionAsync(context, subdata, p => p.JwAddedHoles);
         }
 
         public async Task LoadBeamCollectionAsync(JwBeamData beamdata) 

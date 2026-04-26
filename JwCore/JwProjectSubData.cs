@@ -65,5 +65,7 @@ namespace JwCore
         public virtual ObservableCollectionListSource<JwDownPillarData> JwDownPillarDatas { get; } = new();
 
         public virtual ObservableCollectionListSource<JwCutting> JwCuttings { get; } = new();
+
+        public virtual ObservableCollectionListSource<JwAddedHoleMarkData> JwAddedHoles { get; } = new();
     }
 }

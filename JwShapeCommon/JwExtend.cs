@@ -372,6 +372,21 @@ namespace JwShapeCommon
                     reobj.Directeds.Add(ct);
                 }
             }
+            reobj.AddedHoleMarks = new List<JwAddedHoleMark>();
+            if (data.JwAddedHoles.Count>0)
+            {
+                foreach(var ah in data.JwAddedHoles)
+                {
+                    JwAddedHoleMark mark = new JwAddedHoleMark();
+                    mark.CenterPoint = new JWPoint(ah.Location.X, ah.Location.Y);
+                    mark.HoleCenter = new JWPoint(ah.HoleCenter.X, ah.HoleCenter.Y);
+                    mark.Line1 = new JwXian(ah.LineAS.ToJwPoint(), ah.LineAE.ToJwPoint());
+                    mark.Line2 = new JwXian(ah.LineBS.ToJwPoint(), ah.LineBE.ToJwPoint());
+                    mark.HasBeam = ah.HasBeam;
+                    mark.Id = ah.Id;
+                    reobj.AddedHoleMarks.Add(mark);
+                }
+            }
             reobj.IsFromData = true;
             reobj.JwProjectSubData = data;
             //增加逻辑 动态生成beamcode 好像不需要
