@@ -75,4 +75,21 @@ namespace JwCore
 
         public ObservableCollectionListSource<JwBeamVerticalData> JwBeamVerticalDatas { get; } = new();
     }
+
+    public class JwBeamHuiZong
+    {
+        public string BeamSignature { get; set; }
+
+        public string InitialBeamCode { get; set; }
+
+        public string BeamCode { get; set; }
+
+        public int BeamCount { get; set; }
+
+        public double TotalLength { get; set; }
+
+        public double TotalXXLength { get; set; }
+
+        public string Remark { get; set; } 
+    }
 }

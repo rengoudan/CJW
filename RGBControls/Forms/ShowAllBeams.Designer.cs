@@ -88,6 +88,7 @@
             Controls.Add(pageHeader1);
             Name = "ShowAllBeams";
             Text = "ShowAllBeams";
+            Load += ShowAllBeams_Load;
             panel1.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);

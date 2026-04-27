@@ -40,6 +40,18 @@ namespace JwServices
             return await GetAllAsync<JwBeamData>(predicate);
         }
 
+        /// <summary>
+        /// 2026年4月28日 统计beam
+        /// </summary>
+        /// <param name="mainid"></param>
+        /// <returns></returns>
+        public async Task<List<JwBeamData>> GetBeamDatasByMainAsync(long mainid)
+        {
+            var subdatas = await GetAllAsync<JwProjectSubData>(p => p.JwProjectMainDataId == mainid);
+            var subidlst = subdatas.Select(t => t.Id).ToList();
+            return await GetAllAsync<JwBeamData>(t=>subidlst.Contains(t.JwProjectSubDataId));
+        }
+
         public async Task<List<JwPillarData>> GetPillarDatasAsync(Expression<Func<JwPillarData, bool>> predicate)
         {
             return await GetAllAsync<JwPillarData>(predicate);
