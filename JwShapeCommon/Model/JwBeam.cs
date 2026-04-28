@@ -818,7 +818,7 @@ namespace JwShapeCommon
             data.GongQu = this.GongQu;
             data.HasBFG=this.HasBFG;
             data.BaiFangGTBDistance=this.BaiFangGTBDistance;
-
+            data.InitialBeamCode=this.InitialBeamCode;
             return data;
         }
 

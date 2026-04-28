@@ -97,6 +97,7 @@ namespace RGBControls.Pages
             mainmenulist = new IContextMenuStripItem[]
             {
                 new ContextMenuStripItem("統合ビーム番号付け",""),
+                new ContextMenuStripItem("梁統計",""),
                 new ContextMenuStripItem("消去","")
             };
 
@@ -325,6 +326,14 @@ namespace RGBControls.Pages
                             this.SuccessModal(msg);
                         });
                     }
+            }
+            if (e.Text.Equals("梁統計"))
+            {
+                if( _selectedMainData != null)
+                {
+                    ShowAllBeams showAll=new ShowAllBeams(_selectedMainData);
+                    showAll.ShowDialog();
+                }
             }
         }
 

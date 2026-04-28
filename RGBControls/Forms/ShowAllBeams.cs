@@ -29,6 +29,8 @@ namespace RGBControls.Forms
             _selectedMainData = mainData;
             createData();
             InitializeComponent();
+            initTable();
+            table1.DataSource = _beamHuiZongs;
         }
 
         private async void createData()
@@ -67,16 +69,13 @@ namespace RGBControls.Forms
         {
             table1.Columns= new AntdUI.ColumnCollection
             {
-            new AntdUI.Column("ProjectName", "工事名"),
-                                new AntdUI.Column("Biaochi", "縮尺"),
-                                new AntdUI.Column("BeamsNumber", "梁数"),
-                                new AntdUI.Column("KPillarCount", "K 柱 トータル"),
-                                new AntdUI.Column("SinglePillarCount", "単柱"),
-                                new AntdUI.Column("CustomerName", "顧客名"),
-                                new AntdUI.Column("BCount", "B"),
-                                new AntdUI.Column("BGCount", "BG"),
-                                new AntdUI.Column("FloorQuantity", "階数"),
-                                new AntdUI.Column("ParsedQuantity", "解析数")
+            new AntdUI.Column("InitialBeamCode", "工事名"),
+                                new AntdUI.Column("BeamCode", "縮尺"),
+                                new AntdUI.Column("BeamCount", "梁数"),
+                                new AntdUI.Column("TotalLength", "K 柱 トータル"),
+                                new AntdUI.Column("TotalXXLength", "単柱"),
+                                new AntdUI.Column("BeamCount", "顧客名"),
+                                new AntdUI.Column("Remark", "B"),
 
             };
 
