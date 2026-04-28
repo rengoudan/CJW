@@ -91,5 +91,7 @@ namespace JwCore
         public double TotalXXLength { get; set; }
 
         public string Remark { get; set; } 
+
+        public List<JwBeamData> BeamDatas { get; set; }
     }
 }

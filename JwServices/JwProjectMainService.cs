@@ -390,7 +390,10 @@ namespace JwServices
                             code += ((char)('A' + (i - 1))).ToString();
 
                         foreach (var b in subGroups[i])
-                            b.BeamCode = code;
+                        {
+                            b.BeamCode= code;
+                            await UpdateAsync<JwBeamData>(b);
+                        }
                     }
                 }
             }

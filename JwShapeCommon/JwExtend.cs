@@ -394,6 +394,53 @@ namespace JwShapeCommon
             return reobj;
         }
 
+        public static JwBeam BeamDataToJwBeam(this JwBeamData bm)
+        {
+            var jwbm = bm.DataToJw<JwBeam>();
+            jwbm.BeamCode = bm.BeamCode;
+            jwbm.HasQieGe = bm.HasQieGe;
+            jwbm.IsParentBeam = bm.IsParentBeam;
+            jwbm.IsQiegeBeam = bm.IsQiegeBeam;
+            jwbm.QieGeCount = bm.QieGeCount;
+            jwbm.Id = bm.Id;
+            jwbm.XXLength = bm.XXLength;
+            jwbm.Length = bm.Length;
+            jwbm.HasStartSide = bm.HasStartSide;
+            jwbm.HasEndSide = bm.HasEndSide;
+            jwbm.StartTelosType = bm.StartTelosType;
+            jwbm.EndTelosType = bm.EndTelosType;
+            jwbm.StartCenter = bm.StartCenter;
+            jwbm.EndCenter = bm.EndCenter;
+            jwbm.GongQu = bm.GongQu;
+            jwbm.HasBFG = bm.HasBFG;
+            jwbm.BaiFangGTBDistance = bm.BaiFangGTBDistance;
+            jwbm.InitialBeamCode = bm.InitialBeamCode;
+            //jwbm.HasEndSide=bm.has
+            if (bm.JwHoles.Count > 0)
+            {
+                foreach (var hb in bm.JwHoles)
+                {
+                    jwbm.Holes.Add(hb.DataToHole());
+                }
+            }
+            if (bm.JwBeamVerticalDatas.Count > 0)
+            {
+                foreach (var vb in bm.JwBeamVerticalDatas)
+                {
+                    jwbm.Baifangs.Add(vb.DataToJw());
+                }
+            }
+            if (jwbm.DirectionType == BeamDirectionType.Horizontal)
+            {
+                jwbm.AbsolutePD = jwbm.TopLeft.X;
+            }
+            else
+            {
+                jwbm.AbsolutePD = jwbm.TopLeft.Y;
+            }
+            return jwbm;
+        }
+
         /// <summary>
         /// 增加孔
         /// </summary>

@@ -81,7 +81,6 @@
             uiButton1.Size = new Size(100, 35);
             uiButton1.TabIndex = 0;
             uiButton1.Text = "セーブ";
-            uiButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiButton1.Click += uiButton1_Click;
             // 
             // uiNearSpliteMax
@@ -517,7 +516,7 @@
             uiMarkLabel14.Padding = new Padding(5, 0, 0, 0);
             uiMarkLabel14.Size = new Size(168, 23);
             uiMarkLabel14.TabIndex = 33;
-            uiMarkLabel14.Text = "ブレース起点";
+            uiMarkLabel14.Text = "追加の穴";
             uiMarkLabel14.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // uiComboBox8

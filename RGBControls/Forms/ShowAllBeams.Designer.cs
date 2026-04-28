@@ -32,8 +32,12 @@
             panel1 = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             table1 = new AntdUI.Table();
+            panel2 = new Panel();
+            panel3 = new Panel();
+            table2 = new AntdUI.Table();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // pageHeader1
@@ -60,6 +64,7 @@
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Controls.Add(table1, 0, 0);
+            tableLayoutPanel1.Controls.Add(panel2, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -78,6 +83,35 @@
             table1.Size = new Size(1189, 481);
             table1.TabIndex = 0;
             table1.Text = "table1";
+            table1.SelectIndexChanged += table1_SelectIndexChanged;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(panel3);
+            panel2.Controls.Add(table2);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(3, 490);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1189, 481);
+            panel2.TabIndex = 1;
+            // 
+            // panel3
+            // 
+            panel3.Dock = DockStyle.Fill;
+            panel3.Location = new Point(340, 0);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(849, 481);
+            panel3.TabIndex = 1;
+            // 
+            // table2
+            // 
+            table2.Dock = DockStyle.Left;
+            table2.Gap = 12;
+            table2.Location = new Point(0, 0);
+            table2.Name = "table2";
+            table2.Size = new Size(340, 481);
+            table2.TabIndex = 0;
+            table2.Text = "table2";
             // 
             // ShowAllBeams
             // 
@@ -88,9 +122,11 @@
             Controls.Add(pageHeader1);
             Name = "ShowAllBeams";
             Text = "ShowAllBeams";
+            WindowState = FormWindowState.Maximized;
             Load += ShowAllBeams_Load;
             panel1.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -100,5 +136,8 @@
         private Panel panel1;
         private TableLayoutPanel tableLayoutPanel1;
         private AntdUI.Table table1;
+        private Panel panel2;
+        private AntdUI.Table table2;
+        private Panel panel3;
     }
 }
