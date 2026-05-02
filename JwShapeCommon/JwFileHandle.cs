@@ -21,6 +21,7 @@ using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -4606,9 +4607,45 @@ namespace JwShapeCommon
                 }
             }
         }
-        private void judgehole(JwTouch touch, JWPoint point, bool isstart)
+        
+        private JWPoint offsetParallel(JwXian L1, JwXian L2, double dist, OffsetMode mode)
         {
+            double dx = L1.Pone.X - L1.Pone.X;
+            double dy = L1.Ptwo.Y - L1.Ptwo.Y;
+            double len = Math.Sqrt(dx * dx + dy * dy);
 
+            if (len < 1e-9)
+                throw new Exception("线段长度为 0");
+
+            double offsetX = 0;
+            double offsetY = 0;
+
+            if (mode == OffsetMode.OffsetX)
+            {
+                // ⭐ 将真实距离 dist 转换成 ΔX
+                offsetX = dist * Math.Abs(dy) / len;
+            }
+            else
+            {
+                // ⭐ 将真实距离 dist 转换成 ΔY
+                offsetY = dist * Math.Abs(dx) / len;
+            }
+
+            // +dist 偏移
+            var a1_plus = new JWPoint(L1.Pone.X + offsetX, L1.Pone.Y + offsetY);
+            var a2_plus = new JWPoint(L1.Ptwo.X + offsetX, L1.Ptwo.Y + offsetY);
+
+            // -dist 偏移
+            var a1_minus = new JWPoint(L1.Pone.X - offsetX, L1.Pone.Y - offsetY);
+            var a2_minus = new JWPoint(L1.Ptwo.X - offsetX, L1.Ptwo.Y - offsetY);
+
+            //// 求交点
+            //var p_plus = SegmentIntersection(a1_plus, a2_plus, L2.Start, L2.End);
+            //var p_minus = SegmentIntersection(a1_minus, a2_minus, L2.Start, L2.End);
+
+            //return (p_plus, p_minus);
+            return null;
         }
+
     }
 }

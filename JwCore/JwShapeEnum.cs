@@ -257,4 +257,13 @@ namespace JwCore
         A35 = 35,
     }
 
+    /// <summary>
+    /// x还是y方向的偏移 2026年3月9日添加
+    /// </summary>
+    public enum OffsetMode
+    {
+        OffsetX,
+        OffsetY
+    }
+
 }
