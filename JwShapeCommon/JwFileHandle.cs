@@ -3833,6 +3833,7 @@ namespace JwShapeCommon
         /// <returns></returns>
         private JwLianjieSingle findCenter(JwXian xian)
         {
+            xian.Reorder();//按照x排序
             JwLianjieSingle jwLianjieSingle = new JwLianjieSingle();
             jwLianjieSingle.IsCreateSuccess = false;
             var f = Touchs.First(t => xian.Pone.IsEqualsWithError(t.JieChuPoint));
@@ -4025,6 +4026,14 @@ namespace JwShapeCommon
                     var dl = Math.Round(lg, 1) * JwFileConsts.JwScale;
                     dl = dl - 220;//减部件长度
                     jwLianjieSingle.Length = Math.Round(dl, 0);
+                    if (xian.Ptwo.Y > xian.Pone.Y)
+                    {
+                        jwLianjieSingle.YAdd = true;
+                    }
+                    else
+                    {
+                        jwLianjieSingle.YAdd = false;
+                    }
                 }
                 else
                 {
@@ -4157,6 +4166,14 @@ namespace JwShapeCommon
                 var dl = Math.Round(slq, 1) * JwFileConsts.JwScale;
                 dl = dl - 220;//减部件长度
                 jwLianjieSingle.Length = Math.Round(dl / 10.0) * 10;
+                if(xian.Ptwo.Y > xian.Pone.Y)
+                {
+                    jwLianjieSingle.YAdd = true;
+                }
+                else
+                {
+                    jwLianjieSingle.YAdd = false;
+                }
             }
             return jwLianjieSingle;
         }

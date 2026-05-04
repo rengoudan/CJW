@@ -19,6 +19,11 @@ namespace JwShapeCommon.Model
         public string Id { get; set; }
         public JwXian Xian { get; set; }
 
+        /// <summary>
+        /// start为X 小的  Yadd指示 end的y需要加 还是减  true 加 false 减
+        /// </summary>
+        public bool YAdd { get; set; }
+
         public JwLianjieSingle()
         {
             Id= Guid.NewGuid().ToString();
@@ -37,7 +42,7 @@ namespace JwShapeCommon.Model
 
 
         /// <summary>
-        /// 排序规则  由下到上  由左到右 根据胜方梁
+        /// 排序规则  由下到上  由左到右 根据胜方梁 
         /// </summary>
         public JwPointBeam Start { get; set; }
 

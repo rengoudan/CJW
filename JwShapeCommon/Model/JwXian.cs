@@ -607,6 +607,15 @@ namespace JwShapeCommon
             return sen;
         }
 
+        public void Reorder()
+        {
+            List<JWPoint> q = this.GetXianPoints().OrderBy(t => t.X).ToList();
+            var one = q.First();
+            var two = q.Last();
+            this.Pone = one;
+            this.Ptwo = two;
+        }
+
     }
     public class JwXianComparint : IEqualityComparer<JwXian>
     {
