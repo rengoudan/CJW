@@ -4624,8 +4624,54 @@ namespace JwShapeCommon
                 }
             }
         }
-        
-        private JWPoint offsetParallel(JwXian L1, JwXian L2, double dist, OffsetMode mode)
+
+        /// <summary>
+        /// 处理连接线平移
+        /// </summary>
+        private void determineIfTranslationIsNeeded()
+        {
+            if (LianjieSingles?.Count > 0)
+            {
+                foreach (var lianjie in LianjieSingles)
+                {
+                    if (lianjie.IsCreateSuccess)
+                    {
+                        var b = lianjie.Start.ShengfangBeam;
+                        if(b.DirectionType== BeamDirectionType.Horizontal)
+                        {
+                            //start为x轴增加
+                            //end为x轴减少
+                            JWPoint hjiaodian;
+                            if (lianjie.YAdd)
+                            {
+                                //梁的上面线
+                                var btopline=new JwXian(b.TopLeft, b.TopRight);
+                                hjiaodian=offsetParallel(new JwXian(lianjie.Start.RealPoint,lianjie.End.RealPoint), btopline, 10, OffsetMode.OffsetX,true);
+                            }
+                            else
+                            {
+                                //比对梁的下面线交叉
+                                var bbottomline = new JwXian(b.BottomLeft, b.BottomRight);
+
+                            }
+                            
+                        }
+                       // var offsetPoint = offsetParallel(new JwXian(lianjie.Start.RealPoint, lianjie.End.RealPoint), null, 10, OffsetMode.OffsetX);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 平移交叉判定
+        /// </summary>
+        /// <param name="L1"></param>
+        /// <param name="L2"></param>
+        /// <param name="dist"></param>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private JWPoint offsetParallel(JwXian L1, JwXian L2, double dist, OffsetMode mode,bool isadd)
         {
             double dx = L1.Pone.X - L1.Pone.X;
             double dy = L1.Ptwo.Y - L1.Ptwo.Y;
@@ -4636,7 +4682,7 @@ namespace JwShapeCommon
 
             double offsetX = 0;
             double offsetY = 0;
-
+            JWPoint pone, ptwo,jiaocha;
             if (mode == OffsetMode.OffsetX)
             {
                 // ⭐ 将真实距离 dist 转换成 ΔX
@@ -4647,21 +4693,34 @@ namespace JwShapeCommon
                 // ⭐ 将真实距离 dist 转换成 ΔY
                 offsetY = dist * Math.Abs(dx) / len;
             }
-
-            // +dist 偏移
-            var a1_plus = new JWPoint(L1.Pone.X + offsetX, L1.Pone.Y + offsetY);
-            var a2_plus = new JWPoint(L1.Ptwo.X + offsetX, L1.Ptwo.Y + offsetY);
-
-            // -dist 偏移
-            var a1_minus = new JWPoint(L1.Pone.X - offsetX, L1.Pone.Y - offsetY);
-            var a2_minus = new JWPoint(L1.Ptwo.X - offsetX, L1.Ptwo.Y - offsetY);
-
+            if(isadd)
+            {
+                // +dist 偏移
+                 pone = new JWPoint(L1.Pone.X + offsetX, L1.Pone.Y + offsetY);
+                 ptwo = new JWPoint(L1.Ptwo.X + offsetX, L1.Ptwo.Y + offsetY);
+            }
+            else
+            {
+                // -dist 偏移
+                pone = new JWPoint(L1.Pone.X - offsetX, L1.Pone.Y - offsetY);
+                ptwo = new JWPoint(L1.Ptwo.X - offsetX, L1.Ptwo.Y - offsetY);
+            }
+            JwXian offsetLine = new JwXian(pone, ptwo);
+            JwLineIntersector lineIntersector = new JwLineIntersector();
+            if (lineIntersector.ComputeIntersect(offsetLine, L2) == 1)
+            {
+                jiaocha = lineIntersector.IntersectionPoint;
+            }
+            else
+            {
+                jiaocha = null;
+            }
             //// 求交点
             //var p_plus = SegmentIntersection(a1_plus, a2_plus, L2.Start, L2.End);
             //var p_minus = SegmentIntersection(a1_minus, a2_minus, L2.Start, L2.End);
 
             //return (p_plus, p_minus);
-            return null;
+            return jiaocha;
         }
 
     }
