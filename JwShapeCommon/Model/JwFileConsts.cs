@@ -23,6 +23,11 @@ namespace JwShapeCommon
         public static double CsvYTiaozheng= 0.0;
         #endregion
 
+        /// <summary>
+        /// 连接头的偏移判断值 单位为mm 11+螺母11  2026年3月7日增加
+        /// </summary>
+        public static double LianjiePianyiPanding = 22;
+
         public static JwColor EWaiKongColor;
 
         public static double PillarCenterMax = 8;

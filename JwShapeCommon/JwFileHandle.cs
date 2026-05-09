@@ -4630,6 +4630,7 @@ namespace JwShapeCommon
         /// </summary>
         private void determineIfTranslationIsNeeded()
         {
+            double py = Math.Round(JwFileConsts.LianjiePianyiPanding / JwFileConsts.JwScale, 4);
             if (LianjieSingles?.Count > 0)
             {
                 foreach (var lianjie in LianjieSingles)
@@ -4637,26 +4638,55 @@ namespace JwShapeCommon
                     if (lianjie.IsCreateSuccess)
                     {
                         var b = lianjie.Start.ShengfangBeam;
-                        if(b.DirectionType== BeamDirectionType.Horizontal)
+                        JWPoint startjiaodian;
+                        if (b.DirectionType== BeamDirectionType.Horizontal)
                         {
                             //start为x轴增加
                             //end为x轴减少
-                            JWPoint hjiaodian;
+                            
                             if (lianjie.YAdd)
                             {
                                 //梁的上面线
                                 var btopline=new JwXian(b.TopLeft, b.TopRight);
-                                hjiaodian=offsetParallel(new JwXian(lianjie.Start.RealPoint,lianjie.End.RealPoint), btopline, 10, OffsetMode.OffsetX,true);
+                                startjiaodian = offsetParallel(new JwXian(lianjie.Start.RealPoint,lianjie.End.RealPoint), btopline, py, OffsetMode.OffsetX,true);
                             }
                             else
                             {
                                 //比对梁的下面线交叉
                                 var bbottomline = new JwXian(b.BottomLeft, b.BottomRight);
-
-                            }
-                            
+                                startjiaodian = offsetParallel(new JwXian(lianjie.Start.RealPoint, lianjie.End.RealPoint), bbottomline, py, OffsetMode.OffsetX,false);
+                            }                            
                         }
-                       // var offsetPoint = offsetParallel(new JwXian(lianjie.Start.RealPoint, lianjie.End.RealPoint), null, 10, OffsetMode.OffsetX);
+                        else
+                        {
+                            //如果胜放为垂直 加减与Yadd保持一致
+                            var referenceline=new JwXian(b.TopRight, b.BottomRight);
+                            startjiaodian = offsetParallel(new JwXian(lianjie.Start.RealPoint, lianjie.End.RealPoint), referenceline, py, OffsetMode.OffsetY,lianjie.YAdd);
+                        }
+                        var c = lianjie.End.ShengfangBeam;
+                        JWPoint endjiaodian;
+                        if (c.DirectionType == BeamDirectionType.Horizontal)
+                        {
+                            if(lianjie.YAdd)
+                            {
+                                //比对梁的下面线交叉
+                                var cbottomline = new JwXian(c.BottomLeft, c.BottomRight);
+                                endjiaodian = offsetParallel(new JwXian(lianjie.Start.RealPoint, lianjie.End.RealPoint), cbottomline, py, OffsetMode.OffsetX, false);
+                                
+                            }
+                            else
+                            {
+                                //梁的上面线
+                                var ctopline = new JwXian(c.TopLeft, c.TopRight);
+                                endjiaodian = offsetParallel(new JwXian(lianjie.Start.RealPoint, lianjie.End.RealPoint), ctopline, py, OffsetMode.OffsetX, true);
+                            }
+                        }
+                        else
+                        {
+                            var referenceline = new JwXian(c.TopLeft, c.BottomLeft);
+                            endjiaodian = offsetParallel(new JwXian(lianjie.Start.RealPoint, lianjie.End.RealPoint), referenceline, py, OffsetMode.OffsetY, !lianjie.YAdd);
+                        }
+                        // var offsetPoint = offsetParallel(new JwXian(lianjie.Start.RealPoint, lianjie.End.RealPoint), null, 10, OffsetMode.OffsetX);
                     }
                 }
             }
