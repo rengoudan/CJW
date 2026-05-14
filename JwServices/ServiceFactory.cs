@@ -20,14 +20,16 @@ namespace JwServices
             {
                 _instance = new ServiceFactory();
             }
+            
             return _instance;
         }
-
+        public JwDataContext Context { get; }
 
         public ServiceFactory() 
         { 
             _contextFactory = DbContextFactoryBuilder.CreateFactory(enableLogging: true) ?? 
                 throw new InvalidOperationException("数据库工厂创建失败。"); 
+            Context = _contextFactory.CreateDbContext();
         }
 
         private ServiceFactory(string provider, string? connectionString, bool enableLogging)
@@ -37,6 +39,7 @@ namespace JwServices
                 connectionString: connectionString,
                 enableLogging: enableLogging
             ) ?? throw new InvalidOperationException("数据库工厂创建失败。");
+            Context = _contextFactory.CreateDbContext();
         }
 
         /// <summary>
@@ -49,13 +52,16 @@ namespace JwServices
 
 
         public JwProjectMainService CreateJwProjectMainService() 
-        { 
-            return new JwProjectMainService(_contextFactory);
+        {
+            //return new JwProjectMainService(_contextFactory);
+            return new JwProjectMainService(Context);
         }
 
         public JwqitaService CreateJwqitaService()
         {
-            return new JwqitaService(_contextFactory);
+            //return new JwqitaService(_contextFactory);
+            return new JwqitaService(Context);
         }
     }
 }
+

@@ -16,9 +16,13 @@ namespace JwServices
         {
         }
 
+        public JwqitaService(JwDataContext context) : base(context)
+        {
+        }
+
         public async Task LoadSubDataAsync(JwMaterialTypeData maindata)
         {
-            using var context = CreateContext();
+            //using var context = CreateContext();
             await LoadCollectionAsync(context, maindata, p => p.JwMaterialDatas);
         }
 
@@ -82,7 +86,7 @@ namespace JwServices
 
         public async Task LoadBudgetSubCollectionAsync(JwBudgetMainData subdata)
         {
-            using var context = CreateContext();
+            //using var context = CreateContext();
             //var newsubdata=await GetByIdAsync<JwProjectSubData>(subdata.Id);
             await LoadCollectionAsync(context, subdata, p => p.JwBudgetSubDatas);
         }

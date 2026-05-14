@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using JwData;
 using JwShapeCommon;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,6 +15,10 @@ namespace JwServices
     public class JwProjectMainService: BaseService
     {
         public JwProjectMainService(IDbContextFactory<JwData.JwDataContext> contextFactory) : base(contextFactory)
+        {
+        }
+
+        public JwProjectMainService(JwDataContext context) : base(context)
         {
         }
 
@@ -405,13 +410,13 @@ namespace JwServices
         #region 加载导航集合等
         public async Task LoadSubDataAsync(JwProjectMainData maindata) 
         { 
-            using var context = CreateContext(); 
+            //using var context = CreateContext(); 
             await LoadCollectionAsync(context, maindata, p => p.JwProjectSubDatas); 
         }
 
         public async Task LoadSubCollectionAsync(JwProjectSubData subdata) 
         { 
-            using var context = CreateContext(); 
+            //using var context = CreateContext(); 
             //var newsubdata=await GetByIdAsync<JwProjectSubData>(subdata.Id);
             await LoadCollectionAsync(context, subdata, p => p.JwBeamDatas); 
             //await LoadCollectionAsync(context, subdata, p => p.JwBeamVerticalDatas); 
@@ -425,7 +430,7 @@ namespace JwServices
 
         public async Task LoadBeamCollectionAsync(JwBeamData beamdata) 
         { 
-            using var context = CreateContext(); 
+            //using var context = CreateContext(); 
             await LoadCollectionAsync(context, beamdata, p => p.JwBeamVerticalDatas);
             await LoadCollectionAsync(context, beamdata, p => p.JwHoles);
             //this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();

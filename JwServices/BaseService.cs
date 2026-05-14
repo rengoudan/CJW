@@ -9,20 +9,27 @@ namespace JwServices
     {
         protected readonly IDbContextFactory<JwData.JwDataContext> ContextFactory;
 
+        protected readonly JwDataContext context;
+
         public BaseService(IDbContextFactory<JwData.JwDataContext> contextFactory)
         {
             ContextFactory = contextFactory;
         }
 
+        public BaseService(JwDataContext _context)
+        {
+            context = _context;
+        }
 
-        protected JwDataContext CreateContext() => ContextFactory.CreateDbContext();
+
+        //protected JwDataContext CreateContext() => ContextFactory.CreateDbContext();
 
         // ✅ 获取所有实体（可选条件、排序、包含）
         protected async Task<List<T>> GetAllAsync<T>( Expression<Func<T, bool>>? predicate = null, 
             Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, 
             params Expression<Func<T, object>>[] includes ) where T : class 
         { 
-            using var context = CreateContext(); 
+            //using var context = CreateContext(); 
             IQueryable<T> query = context.Set<T>(); 
             foreach (var include in includes) query = query.Include(include); 
             if (predicate != null) 
@@ -36,7 +43,7 @@ namespace JwServices
           Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
           params Expression<Func<T, object>>[] includes) where T : class
         {
-            using var context = CreateContext();
+            //using var context = CreateContext();
             IQueryable<T> query = context.Set<T>();
             foreach (var include in includes) query = query.Include(include);
             if (predicate != null)
@@ -49,7 +56,7 @@ namespace JwServices
         // ✅ 获取单个实体（可选包含）
         protected async Task<T?> GetByIdAsync<T>( object id, params Expression<Func<T, object>>[] includes ) where T : class 
         { 
-            using var context = CreateContext(); 
+            //using var context = CreateContext(); 
             var entity = await context.Set<T>().FindAsync(id); 
             if (entity == null) 
                 return null; 
@@ -64,7 +71,7 @@ namespace JwServices
     Expression<Func<T, bool>> predicate
 ) where T : class
         {
-            using var context = CreateContext();
+            //using var context = CreateContext();
             IQueryable<T> query = context.Set<T>();
 
 
@@ -75,14 +82,14 @@ namespace JwServices
         // ✅ 新增实体
         protected async Task AddAsync<T>(T entity) where T : class 
         { 
-            using var context = CreateContext(); 
+            //using var context = CreateContext(); 
             context.Set<T>().Add(entity); 
             await context.SaveChangesAsync(); 
         }
 
         protected async Task<bool> DeleteAsync<T>(object id) where T : class 
         { 
-            using var context = CreateContext(); 
+            //using var context = CreateContext(); 
             var entity = await context.Set<T>().FindAsync(id); 
             if (entity == null) 
                 return false; 
@@ -93,7 +100,7 @@ namespace JwServices
 
         protected async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class
         {
-            using var context = CreateContext();
+            //using var context = CreateContext();
             var entities = context.Set<T>().Where(predicate);
             context.Set<T>().RemoveRange(entities);
             return await context.SaveChangesAsync();
@@ -110,7 +117,7 @@ namespace JwServices
         /// <returns></returns>
         protected async Task UpdateAsync<T>(T entity) where T : class 
         { 
-            using var context = CreateContext();
+            //using var context = CreateContext();
             context.Set<T>().Attach(entity); 
             context.Entry(entity).State = EntityState.Modified;
             await context.SaveChangesAsync(); 
@@ -121,7 +128,7 @@ namespace JwServices
      Dictionary<Expression<Func<T, object>>, object> updates
  ) where T : class
         {
-            using var context = CreateContext();
+            //using var context = CreateContext();
             var entity = await context.Set<T>().FindAsync(id);
             if (entity == null) return false;
 
@@ -165,7 +172,7 @@ namespace JwServices
     Expression<Func<TEntity, IEnumerable<TProperty>>> navigation
 ) where TEntity : class where TProperty : class
 {
-    using var context = CreateContext();
+    //using var context = CreateContext();
     var entity = await context.Set<TEntity>().FindAsync(id);
     if (entity == null) return;
 

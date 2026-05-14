@@ -21,7 +21,8 @@ namespace JwData
 
             var connectionString = $"Data Source={dbPath}";
             var optionsBuilder = new DbContextOptionsBuilder<JwDataContext>().
-                UseSqlite(connectionString, x => x.UseNetTopologySuite()); 
+                UseSqlite(connectionString, x => x.UseNetTopologySuite());
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
             if (enableLogging) 
             { 
                 optionsBuilder.EnableSensitiveDataLogging()
@@ -38,6 +39,7 @@ namespace JwData
         {
             var optionsBuilder = new DbContextOptionsBuilder<JwDataContext>();
 
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
             if (provider.Equals("sqlite", StringComparison.OrdinalIgnoreCase))
             {
                 var dbPath = Path.Combine(AppContext.BaseDirectory, "jwdata.db");

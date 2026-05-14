@@ -233,6 +233,14 @@ namespace RGBJWMain.Forms
                     this.uiComboBox1.SelectedItem = this._jwbeam.BaiFangGTBDistance;
                     //this.select1.Items = new BaseCollection(lst);
                 }
+                if (string.IsNullOrEmpty(this._jwbeam.GongQu))
+                {
+                    this.select7.SelectedValue = null;
+                }
+                else
+                {
+                    this.select7.SelectedValue = this._jwbeam.GongQu;
+                }
             }
         }
     }
