@@ -698,6 +698,14 @@ namespace RGBJWMain.Controls
                         if (beam.IsNeed)
                         {
                             SelectedBeam = beam.JwSquareBase as JwBeam;
+                            if (SelectedBeam.DirectionType == BeamDirectionType.Horizontal)
+                            {
+                                SelectedBeam.AbsolutePD = SelectedBeam.TopLeft.X;
+                            }
+                            if (SelectedBeam.DirectionType == BeamDirectionType.Vertical)
+                            {
+                                SelectedBeam.AbsolutePD = SelectedBeam.BottomLeft.Y;
+                            }
                             NewJwBeamForm jsForm = new NewJwBeamForm(SelectedBeam);
                             //JwSingleBeamForm jwSingleBeamDraw = new JwSingleBeamForm(SelectedBeam);
                             //jwSingleBeamDraw.Show();

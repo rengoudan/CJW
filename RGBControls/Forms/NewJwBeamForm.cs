@@ -35,9 +35,9 @@ namespace RGBJWMain.Forms
             //this.Name = this._jwbeam.BeamCode;
            
             InitializeComponent();
-            this._jwbeam = jwbeam;
+            this._jwbeam = jwbeam;// _jwProjectMainService.FindBeamDataById(jwbeam.Id);
             
-            this.pageHeader1.Text = string.Format("梁预览-{0}", this._jwbeam.BeamCode);
+            this.pageHeader1.Text = string.Format("梁閲覧-{0}", this._jwbeam.BeamCode);
             this.uiComboBox1.Visible = false;
             this.button1.Visible = false;
             beamShow();
@@ -136,6 +136,7 @@ namespace RGBJWMain.Forms
                             NewCode = this.select7.SelectedValue.ToString()
                         };
                         GlobalEvent.GetGlobalEvent().UpdateNewGongQuEvent(this, args);
+                        _jwbeam.GongQu = args.NewCode;
                     }
                 }
                 else
@@ -149,6 +150,7 @@ namespace RGBJWMain.Forms
                         };
                         await GlobalEvent.GetGlobalEvent().UpdateCodeEvent.InvokeAsync(this, args);
                         //GlobalEvent.GetGlobalEvent().UpdateCodeEvent(this, args);
+                        _jwbeam.GongQu = args.NewCode;
                     }
                 }
             }

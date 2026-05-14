@@ -83,6 +83,12 @@ namespace JwServices
         {
             return await FindAsync<JwBeamData>(predicate);
         }
+
+        public JwBeamData FindBeamDataById(string id)
+        {
+            return Find<JwBeamData>(t => t.Id == id);
+        }
+
         #endregion
 
 

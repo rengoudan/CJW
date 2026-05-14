@@ -121,4 +121,29 @@ namespace JwShapeCommon.Model
             return result;
         }
     }
+
+    public class JwHoleMachiningComparint : IEqualityComparer<JwHoleMachining>
+    {
+        public bool Equals(JwHoleMachining? x, JwHoleMachining? y)
+        {
+            if (object.ReferenceEquals(x, null))
+            {
+                return false;
+            }
+            if (object.ReferenceEquals(y, null))
+            {
+                return false;
+            }
+            else
+            {
+                return x.Id.Equals(y.Id);
+            }
+        }
+
+        public int GetHashCode(JwHoleMachining obj)
+        {
+            return obj.Id.GetHashCode();
+        }
+
+    }
 }

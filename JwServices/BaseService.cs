@@ -36,7 +36,7 @@ namespace JwServices
                 query = query.Where(predicate); 
             if (orderBy != null) 
                 query = orderBy(query); 
-            return await query.ToListAsync(); 
+            return await query.AsTracking().ToListAsync(); 
         }
 
         protected  List<T> GetAll<T>(Expression<Func<T, bool>>? predicate = null,
@@ -50,7 +50,7 @@ namespace JwServices
                 query = query.Where(predicate);
             if (orderBy != null)
                 query = orderBy(query);
-            return query.ToList();
+            return query.AsTracking().ToList();
         }
 
         // ✅ 获取单个实体（可选包含）
@@ -76,6 +76,17 @@ namespace JwServices
 
 
             return await query.FirstOrDefaultAsync(predicate);
+        }
+
+        protected  T? Find<T>(
+   Expression<Func<T, bool>> predicate
+) where T : class
+        {
+            //using var context = CreateContext();
+            IQueryable<T> query = context.Set<T>();
+
+
+            return  query.FirstOrDefault(predicate);
         }
 
 
