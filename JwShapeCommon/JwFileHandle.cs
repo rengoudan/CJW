@@ -1732,6 +1732,7 @@ namespace JwShapeCommon
                 jwCanvas.LianjieSingles = this.LianjieSingles;
                 jwCanvas.JwDownPillarDatas = this.DownPillarMarks;
                 jwCanvas.Directeds = this.Directeds;
+                jwCanvas.FloorName = this._floorName;
                 //jwCanvas
                 return jwCanvas;
             }

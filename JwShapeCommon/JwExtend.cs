@@ -244,6 +244,7 @@ namespace JwShapeCommon
             reobj.VerticalBeamsCount = data.VerticalBeamsCount;
             reobj.KPillarType = data.KPillarType;
             reobj.Beams = new List<JwBeam>();
+            reobj.FloorName = data.FloorName;
             if (data.BeamCount > 0)
             {
                 foreach (var bm in data.JwBeamDatas)

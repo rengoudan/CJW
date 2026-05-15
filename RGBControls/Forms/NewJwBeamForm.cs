@@ -68,7 +68,7 @@ namespace RGBJWMain.Forms
         {
             if (_jwCanvas != null)
             {
-                this.pageHeader1.Text = string.Format("梁閲覧-{0},階-{1},工区-{2}", this._jwbeam.BeamCode, this._jwCanvas.JwProjectSubData.FloorName, this._jwbeam.GongQu);
+                this.pageHeader1.Text = string.Format("梁閲覧-{0},階-{1},工区-{2}", this._jwbeam.BeamCode, this._jwCanvas.FloorName, this._jwbeam.GongQu);
             }
             else
             {

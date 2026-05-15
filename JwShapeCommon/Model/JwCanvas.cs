@@ -17,7 +17,9 @@ namespace JwShapeCommon
         /// <summary>
         ///
         /// </summary>
-        public JwProjectSubData JwProjectSubData { get; set; }          
+        public JwProjectSubData JwProjectSubData { get; set; }
+
+        public string FloorName { get; set; }
 
         ///// <summary>
         ///// 左上
