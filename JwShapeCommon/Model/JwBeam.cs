@@ -926,20 +926,76 @@ namespace JwShapeCommon
             {
                 this.Holes = this.Holes.OrderBy(t => t.Location.Y).ToList();
             }
-            
-            
-
-            var starthole = this.Holes.Find(t => t.IsStart);
-
-            var endhole = this.Holes.Find(t => t.IsEnd);
-
-            var centerholes = this.Holes.Where(t=>!t.IsEnd&&!t.IsStart).ToList();
 
             double pr = 0;
             double sb = 0;//startbeam 起点坐标
             double lastholes = 0;
 
             double precb = 0;
+
+            var starthole = this.Holes.Find(t => t.IsStart);
+
+            var endhole = this.Holes.Find(t => t.IsEnd);
+
+            //处理beam开始 结束标记点信息
+            var es = new JwBeamMarkPoint(this, false, true);
+            es.PreBeamStartDistance = Math.Round(es.Coordinate - sb, 2);
+            this.jwBeamMarks.Add(es);
+            var endx = new JwBeamMarkPoint(this, true, false, true);//芯终点
+
+            //2026年5月15日 B端有接触的情况 重复孔 
+            if (endhole == null)
+            {
+                if(this.EndTelosType == KongzuType.B)
+                {
+                    //芯终点
+                    endx.Coordinate = es.Coordinate - 50 / JwFileConsts.JwScale;//不用区分水平和垂直
+                    endx.coordinated();
+
+                    double lastce = (es.Coordinate - precb) * JwFileConsts.JwScale;
+
+                    var fh=this.Holes.Find(t => t.Location.IsEqualsWithError(endx.Point));
+                    if (fh != null)
+                    {
+                        fh.IsEnd = true;
+                        endhole = fh;
+                        endx.HasAppend = true;
+                        endx.AppendHole = fh;
+                    }
+                    else
+                    {
+                        JwHole ewholeend;
+                        if (lastce >= 150)
+                        {
+                            endhole = new JwHole(true, endx.Point, KongzuType.BC);
+                            endhole.KongNum = 4;
+                        }
+                        else
+                        {
+                            endhole = new JwHole(true, endx.Point, KongzuType.BP);
+                            endhole.KongNum = 2;
+                            endx.IsBias = true;
+                        }
+                  
+                    }
+                }
+            }
+            else
+            {
+                //endhole = ewholeend;
+                endx.HasAppend = true;
+                //var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
+                //if (kshibf != null)
+                //{
+                //    endhole.HasBhLinkHole = kshibf.HasLast;
+                //    endhole.HasPreLinkHole = kshibf.HasPre;
+                //}
+                endx.AppendHole = endhole;
+            }
+
+                var centerholes = this.Holes.Where(t => !t.IsEnd && !t.IsStart).ToList();
+
+            
 
             //处理beam开始 结束标记点信息
             var bs = new JwBeamMarkPoint(this, true);
@@ -1116,42 +1172,10 @@ namespace JwShapeCommon
               
             }
 
-            //处理beam开始 结束标记点信息
-            var es = new JwBeamMarkPoint(this, false, true);
-            es.PreBeamStartDistance=Math.Round(es.Coordinate - sb, 2);
-            this.jwBeamMarks.Add(es);
-            var endx = new JwBeamMarkPoint(this, true,false, true);//芯终点
+            
 
             if (this.EndTelosType == KongzuType.B)
             {
-                //芯终点
-                endx.Coordinate = es.Coordinate - 50 / JwFileConsts.JwScale;//不用区分水平和垂直
-                endx.coordinated();
-
-                double lastce = (es.Coordinate - precb) * JwFileConsts.JwScale;
-
-                JwHole ewholeend;
-                if (lastce >= 150)
-                {
-                    endhole = new JwHole(true, endx.Point, KongzuType.BC);
-                    endhole.KongNum = 4;
-                }
-                else
-                {
-                    endhole = new JwHole(true, endx.Point, KongzuType.BP);
-                    endhole.KongNum = 2;
-                    endx.IsBias = true;
-                }
-                //endhole = ewholeend;
-                endx.HasAppend = true;
-                //var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
-                //if (kshibf != null)
-                //{
-                //    endhole.HasBhLinkHole = kshibf.HasLast;
-                //    endhole.HasPreLinkHole = kshibf.HasPre;
-                //}
-                endx.AppendHole = endhole;
-                
             }
             else
             {

@@ -3863,8 +3863,8 @@ namespace JwShapeCommon
                             realy = pinbeam.Center - banjing;
                             //水平梁下方
                         }
-                        if (xian.Ptwo.X > xian.Pone.X)
-                        {
+                        //if (xian.Ptwo.X > xian.Pone.X)
+                        //{
                             //垂直梁右侧
                             realx = f.LoserBeam.Center + (84 / JwFileConsts.JwScale);
                             f.JwHoleG.HasBhLinkHole = true;
@@ -3872,23 +3872,25 @@ namespace JwShapeCommon
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.First().HasBhLinkHole = true;
+                                //ff.RJwBeam.holesorder();
+                                //ff.RJwBeam.Holes.First().HasBhLinkHole = true;
+                                ff.AJwBeam.holesorder();
+                                ff.AJwBeam.Holes.First().HasBhLinkHole = true;
                             }
-                        }
-                        else
-                        {
-                            //垂直梁左侧
-                            realx = f.LoserBeam.Center - (84 / JwFileConsts.JwScale);
-                            f.JwHoleG.HasPreLinkHole = true;
-                            var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
-                            if (ff != null)
-                            {
-                                //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
-                            }
-                        }
+                        //}
+                        //else
+                        //{
+                        //    //垂直梁左侧
+                        //    realx = f.LoserBeam.Center - (84 / JwFileConsts.JwScale);
+                        //    f.JwHoleG.HasPreLinkHole = true;
+                        //    var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
+                        //    if (ff != null)
+                        //    {
+                        //        //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                        //        ff.RJwBeam.holesorder();
+                        //        ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                        //    }
+                        //}
                     }
                     else
                     {
@@ -3912,8 +3914,8 @@ namespace JwShapeCommon
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.First().HasBhLinkHole = true;
+                                ff.AJwBeam.holesorder();
+                                ff.AJwBeam.Holes.First().HasBhLinkHole = true;
                             }
                         }
                         else
@@ -3921,7 +3923,7 @@ namespace JwShapeCommon
                             //水平梁下方
                             realy = f.LoserBeam.Center - (84 / JwFileConsts.JwScale);
                             f.JwHoleG.HasPreLinkHole = true;
-                            var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center,2));
+                            var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
@@ -3943,32 +3945,33 @@ namespace JwShapeCommon
                             endrealy = l.WinnerBeam.Center - banjing;
                             //水平梁下方
                         }
-                        if (xian.Pone.X > xian.Ptwo.X)
+                        //垂直梁左侧
+                        endrealx = l.LoserBeam.Center - (84 / JwFileConsts.JwScale);
+                        l.JwHoleG.HasPreLinkHole = true;
+                        var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                        if (ff != null)
                         {
-                            //垂直梁右侧
-                            endrealx = l.LoserBeam.Center + (84 / JwFileConsts.JwScale);
-                            l.JwHoleG.HasBhLinkHole = true;
-                            var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
-                            if (ff != null)
-                            {
-                                //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.First().HasBhLinkHole = true;
-                            }
+                            //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            ff.RJwBeam.holesorder();
+                            ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
                         }
-                        else
-                        {
-                            //垂直梁左侧
-                            endrealx = l.LoserBeam.Center - (84 / JwFileConsts.JwScale);
-                            l.JwHoleG.HasPreLinkHole = true;
-                            var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
-                            if (ff != null)
-                            {
-                                //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
-                            }
-                        }
+                        //if (xian.Pone.X > xian.Ptwo.X)
+                        //{
+                        //    //垂直梁右侧
+                        //    endrealx = l.LoserBeam.Center + (84 / JwFileConsts.JwScale);
+                        //    l.JwHoleG.HasBhLinkHole = true;
+                        //    //var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                        //    //if (ff != null)
+                        //    //{
+                        //    //    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                        //    //    ff.RJwBeam.holesorder();
+                        //    //    ff.RJwBeam.Holes.First().HasBhLinkHole = true;
+                        //    //}
+                        //}
+                        //else
+                        //{
+
+                        //}
                     }
                     else
                     {
@@ -3993,8 +3996,8 @@ namespace JwShapeCommon
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.First().HasBhLinkHole = true;
+                                ff.AJwBeam.holesorder();
+                                ff.AJwBeam.Holes.First().HasBhLinkHole = true;
                             }
 
                         }
