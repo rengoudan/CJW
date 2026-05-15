@@ -706,7 +706,7 @@ namespace RGBJWMain.Controls
                             {
                                 SelectedBeam.AbsolutePD = SelectedBeam.BottomLeft.Y;
                             }
-                            NewJwBeamForm jsForm = new NewJwBeamForm(SelectedBeam);
+                            NewJwBeamForm jsForm = new NewJwBeamForm(SelectedBeam, _canvasDraw.jwCanvas);
                             //JwSingleBeamForm jwSingleBeamDraw = new JwSingleBeamForm(SelectedBeam);
                             //jwSingleBeamDraw.Show();
                             jsForm.IsNewBeam = IsNewCanvas;

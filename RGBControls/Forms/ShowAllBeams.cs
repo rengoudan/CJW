@@ -85,7 +85,7 @@ namespace RGBControls.Forms
             new AntdUI.Column("BeamCode", "梁番号"),
                                 new AntdUI.Column("FloorName", "階"),
                                 new AntdUI.Column("GongQu", "工区"),
-                                
+
 
             };
         }

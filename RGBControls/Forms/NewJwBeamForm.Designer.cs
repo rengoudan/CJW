@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            switch1 = new AntdUI.Switch();
             uiComboBox1 = new Sunny.UI.UIComboBox();
             panel4 = new Panel();
             button1 = new AntdUI.Button();
@@ -43,7 +44,6 @@
             panel3 = new Panel();
             uiTextBox1 = new Sunny.UI.UITextBox();
             divider1 = new AntdUI.Divider();
-            switch1 = new AntdUI.Switch();
             panel1.SuspendLayout();
             panel4.SuspendLayout();
             panel5.SuspendLayout();
@@ -65,6 +65,17 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1281, 92);
             panel1.TabIndex = 1;
+            // 
+            // switch1
+            // 
+            switch1.CheckedText = "CSV出力する";
+            switch1.Location = new Point(866, 55);
+            switch1.Name = "switch1";
+            switch1.Size = new Size(142, 32);
+            switch1.TabIndex = 33;
+            switch1.Text = "switch1";
+            switch1.UnCheckedText = "出力なし";
+            
             // 
             // uiComboBox1
             // 
@@ -89,7 +100,7 @@
             // 
             panel4.Controls.Add(button1);
             panel4.Location = new Point(599, 53);
-            panel4.Margin = new Padding(2, 2, 2, 2);
+            panel4.Margin = new Padding(2);
             panel4.Name = "panel4";
             panel4.Size = new Size(204, 33);
             panel4.TabIndex = 31;
@@ -101,7 +112,7 @@
             button1.IconSvg = "CheckOutlined";
             button1.JoinMode = AntdUI.TJoinMode.Right;
             button1.Location = new Point(163, 0);
-            button1.Margin = new Padding(2, 2, 2, 2);
+            button1.Margin = new Padding(2);
             button1.Name = "button1";
             button1.Size = new Size(41, 33);
             button1.TabIndex = 1;
@@ -112,20 +123,21 @@
             // 
             uiSymbolButton2.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Location = new Point(419, 57);
-            uiSymbolButton2.Margin = new Padding(2, 2, 2, 2);
+            uiSymbolButton2.Margin = new Padding(2);
             uiSymbolButton2.MinimumSize = new Size(1, 1);
             uiSymbolButton2.Name = "uiSymbolButton2";
             uiSymbolButton2.Size = new Size(162, 30);
             uiSymbolButton2.Symbol = 261891;
             uiSymbolButton2.TabIndex = 32;
             uiSymbolButton2.Text = "梁レシピCSV";
+            uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // pageHeader1
             // 
             pageHeader1.Dock = DockStyle.Top;
             pageHeader1.Location = new Point(0, 0);
-            pageHeader1.Margin = new Padding(2, 2, 2, 2);
+            pageHeader1.Margin = new Padding(2);
             pageHeader1.Name = "pageHeader1";
             pageHeader1.ShowButton = true;
             pageHeader1.Size = new Size(1281, 44);
@@ -137,7 +149,7 @@
             panel5.Controls.Add(select7);
             panel5.Controls.Add(button2);
             panel5.Location = new Point(195, 57);
-            panel5.Margin = new Padding(2, 2, 2, 2);
+            panel5.Margin = new Padding(2);
             panel5.Name = "panel5";
             panel5.Size = new Size(204, 33);
             panel5.TabIndex = 30;
@@ -151,7 +163,7 @@
             select7.JoinMode = AntdUI.TJoinMode.Left;
             select7.LocalizationPlaceholderText = "Select.{id}";
             select7.Location = new Point(0, 0);
-            select7.Margin = new Padding(2, 2, 2, 2);
+            select7.Margin = new Padding(2);
             select7.Name = "select7";
             select7.PlaceholderText = "工区選択";
             select7.Size = new Size(163, 33);
@@ -163,7 +175,7 @@
             button2.IconSvg = "CheckOutlined";
             button2.JoinMode = AntdUI.TJoinMode.Right;
             button2.Location = new Point(163, 0);
-            button2.Margin = new Padding(2, 2, 2, 2);
+            button2.Margin = new Padding(2);
             button2.Name = "button2";
             button2.Size = new Size(41, 33);
             button2.TabIndex = 1;
@@ -180,7 +192,6 @@
             uiSymbolButton1.Symbol = 558052;
             uiSymbolButton1.TabIndex = 0;
             uiSymbolButton1.Text = "梁図JW";
-            uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // panel2
@@ -189,7 +200,7 @@
             panel2.Controls.Add(panel3);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 92);
-            panel2.Margin = new Padding(2, 2, 2, 2);
+            panel2.Margin = new Padding(2);
             panel2.Name = "panel2";
             panel2.Size = new Size(1281, 672);
             panel2.TabIndex = 2;
@@ -198,7 +209,7 @@
             // 
             panel6.Dock = DockStyle.Fill;
             panel6.Location = new Point(0, 0);
-            panel6.Margin = new Padding(2, 2, 2, 2);
+            panel6.Margin = new Padding(2);
             panel6.Name = "panel6";
             panel6.Size = new Size(1281, 440);
             panel6.TabIndex = 2;
@@ -209,7 +220,7 @@
             panel3.Controls.Add(divider1);
             panel3.Dock = DockStyle.Bottom;
             panel3.Location = new Point(0, 440);
-            panel3.Margin = new Padding(2, 2, 2, 2);
+            panel3.Margin = new Padding(2);
             panel3.Name = "panel3";
             panel3.Size = new Size(1281, 232);
             panel3.TabIndex = 1;
@@ -223,7 +234,7 @@
             uiTextBox1.MinimumSize = new Size(1, 13);
             uiTextBox1.Multiline = true;
             uiTextBox1.Name = "uiTextBox1";
-            uiTextBox1.Padding = new Padding(4, 4, 4, 4);
+            uiTextBox1.Padding = new Padding(4);
             uiTextBox1.ShowScrollBar = true;
             uiTextBox1.ShowText = false;
             uiTextBox1.Size = new Size(1281, 204);
@@ -236,22 +247,12 @@
             // 
             divider1.Dock = DockStyle.Top;
             divider1.Location = new Point(0, 0);
-            divider1.Margin = new Padding(2, 2, 2, 2);
+            divider1.Margin = new Padding(2);
             divider1.Name = "divider1";
             divider1.Orientation = AntdUI.TOrientation.Left;
             divider1.Size = new Size(1281, 28);
             divider1.TabIndex = 0;
             divider1.Text = "プレビューCSV";
-            // 
-            // switch1
-            // 
-            switch1.CheckedText = "CSV出力する";
-            switch1.Location = new Point(866, 55);
-            switch1.Name = "switch1";
-            switch1.Size = new Size(142, 32);
-            switch1.TabIndex = 33;
-            switch1.Text = "switch1";
-            switch1.UnCheckedText = "出力なし";
             // 
             // NewJwBeamForm
             // 

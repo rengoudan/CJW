@@ -94,6 +94,16 @@ namespace JwServices
 
         #region 各类更改操作
 
+        public async Task ChangeBeamHasCsv(string id,bool csv)
+        {
+            var bd = await GetByIdAsync<JwBeamData>(id);
+            if (bd != null)
+            {
+                bd.HasCsv = csv;
+                await UpdateAsync<JwBeamData>(bd);
+            }
+        }
+
         public async Task ChangeBeamCode(string id,string beamcode)
         {
             var bd = await GetByIdAsync<JwBeamData>(id);

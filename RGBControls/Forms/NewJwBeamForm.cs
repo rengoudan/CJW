@@ -33,21 +33,48 @@ namespace RGBJWMain.Forms
 
         public NewJwBeamForm(JwBeam jwbeam)
         {
-           
+
             //this.Name = this._jwbeam.BeamCode;
-           
+
             InitializeComponent();
             this._jwbeam = jwbeam;
             beamData = _jwProjectMainService.FindBeamDataById(jwbeam.Id);
-            
+
             this.pageHeader1.Text = string.Format("梁閲覧-{0}", this._jwbeam.BeamCode);
             this.uiComboBox1.Visible = false;
             this.button1.Visible = false;
             beamShow();
-
         }
+
+        public NewJwBeamForm(JwBeam jwbeam,JwCanvas canvas)
+        {
+
+            //this.Name = this._jwbeam.BeamCode;
+
+            InitializeComponent();
+            this._jwbeam = jwbeam;
+            beamData = _jwProjectMainService.FindBeamDataById(jwbeam.Id);
+
+            
+            this.uiComboBox1.Visible = false;
+            this.button1.Visible = false;
+            this._jwCanvas = canvas;
+            beamShow();
+        }
+
+        JwCanvas _jwCanvas;
+
         private void beamShow()
         {
+            if (_jwCanvas != null)
+            {
+                this.pageHeader1.Text = string.Format("梁閲覧-{0},階-{1},工区-{2}", this._jwbeam.BeamCode, this._jwCanvas.JwProjectSubData.FloorName, this._jwbeam.GongQu);
+            }
+            else
+            {
+                this.pageHeader1.Text = string.Format("梁閲覧-{0}", this._jwbeam.BeamCode);
+            }
+
             this.panel6.Controls.Remove(_singleBeamShow);
             var lst = this._jwbeam.DrawToJwwwSingle();
             _singleBeamShow = new SingleBeamShow(lst);
@@ -70,7 +97,7 @@ namespace RGBJWMain.Forms
                 {
                     this.select7.SelectedValue = this._jwbeam.GongQu;
                 }
-                
+
             }
         }
 
@@ -103,7 +130,7 @@ namespace RGBJWMain.Forms
                         //{
                         //    a.AddData(s);
                         //}
-                        foreach(var s in lst)
+                        foreach (var s in lst)
                         {
                             a.AddData(s);
                         }
@@ -225,7 +252,7 @@ namespace RGBJWMain.Forms
 
         private void NewJwBeamForm_Load(object sender, EventArgs e)
         {
-            if(this._jwbeam != null)
+            if (this._jwbeam != null)
             {
                 if (this._jwbeam.HasBFG)
                 {
@@ -251,7 +278,14 @@ namespace RGBJWMain.Forms
 
                 //}
                 this.switch1.Checked = this._jwbeam.HasCsv;
+                switch1.CheckedChanged += switch1_CheckedChanged;
             }
+        }
+
+        private async void switch1_CheckedChanged(object sender, AntdUI.BoolEventArgs e)
+        {
+            this._jwbeam.HasCsv = e.Value;
+            await _jwProjectMainService.ChangeBeamHasCsv(this._jwbeam.Id,e.Value);
         }
     }
 }

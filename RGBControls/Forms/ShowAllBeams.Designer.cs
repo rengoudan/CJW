@@ -44,9 +44,10 @@
             // 
             pageHeader1.Dock = DockStyle.Top;
             pageHeader1.Location = new Point(0, 0);
+            pageHeader1.Margin = new Padding(2, 2, 2, 2);
             pageHeader1.Name = "pageHeader1";
             pageHeader1.ShowButton = true;
-            pageHeader1.Size = new Size(1195, 34);
+            pageHeader1.Size = new Size(981, 28);
             pageHeader1.TabIndex = 0;
             pageHeader1.Text = "梁統計";
             // 
@@ -54,9 +55,10 @@
             // 
             panel1.Controls.Add(tableLayoutPanel1);
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(0, 34);
+            panel1.Location = new Point(0, 28);
+            panel1.Margin = new Padding(2, 2, 2, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1195, 974);
+            panel1.Size = new Size(981, 819);
             panel1.TabIndex = 1;
             // 
             // tableLayoutPanel1
@@ -67,20 +69,22 @@
             tableLayoutPanel1.Controls.Add(panel2, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(2, 2, 2, 2);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Size = new Size(1195, 974);
+            tableLayoutPanel1.Size = new Size(981, 819);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // table1
             // 
             table1.Dock = DockStyle.Fill;
             table1.Gap = 12;
-            table1.Location = new Point(3, 3);
+            table1.Location = new Point(2, 2);
+            table1.Margin = new Padding(2, 2, 2, 2);
             table1.Name = "table1";
-            table1.Size = new Size(1189, 481);
+            table1.Size = new Size(977, 405);
             table1.TabIndex = 0;
             table1.Text = "table1";
             table1.SelectIndexChanged += table1_SelectIndexChanged;
@@ -90,17 +94,19 @@
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(table2);
             panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(3, 490);
+            panel2.Location = new Point(2, 411);
+            panel2.Margin = new Padding(2, 2, 2, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1189, 481);
+            panel2.Size = new Size(977, 406);
             panel2.TabIndex = 1;
             // 
             // panel3
             // 
             panel3.Dock = DockStyle.Fill;
-            panel3.Location = new Point(340, 0);
+            panel3.Location = new Point(323, 0);
+            panel3.Margin = new Padding(2, 2, 2, 2);
             panel3.Name = "panel3";
-            panel3.Size = new Size(849, 481);
+            panel3.Size = new Size(654, 406);
             panel3.TabIndex = 1;
             // 
             // table2
@@ -108,18 +114,20 @@
             table2.Dock = DockStyle.Left;
             table2.Gap = 12;
             table2.Location = new Point(0, 0);
+            table2.Margin = new Padding(2, 2, 2, 2);
             table2.Name = "table2";
-            table2.Size = new Size(340, 481);
+            table2.Size = new Size(323, 406);
             table2.TabIndex = 0;
             table2.Text = "table2";
             // 
             // ShowAllBeams
             // 
-            AutoScaleDimensions = new SizeF(11F, 24F);
+            AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1195, 1008);
+            ClientSize = new Size(981, 847);
             Controls.Add(panel1);
             Controls.Add(pageHeader1);
+            Margin = new Padding(2, 2, 2, 2);
             Name = "ShowAllBeams";
             Text = "ShowAllBeams";
             WindowState = FormWindowState.Maximized;
