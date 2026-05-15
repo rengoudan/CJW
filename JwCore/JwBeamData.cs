@@ -69,6 +69,9 @@ namespace JwCore
         /// 2026年4月21日 增加梁指纹的概念
         /// </summary>
         public string BeamSignature { get; set; } = "";
+
+        public virtual bool HasCsv { get; set; }=true;
+
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
 
         public ObservableCollectionListSource<JwHoleData> JwHoles { get; } = new();

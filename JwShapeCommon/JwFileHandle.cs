@@ -361,7 +361,7 @@ namespace JwShapeCommon
             SecondExtendTextPillar();
             ThirdExtendTextPillar();
             LastTextPillar();
-            parseDownPillars();
+           
             CreateQieGeBeams();//生成具体的beam
             StatisticalBBGquantity();
             if (Pillars==null|| Pillars.Count == 0)
@@ -379,7 +379,7 @@ namespace JwShapeCommon
 
             //createBeamAbsolutePD();
             ewaikongHandle();
-
+            parseDownPillars();
             parsenLianjie();//寻找连接线
 
             Revision();
@@ -3488,7 +3488,7 @@ namespace JwShapeCommon
                     {
                         if (item.OwerBeam.DirectionType == BeamDirectionType.Horizontal)
                         {
-                            if (Math.Abs(item.CenterPoint.Y - item.OwerBeam.Center) <= 0.0005)
+                            if (Math.Abs(item.CenterPoint.Y - item.OwerBeam.Center) <= 0.02)
                             {
                                 item.IsInBeamCenter = true;
                             }
@@ -3499,7 +3499,7 @@ namespace JwShapeCommon
                         }
                         else
                         {
-                            if (Math.Abs(item.CenterPoint.X - item.OwerBeam.Center) <= 0.0005)
+                            if (Math.Abs(item.CenterPoint.X - item.OwerBeam.Center) <= 0.02)
                             {
                                 item.IsInBeamCenter = true;
                             }

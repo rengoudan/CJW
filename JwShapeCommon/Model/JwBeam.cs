@@ -799,6 +799,11 @@ namespace JwShapeCommon
         public bool HasBFG = false;
 
         /// <summary>
+        /// 2026年5月15日 标识 是否需要导出csv
+        /// </summary>
+        public bool HasCsv = true; 
+
+        /// <summary>
         /// 同上 在选择查看梁的时候 如果上面的属性为true则允许设置此
         /// </summary>
         public BaiFangGTBDistanceType BaiFangGTBDistance = BaiFangGTBDistanceType.A35;

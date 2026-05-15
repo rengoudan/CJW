@@ -29,13 +29,16 @@ namespace RGBJWMain.Forms
             InitializeComponent();
         }
 
+        private JwBeamData beamData;
+
         public NewJwBeamForm(JwBeam jwbeam)
         {
            
             //this.Name = this._jwbeam.BeamCode;
            
             InitializeComponent();
-            this._jwbeam = jwbeam;// _jwProjectMainService.FindBeamDataById(jwbeam.Id);
+            this._jwbeam = jwbeam;
+            beamData = _jwProjectMainService.FindBeamDataById(jwbeam.Id);
             
             this.pageHeader1.Text = string.Format("梁閲覧-{0}", this._jwbeam.BeamCode);
             this.uiComboBox1.Visible = false;
@@ -243,6 +246,11 @@ namespace RGBJWMain.Forms
                 {
                     this.select7.SelectedValue = this._jwbeam.GongQu;
                 }
+                //if (this._jwbeam.HasCsv)
+                //{
+
+                //}
+                this.switch1.Checked = this._jwbeam.HasCsv;
             }
         }
     }

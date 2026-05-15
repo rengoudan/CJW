@@ -62,7 +62,7 @@ namespace JwShapeCommon.Model
             var offset = JwFileConsts.Kongjing / JwFileConsts.JwScale;
             JwHoleMachining result = new JwHoleMachining();
             result.Id = Guid.NewGuid().ToString();
-            result.RelativeStartDistance = isadd ? this.RelativeStartDistance + offset : this.RelativeStartDistance - offset;
+            result.RelativeStartDistance = isadd ? this.RelativeStartDistance + offset * JwFileConsts.JwScale : this.RelativeStartDistance - offset * JwFileConsts.JwScale;
             result.RealLocation = isadd ? this.RealLocation + offset : this.RealLocation - offset;
             result.HasLeft = true;
             result.HasRight = true;
