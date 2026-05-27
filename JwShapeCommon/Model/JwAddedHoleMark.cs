@@ -40,6 +40,7 @@ namespace JwShapeCommon.Model
             data.LineBE = new NetTopologySuite.Geometries.Point(Line2.Ptwo.X, Line2.Ptwo.Y);
             data.HoleCenter = new NetTopologySuite.Geometries.Point(HoleCenter.X, HoleCenter.Y);
             data.HasBeam = HasBeam;
+            data.JwBeamDataId = OwerBeam?.Id;
             return data;
         }
 

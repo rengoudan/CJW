@@ -993,6 +993,8 @@ namespace JwShapeCommon
         {
             if (PillarXians.Count > 0)
             {
+                clearPillarXians();
+                PillarXians = PillarXians.Where(t => !t.IsSelected).ToList();
                 Pillars = new List<JwPillar>();
                 var extractor = new PillarFeatureExtractor(squareSideLength: 1);
                 Pillars = extractor.Extract(PillarXians);
@@ -1002,6 +1004,32 @@ namespace JwShapeCommon
                 SendMsg(string.Format("KPillarCount is {0}{1}", KPillarCount, Environment.NewLine));
             }
         }
+
+        private void clearPillarXians()
+        {
+            for (var i = 0; i < PillarXians.Count; i++)
+            {
+                var seg1= PillarXians[i];
+                if (!seg1.IsSelected)
+                {
+                    for (int j = i + 1; j < PillarXians.Count; j++)
+                    {
+                        var seg2= PillarXians[j];
+                        //if (!seg2.IsSelected)
+                        //{
+
+                        //}
+                        JwLineIntersector lineIntersector = new JwLineIntersector();
+                        if (lineIntersector.ComputeIntersect(seg1, seg2) == 1)
+                        {
+                            seg2.IsSelected = true;
+                            seg1.IsSelected = true;
+                        }
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// 第一阶段识别出矩形 solid
@@ -2458,12 +2486,22 @@ namespace JwShapeCommon
         {
             //JwBeamDeepParse deepParse = new JwBeamDeepParse(Beams);
 
-            
-
-            RowsPointY = HorizontalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
-            ColumnPointX = VerticalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
-
-            List<IGrouping<double, JwBeam>> shuipinggroup = HorizontalBeams.GroupBy(t => t.BottomLeft.Y).OrderByDescending(t => t.Key).ToList();
+            if (HorizontalBeams?.Count > 0)
+            {
+                RowsPointY = HorizontalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
+            }
+            else
+            {
+                RowsPointY = new List<double>();
+            }
+            if (VerticalBeams?.Count > 0)
+            {
+                ColumnPointX = VerticalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
+            }
+            else
+            {
+                ColumnPointX = new List<double>();
+            }
 
             List<JwBlock> zfxblocks = new List<JwBlock>();
             List<JWPoint> zfxblockcenter = new List<JWPoint>();

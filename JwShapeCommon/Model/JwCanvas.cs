@@ -259,6 +259,10 @@ namespace JwShapeCommon
                     jd.Add(dd.ToJwwData());
                 }
             }
+            foreach (var lj in LianjieLsts)
+            {
+                jd.AddRange(lj.DrawToJww());
+            }
 
             return jd;
         }

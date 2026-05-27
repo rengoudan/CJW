@@ -38,7 +38,17 @@ namespace JwShapeCommon
 
             var (polygons, remainingLines, mergedLines) = PolygonizeAndMergeLines(mls, debug);
 
+            // 新增：直接从 polygonizer 结果中找正方形
+            var squaresFromPolys = polygons.Where(p => IsSquareCandidate(p)).ToList();
+
             var squares = FindSquaresFromEdges(mergedLines, debug);
+
+            // 合并去重
+            var singlesquares = squaresFromPolys
+                .Concat(squares)
+                .GroupBy(s => s.Centroid.Coordinate.ToString())
+                .Select(g => g.First())
+                .ToList();
 
             var pillars = GroupSquaresByLongLines(squares, mergedLines, remainingLines, debug);
 
@@ -329,7 +339,8 @@ namespace JwShapeCommon
             var result = new List<JwPillar>();
             if (squares == null || squares.Count == 0) return result;
             if (mergedLines == null) mergedLines = new List<LineString>();
-
+            // ⭐ 记录所有参与连接关系的正方形
+            var connected = new HashSet<Polygon>();
             // 预计算每个正方的边线集合与边线段（方便判定点是否落在边上）
             var squareInfos = squares.Select(p => new
             {
@@ -390,6 +401,8 @@ namespace JwShapeCommon
                                     // 确保两条线分别连接两个正方（端点分布）
                                     if (ConnectsTwoSquaresByEndpoints(l1, l2, s1.Edges, s2.Edges))
                                     {
+                                        connected.Add(s1.Poly);
+                                        connected.Add(s2.Poly);
                                         double d = Math.Round(s1.Center.Distance(s2.Center), 1);
                                         var pf = new JwPillar(s1.Center.ToJwPoint(), s2.Center.ToJwPoint(), d);
                                         result.Add(pf);
@@ -461,31 +474,39 @@ namespace JwShapeCommon
             // ============================================================
             // ① 新增：独立正方形（没有任何线连接） → 也输出 PillarFeature
             // ============================================================
+
+
+
             foreach (var s in squareInfos)
             {
                 bool hasConnection = false;
 
-                foreach (var ls in mergedLines)
-                {
-                    if (ls == null) continue;
-                    var a = ls.GetCoordinateN(0);
-                    var b = ls.GetCoordinateN(ls.NumPoints - 1);
+                //foreach (var ls in mergedLines)
+                //{
+                //    if (ls == null) continue;
+                //    var a = ls.GetCoordinateN(0);
+                //    var b = ls.GetCoordinateN(ls.NumPoints - 1);
 
-                    // 任意端点落在该正方形边上 → 说明它不是独立的
-                    if (PointOnAnyEdge(a, s.Edges) || PointOnAnyEdge(b, s.Edges))
-                    {
-                        hasConnection = true;
-                        break;
-                    }
-                }
+                //    // 任意端点落在该正方形边上 → 说明它不是独立的
+                //    if (PointOnAnyEdge(a, s.Edges) || PointOnAnyEdge(b, s.Edges))
+                //    {
+                //        hasConnection = true;
+                //        break;
+                //    }
+                //}
 
-                if (!hasConnection)
+                //if (!hasConnection)
+                //{
+                //    // 作为独立 PillarFeature 输出
+                //    var pf = new JwPillar(s.Center.ToJwPoint(), s.Center.ToJwPoint(), 0);
+                //    result.Add(pf);
+                //    if (debug)
+                //        Console.WriteLine($"[Group] 独立正方形输出 PillarFeature @ {s.Center}");
+                //}
+                if (!connected.Contains(s.Poly))
                 {
-                    // 作为独立 PillarFeature 输出
                     var pf = new JwPillar(s.Center.ToJwPoint(), s.Center.ToJwPoint(), 0);
                     result.Add(pf);
-                    if (debug)
-                        Console.WriteLine($"[Group] 独立正方形输出 PillarFeature @ {s.Center}");
                 }
             }
             return result;
