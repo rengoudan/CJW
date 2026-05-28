@@ -975,12 +975,16 @@ namespace JwShapeCommon
                         {
                             endhole = new JwHole(true, endx.Point, KongzuType.BC);
                             endhole.KongNum = 4;
+                            endx.AppendHole = endhole;
+                            endx.HasAppend = true;
                         }
                         else
                         {
                             endhole = new JwHole(true, endx.Point, KongzuType.BP);
                             endhole.KongNum = 2;
                             endx.IsBias = true;
+                            endx.AppendHole = endhole;
+                            endx.HasAppend = true;
                         }
                   
                     }

@@ -370,10 +370,6 @@ namespace JwShapeCommon
                 SendMsg(errbeamstr);
             }
             //panduanBeamduankou();//好像已经没什么用了
-            var qqqq = _jwwmojitaggs;
-            var qqqqq = Pillars.Where(t => t.HasTag).ToList();
-
-
 
             //生成beam 的每个标记位置点
 
@@ -2507,26 +2503,29 @@ namespace JwShapeCommon
             List<JWPoint> zfxblockcenter = new List<JWPoint>();
             int sindex = 0;
             int kindex = 0;
-            foreach (var p in Pillars)
+            if(Pillars?.Count > 0)
             {
-                if (p.BaseType == PillarBaseType.SinglePillar)
+                foreach (var p in Pillars)
                 {
-                    //zfxblocks.AddRange(p.Blocks);
-                    zfxblockcenter.Add(p.PointA);
-                    sindex++;
-                    p.PillarCode = string.Format("単柱-{0}", sindex);
+                    if (p.BaseType == PillarBaseType.SinglePillar)
+                    {
+                        //zfxblocks.AddRange(p.Blocks);
+                        zfxblockcenter.Add(p.PointA);
+                        sindex++;
+                        p.PillarCode = string.Format("単柱-{0}", sindex);
+                    }
+                    if (p.BaseType == PillarBaseType.KPillar)
+                    {
+                        kindex++;
+                        p.PillarCode = string.Format("K柱-{0}", kindex);
+                        zfxblockcenter.Add(p.PointA);
+                        zfxblockcenter.Add(p.PointB);
+                        //zfxblockcenter.AddRange(p.CenterPoints);
+                    }
+                    //if(p.BaseType)
                 }
-                if (p.BaseType == PillarBaseType.KPillar)
-                {
-                    kindex++;
-                    p.PillarCode = string.Format("K柱-{0}", kindex);
-                    zfxblockcenter.Add(p.PointA);
-                    zfxblockcenter.Add(p.PointB);
-                    //zfxblockcenter.AddRange(p.CenterPoints);
-                }
-                //if(p.BaseType)
             }
-
+            
             //zfxblocks = zfxblocks.Distinct(new JwBlockComparint()).ToList();
             zfxblockcenter= zfxblockcenter.Distinct(new JwPointComparint()).ToList();
 
@@ -3551,28 +3550,29 @@ namespace JwShapeCommon
             var centermarks = tempmarks.Where(t => t.IsInBeamCenter).ToList();
             //条件二 判断是否有上柱，待增加 柱类增加 是否有下柱标识
             //遍历所有柱，进行判断
-            var blocks = Pillars.Select(t => t.Blocks).ToList();//所有pillar 的block
+            
             List<JwBlock> alb= new List<JwBlock>();
             List<JWPoint> alcp = new List<JWPoint>();
             DownPillarMarks = tempmarks;
-
-
-            foreach (var p in Pillars)
+            if (Pillars?.Count > 0)
             {
-                alcp.AddRange(p.CenterPoints);
-            }
-            if (alcp.Count > 0)
-            {
-                foreach (var downitem in centermarks)
+                foreach (var p in Pillars)
                 {
-                    var z= alcp.Count(t => t.IsEqualsWithError(downitem.CenterPoint));
-                    //blocks.Where(t=>t.)
-                   
-                    if (z > 0)
+                    alcp.AddRange(p.CenterPoints);
+                }
+                if (alcp.Count > 0)
+                {
+                    foreach (var downitem in centermarks)
                     {
-                        downitem.HasPillar = true;
-                    }
+                        var z = alcp.Count(t => t.IsEqualsWithError(downitem.CenterPoint));
+                        //blocks.Where(t=>t.)
 
+                        if (z > 0)
+                        {
+                            downitem.HasPillar = true;
+                        }
+
+                    }
                 }
             }
             //foreach (var p in Pillars)
@@ -3875,7 +3875,7 @@ namespace JwShapeCommon
             xian.Reorder();//按照x排序
             JwLianjieSingle jwLianjieSingle = new JwLianjieSingle();
             jwLianjieSingle.IsCreateSuccess = false;
-            var f = Touchs.First(t => xian.Pone.IsEqualsWithError(t.JieChuPoint));
+            var f = Touchs.FirstOrDefault(t => xian.Pone.IsEqualsWithError(t.JieChuPoint));
             double banjing = JwFileConsts.EllipseSpacing / (2 * JwFileConsts.JwScale);
             double realy = 0;
             double realx = 0;
@@ -3883,7 +3883,7 @@ namespace JwShapeCommon
             double endrealx = 0;
             if (f!=null)
             {
-                var l=Touchs.First(t=>xian.Ptwo.IsEqualsWithError(t.JieChuPoint));
+                var l=Touchs.FirstOrDefault(t=>xian.Ptwo.IsEqualsWithError(t.JieChuPoint));
                 if(l!=null)
                 {
                     jwLianjieSingle.IsCreateSuccess = true;
