@@ -1125,5 +1125,31 @@ namespace JwShapeCommon
             return false;
         }
 
+
+        public static readonly char[] Letters =
+{
+    'A','B','C','D','E','F','G','H',
+    'J','K','L','M','N',
+    'P','Q','R','S','T','U','V','W','X','Y','Z'
+};
+        public static string GetSuffix(int index)
+        {
+            // index 从 0 开始：0=A, 1=B...
+            int baseN = Letters.Length;
+            List<char> chars = new List<char>();
+
+            index++; // 让 0 对应 A，而不是空
+
+            while (index > 0)
+            {
+                index--;
+                chars.Add(Letters[index % baseN]);
+                index /= baseN;
+            }
+
+            chars.Reverse();
+            return new string(chars.ToArray());
+        }
+
     }
 }

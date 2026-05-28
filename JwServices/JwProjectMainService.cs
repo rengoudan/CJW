@@ -408,7 +408,10 @@ namespace JwServices
                     {
                         string code = group.Key;
                         if (i > 0)
-                            code += ((char)('A' + (i - 1))).ToString();
+                        {
+                            code += JwExtend.GetSuffix(i - 1);
+                        }
+                            //code += ((char)('A' + (i - 1))).ToString();
 
                         foreach (var b in subGroups[i])
                         {

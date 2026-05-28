@@ -3407,7 +3407,7 @@ namespace JwShapeCommon
                 var zmu = NormalizePrefix(s, e);
                 if (y == 0)
                 {
-                    b.InitialBeamCode = string.Format("{0}{1}A", zmu, q);
+                    b.InitialBeamCode = string.Format("{0}{1}", zmu, q);
                     //b.BeamCode = string.Format("{0}{1}A", zmu, q);
                 }
                 else
@@ -3450,7 +3450,11 @@ namespace JwShapeCommon
                     {
                         string code = group.Key;
                         if (i > 0)
-                            code += ((char)('A' + (i - 1))).ToString();
+                        {
+                            //code += GetSuffix(i - 1);
+                            code += JwExtend.GetSuffix(i - 1);
+                        }
+
 
                         foreach (var b in subGroups[i])
                             b.BeamCode = code;
