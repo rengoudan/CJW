@@ -57,6 +57,11 @@ namespace JwCore
 
         public PillarDrawingMethod PillarDrawingMethod { get; set; }
 
+        /// <summary>
+        /// 分割jw内绘制方式
+        /// </summary>
+        public PillarDrawingMethod SplitDrawingMethod { get; set; }
+
         public long? JwCustomerDataId { get; set; }
         public virtual JwCustomerData? JwCustomerData { get; set; } = null!;
 

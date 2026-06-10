@@ -1484,6 +1484,18 @@ namespace JwShapeCommon
             return jp;
         }
 
+        public void Findqiege()
+        {
+            if (JwFileConsts.SpliteDrawingMethod == PillarDrawingMethod.Line)
+            {
+                ChangeQieGeLine();
+            }
+            else
+            {
+                ChangeQieGeSolis();
+            }
+        }
+
         /// <summary>
         /// 2025年11月19日 针对切割柱子进行处理 增加三角线围成三角的识别
         /// </summary>
@@ -1664,6 +1676,57 @@ namespace JwShapeCommon
             }
             
         }
+
+        private void ChangeQieGeLine()
+        {
+           var _spliteLines = SenLst.Where(t => t.m_nPenColor == JwFileConsts.BeamSplitParseColor.ColorNumber).ToList();
+            List<JwXian> _splites = new List<JwXian>();
+            foreach (var sen in _spliteLines)
+            {
+                JWPoint ps = new JWPoint(sen.m_start_x, sen.m_start_y);
+                JWPoint pe = new JWPoint(sen.m_end_x, sen.m_end_y);
+                JwXian j = new JwXian(ps, pe);
+                _splites.Add(j);
+            }
+
+            var detector = new TriangleDetector();
+
+            var triangles = detector.FindTriangles(_splites);
+            Directeds = triangles.Distinct(new JwDirectedComparint()).ToList();
+            foreach (var qg in Directeds)
+            {
+                foreach (var bm in _tempBeams)
+                {
+                    if (!bm.ContainsDirected(qg))
+                    {
+                        if (bm.JieChuDirected(qg))
+                        //if (bm.Contains(qg.DirectPoint))
+                        {
+                            if (bm.DirectionType == BeamDirectionType.Horizontal)
+                            {
+                                if (qg.TaggDirect == TaggDirect.Up || qg.TaggDirect == TaggDirect.Down)
+                                {
+                                    bm.HasQieGe = true;
+                                    bm.QieGePoints.Add(qg.DirectPoint);
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                if (qg.TaggDirect == TaggDirect.Left || qg.TaggDirect == TaggDirect.Right)
+                                {
+                                    bm.HasQieGe = true;
+                                    bm.QieGePoints.Add(qg.DirectPoint);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
 
         /// <summary>
         /// 2025年4月6日 对beam的绝对起点 进行赋值

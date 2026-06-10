@@ -39,6 +39,11 @@ namespace JwShapeCommon
         /// </summary>
         public static PillarDrawingMethod PillarDrawingMethod = PillarDrawingMethod.Shape;
 
+        /// <summary>
+        /// 2026年6月10日 应要求添加分割绘制解析方式 
+        /// </summary>
+        public static PillarDrawingMethod SpliteDrawingMethod= PillarDrawingMethod.Shape;
+
         public static KPillarType Ktype = KPillarType.A900;
 
         /// <summary>

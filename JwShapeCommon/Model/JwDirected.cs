@@ -124,6 +124,16 @@ namespace JwShapeCommon
             }
         }
 
+        public JwDirected(JWPoint a, JWPoint b,JWPoint c)
+        {
+            Points= new List<JWPoint>();
+            Points.Add(a);
+            Points.Add(b);
+            Points.Add(c);
+            parse();
+            IsDirected = true;  
+        }
+
         public bool IsValidDirected = false;
 
         public TaggDirect TaggDirect;
