@@ -407,11 +407,12 @@ namespace JwServices
                     for (int i = 0; i < subGroups.Count; i++)
                     {
                         string code = group.Key;
-                        if (i > 0)
-                        {
-                            code += JwExtend.GetSuffix(i - 1);
-                        }
-                            //code += ((char)('A' + (i - 1))).ToString();
+                        //if (i > 0)
+                        //{
+                        //    code += JwExtend.GetSuffix(i - 1);
+                        //}
+                        code += JwExtend.GetSuffix(i);
+                        //code += ((char)('A' + (i - 1))).ToString();
 
                         foreach (var b in subGroups[i])
                         {

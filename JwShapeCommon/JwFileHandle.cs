@@ -3449,12 +3449,12 @@ namespace JwShapeCommon
                     for(int i=0;i<subGroups.Count;i++)
                     {
                         string code = group.Key;
-                        if (i > 0)
-                        {
-                            //code += GetSuffix(i - 1);
-                            code += JwExtend.GetSuffix(i - 1);
-                        }
-
+                        //if (i > 0)
+                        //{
+                        //    //code += GetSuffix(i - 1);
+                        //    code += JwExtend.GetSuffix(i - 1);
+                        //}
+                        code += JwExtend.GetSuffix(i);
 
                         foreach (var b in subGroups[i])
                             b.BeamCode = code;
