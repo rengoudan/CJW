@@ -404,9 +404,15 @@ namespace JwServices
                     var subGroups = group
         .GroupBy(b => b.BeamSignature)
         .ToList();
+                    string basecode = group.Key;
+                    if (basecode.EndsWith("A"))
+                    {
+                        basecode = basecode[..^1];
+                    }
                     for (int i = 0; i < subGroups.Count; i++)
                     {
-                        string code = group.Key;
+                        string code = basecode;
+                       
                         //if (i > 0)
                         //{
                         //    code += JwExtend.GetSuffix(i - 1);
