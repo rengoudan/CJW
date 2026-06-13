@@ -342,8 +342,10 @@ namespace JwShapeCommon
             }
 
             ChangePillarFromJwwSolid();//处理文件solid
-            ChangeQieGeSolis();//读取切割点内容
-            
+            //ChangeQieGeSolis();//读取切割点内容
+            Findqiege();
+
+
             if (JwFileConsts.PillarDrawingMethod == PillarDrawingMethod.Line)
             {
                 ParsePillarsByXians();
