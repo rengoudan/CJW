@@ -2,6 +2,7 @@
 using JwShapeCommon.Model;
 using JwwHelper;
 using Microsoft.Extensions.Primitives;
+using NetTopologySuite.Algorithm;
 using NetTopologySuite.Geometries;
 using Sunny.UI;
 using System;
@@ -124,7 +125,15 @@ namespace JwShapeCommon
             ZhuBlocks = new List<JwBlock>();
             StartTelosType = KongzuType.B;
             EndTelosType = KongzuType.B;
-            parseBymian(mian, isjiaodian);
+            //if (mian.IsJiaoduPiancha)
+            //{
+            //    createBeamBaseData(mian);
+            //}
+            //else
+            //{
+            //    parseBymian(mian, isjiaodian);
+            //}
+            createBeamBaseData(mian);
             desginScale();
         }
 
@@ -740,6 +749,86 @@ namespace JwShapeCommon
                 }
             }
             
+        }
+
+        private void createBeamBaseData(JWMian main)
+        {
+            double w2 = main.Length / 2d;
+            double h2 = main.Height / 2d;
+
+            double cx = main.CenterPoint.X;
+            double cy = main.CenterPoint.Y;
+
+            // 未旋转前的矩形四点（长边水平）
+            JWPoint[] pts =
+            {
+        new JWPoint(cx - w2, cy - h2), // 左上
+        new JWPoint(cx + w2, cy - h2), // 右上
+        new JWPoint(cx + w2, cy + h2), // 右下
+        new JWPoint(cx - w2, cy + h2)  // 左下
+    };
+
+            // 旋转角度
+            double rad = main.Jiaodu * (double)Math.PI / 180d;
+            double cos = Math.Cos(rad);
+            double sin = Math.Sin(rad);
+
+            // 绕中心点旋转
+            for (int i = 0; i < pts.Length; i++)
+            {
+                double dx = pts[i].X - cx;
+                double dy = pts[i].Y - cy;
+
+                pts[i] = new JWPoint(
+                    cx + dx * cos - dy * sin,
+                    cy + dx * sin + dy * cos
+                );
+            }
+
+            // 按 Y 从大到小排序（上 → 下，因为 Y 大在上）
+            var sorted = pts.OrderByDescending(p => p.Y).ToList();
+
+            // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
+            var top = sorted.Take(2).OrderBy(p => p.X).ToList();
+
+            // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
+            var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
+            this.TopLeft=top[0].Jiangjingdu();
+            this.TopRight=top[1].Jiangjingdu();
+            this.BottomLeft=bottom[0].Jiangjingdu();
+            this.BottomRight=bottom[1].Jiangjingdu();
+            this.CenterPoint = main.CenterPoint.Jiangjingdu();
+            this.Jiaodu= main.Jiaodu;
+            if (Jiaodu == 0 || Jiaodu == 180)
+            {
+                Width = Math.Round(main.Width * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                Height = Math.Round(main.Height * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                DirectionType = BeamDirectionType.Horizontal;
+                StartCenter = Math.Round((TopLeft.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                EndCenter = Math.Round((TopRight.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                Center = CenterPoint.Y;
+            }
+            else if(Jiaodu==90)
+            {
+                Height = Math.Round(main.Width * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                Width = Math.Round(main.Height * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                DirectionType = BeamDirectionType.Vertical;
+                StartCenter = Math.Round((BottomLeft.Y + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                EndCenter = Math.Round((TopLeft.Y + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                Center = CenterPoint.X;
+            }
+            //else if(Jiaodu<90)
+            //{
+
+            //}
+            else
+            {
+                Width = main.Width;
+                Height= main.Height;
+                DirectionType = BeamDirectionType.QingXie;
+                Length= main.Length;
+                Jiaodu= main.Jiaodu;
+            }
         }
 
         public void ChangeStartCenter()

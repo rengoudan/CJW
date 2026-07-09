@@ -73,7 +73,8 @@ namespace JwCore
         Horizontal = 0,
         Vertical = 1,
         Youshang = 2,
-        YouXia = 3
+        YouXia = 3,
+        QingXie=4
     }
 
     /// <summary>

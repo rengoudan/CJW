@@ -690,8 +690,11 @@ namespace JwShapeCommon
                                         var maxd= rectangle.OrderByDescending(t => t.Distance()).First();
                                         var mind = storlst.Last();
                                         m.Width = maxd.Distance();
+                                        m.Length = m.Width;
                                         m.Height=mind.Distance();
-                                        m.Jiaodu= maxd.Jiaodu();
+                                        bool isbiancha = false;
+                                        m.Jiaodu= maxd.Jiaodu(out isbiancha);
+                                        m.IsJiaoduPiancha= isbiancha;
                                         m.Xians = new List<JwXian>(rectangle);
                                         m.Points = points;
                                         Mians.Add(m);

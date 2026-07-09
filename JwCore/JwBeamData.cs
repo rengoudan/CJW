@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NetTopologySuite.Geometries;
 
 namespace JwCore
 {
@@ -71,6 +72,17 @@ namespace JwCore
         public string BeamSignature { get; set; } = "";
 
         public virtual bool HasCsv { get; set; }=true;
+
+        /// <summary>
+        /// 增加角度 2026年7月9日
+        /// </summary>
+        public double Jiaodu { get; set; }
+
+        /// <summary>
+        /// 增加中心点 2026年7月9日
+        /// </summary>
+        public Point? CenterPoint { get; set; }
+
 
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
 

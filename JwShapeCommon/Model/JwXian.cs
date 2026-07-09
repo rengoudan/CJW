@@ -485,13 +485,69 @@ namespace JwShapeCommon
 
         public double Jiaodu()
         {
-            double slope = (Pone.Y - Ptwo.Y) / (Pone.X - Ptwo.X);
+            //double slope = (Pone.Y - Ptwo.Y) / (Pone.X - Ptwo.X);
 
-            // 计算相对于X轴的角度（以度数表示）
-            double angleInRadians = Math.Atan(slope);
-            double angleInDegrees = angleInRadians * (180 / Math.PI);
-            return angleInDegrees;
+            //// 计算相对于X轴的角度（以度数表示）
+            //double angleInRadians = Math.Atan(slope);
+            //double angleInDegrees = angleInRadians * (180 / Math.PI);
+            //return angleInDegrees;
+
+            double dx = Pone.X - Ptwo.X;
+            double dy = Pone.Y - Ptwo.Y;
+
+            // 有向角度：范围 -180° ～ +180°
+            double angle = Math.Atan2(dy, dx) * 180.0 / Math.PI;
+
+            // 映射到 0～360°
+            if (angle < 0)
+                angle += 360;
+
+            // 压缩到 0～180°（无向直线）
+            if (angle > 180)
+                angle -= 180;
+
+            // 精度过滤：如果接近某个整数角度，则自动归并
+            double rounded = Math.Round(angle);
+            if (Math.Abs(angle - rounded) <= JwFileConsts.JiaoduWuchazhi)
+                return rounded;
+
+            return angle;
+
         }
+
+        public double Jiaodu(out bool haspiancha)
+        {
+            //double slope = (Pone.Y - Ptwo.Y) / (Pone.X - Ptwo.X);
+
+            //// 计算相对于X轴的角度（以度数表示）
+            //double angleInRadians = Math.Atan(slope);
+            //double angleInDegrees = angleInRadians * (180 / Math.PI);
+            //return angleInDegrees;
+
+            double dx = Pone.X - Ptwo.X;
+            double dy = Pone.Y - Ptwo.Y;
+
+            // 有向角度：范围 -180° ～ +180°
+            double angle = Math.Atan2(dy, dx) * 180.0 / Math.PI;
+
+            // 映射到 0～360°
+            if (angle < 0)
+                angle += 360;
+
+            // 压缩到 0～180°（无向直线）
+            if (angle > 180)
+                angle -= 180;
+            haspiancha= false;
+            // 精度过滤：如果接近某个整数角度，则自动归并
+            double rounded = Math.Round(angle);
+            if (Math.Abs(angle - rounded) <= JwFileConsts.JiaoduWuchazhi)
+            {
+                haspiancha = true;
+                return rounded;
+            }
+            return angle;
+        }
+
 
         public double Distance(){
             return Distance(Pone, Ptwo);
