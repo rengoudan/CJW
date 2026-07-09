@@ -938,6 +938,8 @@ namespace JwShapeCommon
             data.BaiFangGTBDistance=this.BaiFangGTBDistance;
             data.InitialBeamCode=this.InitialBeamCode;
             data.HasCsv=this.HasCsv;
+            data.Jiaodu=this.Jiaodu;
+            data.CenterPoint = this.CenterPoint.ToPoint();
             return data;
         }
 

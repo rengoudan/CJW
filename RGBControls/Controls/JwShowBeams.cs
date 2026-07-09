@@ -364,11 +364,13 @@ namespace RGBJWMain.Controls
                                 {
                                     //Brush bush = new SolidBrush(Color.Red);
                                     //pe.Graphics.FillRectangle(bush, b.DrawRectangleF.Location.X, b.DrawRectangleF.Location.Y, b.DrawRectangleF.Width, b.DrawRectangleF.Height);
-                                    pe.Graphics.DrawRectangle(penselected, b.DrawRectangleF.Location.X, b.DrawRectangleF.Location.Y, b.DrawRectangleF.Width, b.DrawRectangleF.Height);
+                                    //pe.Graphics.DrawRectangle(penselected, b.DrawRectangleF.Location.X, b.DrawRectangleF.Location.Y, b.DrawRectangleF.Width, b.DrawRectangleF.Height);
+                                    pe.Graphics.DrawPolygon(penselected, b.DrawPoints.ToArray());
                                 }
                                 else
                                 {
-                                    pe.Graphics.DrawRectangle(pens, b.DrawRectangleF.Location.X, b.DrawRectangleF.Location.Y, b.DrawRectangleF.Width, b.DrawRectangleF.Height);
+                                    //pe.Graphics.DrawRectangle(pens, b.DrawRectangleF.Location.X, b.DrawRectangleF.Location.Y, b.DrawRectangleF.Width, b.DrawRectangleF.Height);
+                                    pe.Graphics.DrawPolygon(pens, b.DrawPoints.ToArray());
                                 }
                             }
                             else
