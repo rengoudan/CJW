@@ -786,23 +786,24 @@ namespace JwShapeCommon
             }
 
             // 按 Y 从大到小排序（上 → 下，因为 Y 大在上）
-            var sorted = pts.OrderByDescending(p => p.Y).ToList();
-
-            // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
-            var top = sorted.Take(2).OrderBy(p => p.X).ToList();
-
-            // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
-            var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
-            this.TopLeft=top[0].Jiangjingdu();
-            this.TopRight=top[1].Jiangjingdu();
-            this.BottomLeft=bottom[0].Jiangjingdu();
-            this.BottomRight=bottom[1].Jiangjingdu();
-            this.CenterPoint = main.CenterPoint.Jiangjingdu();
+            
             this.Jiaodu= main.Jiaodu;
             if (Jiaodu == 0 || Jiaodu == 180)
             {
                 Width = Math.Round(main.Width * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 Height = Math.Round(main.Height * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                var sorted = pts.OrderByDescending(p => p.Y).ToList();
+
+                // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
+                var top = sorted.Take(2).OrderBy(p => p.X).ToList();
+
+                // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
+                var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
+                this.TopLeft = top[0];//.Jiangjingdu();
+                this.TopRight = top[1];//.Jiangjingdu();
+                this.BottomLeft = bottom[0];//.Jiangjingdu();
+                this.BottomRight = bottom[1];//.Jiangjingdu();
+                this.CenterPoint = main.CenterPoint.Jiangjingdu();
                 DirectionType = BeamDirectionType.Horizontal;
                 StartCenter = Math.Round((TopLeft.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 EndCenter = Math.Round((TopRight.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
@@ -810,6 +811,18 @@ namespace JwShapeCommon
             }
             else if(Jiaodu==90)
             {
+                var sorted = pts.OrderByDescending(p => p.Y).ToList();
+
+                // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
+                var top = sorted.Take(2).OrderBy(p => p.X).ToList();
+
+                // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
+                var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
+                this.TopLeft = top[0];//.Jiangjingdu();
+                this.TopRight = top[1];//.Jiangjingdu();
+                this.BottomLeft = bottom[0];//.Jiangjingdu();
+                this.BottomRight = bottom[1];//.Jiangjingdu();
+                this.CenterPoint = main.CenterPoint.Jiangjingdu();
                 Height = Math.Round(main.Width * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 Width = Math.Round(main.Height * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 DirectionType = BeamDirectionType.Vertical;
@@ -828,7 +841,20 @@ namespace JwShapeCommon
                 DirectionType = BeamDirectionType.QingXie;
                 Length= main.Length;
                 Jiaodu= main.Jiaodu;
+                var sorted = main.Points.OrderByDescending(p => p.Y).ToList();
+
+                // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
+                var top = sorted.Take(2).OrderBy(p => p.X).ToList();
+
+                // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
+                var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
+                this.TopLeft = top[0];//.Jiangjingdu();
+                this.TopRight = top[1];//.Jiangjingdu();
+                this.BottomLeft = bottom[0];//.Jiangjingdu();
+                this.BottomRight = bottom[1];//.Jiangjingdu();
+                this.CenterPoint = main.CenterPoint.Jiangjingdu();
             }
+
         }
 
         public void ChangeStartCenter()
