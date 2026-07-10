@@ -114,6 +114,28 @@ namespace JwShapeCommon
             
         }
 
+        public static JwBeam QingxieToHorizontal(JwBeam beam)
+        {
+            JwBeam jwBeam = new JwBeam();
+            jwBeam.Width = beam.Length;
+            jwBeam.Height = beam.Height;
+
+            double w2 = beam.Length / 2d;
+            double h2 = beam.Height / 2d;
+
+            double cx = beam.CenterPoint.X;
+            double cy = beam.CenterPoint.Y;
+
+
+            jwBeam.TopLeft = new JWPoint(cx - w2, cy - h2); // 左上
+            jwBeam.TopRight = new JWPoint(cx + w2, cy - h2); // 右上
+            jwBeam.BottomRight = new JWPoint(cx + w2, cy + h2); // 右下
+            jwBeam.BottomLeft = new JWPoint(cx - w2, cy + h2);  // 左下
+
+            jwBeam.CenterPoint = beam.CenterPoint;
+
+            return jwBeam;
+        }
 
         public static JwBlock CreateNewBlock(JwBlock block)
         {

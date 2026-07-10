@@ -269,6 +269,8 @@ namespace JwShapeCommon
                     jwbm.BaiFangGTBDistance= bm.BaiFangGTBDistance;
                     jwbm.InitialBeamCode = bm.InitialBeamCode;
                     jwbm.HasCsv = bm.HasCsv;
+                    jwbm.Jiaodu= bm.Jiaodu;
+                    jwbm.CenterPoint =  new JWPoint(bm.CenterPoint!.X, bm.CenterPoint!.Y);
                     //jwbm.HasEndSide=bm.has
                     if (bm.JwHoles.Count > 0)
                     {

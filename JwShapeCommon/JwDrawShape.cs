@@ -189,27 +189,27 @@ new PointF((float)TopRight.X, (float)TopRight.Y));
                     // 将角度转换为弧度
                     double radian = -Jiaodu * Math.PI / 180;
 
-                    //// 计算四个顶点的相对坐标
-                    //PointF[] points = new PointF[4];
-                    //draw.DrawPoints.Add(new PointF(
-                    //   (float)CenterPoint.X + (float)(-Width / 2 * Math.Cos(radian) - Height / 2 * Math.Sin(radian)),
-                    //    (float)CenterPoint.Y + (float)(-Width / 2 * Math.Sin(radian) + Height / 2 * Math.Cos(radian))));
-                    //draw.DrawPoints.Add(new PointF(
-                    //    (float)CenterPoint.X + (float)(Width / 2 * Math.Cos(radian) - Height / 2 * Math.Sin(radian)),
-                    //    (float)CenterPoint.Y + (float)(Width / 2 * Math.Sin(radian) + Height / 2 * Math.Cos(radian))));
-                    //draw.DrawPoints.Add(new PointF(
-                    //    (float)CenterPoint.X + (float)(Width / 2 * Math.Cos(radian) + Height / 2 * Math.Sin(radian)),
-                    //    (float)CenterPoint.Y + (float)(Width / 2 * Math.Sin(radian) - Height / 2 * Math.Cos(radian))));
-                    //draw.DrawPoints.Add(new PointF(
-                    //    (float)CenterPoint.X + (float)(-Width / 2 * Math.Cos(radian) + Height / 2 * Math.Sin(radian)),
-                    //    (float)CenterPoint.Y + (float)(-Width / 2 * Math.Sin(radian) - Height / 2 * Math.Cos(radian))));
+                    // 计算四个顶点的相对坐标
+                    PointF[] points = new PointF[4];
+                    draw.DrawPoints.Add(new PointF(
+                       (float)CenterPoint.X + (float)(-Width / 2 * Math.Cos(radian) - Height / 2 * Math.Sin(radian)),
+                        (float)CenterPoint.Y + (float)(-Width / 2 * Math.Sin(radian) + Height / 2 * Math.Cos(radian))));
+                    draw.DrawPoints.Add(new PointF(
+                        (float)CenterPoint.X + (float)(Width / 2 * Math.Cos(radian) - Height / 2 * Math.Sin(radian)),
+                        (float)CenterPoint.Y + (float)(Width / 2 * Math.Sin(radian) + Height / 2 * Math.Cos(radian))));
+                    draw.DrawPoints.Add(new PointF(
+                        (float)CenterPoint.X + (float)(Width / 2 * Math.Cos(radian) + Height / 2 * Math.Sin(radian)),
+                        (float)CenterPoint.Y + (float)(Width / 2 * Math.Sin(radian) - Height / 2 * Math.Cos(radian))));
+                    draw.DrawPoints.Add(new PointF(
+                        (float)CenterPoint.X + (float)(-Width / 2 * Math.Cos(radian) + Height / 2 * Math.Sin(radian)),
+                        (float)CenterPoint.Y + (float)(-Width / 2 * Math.Sin(radian) - Height / 2 * Math.Cos(radian))));
 
-                    draw.DrawPoints.Add(new PointF((float)TopLeft.X, (float)TopLeft.Y));
-                                        draw.DrawPoints.Add(
-                        new PointF((float)TopRight.X, (float)TopRight.Y));
-                    draw.DrawPoints.Add(new PointF((float)BottomRight.X, (float)BottomRight.Y));
-                    draw.DrawPoints.Add(new PointF((float)BottomLeft.X, (float)BottomLeft.Y));  
-                    // 绘制倾斜的矩形
+                    //draw.DrawPoints.Add(new PointF((float)TopLeft.X, (float)TopLeft.Y));
+                    //                    draw.DrawPoints.Add(
+                    //    new PointF((float)TopRight.X, (float)TopRight.Y));
+                    //draw.DrawPoints.Add(new PointF((float)BottomRight.X, (float)BottomRight.Y));
+                    //draw.DrawPoints.Add(new PointF((float)BottomLeft.X, (float)BottomLeft.Y));  
+                    //// 绘制倾斜的矩形
 
                 }
                 float textx = DirectionType == BeamDirectionType.Horizontal ? (float)CenterPoint.X : (float)TopRight.X + 3;

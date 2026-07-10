@@ -772,7 +772,7 @@ namespace JwShapeCommon
             double rad = main.Jiaodu * (double)Math.PI / 180d;
             double cos = Math.Cos(rad);
             double sin = Math.Sin(rad);
-
+          
             // 绕中心点旋转
             for (int i = 0; i < pts.Length; i++)
             {
@@ -786,24 +786,24 @@ namespace JwShapeCommon
             }
 
             // 按 Y 从大到小排序（上 → 下，因为 Y 大在上）
-            
+            var sorted = pts.OrderByDescending(p => p.Y).ToList();
+
+            // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
+            var top = sorted.Take(2).OrderBy(p => p.X).ToList();
+
+            // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
+            var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
+            this.TopLeft = top[0].Jiangjingdu();
+            this.TopRight = top[1].Jiangjingdu();
+            this.BottomLeft = bottom[0].Jiangjingdu();
+            this.BottomRight = bottom[1].Jiangjingdu();
+            this.CenterPoint = main.CenterPoint.Jiangjingdu();
             this.Jiaodu= main.Jiaodu;
             if (Jiaodu == 0 || Jiaodu == 180)
             {
                 Width = Math.Round(main.Width * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 Height = Math.Round(main.Height * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
-                var sorted = pts.OrderByDescending(p => p.Y).ToList();
-
-                // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
-                var top = sorted.Take(2).OrderBy(p => p.X).ToList();
-
-                // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
-                var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
-                this.TopLeft = top[0];//.Jiangjingdu();
-                this.TopRight = top[1];//.Jiangjingdu();
-                this.BottomLeft = bottom[0];//.Jiangjingdu();
-                this.BottomRight = bottom[1];//.Jiangjingdu();
-                this.CenterPoint = main.CenterPoint.Jiangjingdu();
+                
                 DirectionType = BeamDirectionType.Horizontal;
                 StartCenter = Math.Round((TopLeft.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 EndCenter = Math.Round((TopRight.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
@@ -811,18 +811,18 @@ namespace JwShapeCommon
             }
             else if(Jiaodu==90)
             {
-                var sorted = pts.OrderByDescending(p => p.Y).ToList();
+                //var sorted = pts.OrderByDescending(p => p.Y).ToList();
 
-                // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
-                var top = sorted.Take(2).OrderBy(p => p.X).ToList();
+                //// 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
+                //var top = sorted.Take(2).OrderBy(p => p.X).ToList();
 
-                // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
-                var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
-                this.TopLeft = top[0];//.Jiangjingdu();
-                this.TopRight = top[1];//.Jiangjingdu();
-                this.BottomLeft = bottom[0];//.Jiangjingdu();
-                this.BottomRight = bottom[1];//.Jiangjingdu();
-                this.CenterPoint = main.CenterPoint.Jiangjingdu();
+                //// 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
+                //var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
+                //this.TopLeft = top[0];//.Jiangjingdu();
+                //this.TopRight = top[1];//.Jiangjingdu();
+                //this.BottomLeft = bottom[0];//.Jiangjingdu();
+                //this.BottomRight = bottom[1];//.Jiangjingdu();
+                //this.CenterPoint = main.CenterPoint.Jiangjingdu();
                 Height = Math.Round(main.Width * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 Width = Math.Round(main.Height * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 DirectionType = BeamDirectionType.Vertical;
@@ -841,18 +841,18 @@ namespace JwShapeCommon
                 DirectionType = BeamDirectionType.QingXie;
                 Length= main.Length;
                 Jiaodu= main.Jiaodu;
-                var sorted = main.Points.OrderByDescending(p => p.Y).ToList();
+                //var sorted = main.Points.OrderByDescending(p => p.Y).ToList();
 
-                // 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
-                var top = sorted.Take(2).OrderBy(p => p.X).ToList();
+                //// 上面两个点（Y 最大的两个），再按 X 从小到大（左 → 右）
+                //var top = sorted.Take(2).OrderBy(p => p.X).ToList();
 
-                // 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
-                var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
-                this.TopLeft = top[0];//.Jiangjingdu();
-                this.TopRight = top[1];//.Jiangjingdu();
-                this.BottomLeft = bottom[0];//.Jiangjingdu();
-                this.BottomRight = bottom[1];//.Jiangjingdu();
-                this.CenterPoint = main.CenterPoint.Jiangjingdu();
+                //// 下面两个点（Y 较小的两个），再按 X 从小到大（左 → 右）
+                //var bottom = sorted.Skip(2).OrderBy(p => p.X).ToList();  // 左 → 右
+                //this.TopLeft = top[0];//.Jiangjingdu();
+                //this.TopRight = top[1];//.Jiangjingdu();
+                //this.BottomLeft = bottom[0];//.Jiangjingdu();
+                //this.BottomRight = bottom[1];//.Jiangjingdu();
+                //this.CenterPoint = main.CenterPoint.Jiangjingdu();
             }
 
         }
@@ -1876,164 +1876,170 @@ namespace JwShapeCommon
 
         public List<JwwData> DrawToJwwwSingle()
         {
-            double yconst = 4;
-            double topy=yconst+2;
-            double centery = yconst- yconst;
-            double bottomy = -yconst - 2;
-            double beamstartx = 0;
-            var hodu = JwFileConsts.Lianghoudu / JwFileConsts.JwScale;
-            List<JwwData> jd = new List<JwwData>();
-            //填充线
-            double lg=this.Length/JwFileConsts.JwScale;
-            double xlg=this.XXLength/JwFileConsts.JwScale;
-            double bms = this.jwBeamMarks.Find(t => t.IsBeamStart).Coordinate;
-            double bme = this.jwBeamMarks.Find(t => t.IsBeamEnd).Coordinate;
-            double constoffsetx = bms;
-            //top
-            jd.Add(DrawSen(beamstartx, topy, true, lg));
-            jd.Add(DrawSen(beamstartx, topy, false, 1));
-            jd.Add(DrawSen(beamstartx, topy-1, true, lg));
-            jd.Add(DrawSen(lg, topy, false, 1));
-            var centertopy = topy - 1d / 2;
-            jd.Add(DrawSen(beamstartx,centertopy-hodu/2, true, lg, 2));
+            if(this.DirectionType!=BeamDirectionType.QingXie)
+            {
+                double yconst = 4;
+                double topy = yconst + 2;
+                double centery = yconst - yconst;
+                double bottomy = -yconst - 2;
+                double beamstartx = 0;
+                var hodu = JwFileConsts.Lianghoudu / JwFileConsts.JwScale;
+                List<JwwData> jd = new List<JwwData>();
+                //填充线
+                double lg = this.Length / JwFileConsts.JwScale;
+                double xlg = this.XXLength / JwFileConsts.JwScale;
+                double bms = this.jwBeamMarks.Find(t => t.IsBeamStart).Coordinate;
+                double bme = this.jwBeamMarks.Find(t => t.IsBeamEnd).Coordinate;
+                double constoffsetx = bms;
+                //top
+                jd.Add(DrawSen(beamstartx, topy, true, lg));
+                jd.Add(DrawSen(beamstartx, topy, false, 1));
+                jd.Add(DrawSen(beamstartx, topy - 1, true, lg));
+                jd.Add(DrawSen(lg, topy, false, 1));
+                var centertopy = topy - 1d / 2;
+                jd.Add(DrawSen(beamstartx, centertopy - hodu / 2, true, lg, 2));
                 jd.Add(DrawSen(beamstartx, centertopy + hodu / 2, true, lg, 2));
-            var tdrawy= topy - 0.5;
+                var tdrawy = topy - 0.5;
 
-            //center
-            jd.Add(DrawSen(beamstartx, centery, true, lg));
-            jd.Add(DrawSen(beamstartx, centery, false, 2));
-            jd.Add(DrawSen(beamstartx, centery - 2, true, lg));
-            jd.Add(DrawSen(lg, centery, false, 2));
-            jd.Add(DrawSen(beamstartx, centery - hodu, true, lg, 2));
-            jd.Add(DrawSen(beamstartx, centery -2+ hodu, true, lg, 2));
-            var centercentery = centery - 1d;
+                //center
+                jd.Add(DrawSen(beamstartx, centery, true, lg));
+                jd.Add(DrawSen(beamstartx, centery, false, 2));
+                jd.Add(DrawSen(beamstartx, centery - 2, true, lg));
+                jd.Add(DrawSen(lg, centery, false, 2));
+                jd.Add(DrawSen(beamstartx, centery - hodu, true, lg, 2));
+                jd.Add(DrawSen(beamstartx, centery - 2 + hodu, true, lg, 2));
+                var centercentery = centery - 1d;
 
-            JwwMoji duan = new JwwMoji();
-            duan.m_start_x = beamstartx - 2;
-            duan.m_start_y = (centery + centery - 2) * 3 / 4;
-            duan.m_string = this.HasStartSide ? this.StartTelosType.ToString() : "B";
-            duan.m_dSizeX = 200 / JwFileConsts.JwScale;
-            duan.m_dSizeY = 200 / JwFileConsts.JwScale;
-            jd.Add(duan);
-            JwwMoji duanend = new JwwMoji();
-            duanend.m_start_x = lg+3;
-            duanend.m_start_y = (centery + centery-2) * 3 / 4;
-            duanend.m_string = this.HasEndSide ? this.EndTelosType.ToString() : "B";
-            duanend.m_dSizeX = 200 / JwFileConsts.JwScale;
-            duanend.m_dSizeY = 200 / JwFileConsts.JwScale;
-            jd.Add(duanend);
+                JwwMoji duan = new JwwMoji();
+                duan.m_start_x = beamstartx - 2;
+                duan.m_start_y = (centery + centery - 2) * 3 / 4;
+                duan.m_string = this.HasStartSide ? this.StartTelosType.ToString() : "B";
+                duan.m_dSizeX = 200 / JwFileConsts.JwScale;
+                duan.m_dSizeY = 200 / JwFileConsts.JwScale;
+                jd.Add(duan);
+                JwwMoji duanend = new JwwMoji();
+                duanend.m_start_x = lg + 3;
+                duanend.m_start_y = (centery + centery - 2) * 3 / 4;
+                duanend.m_string = this.HasEndSide ? this.EndTelosType.ToString() : "B";
+                duanend.m_dSizeX = 200 / JwFileConsts.JwScale;
+                duanend.m_dSizeY = 200 / JwFileConsts.JwScale;
+                jd.Add(duanend);
 
-            //bottom
-            jd.Add(DrawSen(beamstartx, bottomy, true, lg));
-            jd.Add(DrawSen( beamstartx, bottomy, false, 1));
-            jd.Add(DrawSen(beamstartx, bottomy - 1, true, lg));
-            jd.Add(DrawSen(lg, bottomy, false, 1));
-            var centerbottomy = bottomy - 1d/2;
-            jd.Add(DrawSen(beamstartx, centerbottomy - hodu / 2, true, lg, 2));
-            jd.Add(DrawSen(beamstartx, centerbottomy + hodu / 2, true, lg, 2));
-            foreach (var jhm in this.JwHoleMachinings)
-            {
-                if (jhm.HasTop)
+                //bottom
+                jd.Add(DrawSen(beamstartx, bottomy, true, lg));
+                jd.Add(DrawSen(beamstartx, bottomy, false, 1));
+                jd.Add(DrawSen(beamstartx, bottomy - 1, true, lg));
+                jd.Add(DrawSen(lg, bottomy, false, 1));
+                var centerbottomy = bottomy - 1d / 2;
+                jd.Add(DrawSen(beamstartx, centerbottomy - hodu / 2, true, lg, 2));
+                jd.Add(DrawSen(beamstartx, centerbottomy + hodu / 2, true, lg, 2));
+                foreach (var jhm in this.JwHoleMachinings)
                 {
-                    jd.AddRange(jhm.DrawToJww(constoffsetx, centercentery));
+                    if (jhm.HasTop)
+                    {
+                        jd.AddRange(jhm.DrawToJww(constoffsetx, centercentery));
+                    }
+                    if (jhm.HasRight)
+                    {
+                        jd.AddRange(jhm.DrawToJww(constoffsetx, centertopy));
+                    }
+                    if (jhm.HasLeft)
+                    {
+                        jd.AddRange(jhm.DrawToJww(constoffsetx, centerbottomy));
+                    }
                 }
-                if (jhm.HasRight)
+
+                //梁长度显示
+                double lcdbottomy = bottomy - yconst;
+                jd.Add(chuizhifuzhuxian(beamstartx, lcdbottomy, yconst * 0.9));
+                jd.Add(chuizhifuzhuxian(lg, lcdbottomy, yconst * 0.9));
+                jd.AddRange(showprexindistance(beamstartx, lg, lcdbottomy));
+                //中心点间距
+
+                double startcente = this.StartCenter - constoffsetx;
+                double endcente = this.EndCenter - constoffsetx;
+
+                double downcentery = centery - yconst * 0.9;
+                jd.Add(chuizhifuzhuxian(startcente, downcentery, yconst * 0.9 - 1));
+                jd.Add(chuizhifuzhuxian(endcente, downcentery, yconst * 0.9 - 1));
+                jd.AddRange(showprexindistance(startcente, endcente, downcentery));
+                double zhongxinstartbj = centery - yconst * 0.8;
+                jd.Add(chuizhifuzhuxian(startcente, zhongxinstartbj, yconst * 0.8 - 1));
+                jd.Add(chuizhifuzhuxian(beamstartx, zhongxinstartbj, yconst * 0.8 - 1));
+                jd.AddRange(showprexindistance(startcente, beamstartx, zhongxinstartbj));
+                jd.Add(chuizhifuzhuxian(endcente, zhongxinstartbj, yconst * 0.8 - 1));
+                jd.Add(chuizhifuzhuxian(lg, zhongxinstartbj, yconst * 0.8 - 1));
+                jd.AddRange(showprexindistance(endcente, lg, zhongxinstartbj));
+
+                double cdrawy = centery - 1;
+                double cdrawendy = cdrawy + yconst;
+                double precenter = 0;
+                double ppp = 0;
+                int i = 0;
+                var zzlst = this.jwBeamMarks.OrderBy(t => t.Coordinate).ToList();
+                foreach (var jmark in zzlst)
                 {
-                    jd.AddRange(jhm.DrawToJww(constoffsetx, centertopy));
-                }
-                if (jhm.HasLeft)
-                {
-                    jd.AddRange(jhm.DrawToJww(constoffsetx, centerbottomy));
-                }   
-            }
-
-            //梁长度显示
-            double lcdbottomy = bottomy - yconst;
-            jd.Add(chuizhifuzhuxian(beamstartx,lcdbottomy,yconst*0.9));
-            jd.Add(chuizhifuzhuxian(lg,lcdbottomy, yconst *0.9));
-            jd.AddRange(showprexindistance(beamstartx, lg, lcdbottomy));
-            //中心点间距
-
-            double startcente = this.StartCenter - constoffsetx;
-            double endcente = this.EndCenter - constoffsetx;
-
-            double downcentery = centery - yconst * 0.9;
-            jd.Add(chuizhifuzhuxian(startcente, downcentery, yconst * 0.9-1));
-            jd.Add(chuizhifuzhuxian(endcente, downcentery, yconst * 0.9-1));
-            jd.AddRange(showprexindistance(startcente, endcente, downcentery));
-            double zhongxinstartbj = centery - yconst * 0.8;
-            jd.Add(chuizhifuzhuxian(startcente, zhongxinstartbj, yconst * 0.8-1));
-            jd.Add(chuizhifuzhuxian(beamstartx, zhongxinstartbj, yconst * 0.8-1));
-            jd.AddRange(showprexindistance(startcente, beamstartx, zhongxinstartbj));
-            jd.Add(chuizhifuzhuxian(endcente, zhongxinstartbj, yconst * 0.8-1));
-            jd.Add(chuizhifuzhuxian(lg, zhongxinstartbj, yconst * 0.8-1));
-            jd.AddRange(showprexindistance(endcente, lg, zhongxinstartbj));
-
-            double cdrawy = centery - 1;
-            double cdrawendy = cdrawy + yconst;
-            double precenter = 0;
-            double ppp = 0;
-            int i = 0;
-            var zzlst = this.jwBeamMarks.OrderBy(t => t.Coordinate).ToList();
-            foreach (var jmark in zzlst)
-            {
-                if (jmark.IsCenter)
-                {
-                    jd.Add(chuizhifuzhuxian(jmark.Coordinate - constoffsetx, cdrawy, cdrawendy+1));
+                    if (jmark.IsCenter)
+                    {
+                        jd.Add(chuizhifuzhuxian(jmark.Coordinate - constoffsetx, cdrawy, cdrawendy + 1));
+                        if (i != 0)
+                        {
+                            jd.AddRange(showprexindistance(ppp, jmark.Coordinate - constoffsetx, cdrawy + cdrawendy + 1));
+                        }
+                        ppp = jmark.Coordinate - constoffsetx;
+                    }
+                    jd.Add(chuizhifuzhuxian(jmark.Coordinate - constoffsetx, cdrawy, cdrawendy));
                     if (i != 0)
                     {
-                        jd.AddRange(showprexindistance(ppp, jmark.Coordinate - constoffsetx, cdrawy + cdrawendy+1));
+                        jd.AddRange(showprexindistance(precenter, jmark.Coordinate - constoffsetx, cdrawy + cdrawendy));
                     }
-                    ppp = jmark.Coordinate - constoffsetx;
+                    precenter = jmark.Coordinate - constoffsetx;
+                    i++;
                 }
-                jd.Add(chuizhifuzhuxian(jmark.Coordinate - constoffsetx, cdrawy, cdrawendy));
-                if (i != 0)
+                var jmtoplst = this.JwHoleMachinings.Where(t => t.HasRight).OrderBy(t => t.RealLocation).ToList();
+                var jmcenterlst = this.JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RealLocation).ToList();
+                if (this.StartTelosType == KongzuType.G)
                 {
-                    jd.AddRange(showprexindistance(precenter, jmark.Coordinate - constoffsetx, cdrawy + cdrawendy));
+                    var ft = jmtoplst.First();
+                    var fc = jmcenterlst.First();
+                    jd.Add(chuizhifuzhuxian(fc.RealLocation - constoffsetx, cdrawy, cdrawendy));
+                    jd.AddRange(showprexindistance(beamstartx, fc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
+                    jd.Add(chuizhifuzhuxian(ft.RealLocation - constoffsetx, tdrawy, 2.5));
+                    jd.Add(chuizhifuzhuxian(beamstartx, tdrawy, 2.5));
+                    jd.AddRange(showprexindistance(ft.RealLocation - constoffsetx, beamstartx, tdrawy + 2.5));
                 }
-                precenter = jmark.Coordinate - constoffsetx;
-                i++;
+                if (this.EndTelosType == KongzuType.G)
+                {
+                    var bt = jmtoplst.Last();
+                    var bc = jmcenterlst.Last();
+                    jd.Add(chuizhifuzhuxian(bc.RealLocation - constoffsetx, cdrawy, cdrawendy));
+                    jd.AddRange(showprexindistance(lg, bc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
+                    jd.Add(chuizhifuzhuxian(lg, tdrawy, 2.5));
+                    jd.Add(chuizhifuzhuxian(bt.RealLocation - constoffsetx, tdrawy, 2.5));
+                    jd.AddRange(showprexindistance(bt.RealLocation - constoffsetx, lg, tdrawy + 2.5));
+                }
+                if (this.StartTelosType == KongzuType.J)
+                {
+                    //var ft = jmtoplst.First();
+                    var fc = jmcenterlst.First();
+                    jd.Add(chuizhifuzhuxian(fc.RealLocation - constoffsetx, cdrawy, cdrawendy));
+                    jd.AddRange(showprexindistance(beamstartx, fc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
+                    //jd.Add(chuizhifuzhuxian(ft.RealLocation - constoffsetx, tdrawy, 2.5));
+                    //jd.Add(chuizhifuzhuxian(beamstartx, tdrawy, 2.5));
+                    //jd.AddRange(showprexindistance(ft.RealLocation - constoffsetx, beamstartx, tdrawy + 2.5));
+                }
+                if (this.EndTelosType == KongzuType.J)
+                {
+                    var bc = jmcenterlst.Last();
+                    jd.Add(chuizhifuzhuxian(bc.RealLocation - constoffsetx, cdrawy, cdrawendy));
+                    jd.AddRange(showprexindistance(lg, bc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
+                }
+                return jd;
             }
-            var jmtoplst=this.JwHoleMachinings.Where(t=>t.HasRight).OrderBy(t=>t.RealLocation).ToList();
-            var jmcenterlst=this.JwHoleMachinings.Where(t=>t.HasTop).OrderBy(t => t.RealLocation).ToList();
-            if (this.StartTelosType == KongzuType.G)
+            else
             {
-                var ft = jmtoplst.First();
-                var fc= jmcenterlst.First();
-                jd.Add(chuizhifuzhuxian(fc.RealLocation - constoffsetx, cdrawy, cdrawendy));
-                jd.AddRange(showprexindistance(beamstartx, fc.RealLocation - constoffsetx, cdrawy + cdrawendy-1));
-                jd.Add(chuizhifuzhuxian(ft.RealLocation - constoffsetx, tdrawy, 2.5));
-                jd.Add(chuizhifuzhuxian(beamstartx, tdrawy,  2.5));
-                jd.AddRange(showprexindistance(ft.RealLocation - constoffsetx, beamstartx, tdrawy+2.5));
+                return DrawBeamWithHoleToJww(false);
             }
-            if(this.EndTelosType==KongzuType.G)
-            {
-                var bt = jmtoplst.Last();
-                var bc = jmcenterlst.Last();
-                jd.Add(chuizhifuzhuxian(bc.RealLocation - constoffsetx, cdrawy, cdrawendy));
-                jd.AddRange(showprexindistance(lg, bc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
-                jd.Add(chuizhifuzhuxian(lg, tdrawy, 2.5));
-                jd.Add(chuizhifuzhuxian(bt.RealLocation-constoffsetx, tdrawy, 2.5));
-                jd.AddRange(showprexindistance(bt.RealLocation - constoffsetx, lg, tdrawy + 2.5));
-            }
-            if(this.StartTelosType==KongzuType.J)
-            {
-                //var ft = jmtoplst.First();
-                var fc = jmcenterlst.First();
-                jd.Add(chuizhifuzhuxian(fc.RealLocation - constoffsetx, cdrawy, cdrawendy));
-                jd.AddRange(showprexindistance(beamstartx, fc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
-                //jd.Add(chuizhifuzhuxian(ft.RealLocation - constoffsetx, tdrawy, 2.5));
-                //jd.Add(chuizhifuzhuxian(beamstartx, tdrawy, 2.5));
-                //jd.AddRange(showprexindistance(ft.RealLocation - constoffsetx, beamstartx, tdrawy + 2.5));
-            }
-            if (this.EndTelosType == KongzuType.J)
-            {
-                var bc = jmcenterlst.Last();
-                jd.Add(chuizhifuzhuxian(bc.RealLocation - constoffsetx, cdrawy, cdrawendy));
-                jd.AddRange(showprexindistance(lg, bc.RealLocation - constoffsetx, cdrawy + cdrawendy - 1));
-            }
-            return jd;
-
         }
 
         /// <summary>
