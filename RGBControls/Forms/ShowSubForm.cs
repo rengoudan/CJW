@@ -37,7 +37,7 @@ namespace RGBControls.Forms
         }
 
 
-        public ShowSubForm(JwProjectSubData subdata,Sub sub)
+        public ShowSubForm(JwProjectSubData subdata, Sub sub)
         {
             InitializeComponent();
             Subdata = subdata;
@@ -51,7 +51,7 @@ namespace RGBControls.Forms
             if (_subdata != null)
             {
                 this.Controls.Add(_sub);
-                _sub.Dock= DockStyle.Fill;
+                _sub.Dock = DockStyle.Fill;
                 this.PerformLayout();
                 this.BringToFront();
                 this.Focus();
@@ -91,6 +91,16 @@ namespace RGBControls.Forms
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// 显示设置窗口
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

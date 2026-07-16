@@ -2,6 +2,7 @@
 using JwShapeCommon.Model;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,6 +147,47 @@ namespace JwShapeCommon
             jwBlock.BottomRight = new JWPoint(block.BottomRight.X, block.BottomRight.Y);
             jwBlock.JisuanWidthHeight();
             return jwBlock;
+        }
+
+        public static Color GetColor(string letter)
+        {
+            if (string.IsNullOrEmpty(letter))
+                return Color.Black;
+            char firstLetter = letter[0];
+            return GetAutoColor(firstLetter);
+        }
+
+        public static Color GetAutoColor(char letter)
+        {
+            int index = char.ToUpper(letter) - 'A';   // A=0, B=1, C=2...
+            double hue = (index * 360.0 / 26.0);      // 均匀分布在色相环上
+
+            double saturation = 0.75;                 // 保证颜色鲜艳，不会变灰
+            double lightness = 0.55;                  // 保证颜色不会太暗（避免黑色）
+
+            return FromHsl(hue, saturation, lightness);
+        }
+
+        public static Color FromHsl(double h, double s, double l)
+        {
+            double c = (1 - Math.Abs(2 * l - 1)) * s;
+            double x = c * (1 - Math.Abs((h / 60) % 2 - 1));
+            double m = l - c / 2;
+
+            double r = 0, g = 0, b = 0;
+
+            if (h < 60) { r = c; g = x; }
+            else if (h < 120) { r = x; g = c; }
+            else if (h < 180) { g = c; b = x; }
+            else if (h < 240) { g = x; b = c; }
+            else if (h < 300) { r = x; b = c; }
+            else { r = c; b = x; }
+
+            return Color.FromArgb(
+                (int)((r + m) * 255),
+                (int)((g + m) * 255),
+                (int)((b + m) * 255)
+            );
         }
     }
 }

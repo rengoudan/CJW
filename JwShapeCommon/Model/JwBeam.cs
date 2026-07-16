@@ -2172,6 +2172,30 @@ namespace JwShapeCommon
             return $"{Math.Round(h.RelativeStartDistance, 3)}|" +
                    $"{(h.HasLeft ? 1 : 0)}{(h.HasRight ? 1 : 0)}{(h.HasTop ? 1 : 0)}";
         }
+
+        /// <summary>
+        /// 按工区设置颜色
+        /// 未设置为白色 不到处csv为灰色
+        /// </summary>
+        /// <returns></returns>
+        public Color GetBeamColor()
+        {
+            if (this.HasCsv)
+            {
+                if (string.IsNullOrEmpty(this.GongQu))
+                {
+                    return Color.White;
+                }
+                else
+                {
+                    return JwShapeHelper.GetColor(this.GongQu);
+                }
+            }
+            else
+            {
+                return Color.Gray;
+            }
+        }
     }
 
     public static class JwBeamExtensions

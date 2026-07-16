@@ -370,7 +370,8 @@ namespace RGBJWMain.Controls
                                 else
                                 {
                                     //pe.Graphics.DrawRectangle(pens, b.DrawRectangleF.Location.X, b.DrawRectangleF.Location.Y, b.DrawRectangleF.Width, b.DrawRectangleF.Height);
-                                    pe.Graphics.DrawPolygon(pens, b.DrawPoints.ToArray());
+                                    var tdcolor = new Pen(new SolidBrush(b.PenColor), 1);
+                                    pe.Graphics.DrawPolygon(tdcolor, b.DrawPoints.ToArray());
                                 }
                             }
                             else
@@ -381,7 +382,8 @@ namespace RGBJWMain.Controls
                                 }
                                 else
                                 {
-                                    pe.Graphics.DrawPolygon(pens, b.DrawPoints.ToArray());
+                                    var tdcolor = new Pen(new SolidBrush(b.PenColor), 1);
+                                    pe.Graphics.DrawPolygon(tdcolor, b.DrawPoints.ToArray());
                                 }
                             }
 

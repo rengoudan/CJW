@@ -1,6 +1,6 @@
 ﻿namespace RGBControls.Forms
 {
-    partial class ShowSubForm
+    partial class BeamShowSettings
     {
         /// <summary>
         /// Required designer variable.
@@ -28,53 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShowSubForm));
             pageHeader1 = new AntdUI.PageHeader();
-            button1 = new AntdUI.Button();
-            pageHeader1.SuspendLayout();
             SuspendLayout();
             // 
             // pageHeader1
             // 
-            pageHeader1.Controls.Add(button1);
             pageHeader1.Dock = DockStyle.Top;
-            pageHeader1.Icon = (Image)resources.GetObject("pageHeader1.Icon");
             pageHeader1.Location = new Point(0, 0);
             pageHeader1.Name = "pageHeader1";
             pageHeader1.ShowButton = true;
-            pageHeader1.ShowIcon = true;
-            pageHeader1.Size = new Size(800, 40);
+            pageHeader1.Size = new Size(800, 34);
             pageHeader1.TabIndex = 0;
-            pageHeader1.Text = "pageHeader1";
+            pageHeader1.Text = "プレビュー表示設定";
             // 
-            // button1
-            // 
-            button1.Dock = DockStyle.Right;
-            button1.Ghost = true;
-            button1.IconSvg = "SettingOutlined";
-            button1.Location = new Point(525, 0);
-            button1.Name = "button1";
-            button1.Size = new Size(59, 40);
-            button1.TabIndex = 0;
-            button1.Click += button1_Click;
-            // 
-            // ShowSubForm
+            // BeamShowSettings
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 600);
             Controls.Add(pageHeader1);
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "ShowSubForm";
-            Text = "ShowSubForm";
-            Load += ShowSubForm_Load;
-            pageHeader1.ResumeLayout(false);
+            Name = "BeamShowSettings";
+            Text = "BeamShowSettings";
             ResumeLayout(false);
         }
 
         #endregion
 
         private AntdUI.PageHeader pageHeader1;
-        private AntdUI.Button button1;
     }
 }

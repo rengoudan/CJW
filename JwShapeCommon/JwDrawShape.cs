@@ -59,6 +59,7 @@ namespace JwShapeCommon
             ShapeType = DrawShapeType.None;
             if (jwSquare.GetType().Name == "JwBeam")
             {
+                
                 if (hbeilv != 1.0)
                 {
                     ShapeType = DrawShapeType.Beam;
@@ -158,11 +159,11 @@ namespace JwShapeCommon
         {
             if(ShapeType==DrawShapeType.Beam)
             {
-            
+                var bmm =this.jwShape as JwBeam;
                 PointF pf=new PointF((float)TopLeft.X, (float)TopLeft.Y);
                 var z=new RectangleF(pf, new SizeF((float)Width, (float)Height));
                 ControlDraw draw=new ControlDraw();
-                draw.PenColor= Color.White;
+                draw.PenColor = bmm.GetBeamColor();// Color.White;
                 draw.DrawRectangleF = z;
                 draw.ShapeType = ShapeType;
                 draw.JwSquareBase = jwShape;
