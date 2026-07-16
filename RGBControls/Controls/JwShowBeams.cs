@@ -277,6 +277,20 @@ namespace RGBJWMain.Controls
             }
         }
 
+        private bool _showcolor;
+        /// <summary>
+        /// 颜色标记显示
+        /// </summary>
+        public bool ShowColor
+        {
+            get => _showcolor;
+            set
+            {
+                _showcolor = value;
+                Invalidate();
+            }
+        }
+
         public bool HasItems { get; set; }
 
         private Point _centerpoint;
@@ -345,6 +359,7 @@ namespace RGBJWMain.Controls
             _showBeams = true;
             _showFuzhu = true;
             _showGoujian = true;
+            _showcolor = true;  
         }
 
         private void drawControls(PaintEventArgs pe)
@@ -649,6 +664,44 @@ namespace RGBJWMain.Controls
             pe.Graphics.TranslateTransform(origin.X, origin.Y);
             pe.Graphics.ScaleTransform(scale, scale);
             drawControls(pe);
+            if (this.ShowColor)
+            {
+                DrawLetterColorLegend(pe.Graphics, this.ClientRectangle);
+            }
+        }
+
+        private void DrawLetterColorLegend(Graphics g, Rectangle bounds)
+        {
+            int boxSize = 18;          // 色块大小
+            int spacing = 6;           // 色块与文字间距
+            int margin = 10;           // 图例距离右下角的边距
+            int colCount = 6;          // 每行显示几个字母
+
+            Font font = this.Font;
+            int startX = bounds.Right - margin - (colCount * (boxSize + 30));
+            int startY = bounds.Bottom - margin - (5 * (boxSize + spacing));
+
+            for (int i = 0; i < 26; i++)
+            {
+                char letter = (char)('A' + i);
+                //Color color = JwShapeHelper.GetHighContrastColor(letter);
+                Color color = JwShapeHelper.GetLetterColor(letter);
+
+                int row = i / colCount;
+                int col = i % colCount;
+
+                int x = startX + col * (boxSize + 30);
+                int y = startY + row * (boxSize + spacing);
+
+                // 绘制颜色方块
+                using (Brush b = new SolidBrush(color))
+                {
+                    g.FillRectangle(b, x, y, boxSize, boxSize);
+                }
+
+                // 绘制字母
+                g.DrawString(letter.ToString(), font, Brushes.White, x + boxSize + spacing, y);
+            }
         }
 
         private bool HasMouseDownPoint =false;

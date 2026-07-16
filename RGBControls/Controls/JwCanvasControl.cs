@@ -73,6 +73,7 @@ namespace RGBJWMain.Controls
                     uiSDown.Active = true;
                     uiSwitch4.Active = true;
                     uiSwitch5.Active = true;
+                    uiSwitch6.Active = true;
                     jwShowBeams1.IsNewCanvas = IsNewCanvas;
                     jwShowBeams1.CanvasDraw = _canvasDraw;
 
@@ -222,6 +223,12 @@ namespace RGBJWMain.Controls
         {
             jwShowBeams1.ShowDownPillar = value;
             uiSwitch5.Invalidate();
+        }
+
+        private void uiSwitch6_ValueChanged(object sender, bool value)
+        {
+            jwShowBeams1.ShowColor= value;
+            uiSwitch6.Invalidate();
         }
     }
 }

@@ -154,16 +154,37 @@ namespace JwShapeCommon
             if (string.IsNullOrEmpty(letter))
                 return Color.Black;
             char firstLetter = letter[0];
-            return GetAutoColor(firstLetter);
+            //return GetHighContrastColor(firstLetter);
+            return GetLetterColor(firstLetter);
         }
 
-        public static Color GetAutoColor(char letter)
-        {
-            int index = char.ToUpper(letter) - 'A';   // A=0, B=1, C=2...
-            double hue = (index * 360.0 / 26.0);      // 均匀分布在色相环上
+        private const double GoldenAngle = 137.508; // 黄金角度
 
-            double saturation = 0.75;                 // 保证颜色鲜艳，不会变灰
-            double lightness = 0.55;                  // 保证颜色不会太暗（避免黑色）
+        public static Color GetLetterColor(char letter)
+        {
+            int index = char.ToUpper(letter) - 'A'; // 0..25
+
+            int hueIndex = index % 13;      // 13 个色相
+            int toneIndex = index / 13;     // 0 或 1，两档亮度
+
+            double hue = hueIndex * (360.0 / 13.0); // 均匀分布 13 色
+            double saturation = 0.80;
+
+            // 两档亮度：一浅一深，但都不黑
+            double lightness = (toneIndex == 0) ? 0.60 : 0.40;
+
+            return FromHsl(hue, saturation, lightness);
+        }
+
+        public static Color GetHighContrastColor(char letter)
+        {
+            int index = char.ToUpper(letter) - 'A'; // A=0, B=1...
+
+            // 使用黄金角度生成高对比色
+            double hue = (index * GoldenAngle) % 360.0;
+
+            double saturation = 0.85; // 高饱和度
+            double lightness = 0.55;  // 中亮度，杜绝黑色
 
             return FromHsl(hue, saturation, lightness);
         }
