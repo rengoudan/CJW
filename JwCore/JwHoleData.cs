@@ -37,5 +37,11 @@ namespace JwCore
         public bool HasPreLinkHole { get; set; }
 
         public bool HasBhLinkHole { get; set; }
+
+        /// <summary>
+        /// 是否加工显示
+        /// 2026年7月17日
+        /// </summary>
+        public bool IsMachining { get; set; }
     }
 }

@@ -210,6 +210,7 @@ namespace JwCore
         FengeJ = 2,
         JieChu=3,//指 胜方 打孔
         AddedHole = 4,//指标识额外需要增加的孔
+        Lianjie=5,//2026年7月17日 连接线打的孔
     }
 
     /// <summary>
