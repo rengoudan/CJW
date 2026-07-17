@@ -66,6 +66,8 @@ namespace JwShapeCommon.Model
         /// </summary>
         public double HoleCenter { get; set; }
 
+        public bool IsMachining { get; set; }
+
         //public JwKongZu? BottomKongzu { get; set;}
 
         public JwHole()
@@ -82,6 +84,7 @@ namespace JwShapeCommon.Model
             ChangeFrom = firstCreateFrom;
             IsStart = isStart;
             IsEnd = isEnd;
+            IsMachining = false;
             if (!isStart && !isEnd)
             {
                 HoleType = KongzuType.Center;
