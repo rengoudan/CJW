@@ -2093,10 +2093,11 @@ namespace JwShapeCommon
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c };
+                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c,BFCenter=c.Center};
                                         //2026年2月2日 增加接触点位置 
                                         jwt.JieChuPoint = new JWPoint(c.Center, l.Center);
                                         Touchs.Add(jwt); 
+                                        l.BeamTouchs.Add(jwt);
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -2226,9 +2227,10 @@ namespace JwShapeCommon
                                             InitialLoser = sy
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c };
+                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = c, BFCenter = c.Center };
                                         jwt.JieChuPoint = new JWPoint(c.Center, l.Center);
-                                        Touchs.Add(jwt); ;
+                                        Touchs.Add(jwt);
+                                        l.BeamTouchs.Add(jwt);
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -2354,9 +2356,10 @@ namespace JwShapeCommon
                                             LoserPortType = PortType.End
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r };
+                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r,BFCenter=r.Center };
                                         jwt.JieChuPoint = new JWPoint(l.Center, r.Center);
                                         Touchs.Add(jwt) ;
+                                        l.BeamTouchs.Add(jwt);
                                         //处理端部孔组信息  JwKongZu类
                                         //胜方
                                         var sflocaiton = new JWPoint(l.Center, r.Center);
@@ -2459,9 +2462,10 @@ namespace JwShapeCommon
                                             LoserPortType = PortType.Start
                                         };
                                         l.Baifangs.Add(vertical);//记录 败方及他的位置
-                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r };
+                                        var jwt = new JwTouch { WinnerBeam = l, JwBeamVertical = vertical, LoserBeam = r, BFCenter = r.Center };
                                         jwt.JieChuPoint = new JWPoint(l.Center, r.Center);
                                         Touchs.Add(jwt) ;
+                                        l.BeamTouchs.Add(jwt);
                                         //处理端部孔组信息  JwKongZu类
 
                                         //胜方
@@ -3951,6 +3955,7 @@ namespace JwShapeCommon
         /// <returns></returns>
         private JwLianjieSingle findCenter(JwXian xian)
         {
+            var youxiaotouchs = Touchs.Where(t => !t.WinnerBeam.IsParentBeam).ToList();
             xian.Reorder();//按照x排序
             JwLianjieSingle jwLianjieSingle = new JwLianjieSingle();
             jwLianjieSingle.IsCreateSuccess = false;
@@ -4223,6 +4228,7 @@ namespace JwShapeCommon
             bool isfirstlosershuiping = false;
             bool islastlosershuiping = false;
             bool ftwo = false;
+            //var zzzz=Touchs.Where(t=>t.WinnerBeam.IsQiegeBeam)
             foreach (var b in Touchs)
             {
                 //xian.Pone  

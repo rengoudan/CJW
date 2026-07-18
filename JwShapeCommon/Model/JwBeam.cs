@@ -2241,6 +2241,8 @@ namespace JwShapeCommon
                 return Color.Gray;
             }
         }
+
+        public List<JwTouch> BeamTouchs=new List<JwTouch>();
     }
 
     public static class JwBeamExtensions
@@ -2432,6 +2434,7 @@ namespace JwShapeCommon
         public static List<JwBeam> BeamSpliteDouble(this JwBeam beam)
         {
             List<JwBeam> relst = new List<JwBeam>();
+            var zlst = beam.BeamTouchs;
             if (beam.HasQieGe)
             {
                 beam.IsParentBeam = true;
@@ -2455,6 +2458,10 @@ namespace JwShapeCommon
                         beam.jwQiegeZus.Add(qiegeZu);
                         int t = i + 1;
                         nb.BeamCode = beam.BeamCode + "-" + t.ToString();
+                        var qll = zlst.Where(t => t.BFCenter > startx && t.BFCenter < endx).ToList();
+                        
+                        nb.BeamTouchs.AddRange(qll);
+                        nb.BeamTouchs.ForEach(t => t.WinnerBeam = nb);
                         relst.Add(nb);
                         startx = endx;
                     }
@@ -2466,6 +2473,9 @@ namespace JwShapeCommon
                         pres.AJwBeam = edp;
                     }
                     edp.BeamCode = beam.BeamCode + "-" + (beam.QieGePoints.Count + 1).ToString();
+                    var ql = zlst.Where(t => t.BFCenter > startx && t.BFCenter < endright).ToList();
+                    edp.BeamTouchs.AddRange(ql);
+                    edp.BeamTouchs.ForEach(t => t.WinnerBeam = edp);
                     relst.Add(edp);
                 }
                 if (beam.DirectionType == BeamDirectionType.Vertical)
@@ -2491,6 +2501,10 @@ namespace JwShapeCommon
                             pre.AJwBeam = nb;
                         }
                         beam.jwQiegeZus.Add(qiegeZu);
+                        var qll = zlst.Where(t => t.BFCenter > starty && t.BFCenter < endy).ToList();
+                        
+                        nb.BeamTouchs.AddRange(qll);
+                        nb.BeamTouchs.ForEach(t=>t.WinnerBeam= nb);
                         relst.Add(nb);
 
                         starty = endy;
@@ -2503,7 +2517,10 @@ namespace JwShapeCommon
                     {
                         pres.AJwBeam = endbeam;
                     }
-
+                    var ql = zlst.Where(t => t.BFCenter > starty && t.BFCenter < endtop).ToList();
+                    ql.ForEach(t=>t.WinnerBeam=endbeam);
+                    endbeam.BeamTouchs.AddRange(ql);
+                    endbeam.BeamTouchs.ForEach(t => t.WinnerBeam = endbeam);
                     relst.Add(endbeam);
                 }
                 //linkpart
