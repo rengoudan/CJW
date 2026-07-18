@@ -2243,6 +2243,8 @@ namespace JwShapeCommon
         }
 
         public List<JwTouch> BeamTouchs=new List<JwTouch>();
+
+        public int LianjieHolesCount = 0;
     }
 
     public static class JwBeamExtensions

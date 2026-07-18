@@ -380,6 +380,9 @@ namespace JwShapeCommon
             parseDownPillars();
             parsenLianjie();//寻找连接线
 
+
+
+            //在之前判断链接件之间距离是否
             Revision();
 
             if (HasBeam)
@@ -3399,6 +3402,7 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 2026年4月20日只有是G或者J才进行修正 其他的按照实际测量值进行计算 待修改
+        /// beam调用AbsolutePD 生成hole加工集合
         /// </summary>
         private void Revision()
         {
@@ -5002,6 +5006,47 @@ namespace JwShapeCommon
 
             //return (p_plus, p_minus);
             return jiaocha;
+        }
+
+        private void JudgementSpacing()
+        {
+            Beams.ForEach(t =>
+            {
+                t.LianjieHolesCount = t.Holes.Count(t => t.FirstCreateFrom == HoleCreateFrom.Lianjie);
+            });
+            var lst = Beams.Where(t => t.LianjieHolesCount > 1).ToList();
+            foreach(var b in lst)
+            {
+
+            }
+        }
+
+        private List<(JwHole A, JwHole B)> FindHolePairs(List<JwHole> holes)
+        {
+            if (holes == null || holes.Count < 2)
+                return new List<(JwHole, JwHole)>();
+
+            // 1. 按 HoleCenter 排序
+            var ordered = holes.OrderBy(h => h.HoleCenter).ToList();
+
+            var result = new List<(JwHole, JwHole)>();
+
+            // 2. 扫描相邻 hole
+            for (int i = 0; i < ordered.Count - 1; i++)
+            {
+                var h1 = ordered[i];
+                var h2 = ordered[i + 1];
+
+                double diff = Math.Abs(h2.HoleCenter - h1.HoleCenter);
+
+                // 3. 差值小于 43 → 视为成对
+                if (diff < 43)
+                {
+                    result.Add((h1, h2));
+                }
+            }
+
+            return result;
         }
 
     }

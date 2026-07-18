@@ -24,6 +24,11 @@ namespace JwShapeCommon
         #endregion
 
         /// <summary>
+        /// 未除scale的 最小链接件间距
+        /// </summary>
+        public static double LianjieSpacing = 43;
+
+        /// <summary>
         /// 用来判定角度误差 2026年7月9日
         /// </summary>
         public static double JiaoduWuchazhi = 0.5;
