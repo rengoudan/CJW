@@ -183,6 +183,10 @@ namespace RGBJWMain.Forms
                         _jwbeam.GongQu = args.NewCode;
                     }
                 }
+                if(GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent!=null)
+                {
+                    GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent(this, EventArgs.Empty);
+                }
             }
             else
             {

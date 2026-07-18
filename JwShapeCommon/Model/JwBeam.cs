@@ -1262,33 +1262,53 @@ namespace JwShapeCommon
                 //前提是遍历的holes都为pillar产生及胜方
                 for (int i = 0; i < centerholes.Count; i++)
                 {
-                   
-                    var cccc = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
-                    if (this.DirectionType == BeamDirectionType.Horizontal)
+                    var h= centerholes[i];
+                   if(h.IsMachining)
                     {
-                        cccc.Coordinate = centerholes[i].Location.X;
+                        if (h.FirstCreateFrom == HoleCreateFrom.Lianjie)
+                        {
+                            var cccc = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
+                            cccc.Coordinate = h.HoleCenter;
+                            cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 1);
+                            cccc.PreBeamStartDistance = Math.Round(cccc.Coordinate - sb, 1);
+                            cccc.AppendHole = centerholes[i];
+                            cccc.HasAppend = true;
+                            this.jwBeamMarks.Add(cccc);
+                            precb = cccc.Coordinate;//循环完即为最后一个洞坐标非 首位端口的洞
+
+                            addLianjieMachining(sb, h);
+                        }
+                        else
+                        {
+                            var cccc = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
+                            if (this.DirectionType == BeamDirectionType.Horizontal)
+                            {
+                                cccc.Coordinate = centerholes[i].Location.X;
+                            }
+                            if (this.DirectionType == BeamDirectionType.Vertical)
+                            {
+                                cccc.Coordinate = centerholes[i].Location.Y;
+                            }
+                            cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 1);
+                            cccc.PreBeamStartDistance = Math.Round(cccc.Coordinate - sb, 1);
+                            cccc.AppendHole = centerholes[i];
+                            cccc.HasAppend = true;
+                            this.jwBeamMarks.Add(cccc);
+                            precb = cccc.Coordinate;//循环完即为最后一个洞坐标非 首位端口的洞
+
+                            addMachining(sb, cccc.Coordinate, cccc.AppendHole, false, false);
+                            //var fbf = this.Baifangs.Find(t => t.Center == cccc.Coordinate);
+
+                            //if(fbf != null)
+                            //{
+                            //    centerholes[i].HasPreLinkHole = fbf.HasPre;
+                            //    centerholes[i].HasBhLinkHole = fbf.HasLast;
+                            //}
+
+
+
+                        }
                     }
-                    if (this.DirectionType == BeamDirectionType.Vertical)
-                    {
-                        cccc.Coordinate = centerholes[i].Location.Y;
-                    }
-
-                    //var fbf = this.Baifangs.Find(t => t.Center == cccc.Coordinate);
-
-                    //if(fbf != null)
-                    //{
-                    //    centerholes[i].HasPreLinkHole = fbf.HasPre;
-                    //    centerholes[i].HasBhLinkHole = fbf.HasLast;
-                    //}
-
-                    cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 1);
-                    cccc.PreBeamStartDistance=Math.Round(cccc.Coordinate -sb,1);
-                    cccc.AppendHole=centerholes[i];
-                    cccc.HasAppend = true;
-                    this.jwBeamMarks.Add(cccc);
-                    precb=cccc.Coordinate;//循环完即为最后一个洞坐标非 首位端口的洞
-
-                    addMachining(sb,cccc.Coordinate,cccc.AppendHole,false,false);
 
                     //if (i == centerholes.Count - 1)
                     //{
@@ -1443,46 +1463,46 @@ namespace JwShapeCommon
                         //4孔
                         JwHoleMachinings.Add(machiningleft);
                         JwHoleMachinings.Add(machiningright);
-                        if (hole.HasBhLinkHole)
-                        {
-                            //JwHoleMachinings.Add(preright);
-                            JwHoleMachinings.Add(preright);
-                        }
-                        if (hole.HasPreLinkHole)
-                        {
-                            //JwHoleMachinings.Add(preleft);
-                            JwHoleMachinings.Add(preleft);
-                        }
+                        //if (hole.HasBhLinkHole)
+                        //{
+                        //    //JwHoleMachinings.Add(preright);
+                        //    JwHoleMachinings.Add(preright);
+                        //}
+                        //if (hole.HasPreLinkHole)
+                        //{
+                        //    //JwHoleMachinings.Add(preleft);
+                        //    JwHoleMachinings.Add(preleft);
+                        //}
                         break;
                     case KongzuType.BP:
                         if (isstart)
                         {
                             JwHoleMachinings.Add(machiningleft);
-                            if (hole.HasBhLinkHole)
-                            {
-                                JwHoleMachinings.Add(jwtouright);
-                            }
+                            //if (hole.HasBhLinkHole)
+                            //{
+                            //    JwHoleMachinings.Add(jwtouright);
+                            //}
                         }
 
                         if (isend)
                         {
                             JwHoleMachinings.Add(machiningright);
-                            if (hole.HasPreLinkHole)
-                            {
-                                JwHoleMachinings.Add(jwweileft);
-                            }
+                            //if (hole.HasPreLinkHole)
+                            //{
+                            //    JwHoleMachinings.Add(jwweileft);
+                            //}
                         }
                         break;
                     case KongzuType.J:
                         JwHoleMachinings.Add(machiningsingle);
-                        if (hole.HasBhLinkHole)
-                        {
-                            JwHoleMachinings.Add(jwtouright);
-                        }
-                        if (hole.HasPreLinkHole)
-                        {
-                            JwHoleMachinings.Add(jwweileft);
-                        }
+                        //if (hole.HasBhLinkHole)
+                        //{
+                        //    JwHoleMachinings.Add(jwtouright);
+                        //}
+                        //if (hole.HasPreLinkHole)
+                        //{
+                        //    JwHoleMachinings.Add(jwweileft);
+                        //}
                         break;
                     case KongzuType.G:
                         machiningsingle.HasLeft = false;
@@ -1508,10 +1528,10 @@ namespace JwShapeCommon
                             var addgbt = machiningsingletopbottomg.GTopBottomAddHole(true);
                             JwHoleMachinings.Add(machiningsingletopbottomg);
                             JwHoleMachinings.Add(addgbt);
-                            if (hole.HasBhLinkHole)
-                            {
-                                JwHoleMachinings.Add(jwtouright);
-                            }
+                            //if (hole.HasBhLinkHole)
+                            //{
+                            //    JwHoleMachinings.Add(jwtouright);
+                            //}
                             //var addg = machiningsingle.GTopBottomAddHole(true);
                             //JwHoleMachinings.Add(addg);
                         }
@@ -1532,10 +1552,10 @@ namespace JwShapeCommon
                                 var addgbt = machiningsingletopbottomg.GTopBottomAddHole(false);
                             JwHoleMachinings.Add(machiningsingletopbottomg);
                             JwHoleMachinings.Add(addgbt);
-                            if (hole.HasPreLinkHole)
-                            {
-                                JwHoleMachinings.Add(jwweileft);
-                            }
+                            //if (hole.HasPreLinkHole)
+                            //{
+                            //    JwHoleMachinings.Add(jwweileft);
+                            //}
                             //var addg = machiningsingle.GTopBottomAddHole(false);
                             //JwHoleMachinings.Add(addg);
                         }
@@ -1543,28 +1563,53 @@ namespace JwShapeCommon
                         break;
                     case KongzuType.AddedHole:
                         JwHoleMachinings.Add(machiningsingle);
-                        if (hole.HasBhLinkHole)
-                        {
-                            JwHoleMachinings.Add(preright);
-                        }
-                        if (hole.HasPreLinkHole)
-                        {
-                            JwHoleMachinings.Add(preleft);
-                        }
+                        //if (hole.HasBhLinkHole)
+                        //{
+                        //    JwHoleMachinings.Add(preright);
+                        //}
+                        //if (hole.HasPreLinkHole)
+                        //{
+                        //    JwHoleMachinings.Add(preleft);
+                        //}
                         break;
                     default:
                         JwHoleMachinings.Add(machiningleft);
                         JwHoleMachinings.Add(machiningright);
-                        if (hole.HasBhLinkHole)
-                        {
-                            JwHoleMachinings.Add(preright);
-                        }
-                        if (hole.HasPreLinkHole)
-                        {
-                            JwHoleMachinings.Add(preleft);
-                        }
+                        //if (hole.HasBhLinkHole)
+                        //{
+                        //    JwHoleMachinings.Add(preright);
+                        //}
+                        //if (hole.HasPreLinkHole)
+                        //{
+                        //    JwHoleMachinings.Add(preleft);
+                        //}
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// lianjie打孔
+        /// </summary>
+        /// <param name="ks"></param>
+        /// <param name="location"></param>
+        /// <param name="hole"></param>
+        public void addLianjieMachining(double ks, JwHole hole)
+        {
+            if (hole != null)
+            {
+                var location=hole.HoleCenter;
+                var singleleft = Math.Round(location, 2);
+                JwHoleMachining preleft = new JwHoleMachining
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    RelativeStartDistance = (singleleft-ks) * JwFileConsts.JwScale,
+                    RealLocation = singleleft,
+                    HasLeft = true,
+                    HasRight=false,
+                    HasTop= false
+                };
+                JwHoleMachinings.Add(preleft);
             }
         }
 

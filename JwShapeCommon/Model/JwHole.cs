@@ -75,6 +75,14 @@ namespace JwShapeCommon.Model
 
         }
 
+        /// <summary>
+        /// 接触调用
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="firstCreateFrom"></param>
+        /// <param name="locationCenter"></param>
+        /// <param name="isStart"></param>
+        /// <param name="isEnd"></param>
         public JwHole(JWPoint location, HoleCreateFrom firstCreateFrom, JWPoint? locationCenter = null, bool isStart = false, bool isEnd = false)
         {
             Id = Guid.NewGuid().ToString();
@@ -84,7 +92,7 @@ namespace JwShapeCommon.Model
             ChangeFrom = firstCreateFrom;
             IsStart = isStart;
             IsEnd = isEnd;
-            IsMachining = false;
+            IsMachining = true;
             if (!isStart && !isEnd)
             {
                 HoleType = KongzuType.Center;
@@ -339,6 +347,58 @@ namespace JwShapeCommon.Model
         /// 相对前一个的值
         /// </summary>
         public double RelativeP { get; set;}
+
+        /// <summary>
+        /// 所属的梁
+        /// </summary>
+        public JwBeam Beam { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ispre"></param>
+        /// <returns></returns>
+        public JwHole AppendHole(bool ispre,JwBeam _beam)
+        {
+            JwHole hole = new JwHole();
+            hole.IsMachining = true;
+            hole.FirstCreateFrom =hole.ChangeFrom = HoleCreateFrom.Lianjie;
+            double x, y;
+            if(ispre)
+            {
+                if(_beam.DirectionType== BeamDirectionType.Horizontal)
+                {
+                    x = Location.X - JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale;
+                    y = Location.Y ;
+                    hole.HoleCenter = x;
+                }
+                else
+                {
+                    x = Location.X ;
+                    y = Location.Y - JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale;
+                    hole.HoleCenter = y;
+                }
+            }
+            else
+            {
+                if(_beam.DirectionType== BeamDirectionType.Horizontal)
+                {
+                    x = Location.X+ JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale;
+                    y = Location.Y;
+                    hole.HoleCenter = x;
+                }
+                else
+                {
+                    x = Location.X ;
+                    y = Location.Y+ JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale;
+                    hole.HoleCenter = y;
+                }
+            }
+            hole.Location=hole.LocationCenter = new JWPoint(x, y);
+            hole.HasTop = hole.HasCenter = false;
+            hole.HasBottom = true;
+            return hole;
+        }
     }
 
     public class JwBeamSide

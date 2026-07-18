@@ -3986,7 +3986,11 @@ namespace JwShapeCommon
                             //垂直梁右侧
                             realx = f.LoserBeam.Center + (84 / JwFileConsts.JwScale);
                             f.JwHoleG.HasBhLinkHole = true;
-                            var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
+                        //2026年7月18日
+                        var ah = f.JwHoleG.AppendHole(false,f.WinnerBeam);
+                        ah.Beam = f.WinnerBeam;
+                        f.WinnerBeam.Holes.Add(ah);
+                        var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
@@ -3994,7 +3998,9 @@ namespace JwShapeCommon
                                 //ff.RJwBeam.Holes.First().HasBhLinkHole = true;
                                 ff.AJwBeam.holesorder();
                                 ff.AJwBeam.Holes.First().HasBhLinkHole = true;
-                            }
+                            //2026年7月18日
+                            ff.AJwBeam.Holes.Add(ah);
+                        }
                         //}
                         //else
                         //{
@@ -4028,12 +4034,19 @@ namespace JwShapeCommon
                             //水平梁上方
                             realy = f.LoserBeam.Center + (84 / JwFileConsts.JwScale);
                             f.JwHoleG.HasBhLinkHole = true;
+                            //2026年7月18日
+                            //2026年7月18日
+                            var ah = f.JwHoleG.AppendHole(false,f.WinnerBeam);
+                            ah.Beam = f.WinnerBeam;
+                            f.WinnerBeam.Holes.Add(ah);
                             var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                                 ff.AJwBeam.holesorder();
                                 ff.AJwBeam.Holes.First().HasBhLinkHole = true;
+                                //2026年7月18日
+                                ff.AJwBeam.Holes.Add(ah);
                             }
                         }
                         else
@@ -4041,12 +4054,18 @@ namespace JwShapeCommon
                             //水平梁下方
                             realy = f.LoserBeam.Center - (84 / JwFileConsts.JwScale);
                             f.JwHoleG.HasPreLinkHole = true;
+                            //2026年7月18日
+                            //2026年7月18日
+                            var ah = f.JwHoleG.AppendHole(true, f.WinnerBeam);
+                            ah.Beam = f.WinnerBeam;
+                            f.WinnerBeam.Holes.Add(ah);
                             var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                                 ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                                ff.RJwBeam.Holes.Last().HasPreLinkHole = true;//2026年7月18日
+                                ff.AJwBeam.Holes.Add(ah);
                             }
                         }
                     }
@@ -4066,12 +4085,18 @@ namespace JwShapeCommon
                         //垂直梁左侧
                         endrealx = l.LoserBeam.Center - (84 / JwFileConsts.JwScale);
                         l.JwHoleG.HasPreLinkHole = true;
+                        //2026年7月18日
+                        //2026年7月18日
+                        var ah = l.JwHoleG.AppendHole(true, l.WinnerBeam);
+                        ah.Beam = l.WinnerBeam;
+                        l.WinnerBeam.Holes.Add(ah);
                         var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
                         if (ff != null)
                         {
                             //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                             ff.RJwBeam.holesorder();
                             ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                            ff.AJwBeam.Holes.Add(ah);
                         }
                         //if (xian.Pone.X > xian.Ptwo.X)
                         //{
@@ -4109,13 +4134,18 @@ namespace JwShapeCommon
                             //水平梁上方
                             endrealy = l.LoserBeam.Center + (84 / JwFileConsts.JwScale);
                             l.JwHoleG.HasBhLinkHole = true;
-
+                            //2026年7月18日
+                            //2026年7月18日
+                            var ah = l.JwHoleG.AppendHole(false, l.WinnerBeam);
+                            ah.Beam = l.WinnerBeam;
+                            l.WinnerBeam.Holes.Add(ah);
                             var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                                 ff.AJwBeam.holesorder();
                                 ff.AJwBeam.Holes.First().HasBhLinkHole = true;
+                                ff.AJwBeam.Holes.Add(ah);
                             }
 
                         }
@@ -4125,11 +4155,16 @@ namespace JwShapeCommon
                             endrealy = l.LoserBeam.Center - (84 / JwFileConsts.JwScale);
                             l.JwHoleG.HasPreLinkHole = true;
                             var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                            //2026年7月18日
+                            var ah = l.JwHoleG.AppendHole(true, l.WinnerBeam);
+                            ah.Beam = l.WinnerBeam;
+                            l.WinnerBeam.Holes.Add(ah);
                             if (ff != null)
                             {
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                                 ff.RJwBeam.holesorder();
                                 ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                                ff.AJwBeam.Holes.Add(ah);
                             }
                         }
                     }
@@ -4339,12 +4374,19 @@ namespace JwShapeCommon
                                 //p.HasPreLinkHole = true;
                                 jwPointBeam.Direct = ZhengfuType.Reduce;
                                 touch.JwHoleG.HasPreLinkHole = true;
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(true,touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                                 var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc, 2));
                                 if (f != null)
                                 {
                                     //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                                     f.RJwBeam.holesorder();
                                     f.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                                    //2026年7月18日
+                                    f.RJwBeam.Holes.Add(ah);
                                 }
                             }
                             else
@@ -4353,6 +4395,12 @@ namespace JwShapeCommon
                                 double realy = p.HoleCenter - (84 / JwFileConsts.JwScale);
                                 jwPointBeam.RealPoint = new JWPoint(jwPointBeam.RealPoint.X, realy);
                                 p.HasPreLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(true, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                             }
                             //获取需要添加 上下额外孔组的 孔组
                             //var f = pdlst.First();
@@ -4384,6 +4432,12 @@ namespace JwShapeCommon
                                 //p.HasPreLinkHole = true;
                                 jwPointBeam.Direct = ZhengfuType.Reduce;
                                 touch.JwHoleG.HasPreLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(true, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                             }
                             else
                             {
@@ -4413,12 +4467,19 @@ namespace JwShapeCommon
                                 //p.HasPreLinkHole = true;
                                 jwPointBeam.Direct = ZhengfuType.Add;
                                 touch.JwHoleG.HasBhLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(false, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                                 var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc, 2));
                                 if (f != null)
                                 {
                                     //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
                                     f.AJwBeam.holesorder();
                                     f.AJwBeam.Holes.First().HasBhLinkHole = true;
+                                    f.AJwBeam.Holes.Add(ah);
                                 }
                             }
                             else
@@ -4427,6 +4488,11 @@ namespace JwShapeCommon
                                 double realy = p.HoleCenter + (84 / JwFileConsts.JwScale);
                                 jwPointBeam.RealPoint = new JWPoint(jwPointBeam.RealPoint.X, realy);
                                 p.HasBhLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(false, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
                             }
                             //获取需要添加 上下额外孔组的 孔组
                             //var f = pdlst.First();
@@ -4463,6 +4529,12 @@ namespace JwShapeCommon
                                 //p.HasPreLinkHole = true;
                                 jwPointBeam.Direct = ZhengfuType.Add;
                                 touch.JwHoleG.HasBhLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(false, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                             }
                             else
                             {
@@ -4479,6 +4551,12 @@ namespace JwShapeCommon
                             //没有找到 说明在端部
                             jwPointBeam.Direct = ZhengfuType.Add;
                             touch.JwHoleG.HasBhLinkHole = true;
+                            //2026年7月18日
+                            //2026年7月18日
+                            var ah = touch.JwHoleG.AppendHole(false, touch.WinnerBeam);
+                            ah.Beam = touch.WinnerBeam;
+                            touch.WinnerBeam.Holes.Add(ah);
+
                         }
                     }
                 }
@@ -4500,12 +4578,20 @@ namespace JwShapeCommon
                                 //p.HasPreLinkHole = true;
                                 jwPointBeam.Direct = ZhengfuType.Reduce;
                                 touch.JwHoleG.HasPreLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(true, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                                 var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc, 2));
                                 if (f != null)
                                 {
                                     //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                                     f.RJwBeam.holesorder();
                                     f.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                                    //2026年7月18日
+                                    f.RJwBeam.Holes.Add(ah);
                                 }
                             }
                             else
@@ -4547,6 +4633,12 @@ namespace JwShapeCommon
                                 //p.HasPreLinkHole = true;
                                 jwPointBeam.Direct = ZhengfuType.Reduce;
                                 touch.JwHoleG.HasPreLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(true, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                             }
                             else
                             {
@@ -4563,6 +4655,12 @@ namespace JwShapeCommon
                             //没有找到 说明在端部
                             jwPointBeam.Direct = ZhengfuType.Reduce;
                             touch.JwHoleG.HasPreLinkHole = true;
+                            //2026年7月18日
+                            //2026年7月18日
+                            var ah = touch.JwHoleG.AppendHole(true, touch.WinnerBeam);
+                            ah.Beam = touch.WinnerBeam;
+                            touch.WinnerBeam.Holes.Add(ah);
+
                         }
                         //jwPointBeam.Direct = ZhengfuType.Reduce;
                         //touch.JwHoleG.HasPreLinkHole = true;
@@ -4584,12 +4682,19 @@ namespace JwShapeCommon
                                 //p.HasPreLinkHole = true;
                                 jwPointBeam.Direct = ZhengfuType.Add;
                                 touch.JwHoleG.HasBhLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(false, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                                 var f = touch.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(bfc, 2));
                                 if (f != null)
                                 {
                                     //f.AJwBeam.StartSide.KongZu.HasBhLinkHole = true;
                                     f.AJwBeam.holesorder();
                                     f.AJwBeam.Holes.First().HasBhLinkHole = true;
+                                    f.AJwBeam.Holes.Add(ah);    
                                 }
                                 //jwPointBeam.Direct = ZhengfuType.Add;
                             }
@@ -4600,6 +4705,13 @@ namespace JwShapeCommon
                                 double realX = p.HoleCenter + (84 / JwFileConsts.JwScale);
                                 jwPointBeam.RealPoint = new JWPoint(realX, jwPointBeam.RealPoint.Y);
                                 p.HasBhLinkHole = true;
+                                //2026年7月18日
+                                //touch.LoserBeam.Holes.Add(touch.JwHoleG.AppendHole(false));
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(false, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                             }
                         }
                         //else
@@ -4627,6 +4739,12 @@ namespace JwShapeCommon
                                 //p.HasPreLinkHole = true;
                                 jwPointBeam.Direct = ZhengfuType.Add;
                                 touch.JwHoleG.HasBhLinkHole = true;
+                                //2026年7月18日
+                                //2026年7月18日
+                                var ah = touch.JwHoleG.AppendHole(false, touch.WinnerBeam);
+                                ah.Beam = touch.WinnerBeam;
+                                touch.WinnerBeam.Holes.Add(ah);
+
                             }
                             else
                             {
@@ -4641,6 +4759,12 @@ namespace JwShapeCommon
                             //没有找到 说明在端部
                             jwPointBeam.Direct = ZhengfuType.Add;
                             touch.JwHoleG.HasBhLinkHole = true;
+                            //2026年7月18日
+                            //2026年7月18日
+                            var ah = touch.JwHoleG.AppendHole(false, touch.WinnerBeam);
+                            ah.Beam = touch.WinnerBeam;
+                            touch.WinnerBeam.Holes.Add(ah);
+
                         }
                     }
                 }

@@ -56,6 +56,8 @@ namespace JwShapeCommon
         public EventHandler<WarningArgs> WarningEvent;
 
         public EventHandler RefreshDataEvent;
+
+        public EventHandler RefreshShowBeamsEvent;
     }
 
     /// <summary>

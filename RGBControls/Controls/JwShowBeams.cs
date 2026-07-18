@@ -25,6 +25,7 @@ namespace RGBJWMain.Controls
             this.BackColor = Color.Black;
             InitializeComponent();
             GlobalEvent.GetGlobalEvent().ControlSelectedSquareEvent += controlSelectedEvent;
+            //GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent += GlobalEvent_RefreshShowBeamsEvent;
             this.MouseWheel += JwShowBeams_MouseWheel;
             this.MouseClick += JwShowBeams_MouseClick;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
@@ -32,7 +33,11 @@ namespace RGBJWMain.Controls
               ControlStyles.OptimizedDoubleBuffer, true);
             this.UpdateStyles();
         }
-       
+
+        private void GlobalEvent_RefreshShowBeamsEvent(object? sender, EventArgs e)
+        {
+            this.Invalidate();
+        }
 
         private void controlSelectedEvent(object sender, ControlSelectedSquareArgs e)
         {
@@ -362,6 +367,10 @@ namespace RGBJWMain.Controls
             _showcolor = true;  
         }
 
+        public void Rehua()
+        {
+            Invalidate();
+        }
         private void drawControls(PaintEventArgs pe)
         {
             if (_bounds != null)

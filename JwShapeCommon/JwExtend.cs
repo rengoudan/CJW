@@ -500,6 +500,7 @@ namespace JwShapeCommon
                 if (fh == null)
                 {
                     hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                    hh.Beam= beam;
                     if (beam.DirectionType == BeamDirectionType.Horizontal)
                     {
                         hh.HoleCenter = location.X;
@@ -515,6 +516,7 @@ namespace JwShapeCommon
                     if (createFrom == HoleCreateFrom.FengeJ)
                     {
                         hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                        hh.Beam = beam;
                         if (beam.DirectionType == BeamDirectionType.Horizontal)
                         {
                             hh.HoleCenter = location.X;
@@ -535,6 +537,7 @@ namespace JwShapeCommon
             else
             {
                 hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
+                hh.Beam = beam;
                 if (beam.DirectionType == BeamDirectionType.Horizontal)
                 {
                     hh.HoleCenter = location.X;

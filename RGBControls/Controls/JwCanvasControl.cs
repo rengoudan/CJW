@@ -176,7 +176,7 @@ namespace RGBJWMain.Controls
         {
             base.Refresh();
             //jwShowBeams1.Refresh();
-            jwShowBeams1.Invalidate();
+            jwShowBeams1.Rehua();
         }
 
         public void jwToPng(string path)

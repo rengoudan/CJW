@@ -50,7 +50,14 @@ namespace RGBControls.Controls
             SubData = subdata;
             inittable();
             //this.Resize += Sub_Resize;
+            GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent += GlobalEvent_RefreshShowBeamsEvent;
 
+        }
+
+        private void GlobalEvent_RefreshShowBeamsEvent(object? sender, EventArgs e)
+        {
+            this.Invalidate();
+            this.jwCanvasControl1.Refresh();
         }
 
         private void inittable()
