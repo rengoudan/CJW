@@ -39,6 +39,13 @@ namespace JwCore
         public string JwProjectSubDataId { get; set; }
         public JwProjectSubData JwProjectSubData { get; set; } = null!;
         public CreateFromType CreateFrom { get; set; }
+
+        public bool HasStartChange { get; set; }
+
+        public bool HasEndChange { get; set; }
+        public Point StartOriginal { get; set; }
+
+        public Point EndOriginal { get; set; }
     }
 
     //public class JwLianjieGroupData

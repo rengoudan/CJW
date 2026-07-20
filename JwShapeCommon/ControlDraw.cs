@@ -25,6 +25,8 @@ namespace JwShapeCommon
 
         public bool IsTeshuBeam { get; set; }
 
+        public bool IsWujiao { get; set; }
+
         private bool _iselected;
         public bool IsSelected 
         {

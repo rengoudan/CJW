@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NetTopologySuite.Geometries;
 using JwwHelper;
+using System.Security.Policy;
 
 namespace JwShapeCommon.Model
 {
@@ -65,12 +66,43 @@ namespace JwShapeCommon.Model
         /// </summary>
         public double Length { get; set; }
 
+        /// <summary>
+        /// 2026年7月19日 为了支持判断桐beam，链接hole小于43调整
+        /// </summary>
+        public JwHole StartHoleOriginal { get; set; }
+
+        /// <summary>
+        /// 实际
+        /// </summary>
+        public JwHole StartHole { get; set; }
+
+        public bool HasStartChange { get; set; }
+
+        public LianjiePosition StartPosition { get; set; }
+
+        public JwHole EndHoleOriginal { get; set; }
+        /// <summary>
+        /// 实际
+        /// </summary>
+        public JwHole EndHole { get; set; } 
+
+        public bool HasEndChange { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public LianjiePosition EndPosition { get; set; }
+
         public JwLianjieData ToDbData()
         {
             JwLianjieData lianjieData = new JwLianjieData();
             lianjieData.Id = Id;
             lianjieData.Start=new Point(Start.RealPoint.X, Start.RealPoint.Y);
+            lianjieData.StartOriginal= new Point(Start.RealPointOriginal.X, Start.RealPointOriginal.Y);
             lianjieData.End = new Point(End.RealPoint.X, End.RealPoint.Y);
+            lianjieData.EndOriginal = new Point(End.RealPointOriginal.X, End.RealPointOriginal.Y);
+            lianjieData.HasEndChange= HasEndChange;
+            lianjieData.HasStartChange= HasStartChange;
             ////lianjieData.Id=Guid.NewGuid().ToString();
             //// = 12;
             ////var slq = JwExtend.Distance(Start.RealPoint, End.RealPoint);
@@ -81,6 +113,38 @@ namespace JwShapeCommon.Model
         }
 
 
+
+        public void ReplaceStartHole(JwHole newHole)
+        {
+            Start.Hole.IsMachining = false; 
+            //Start.RealPointOriginal= Start.RealPoint;
+            //Start.Hole.
+            Start.Hole = newHole;
+            HasStartChange = true;
+            Start.Recalculate(); // 如果你希望 RealPoint 也更新
+            calculateLength();// 更新长度
+        }
+
+        public void ReplaceEndHole(JwHole newHole)
+        {
+            Start.Hole.IsMachining = false;
+            End.Hole = newHole;
+            HasEndChange = true;
+            End.Recalculate();
+            calculateLength();// 更新长度
+        }
+
+
+        private void calculateLength()
+        {
+            if (Start != null && End != null)
+            {
+                var lg = JwExtend.Distance(Start.RealPoint, End.RealPoint);
+                var dl = Math.Round(lg, 1) * JwFileConsts.JwScale;
+                dl = dl - 220;//减部件长度
+                this.Length = Math.Round(dl, 0);
+            }
+        }
     }
 
     public class JwLianjie:IDrawToJww
@@ -135,6 +199,7 @@ namespace JwShapeCommon.Model
             jwwDatas.Add(tentwo);
             return jwwDatas;
         }
+
     }
 
     /// <summary>
@@ -177,48 +242,80 @@ namespace JwShapeCommon.Model
             this.Direct= direct;
             calculate();
         }
-        private void calculate()
+        private void calculate(bool isjs=false)
         {
+            if(!isjs)
+            {
+                double banjing = JwFileConsts.EllipseSpacing / (2 * JwFileConsts.JwScale);
+                if (this.LianjieType == BeamDirectionType.Horizontal)
+                {
+                    double pinayix = (int)this.Direct;
+                    double realy = 0;
+                    if (Touch.JwBeamVertical.Position == TaggDirect.Down)
+                    {
+                        realy = Touch.WinnerBeam.Center - banjing;
+                    }
+                    if (Touch.JwBeamVertical.Position == TaggDirect.Up)
+                    {
+                        realy = Touch.WinnerBeam.Center + banjing;
+                    }
+
+                    //double realy = Touch.WinnerBeam.Center + ((int)Direct) * 50;
+
+                    //double realx = Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
+                    double realx = Touch.LoserBeam.Center + pinayix * (84 / JwFileConsts.JwScale);
+                    this.RealPoint = new JWPoint(realx, realy);
+                }
+                else
+                {
+                    double realx = 0;// = this.IsStart ? 50 : -50;
+                    double realy = 0;
+                    if (Touch.JwBeamVertical.Position == TaggDirect.Right)
+                    {
+                        realx = Touch.WinnerBeam.Center + banjing;
+                    }
+                    if (Touch.JwBeamVertical.Position == TaggDirect.Left)
+                    {
+                        realx = Touch.WinnerBeam.Center - banjing;
+                    }
+                    double pinayix = (int)this.Direct;
+                    //realx = Touch.WinnerBeam.Center + ((int)Direct) * 50;
+
+                    //realy= Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
+                    realy = Touch.LoserBeam.Center + pinayix * (84 / JwFileConsts.JwScale);
+
+                    this.RealPoint = new JWPoint(realx, realy);
+                }
+            }
+            
+        }
+
+
+        //
+        public void Recalculate()
+        {
+            this.RealPointOriginal = this.RealPoint;
+            double x=Hole.Location.X;
+            double y=Hole.Location.Y;
             double banjing = JwFileConsts.EllipseSpacing / (2 * JwFileConsts.JwScale);
-            if (this.LianjieType == BeamDirectionType.Horizontal)
+            switch (Position)
             {
-                double pinayix = (int)this.Direct;
-                double realy = 0;
-                if (Touch.JwBeamVertical.Position== TaggDirect.Down)
-                {
-                    realy = Touch.WinnerBeam.Center - banjing;
-                }
-                if(Touch.JwBeamVertical.Position == TaggDirect.Up)
-                {
-                    realy = Touch.WinnerBeam.Center + banjing;
-                }
-
-                //double realy = Touch.WinnerBeam.Center + ((int)Direct) * 50;
-
-                //double realx = Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
-                double realx = Touch.LoserBeam.Center + pinayix * (84 / JwFileConsts.JwScale);
-                this.RealPoint=new JWPoint(realx, realy);
+                case LianjiePosition.Up:
+                    y = y + banjing;
+                    break;
+                case LianjiePosition.Down:
+                    y -= banjing;
+                    break;
+                case LianjiePosition.Left:
+                    x -= banjing;
+                    break;
+                case LianjiePosition.Right:
+                    y += banjing;
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                double realx = 0;// = this.IsStart ? 50 : -50;
-                double realy = 0;
-                if (Touch.JwBeamVertical.Position == TaggDirect.Right)
-                {
-                    realx = Touch.WinnerBeam.Center + banjing;
-                }
-                if (Touch.JwBeamVertical.Position == TaggDirect.Left)
-                {
-                    realx = Touch.WinnerBeam.Center - banjing;
-                }
-                double pinayix = (int)this.Direct;
-                //realx = Touch.WinnerBeam.Center + ((int)Direct) * 50;
-
-                //realy= Touch.LoserBeam.Center + pinayix * (100 / JwFileConsts.JwScale);
-                realy = Touch.LoserBeam.Center + pinayix * (84 / JwFileConsts.JwScale);
-
-                this.RealPoint = new JWPoint(realx, realy);
-            }
+            RealPoint=new JWPoint(x, y);
         }
 
         /// <summary>
@@ -230,6 +327,8 @@ namespace JwShapeCommon.Model
         /// 需要针对84*2 两个孔组间的距离 增加额外判定并且赋值操作
         /// </summary>
         public JWPoint RealPoint { get; set; }
+
+        public JWPoint RealPointOriginal { get; set; }
 
         /// <summary>
         /// 败方梁
@@ -284,6 +383,15 @@ namespace JwShapeCommon.Model
         /// </summary>
         public ZhengfuType Direct 
         { get { return _direct; } set { _direct = value;this.calculate(); } }
+
+        public LianjiePosition Position { get; set; }
+
+        public JwHole Hole { get; set; }
+
+        public bool HasChange { get; set; }
+
+        public JwHole NewHole { get; set; }
+
     }
 
     public class TouchType
@@ -293,5 +401,11 @@ namespace JwShapeCommon.Model
         public JWPoint JWPoint { get; set; }
 
         public JwTouch JwTouch { get; set; }
+    }
+
+    public class HoleOwnerInfo
+    {
+        public JwLianjieSingle Lianjie { get; set; }
+        public bool IsStart { get; set; }
     }
 }

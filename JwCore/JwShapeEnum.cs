@@ -62,7 +62,8 @@ namespace JwCore
         DownPillar = 6,
         Text = 7,
         Cutting = 8,
-        AddedHole = 9
+        AddedHole = 9,
+        Star=10
     }
 
     /// <summary>
@@ -229,6 +230,14 @@ namespace JwCore
     {
         Reduce = -1,
         Add = 1
+    }
+
+    public enum LianjiePosition
+    {
+        Up = 1,
+        Down = 2,
+        Left = 3,
+        Right = 4
     }
 
     public enum LianjieParsingMethod

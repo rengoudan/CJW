@@ -210,5 +210,52 @@ namespace JwShapeCommon
                 (int)((b + m) * 255)
             );
         }
+
+        /// <summary>
+        /// 计算五角星的 10 个顶点（外点 + 内点）
+        /// </summary>
+        /// <param name="center">中心点</param>
+        /// <param name="outerRadius">外半径（尖端到中心）</param>
+        /// <returns>10 个顶点（顺序可直接用于 DrawPolygon）</returns>
+        public static PointF[] GetStarPoints(PointF center, float outerRadius)
+        {
+            // 内半径比例：sin(18°) / sin(54°)
+            double innerRatio = Math.Sin(Deg2Rad(18)) / Math.Sin(Deg2Rad(54));
+            float innerRadius = (float)(outerRadius * innerRatio);
+
+            PointF[] pts = new PointF[10];
+
+            // 起始角度：-90°（让一个尖端朝上）
+            double angleOuter = Deg2Rad(-90);
+            double step = Deg2Rad(72);   // 360 / 5
+
+            for (int i = 0; i < 5; i++)
+            {
+                // 外点
+                pts[2 * i] = new PointF(
+                    center.X + (float)(outerRadius * Math.Cos(angleOuter)),
+                    center.Y + (float)(outerRadius * Math.Sin(angleOuter))
+                );
+
+                // 内点：外点角度 + 36°
+                double angleInner = angleOuter + Deg2Rad(36);
+                pts[2 * i + 1] = new PointF(
+                    center.X + (float)(innerRadius * Math.Cos(angleInner)),
+                    center.Y + (float)(innerRadius * Math.Sin(angleInner))
+                );
+
+                angleOuter += step;
+            }
+
+            return pts;
+        }
+
+        private static double Deg2Rad(double deg)
+        {
+            return deg * Math.PI / 180.0;
+        }
+
     }
+
+
 }

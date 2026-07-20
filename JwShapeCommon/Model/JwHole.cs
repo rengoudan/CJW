@@ -354,6 +354,25 @@ namespace JwShapeCommon.Model
         public JwBeam Beam { get; set; }
 
         /// <summary>
+        /// createfrom为lianjie时，且间距小于43时候标识成对的孔
+        /// </summary>
+        public JwHole PairedHole { get; set; }
+
+        /// <summary>
+        /// 2026年7月19日是否被替换
+        /// </summary>
+        public bool IsPairedChanged { get; set; }
+
+        /// <summary>
+        /// 2026年7月19日 仅在createfrom为lianjie时，标记连接线的坐标点逻辑如下
+        /// 如果是水平梁，标记为Y坐标，相对于beam的center是add还是增加
+        /// 即连接线起点在梁的上方还是下方，上为add下为reduce
+        /// 如果是垂直梁，标记为X坐标，相对于beam的center是add还是reduce
+        /// left为reduce right为add
+        /// </summary>
+        public ZhengfuType Direct { get; set; }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="ispre"></param>
@@ -399,6 +418,8 @@ namespace JwShapeCommon.Model
             hole.HasBottom = true;
             return hole;
         }
+
+
     }
 
     public class JwBeamSide

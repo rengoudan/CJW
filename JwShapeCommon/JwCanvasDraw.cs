@@ -3,6 +3,7 @@ using JwShapeCommon.Model;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -152,6 +153,32 @@ namespace JwShapeCommon
                         cline.Distance= zlianjie.Length;
 
                         LianjieLines.Add(cline);
+                        float dx = (float)(JwFileConsts.EllipseDiameter / JwFileConsts.JwScale * _minbeilv);
+                        if (zlianjie.HasEndChange)
+                        {
+                            ControlDraw wjx1=new ControlDraw();
+                            wjx1.PenColor = Color.Purple;
+                            var np = new JWPoint(zlianjie.End.RealPointOriginal.X, zlianjie.End.RealPointOriginal.Y);
+                            np.Zoom(_minbeilv);
+                            np.ChangeAxis(axisX, axisY);
+                            var lst= JwShapeHelper.GetStarPoints(np.ToPointF(), dx);
+                            wjx1.DrawPoints = lst.ToList();
+                            wjx1.ShapeType = DrawShapeType.Star;
+                            controls.Add(wjx1);
+                        }
+                        if(zlianjie.HasStartChange)
+                        {
+                            ControlDraw wjx2 = new ControlDraw();
+                            wjx2.PenColor = Color.Purple;
+                            var np = new JWPoint(zlianjie.Start.RealPointOriginal.X, zlianjie.Start.RealPointOriginal.Y);
+                            np.Zoom(_minbeilv);
+                            np.ChangeAxis(axisX, axisY);
+                            var lst2 = JwShapeHelper.GetStarPoints(np.ToPointF(), dx);
+                            wjx2.DrawPoints = lst2.ToList();
+                            wjx2.ShapeType = DrawShapeType.Star;
+                            controls.Add(wjx2);
+                        }
+
                     }
                 }
                 if (jwCanvas.IsFromData)

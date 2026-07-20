@@ -563,7 +563,7 @@ namespace RGBJWMain.Controls
                         if (ljl.IsSelected)
                         {
                             pe.Graphics.DrawLine(penljselected, ljl.DrawStart, ljl.DrawEnd);
-                            DrawLineWithLength(pe.Graphics, penljselected, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite,ljl.Distance);
+                            DrawLineWithLength(pe.Graphics, penljselected, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite, ljl.Distance);
                         }
                         else
                         {
@@ -571,33 +571,46 @@ namespace RGBJWMain.Controls
                             DrawLineWithLength(pe.Graphics, penlj, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite, ljl.Distance);
                         }
                     }
-                }
-                if (_showDownPillar)
-                {
-                    //绘制下方柱
-                    if (CanvasDraw.DownPillars.Count > 0)
+                    var wjxlst = CanvasDraw.controls.Where(t => t.ShapeType == DrawShapeType.Star).ToList();
+                    if (wjxlst?.Count > 0)
                     {
-                        foreach (var dp in CanvasDraw.DownPillars)
                         {
-                            Brush bush = new SolidBrush(Color.Blue);
-                            pe.Graphics.DrawLine(penjt, dp.LineAS, dp.LineAE);
-                            pe.Graphics.DrawLine(penjt, dp.LineBS, dp.LineBE);
+
+                            foreach (var t in wjxlst)
+                            {
+                                Brush bushdirect = new SolidBrush(t.PenColor);
+                                pe.Graphics.FillPolygon(bushdirect, t.DrawPoints.ToArray());
+                            }
                         }
 
                     }
-                }
-                
-                if (_showCutting)
-                {
-                    if (CanvasDraw.CuttingDraws.Count > 0)
+                    if (_showDownPillar)
                     {
-                        Brush bushdirect = new SolidBrush(Color.Purple);
-                        foreach (var cd in CanvasDraw.CuttingDraws)
+                        //绘制下方柱
+                        if (CanvasDraw.DownPillars.Count > 0)
                         {
-                            pe.Graphics.FillPolygon(bushdirect, cd.Polygon.ToArray());
+                            foreach (var dp in CanvasDraw.DownPillars)
+                            {
+                                Brush bush = new SolidBrush(Color.Blue);
+                                pe.Graphics.DrawLine(penjt, dp.LineAS, dp.LineAE);
+                                pe.Graphics.DrawLine(penjt, dp.LineBS, dp.LineBE);
+                            }
+
                         }
                     }
 
+                    if (_showCutting)
+                    {
+                        if (CanvasDraw.CuttingDraws.Count > 0)
+                        {
+                            Brush bushdirect = new SolidBrush(Color.Purple);
+                            foreach (var cd in CanvasDraw.CuttingDraws)
+                            {
+                                pe.Graphics.FillPolygon(bushdirect, cd.Polygon.ToArray());
+                            }
+                        }
+
+                    }
                 }
             }
         }
