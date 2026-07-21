@@ -4473,40 +4473,12 @@ namespace JwShapeCommon
                     }
                     var pdlst = startTouch.WinnerBeam.Holes.Where(t => t.HoleCenter > fist.X && t.FirstCreateFrom != HoleCreateFrom.Lianjie).OrderBy(t => t.HoleCenter).ToList();
                     var p = pdlst.First();
-                    var cha = Math.Abs(p.HoleCenter - fist.X) * JwFileConsts.JwScale;
-                    if (cha > 2 * 84)
+                    if (p != null)
                     {
-                        startx = startTouch.JieChuPoint.X + touchbanjing;
-                        //需要添加 上下额外孔组的 孔组
-                        //p.HasPreLinkHole = true;
-                        //jwPointBeam.Direct = ZhengfuType.Reduce;
-                        //2026年7月18日
-                        //2026年7月18日
-                        starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                        starthole.Beam = startTouch.WinnerBeam;
-                        startTouch.WinnerBeam.Holes.Add(starthole);
-
-                    }
-                    else
-                    {
-                        startx = p.Location.X + touchbanjing;
-                        //jwPointBeam.Direct = ZhengfuType.Reduce;
-                        starthole = p.AppendHole(false, startTouch.WinnerBeam);
-                        startTouch.WinnerBeam.Holes.Add(starthole);
-                    }
-                }
-                else
-                {
-                    start.Position = LianjiePosition.Right;
-                    startx = startTouch.WinnerBeam.Center + banjing;
-                    if (fist.Y > startTouch.LoserBeam.Center)
-                    {
-                        var pdlst = startTouch.WinnerBeam.Holes.Where(t => t.HoleCenter > fist.Y && t.FirstCreateFrom != HoleCreateFrom.Lianjie).OrderBy(t => t.HoleCenter).ToList();
-                        var p = pdlst.First();
-                        var cha = Math.Abs(p.HoleCenter - fist.Y) * JwFileConsts.JwScale;
+                        var cha = Math.Abs(p.HoleCenter - fist.X) * JwFileConsts.JwScale;
                         if (cha > 2 * 84)
                         {
-                            starty = startTouch.JieChuPoint.Y + touchbanjing;
+                            startx = startTouch.JieChuPoint.X + touchbanjing;
                             //需要添加 上下额外孔组的 孔组
                             //p.HasPreLinkHole = true;
                             //jwPointBeam.Direct = ZhengfuType.Reduce;
@@ -4519,7 +4491,7 @@ namespace JwShapeCommon
                         }
                         else
                         {
-                            starty = p.Location.Y + touchbanjing;
+                            startx = p.Location.X + touchbanjing;
                             //jwPointBeam.Direct = ZhengfuType.Reduce;
                             starthole = p.AppendHole(false, startTouch.WinnerBeam);
                             startTouch.WinnerBeam.Holes.Add(starthole);
@@ -4527,10 +4499,91 @@ namespace JwShapeCommon
                     }
                     else
                     {
+                        startx = startTouch.JieChuPoint.X + touchbanjing;
+                        //需要添加 上下额外孔组的 孔组
+                        //p.HasPreLinkHole = true;
+                        //jwPointBeam.Direct = ZhengfuType.Reduce;
+                        //2026年7月18日
+                        //2026年7月18日
+                        starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                        starthole.Beam = startTouch.WinnerBeam;
+                        startTouch.WinnerBeam.Holes.Add(starthole);
+                    }
+                }
+                else
+                {
+                    start.Position = LianjiePosition.Right;
+                    startx = startTouch.WinnerBeam.Center + banjing;
+                    if (fist.Y > startTouch.LoserBeam.Center)
+                    {
+                        var pdlst = startTouch.WinnerBeam.Holes.Where(t => t.HoleCenter > fist.Y && t.FirstCreateFrom != HoleCreateFrom.Lianjie).OrderBy(t => t.HoleCenter).ToList();
+                        var p = pdlst.First();
+                        if (p != null)
+                        {
+                            var cha = Math.Abs(p.HoleCenter - fist.Y) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                starty = startTouch.JieChuPoint.Y + touchbanjing;
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                //jwPointBeam.Direct = ZhengfuType.Reduce;
+                                //2026年7月18日
+                                //2026年7月18日
+                                starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                                starthole.Beam = startTouch.WinnerBeam;
+                                startTouch.WinnerBeam.Holes.Add(starthole);
+
+                            }
+                            else
+                            {
+                                starty = p.Location.Y + touchbanjing;
+                                //jwPointBeam.Direct = ZhengfuType.Reduce;
+                                starthole = p.AppendHole(false, startTouch.WinnerBeam);
+                                startTouch.WinnerBeam.Holes.Add(starthole);
+                            }
+                        }
+                        else
+                        {
+                            starty = startTouch.JieChuPoint.Y + touchbanjing;
+                            //需要添加 上下额外孔组的 孔组
+                            //p.HasPreLinkHole = true;
+                            //jwPointBeam.Direct = ZhengfuType.Reduce;
+                            //2026年7月18日
+                            //2026年7月18日
+                            starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                            starthole.Beam = startTouch.WinnerBeam;
+                            startTouch.WinnerBeam.Holes.Add(starthole);
+                        }
+                    }
+                    else
+                    {
                         var pdlst = startTouch.WinnerBeam.Holes.Where(t => t.HoleCenter < fist.Y && t.FirstCreateFrom != HoleCreateFrom.Lianjie).OrderByDescending(t => t.HoleCenter).ToList();
                         var p = pdlst.First();
-                        var cha = Math.Abs(p.HoleCenter - fist.Y) * JwFileConsts.JwScale;
-                        if (cha > 2 * 84)
+                        if (p != null)
+                        {
+                            var cha = Math.Abs(p.HoleCenter - fist.Y) * JwFileConsts.JwScale;
+                            if (cha > 2 * 84)
+                            {
+                                starty = startTouch.JieChuPoint.Y - touchbanjing;
+                                //需要添加 上下额外孔组的 孔组
+                                //p.HasPreLinkHole = true;
+                                //jwPointBeam.Direct = ZhengfuType.Reduce;
+                                //2026年7月18日
+                                //2026年7月18日
+                                starthole = startTouch.JwHoleG.AppendHole(true, startTouch.WinnerBeam);
+                                starthole.Beam = startTouch.WinnerBeam;
+                                startTouch.WinnerBeam.Holes.Add(starthole);
+
+                            }
+                            else
+                            {
+                                starty = p.Location.Y - touchbanjing;
+                                //jwPointBeam.Direct = ZhengfuType.Reduce;
+                                starthole = p.AppendHole(false, startTouch.WinnerBeam);
+                                startTouch.WinnerBeam.Holes.Add(starthole);
+                            }
+                        }
+                        else
                         {
                             starty = startTouch.JieChuPoint.Y - touchbanjing;
                             //需要添加 上下额外孔组的 孔组
@@ -4540,14 +4593,6 @@ namespace JwShapeCommon
                             //2026年7月18日
                             starthole = startTouch.JwHoleG.AppendHole(true, startTouch.WinnerBeam);
                             starthole.Beam = startTouch.WinnerBeam;
-                            startTouch.WinnerBeam.Holes.Add(starthole);
-
-                        }
-                        else
-                        {
-                            starty = p.Location.Y - touchbanjing;
-                            //jwPointBeam.Direct = ZhengfuType.Reduce;
-                            starthole = p.AppendHole(false, startTouch.WinnerBeam);
                             startTouch.WinnerBeam.Holes.Add(starthole);
                         }
                     }

@@ -146,10 +146,13 @@ namespace JwShapeCommon
         {
             JwLianjie lianjie = new JwLianjie();
             lianjie.Start = new JWPoint(data.Start.X, data.Start.Y);
-            
+            lianjie.StartOriginal=new JWPoint(data.StartOriginal.X, data.StartOriginal.Y);
+            lianjie.EndOriginal = new JWPoint(data.EndOriginal.X, data.EndOriginal.Y);
             lianjie.End = new JWPoint(data.End.X, data.End.Y);
             lianjie.Length = data.Length;
             lianjie.Id = data.Id;
+            lianjie.HasEndChange= data.HasEndChange;
+            lianjie.HasStartChange= data.HasStartChange;
             //lianjie.
             return lianjie;
         }

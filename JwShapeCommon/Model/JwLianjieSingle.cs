@@ -153,6 +153,14 @@ namespace JwShapeCommon.Model
 
         public JWPoint End { get; set; }
 
+        public JWPoint StartOriginal { get; set; }
+
+        public JWPoint EndOriginal { get; set; }
+
+        public bool HasStartChange { get; set; }
+
+        public bool HasEndChange { get; set; }
+
         /// <summary>
         /// 实际的长度单位mM
         /// </summary>

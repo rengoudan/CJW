@@ -219,6 +219,49 @@ namespace JwShapeCommon
                             cline.DrawEnd = jpend.ToPointF();
                             cline.Distance=jlj.Length;
                             LianjieLines.Add(cline);
+                            float dx = (float)(150d / JwFileConsts.JwScale * _minbeilv);
+                            if (jlj.HasEndChange)
+                            {
+                                ControlDraw wjx1 = new ControlDraw();
+                                wjx1.PenColor = Color.Purple;
+                                var np = new JWPoint(jlj.EndOriginal.X, jlj.EndOriginal.Y);
+                                np.Zoom(_minbeilv);
+                                np.ChangeAxis(axisX, axisY);
+                                PointF npf = np.ToPointF();
+                                // 外接矩形（左上角坐标 + 宽高）
+                                RectangleF rect = new RectangleF(
+                                    npf.X - dx,
+                                    npf.Y - dx,
+                                    dx * 2,
+                                    dx * 2);
+                                //var lst= JwShapeHelper.GetStarPoints(np.ToPointF(), dx);
+                                //wjx1.DrawPoints = new List<PointF> ();
+                                //wjx1.DrawPoints.Add(np.ToPointF());
+                                wjx1.DrawRectangleF = rect;
+                                wjx1.ShapeType = DrawShapeType.Star;
+                                controls.Add(wjx1);
+                            }
+                            if (jlj.HasStartChange)
+                            {
+                                ControlDraw wjx2 = new ControlDraw();
+                                wjx2.PenColor = Color.Purple;
+                                var np = new JWPoint(jlj.StartOriginal.X, jlj.StartOriginal.Y);
+                                np.Zoom(_minbeilv);
+                                np.ChangeAxis(axisX, axisY);
+                                PointF npf = np.ToPointF();
+                                // 外接矩形（左上角坐标 + 宽高）
+                                RectangleF rect = new RectangleF(
+                                    npf.X - dx,
+                                    npf.Y - dx,
+                                    dx * 2,
+                                    dx * 2);
+                                //var lst= JwShapeHelper.GetStarPoints(np.ToPointF(), dx);
+                                //wjx1.DrawPoints = new List<PointF> ();
+                                //wjx1.DrawPoints.Add(np.ToPointF());
+                                wjx2.DrawRectangleF = rect;
+                                wjx2.ShapeType = DrawShapeType.Star;
+                                controls.Add(wjx2);
+                            }
                         }
                     }
                 }
