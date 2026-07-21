@@ -578,8 +578,13 @@ namespace RGBJWMain.Controls
 
                             foreach (var t in wjxlst)
                             {
-                                Brush bushdirect = new SolidBrush(t.PenColor);
-                                pe.Graphics.FillPolygon(bushdirect, t.DrawPoints.ToArray());
+                                //Brush bushdirect = new SolidBrush(t.PenColor);
+                                //pe.Graphics.FillPolygon(bushdirect, t.DrawPoints.ToArray());
+                                using (Pen pen = new Pen(t.PenColor))
+                                {
+                                    // 画圆的轮廓
+                                    pe.Graphics.DrawEllipse(pen, t.DrawRectangleF);
+                                }
                             }
                         }
 

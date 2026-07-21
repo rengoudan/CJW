@@ -1,6 +1,7 @@
 ﻿using JwCore;
 using JwShapeCommon.Model;
 using Microsoft.Extensions.Logging.Abstractions;
+using NetTopologySuite.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -153,7 +154,7 @@ namespace JwShapeCommon
                         cline.Distance= zlianjie.Length;
 
                         LianjieLines.Add(cline);
-                        float dx = (float)(JwFileConsts.EllipseDiameter / JwFileConsts.JwScale * _minbeilv);
+                        float dx = (float)(150d / JwFileConsts.JwScale * _minbeilv);
                         if (zlianjie.HasEndChange)
                         {
                             ControlDraw wjx1=new ControlDraw();
@@ -161,8 +162,17 @@ namespace JwShapeCommon
                             var np = new JWPoint(zlianjie.End.RealPointOriginal.X, zlianjie.End.RealPointOriginal.Y);
                             np.Zoom(_minbeilv);
                             np.ChangeAxis(axisX, axisY);
-                            var lst= JwShapeHelper.GetStarPoints(np.ToPointF(), dx);
-                            wjx1.DrawPoints = lst.ToList();
+                            PointF npf = np.ToPointF();
+                            // 外接矩形（左上角坐标 + 宽高）
+                            RectangleF rect = new RectangleF(
+                                npf.X - dx,
+                                npf.Y - dx,
+                                dx * 2,
+                                dx * 2);
+                            //var lst= JwShapeHelper.GetStarPoints(np.ToPointF(), dx);
+                            //wjx1.DrawPoints = new List<PointF> ();
+                            //wjx1.DrawPoints.Add(np.ToPointF());
+                            wjx1.DrawRectangleF = rect;
                             wjx1.ShapeType = DrawShapeType.Star;
                             controls.Add(wjx1);
                         }
@@ -173,8 +183,17 @@ namespace JwShapeCommon
                             var np = new JWPoint(zlianjie.Start.RealPointOriginal.X, zlianjie.Start.RealPointOriginal.Y);
                             np.Zoom(_minbeilv);
                             np.ChangeAxis(axisX, axisY);
-                            var lst2 = JwShapeHelper.GetStarPoints(np.ToPointF(), dx);
-                            wjx2.DrawPoints = lst2.ToList();
+                            PointF npf = np.ToPointF();
+                            // 外接矩形（左上角坐标 + 宽高）
+                            RectangleF rect = new RectangleF(
+                                npf.X - dx,
+                                npf.Y - dx,
+                                dx * 2,
+                                dx * 2);
+                            //var lst= JwShapeHelper.GetStarPoints(np.ToPointF(), dx);
+                            //wjx1.DrawPoints = new List<PointF> ();
+                            //wjx1.DrawPoints.Add(np.ToPointF());
+                            wjx2.DrawRectangleF = rect;
                             wjx2.ShapeType = DrawShapeType.Star;
                             controls.Add(wjx2);
                         }

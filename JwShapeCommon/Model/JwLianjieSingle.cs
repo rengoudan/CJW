@@ -310,7 +310,7 @@ namespace JwShapeCommon.Model
                     x -= banjing;
                     break;
                 case LianjiePosition.Right:
-                    y += banjing;
+                    x += banjing;
                     break;
                 default:
                     break;

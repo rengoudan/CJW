@@ -27,6 +27,8 @@ namespace JwShapeCommon
 
         public bool IsWujiao { get; set; }
 
+        
+
         private bool _iselected;
         public bool IsSelected 
         {
