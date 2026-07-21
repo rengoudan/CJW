@@ -146,6 +146,7 @@ namespace JwShapeCommon
         {
             JwLianjie lianjie = new JwLianjie();
             lianjie.Start = new JWPoint(data.Start.X, data.Start.Y);
+            
             lianjie.End = new JWPoint(data.End.X, data.End.Y);
             lianjie.Length = data.Length;
             lianjie.Id = data.Id;
@@ -170,7 +171,8 @@ namespace JwShapeCommon
                 HoleType = data.HoleType,
                 Id = data.Id,
                 KongNum = data.KongNum,
-                Location = new JWPoint(data.Location.X, data.Location.Y)
+                Location = new JWPoint(data.Location.X, data.Location.Y),
+                IsMachining = data.IsMachining,
             };
             if (data.HasBhLinkHole)
             {

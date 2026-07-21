@@ -4686,8 +4686,8 @@ namespace JwShapeCommon
                 jwLianjieSingle.Start.Hole = starthole;
                 jwLianjieSingle.End.Hole = endhole;
                 jwLianjieSingle.IsCreateSuccess = true;
-                jwLianjieSingle.Start.RealPoint=new JWPoint(startx,starty);
-                jwLianjieSingle.End.RealPoint = new JWPoint(endx, endy);
+                jwLianjieSingle.Start.RealPoint=jwLianjieSingle.Start.RealPointOriginal=new JWPoint(startx,starty);
+                jwLianjieSingle.End.RealPoint=jwLianjieSingle.End.RealPointOriginal = new JWPoint(endx, endy);
                 jwLianjieSingle.EndHole = jwLianjieSingle.EndHoleOriginal = endhole;
                 jwLianjieSingle.StartHole = jwLianjieSingle.StartHoleOriginal = starthole;
                 var slq = JwExtend.Distance(start.RealPoint, end.RealPoint);

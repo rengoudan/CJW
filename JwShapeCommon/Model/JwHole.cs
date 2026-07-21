@@ -336,6 +336,7 @@ namespace JwShapeCommon.Model
                 HoleType = HoleType,
                 KongNum = KongNum,
                 Location = new NetTopologySuite.Geometries.Point(Location.X, Location.Y),
+                IsMachining=IsMachining
 
             };
             return holeData;
@@ -380,6 +381,7 @@ namespace JwShapeCommon.Model
         public JwHole AppendHole(bool ispre,JwBeam _beam)
         {
             JwHole hole = new JwHole();
+            hole.Id = Guid.NewGuid().ToString();
             hole.IsMachining = true;
             hole.FirstCreateFrom =hole.ChangeFrom = HoleCreateFrom.Lianjie;
             double x, y;

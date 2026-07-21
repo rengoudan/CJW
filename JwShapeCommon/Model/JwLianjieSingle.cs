@@ -131,7 +131,7 @@ namespace JwShapeCommon.Model
             End.Hole = newHole;
             HasEndChange = true;
             End.Recalculate();
-            calculateLength();// 更新长度
+            calculateLength();// 更新长度l`
         }
 
 
