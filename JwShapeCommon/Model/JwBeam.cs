@@ -2466,7 +2466,7 @@ namespace JwShapeCommon
                         nb.BeamTouchs.AddRange(qll);
                         nb.BeamTouchs.ForEach(t => t.WinnerBeam = nb);
                         relst.Add(nb);
-                        var ft = zlst.Find(t => t.BFCenter == endx);
+                        var ft = zlst.Find(t => t.BFCenter == Math.Round(endx,2));
                         if (ft != null)
                         {
                             ft.QiegeZu = qiegeZu;
