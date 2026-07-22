@@ -3907,7 +3907,7 @@ namespace JwShapeCommon
         private void processChengduiXian(JwChengduiXian jwChengduiXian)
         {
             double maxlg = 0;
-            JwLianjieSingle jwLianjie = findBeam2(jwChengduiXian.XianOne);
+            JwLianjieSingle jwLianjie = findBeam3(jwChengduiXian.XianOne);
             if (jwLianjie.IsCreateSuccess)
             {
                 jwLianjie.GroupId = jwChengduiXian.GroupId;
@@ -3915,7 +3915,7 @@ namespace JwShapeCommon
                 maxlg=Math.Max(maxlg, jwLianjie.Length);
 
             }
-            JwLianjieSingle jwLianjies = findBeam2(jwChengduiXian.XianTwo);
+            JwLianjieSingle jwLianjies = findBeam3(jwChengduiXian.XianTwo);
             if (jwLianjies.IsCreateSuccess)
             {
                 jwLianjies.GroupId = jwChengduiXian.GroupId;
@@ -4460,14 +4460,18 @@ namespace JwShapeCommon
                             starthole = new JwHole(startx, startTouch.WinnerBeam.Center);
                             starthole.HoleCenter = startx;
                             //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                            starthole.Beam = startTouch.WinnerBeam;
-                            startTouch.WinnerBeam.Holes.Add(starthole);
+                            //starthole.Beam = startTouch.WinnerBeam;
+                            //startTouch.WinnerBeam.Holes.Add(starthole);
                             if (startTouch.HasQiege)
                             {
                                 starthole.Beam = startTouch.QiegeZu.AJwBeam;
                                 startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
                             }
-
+                            else
+                            {
+                                starthole.Beam = startTouch.WinnerBeam;
+                                startTouch.WinnerBeam.Holes.Add(starthole);
+                            }
                         }
                         else
                         {
@@ -4478,12 +4482,17 @@ namespace JwShapeCommon
                             starthole = new JwHole(startx, startTouch.WinnerBeam.Center);
                             starthole.HoleCenter = startx;
                             //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                            starthole.Beam = startTouch.WinnerBeam;
-                            startTouch.WinnerBeam.Holes.Add(starthole);
+                            //starthole.Beam = startTouch.WinnerBeam;
+                            //startTouch.WinnerBeam.Holes.Add(starthole);
                             if (startTouch.HasQiege)
                             {
                                 starthole.Beam = startTouch.QiegeZu.AJwBeam;
                                 startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
+                            }
+                            else
+                            {
+                                starthole.Beam = startTouch.WinnerBeam;
+                                startTouch.WinnerBeam.Holes.Add(starthole);
                             }
                         }
                     }
@@ -4501,12 +4510,17 @@ namespace JwShapeCommon
                         starthole = new JwHole(startx, startTouch.WinnerBeam.Center);
                         starthole.HoleCenter = startx;
                         //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                        starthole.Beam = startTouch.WinnerBeam;
-                        startTouch.WinnerBeam.Holes.Add(starthole);
+                        //starthole.Beam = startTouch.WinnerBeam;
+                        //startTouch.WinnerBeam.Holes.Add(starthole);
                         if (startTouch.HasQiege)
                         {
                             starthole.Beam = startTouch.QiegeZu.AJwBeam;
                             startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
+                        }
+                        else
+                        {
+                            starthole.Beam = startTouch.WinnerBeam;
+                            startTouch.WinnerBeam.Holes.Add(starthole);
                         }
                     }
                 }
@@ -4532,14 +4546,18 @@ namespace JwShapeCommon
                                 starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
                                 starthole.HoleCenter = starty;
                                 //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                                starthole.Beam = startTouch.WinnerBeam;
-                                startTouch.WinnerBeam.Holes.Add(starthole);
+                                //starthole.Beam = startTouch.WinnerBeam;
+                                //startTouch.WinnerBeam.Holes.Add(starthole);
                                 if (startTouch.HasQiege)
                                 {
                                     starthole.Beam = startTouch.QiegeZu.AJwBeam;
                                     startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
                                 }
-
+                                else
+                                {
+                                    starthole.Beam = startTouch.WinnerBeam;
+                                    startTouch.WinnerBeam.Holes.Add(starthole);
+                                }
 
                             }
                             else
@@ -4549,11 +4567,16 @@ namespace JwShapeCommon
                                 starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
                                 starthole.HoleCenter = starty;
                                 //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                                starthole.Beam = startTouch.WinnerBeam;
-                                startTouch.WinnerBeam.Holes.Add(starthole);
+                                //starthole.Beam = startTouch.WinnerBeam;
+                                //startTouch.WinnerBeam.Holes.Add(starthole);
                                 if (startTouch.HasQiege)
                                 {
                                     startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
+                                }
+                                else
+                                {
+                                    starthole.Beam = startTouch.WinnerBeam;
+                                    startTouch.WinnerBeam.Holes.Add(starthole);
                                 }
                             }
                         }
@@ -4568,12 +4591,17 @@ namespace JwShapeCommon
                             starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
                             starthole.HoleCenter = starty;
                             //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                            starthole.Beam = startTouch.WinnerBeam;
-                            startTouch.WinnerBeam.Holes.Add(starthole);
+                            //starthole.Beam = startTouch.WinnerBeam;
+                            //startTouch.WinnerBeam.Holes.Add(starthole);
                             if (startTouch.HasQiege)
                             {
                                 starthole.Beam = startTouch.QiegeZu.AJwBeam;
                                 startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
+                            }
+                            else
+                            {
+                                starthole.Beam = startTouch.WinnerBeam;
+                                startTouch.WinnerBeam.Holes.Add(starthole);
                             }
                         }
                     }
@@ -4595,12 +4623,17 @@ namespace JwShapeCommon
                                 starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
                                 starthole.HoleCenter = starty;
                                 //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                                starthole.Beam = startTouch.WinnerBeam;
-                                startTouch.WinnerBeam.Holes.Add(starthole);
+                                //starthole.Beam = startTouch.WinnerBeam;
+                                //startTouch.WinnerBeam.Holes.Add(starthole);
                                 if (startTouch.HasQiege)
                                 {
                                     starthole.Beam = startTouch.QiegeZu.RJwBeam;
                                     startTouch.QiegeZu.RJwBeam.Holes.Add(starthole);
+                                }
+                                else
+                                {
+                                    starthole.Beam = startTouch.WinnerBeam;
+                                    startTouch.WinnerBeam.Holes.Add(starthole);
                                 }
                             }
                             else
@@ -4610,12 +4643,17 @@ namespace JwShapeCommon
                                 starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
                                 starthole.HoleCenter = starty;
                                 //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
-                                starthole.Beam = startTouch.WinnerBeam;
-                                startTouch.WinnerBeam.Holes.Add(starthole);
+                                //starthole.Beam = startTouch.WinnerBeam;
+                                //startTouch.WinnerBeam.Holes.Add(starthole);
                                 if (startTouch.HasQiege)
                                 {
                                     starthole.Beam = startTouch.QiegeZu.RJwBeam;
                                     startTouch.QiegeZu.RJwBeam.Holes.Add(starthole);
+                                }
+                                else
+                                {
+                                    starthole.Beam = startTouch.WinnerBeam;
+                                    startTouch.WinnerBeam.Holes.Add(starthole);
                                 }
                             }
                         }
@@ -4639,6 +4677,11 @@ namespace JwShapeCommon
                             {
                                 starthole.Beam = startTouch.QiegeZu.RJwBeam;
                                 startTouch.QiegeZu.RJwBeam.Holes.Add(starthole);
+                            }
+                            else
+                            {
+                                starthole.Beam = startTouch.WinnerBeam;
+                                startTouch.WinnerBeam.Holes.Add(starthole);
                             }
                         }
                     }
@@ -4671,12 +4714,17 @@ namespace JwShapeCommon
                             //2026年7月18日
                             endhole = new JwHole(endx, endy);//endTouch.JwHoleG.AppendHole(true, endTouch.WinnerBeam);
                             endhole.HoleCenter = endx;
-                            endhole.Beam = endTouch.WinnerBeam;
+                            //endhole.Beam = endTouch.WinnerBeam;
                             endTouch.WinnerBeam.Holes.Add(endhole);
                             if (endTouch.HasQiege)
                             {
                                 endhole.Beam = endTouch.QiegeZu.RJwBeam;
                                 endTouch.QiegeZu.RJwBeam.Holes.Add(endhole);
+                            }
+                            else
+                            {
+                                endhole.Beam = endTouch.WinnerBeam;
+                                endTouch.WinnerBeam.Holes.Add(endhole);
                             }
 
                         }
@@ -4692,6 +4740,11 @@ namespace JwShapeCommon
                                 endhole.Beam = endTouch.QiegeZu.RJwBeam;
                                 endTouch.QiegeZu.RJwBeam.Holes.Add(endhole);
                             }
+                            else
+                            {
+                                endhole.Beam = endTouch.WinnerBeam;
+                                endTouch.WinnerBeam.Holes.Add(endhole);
+                            }
                         }
                     }
                     else
@@ -4704,12 +4757,17 @@ namespace JwShapeCommon
                         //2026年7月18日
                         endhole = new JwHole(endx, endy);
                         endhole.HoleCenter = endx;
-                        endhole.Beam = endTouch.WinnerBeam;
+                        //endhole.Beam = endTouch.WinnerBeam;
                         endTouch.WinnerBeam.Holes.Add(endhole);
                         if (endTouch.HasQiege)
                         {
                             endhole.Beam = endTouch.QiegeZu.RJwBeam;
                             endTouch.QiegeZu.RJwBeam.Holes.Add(endhole);
+                        }
+                        else
+                        {
+                            endhole.Beam = endTouch.WinnerBeam;
+                            endTouch.WinnerBeam.Holes.Add(endhole);
                         }
                     }
                 }
@@ -4735,13 +4793,17 @@ namespace JwShapeCommon
                                 endhole =new JwHole(endTouch.WinnerBeam.Center, endy) ;//endTouch.JwHoleG.AppendHole(false, endTouch.WinnerBeam);
                                 endhole.HoleCenter = endy;
                                 endhole.Beam = endTouch.WinnerBeam;
-                                endTouch.WinnerBeam.Holes.Add(endhole);
+                                //endTouch.WinnerBeam.Holes.Add(endhole);
                                 if (endTouch.HasQiege)
                                 {
                                     endhole.Beam = endTouch.QiegeZu.AJwBeam;
                                     endTouch.QiegeZu.AJwBeam.Holes.Add(endhole);
                                 }
-
+                                else
+                                {
+                                    endhole.Beam = endTouch.WinnerBeam;
+                                    endTouch.WinnerBeam.Holes.Add(endhole);
+                                }
                             }
                             else
                             {
@@ -4749,11 +4811,16 @@ namespace JwShapeCommon
                                 //jwPointBeam.Direct = ZhengfuType.Reduce;
                                 endhole = new JwHole(endTouch.WinnerBeam.Center, endy);
                                 endhole.HoleCenter = endy;
-                                endTouch.WinnerBeam.Holes.Add(endhole);
+                                //endTouch.WinnerBeam.Holes.Add(endhole);
                                 if (endTouch.HasQiege)
                                 {
                                     endhole.Beam = endTouch.QiegeZu.AJwBeam;
                                     endTouch.QiegeZu.AJwBeam.Holes.Add(endhole);
+                                }
+                                else
+                                {
+                                    endhole.Beam = endTouch.WinnerBeam;
+                                    endTouch.WinnerBeam.Holes.Add(endhole);
                                 }
                             }
                         }
@@ -4767,12 +4834,17 @@ namespace JwShapeCommon
                             //2026年7月18日
                             endhole = new JwHole(endTouch.WinnerBeam.Center, endy);
                             endhole.HoleCenter = endy;
-                            endhole.Beam = endTouch.WinnerBeam;
-                            endTouch.WinnerBeam.Holes.Add(endhole);
+                            //endhole.Beam = endTouch.WinnerBeam;
+                            //endTouch.WinnerBeam.Holes.Add(endhole);
                             if (endTouch.HasQiege)
                             {
                                 endhole.Beam = endTouch.QiegeZu.AJwBeam;
                                 endTouch.QiegeZu.AJwBeam.Holes.Add(endhole);
+                            }
+                            else
+                            {
+                                endhole.Beam = endTouch.WinnerBeam;
+                                endTouch.WinnerBeam.Holes.Add(endhole);
                             }
                         }
                     }
@@ -4792,13 +4864,17 @@ namespace JwShapeCommon
                             endhole = new JwHole(endTouch.WinnerBeam.Center,endy);//endTouch.JwHoleG.AppendHole(true, endTouch.WinnerBeam);
                             endhole.HoleCenter = endy;
                             endhole.Beam = endTouch.WinnerBeam;
-                            endTouch.WinnerBeam.Holes.Add(endhole);
+                           
                             if (endTouch.HasQiege)
                             {
                                 endhole.Beam = endTouch.QiegeZu.RJwBeam;
                                 endTouch.QiegeZu.RJwBeam.Holes.Add(endhole);
                             }
-
+                            else
+                            {
+                                endhole.Beam = endTouch.WinnerBeam;
+                                endTouch.WinnerBeam.Holes.Add(endhole);
+                            }
                         }
                         else
                         {
@@ -4806,12 +4882,17 @@ namespace JwShapeCommon
                             //jwPointBeam.Direct = ZhengfuType.Reduce;
                             endhole = new JwHole(endTouch.WinnerBeam.Center, endy);//endTouch.JwHoleG.AppendHole(true, endTouch.WinnerBeam);
                             endhole.HoleCenter = endy;
-                            endhole.Beam = endTouch.WinnerBeam;
-                            endTouch.WinnerBeam.Holes.Add(endhole);
+                            
+                            //
                             if (endTouch.HasQiege)
                             {
                                 endhole.Beam = endTouch.QiegeZu.RJwBeam;
                                 endTouch.QiegeZu.RJwBeam.Holes.Add(endhole);
+                            }
+                            else
+                            {
+                                endhole.Beam = endTouch.WinnerBeam;
+                                endTouch.WinnerBeam.Holes.Add(endhole);
                             }
                         }
                     }
@@ -5560,6 +5641,152 @@ namespace JwShapeCommon
             }
 
             return result;
+        }
+
+        private JwLianjieSingle findBeam3(JwXian xian)
+        {
+            xian.Reorder();
+
+            var fist = xian.Pone;
+            var last = xian.Ptwo;
+
+            var startTouch = FindTouchForPoint(fist);
+            var endTouch = FindTouchForPoint(last);
+
+            if (startTouch == null || endTouch == null)
+                return new JwLianjieSingle { IsCreateSuccess = false };
+
+            var startInfo = BuildPointBeamAndHole(fist, startTouch, true);
+            var endInfo = BuildPointBeamAndHole(last, endTouch, false);
+
+            return BuildLianjieSingle(startInfo, endInfo);
+        }
+
+
+        private JwTouch FindTouchForPoint(JWPoint pt)
+        {
+            foreach (var t in Touchs)
+            {
+                if (!t.LoserBeam.ContainShenglue(pt))
+                    continue;
+
+                double bb = Math.Round(t.JwBeamVertical.IsShuipingLoser ? pt.X : pt.Y, 2);
+                double jdcha = Math.Abs(t.JwBeamVertical.InitialLoser - bb);
+
+                if (jdcha <= 0.05)
+                    return t;
+            }
+            return null;
+        }
+
+        private JwLianjieSingle BuildLianjieSingle(
+    (JwPointBeam pb, JwHole hole, double x, double y) start,
+    (JwPointBeam pb, JwHole hole, double x, double y) end)
+        {
+            var lj = new JwLianjieSingle
+            {
+                Start = start.pb,
+                End = end.pb,
+                StartPosition = start.pb.Position,
+                EndPosition = end.pb.Position,
+                StartHole = start.hole,
+                EndHole = end.hole,
+                StartHoleOriginal = start.hole,
+                EndHoleOriginal = end.hole,
+                IsCreateSuccess = true
+            };
+
+            start.pb.Hole = start.hole;
+            end.pb.Hole = end.hole;
+
+            start.pb.RealPoint = start.pb.RealPointOriginal = new JWPoint(start.x, start.y);
+            end.pb.RealPoint = end.pb.RealPointOriginal = new JWPoint(end.x, end.y);
+
+            holeOwners.Add(start.hole, new HoleOwnerInfo { IsStart = true, Lianjie = lj });
+            holeOwners.Add(end.hole, new HoleOwnerInfo { IsStart = false, Lianjie = lj });
+
+            double slq = JwExtend.Distance(start.pb.RealPoint, end.pb.RealPoint);
+            double dl = Math.Round(slq, 1) * JwFileConsts.JwScale - 220;
+            lj.Length = Math.Round(dl / 10.0) * 10;
+
+            return lj;
+        }
+
+
+        private (JwPointBeam pb, JwHole hole, double x, double y)
+    BuildPointBeamAndHole(JWPoint pt, JwTouch touch, bool isStart)
+        {
+            double banjing = JwFileConsts.EllipseSpacing / (2 * JwFileConsts.JwScale);
+            double touchbanjing = JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale;
+
+            var pb = new JwPointBeam(pt, touch, isStart);
+
+            double x, y;
+            JwHole hole;
+
+            if (touch.WinnerBeam.DirectionType == BeamDirectionType.Horizontal)
+            {
+                // 计算 Y
+                pb.Position = (pt.Y > touch.WinnerBeam.Center) ? LianjiePosition.Up : LianjiePosition.Down;
+                y = touch.WinnerBeam.Center + (pb.Position == LianjiePosition.Up ? banjing : -banjing);
+
+                // 找孔
+                var p = touch.WinnerBeam.Holes
+                    .Where(h => h.HoleCenter > pt.X && h.FirstCreateFrom != HoleCreateFrom.Lianjie)
+                    .OrderBy(h => h.HoleCenter)
+                    .FirstOrDefault();
+
+                if (p != null && Math.Abs(p.HoleCenter - pt.X) * JwFileConsts.JwScale <= 168)
+                    x = p.Location.X + touchbanjing;
+                else
+                    x = touch.JieChuPoint.X + touchbanjing;
+
+                hole = CreateHole(touch, x, touch.WinnerBeam.Center, isStart);
+            }
+            else
+            {
+                // 垂直方向
+                pb.Position = isStart ? LianjiePosition.Right : LianjiePosition.Left;
+                x = touch.WinnerBeam.Center + (isStart ? banjing : -banjing);
+
+                var p = (pt.Y > touch.LoserBeam.Center)
+                    ? touch.WinnerBeam.Holes.Where(h => h.HoleCenter > pt.Y && h.FirstCreateFrom != HoleCreateFrom.Lianjie).OrderBy(h => h.HoleCenter).FirstOrDefault()
+                    : touch.WinnerBeam.Holes.Where(h => h.HoleCenter < pt.Y && h.FirstCreateFrom != HoleCreateFrom.Lianjie).OrderByDescending(h => h.HoleCenter).FirstOrDefault();
+
+                if (p != null && Math.Abs(p.HoleCenter - pt.Y) * JwFileConsts.JwScale <= 168)
+                    y = p.Location.Y + (pt.Y > touch.LoserBeam.Center ? touchbanjing : -touchbanjing);
+                else
+                    y = touch.JieChuPoint.Y + (pt.Y > touch.LoserBeam.Center ? touchbanjing : -touchbanjing);
+
+                hole = CreateHole(touch, touch.WinnerBeam.Center, y, isStart);
+            }
+
+            return (pb, hole, x, y);
+        }
+
+
+        private JwHole CreateHole(JwTouch touch, double x, double y, bool isStart)
+        {
+            var hole = new JwHole(x, y)
+            {
+                HoleCenter = touch.WinnerBeam.DirectionType == BeamDirectionType.Horizontal ? x : y
+            };
+
+            JwBeam beam;
+
+            if (touch.HasQiege)
+            {
+                beam = (isStart ? touch.QiegeZu.AJwBeam : touch.QiegeZu.RJwBeam);
+            }
+            else
+            {
+                beam = touch.WinnerBeam;
+            }
+
+            hole.Beam = beam;
+            beam.Holes.Add(hole);
+
+            return hole;
         }
 
     }
