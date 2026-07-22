@@ -1,4 +1,5 @@
 ﻿using JwCore;
+using Sunny.UI.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -214,6 +215,14 @@ namespace JwShapeCommon.Model
             }
         }
 
+
+        public JwHole(double x,double y)
+        {
+            Id = Guid.NewGuid().ToString();
+            IsMachining = true;
+            FirstCreateFrom = ChangeFrom = HoleCreateFrom.Lianjie;
+            Location = new JWPoint(x, y);
+        }
 
         /// <summary>
         /// 用来指示 孔组是否有中心点（即如果num为2 isbias为true 则location为中心点，孔组需要偏离中心点56/2）

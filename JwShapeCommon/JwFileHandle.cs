@@ -24,6 +24,7 @@ using System.Runtime.Serialization.Formatters;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using static System.Reflection.Metadata.BlobBuilder;
 using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.LinkLabel;
@@ -3965,6 +3966,7 @@ namespace JwShapeCommon
             jwLianjieSingle.IsCreateSuccess = false;
             var f = Touchs.FirstOrDefault(t => xian.Pone.IsEqualsWithError(t.JieChuPoint));
             double banjing = JwFileConsts.EllipseSpacing / (2 * JwFileConsts.JwScale);
+            double pinyi = JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale;
             double realy = 0;
             double realx = 0;
             double endrealy = 0;
@@ -3982,6 +3984,7 @@ namespace JwShapeCommon
                     var pinbeam = f.WinnerBeam;
                     if (pinbeam.DirectionType == BeamDirectionType.Horizontal)
                     {
+                        realx = f.JieChuPoint.X+pinyi;
                         //判断孔上下 所以比对Y值
                         if (xian.Ptwo.Y > pinbeam.Center)
                         {
@@ -3997,11 +4000,7 @@ namespace JwShapeCommon
                             jwLianjieSingle.StartPosition = LianjiePosition.Down;
                             //水平梁下方
                         }
-                        //if (xian.Ptwo.X > xian.Pone.X)
-                        //{
-                            //垂直梁右侧
-                            realx = f.LoserBeam.Center + (84 / JwFileConsts.JwScale);
-                            f.JwHoleG.HasBhLinkHole = true;
+                        
                         //2026年7月18日
                         starthole = f.JwHoleG.AppendHole(false,f.WinnerBeam);
                         starthole.Beam = f.WinnerBeam;
@@ -4011,46 +4010,16 @@ namespace JwShapeCommon
                         var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
                             if (ff != null)
                             {
-                                //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                //ff.RJwBeam.holesorder();
-                                //ff.RJwBeam.Holes.First().HasBhLinkHole = true;
                                 ff.AJwBeam.holesorder();
                                 ff.AJwBeam.Holes.First().HasBhLinkHole = true;
                             //2026年7月18日
                             ff.AJwBeam.Holes.Add(starthole);
                         }
-                        //}
-                        //else
-                        //{
-                        //    //垂直梁左侧
-                        //    realx = f.LoserBeam.Center - (84 / JwFileConsts.JwScale);
-                        //    f.JwHoleG.HasPreLinkHole = true;
-                        //    var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
-                        //    if (ff != null)
-                        //    {
-                        //        //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                        //        ff.RJwBeam.holesorder();
-                        //        ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
-                        //    }
-                        //}
                     }
                     else
                     {
                         //垂直梁
-                        if (xian.Ptwo.X > pinbeam.Center)
-                        {
-                            //垂直梁右侧
-                            realx = pinbeam.Center + banjing;
-                            starttype = ZhengfuType.Add;
-                            jwLianjieSingle.StartPosition = LianjiePosition.Right;
-                        }
-                        else
-                        {
-                            //垂直梁左侧
-                            realx = pinbeam.Center - banjing;
-                            starttype = ZhengfuType.Reduce;
-                            jwLianjieSingle.StartPosition = LianjiePosition.Left;
-                        }
+                        realx = f.JieChuPoint.X + banjing;
                         if (xian.Ptwo.Y > xian.Pone.Y)
                         {
                             //水平梁上方
@@ -4076,7 +4045,7 @@ namespace JwShapeCommon
                         else
                         {
                             //水平梁下方
-                            realy = f.LoserBeam.Center - (84 / JwFileConsts.JwScale);
+                            realy = f.LoserBeam.Center - pinyi;
                             f.JwHoleG.HasPreLinkHole = true;
                             //2026年7月18日
                             //2026年7月18日
@@ -4089,7 +4058,7 @@ namespace JwShapeCommon
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                                 ff.RJwBeam.holesorder();
                                 ff.RJwBeam.Holes.Last().HasPreLinkHole = true;//2026年7月18日
-                                ff.AJwBeam.Holes.Add(starthole);
+                                ff.RJwBeam.Holes.Add(starthole);
                             }
                         }
                     }
@@ -4126,7 +4095,7 @@ namespace JwShapeCommon
                             //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                             ff.RJwBeam.holesorder();
                             ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
-                            ff.AJwBeam.Holes.Add(endhole);
+                            ff.RJwBeam.Holes.Add(endhole);
                         }
                         //if (xian.Pone.X > xian.Ptwo.X)
                         //{
@@ -4149,26 +4118,27 @@ namespace JwShapeCommon
                     else
                     {
                         //垂直梁
-                        if (xian.Pone.X > l.WinnerBeam.Center)
-                        {
-                            //垂直梁右侧
-                            endrealx = l.WinnerBeam.Center + banjing;
-                            //endtype = ZhengfuType.Add;
-                            jwLianjieSingle.EndPosition = LianjiePosition.Right;
-                        }
-                        else
-                        {
-                            //垂直梁左侧
-                            endrealx = l.WinnerBeam.Center - banjing;
-                            //endtype = ZhengfuType.Reduce;
-                            jwLianjieSingle.EndPosition = LianjiePosition.Left;
-                        }
+                        endrealx = l.WinnerBeam.Center + banjing;
+                        //if (xian.Pone.X > l.WinnerBeam.Center)
+                        //{
+                        //    //垂直梁右侧
+                        //    endrealx = l.WinnerBeam.Center + banjing;
+                        //    //endtype = ZhengfuType.Add;
+                        //    jwLianjieSingle.EndPosition = LianjiePosition.Right;
+                        //}
+                        //else
+                        //{
+                        //    //垂直梁左侧
+                        //    endrealx = l.WinnerBeam.Center - banjing;
+                        //    //endtype = ZhengfuType.Reduce;
+                        //    jwLianjieSingle.EndPosition = LianjiePosition.Left;
+                        //}
+                        jwLianjieSingle.EndPosition = LianjiePosition.Left;
                         if (xian.Pone.Y > xian.Ptwo.Y)
                         {
                             //水平梁上方
-                            endrealy = l.LoserBeam.Center + (84 / JwFileConsts.JwScale);
-                            l.JwHoleG.HasBhLinkHole = true;
-                            //2026年7月18日
+                            endrealy = l.LoserBeam.Center + pinyi;
+                            //l.JwHoleG.HasBhLinkHole = true;
                             //2026年7月18日
                             endhole = l.JwHoleG.AppendHole(false, l.WinnerBeam);
                             endhole.Beam = l.WinnerBeam;
@@ -4188,7 +4158,7 @@ namespace JwShapeCommon
                         else
                         {
                             //水平梁下方
-                            endrealy = l.LoserBeam.Center - (84 / JwFileConsts.JwScale);
+                            endrealy = l.LoserBeam.Center - pinyi;
                             
                             l.JwHoleG.HasPreLinkHole = true;
                             var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
@@ -4203,7 +4173,7 @@ namespace JwShapeCommon
                                 //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
                                 ff.RJwBeam.holesorder();
                                 ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
-                                ff.AJwBeam.Holes.Add(endhole);
+                                ff.RJwBeam.Holes.Add(endhole);
                             }
                         }
                     }
@@ -4458,9 +4428,11 @@ namespace JwShapeCommon
             }
             if (fone && ftwo)
             {
+                
                 start = new JwPointBeam(fist, startTouch, true);
                 if (startTouch.WinnerBeam.DirectionType == BeamDirectionType.Horizontal)
                 {
+                    
                     if (fist.Y > startTouch.WinnerBeam.Center)
                     {
                         start.Position = LianjiePosition.Up;
@@ -4484,17 +4456,30 @@ namespace JwShapeCommon
                             //jwPointBeam.Direct = ZhengfuType.Reduce;
                             //2026年7月18日
                             //2026年7月18日
-                            starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                            starthole = new JwHole(startx, startTouch.WinnerBeam.Center);
+                            //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
                             starthole.Beam = startTouch.WinnerBeam;
                             startTouch.WinnerBeam.Holes.Add(starthole);
+                            if (startTouch.HasQiege)
+                            {
+                                startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
+                            }
 
                         }
                         else
                         {
                             startx = p.Location.X + touchbanjing;
                             //jwPointBeam.Direct = ZhengfuType.Reduce;
-                            starthole = p.AppendHole(false, startTouch.WinnerBeam);
+                            //starthole = p.AppendHole(false, startTouch.WinnerBeam);
+                            //startTouch.WinnerBeam.Holes.Add(starthole);
+                            starthole = new JwHole(startx, startTouch.WinnerBeam.Center);
+                            //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                            starthole.Beam = startTouch.WinnerBeam;
                             startTouch.WinnerBeam.Holes.Add(starthole);
+                            if (startTouch.HasQiege)
+                            {
+                                startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
+                            }
                         }
                     }
                     else
@@ -4505,9 +4490,17 @@ namespace JwShapeCommon
                         //jwPointBeam.Direct = ZhengfuType.Reduce;
                         //2026年7月18日
                         //2026年7月18日
-                        starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                        //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                        //starthole.Beam = startTouch.WinnerBeam;
+                        //startTouch.WinnerBeam.Holes.Add(starthole);
+                        starthole = new JwHole(startx, startTouch.WinnerBeam.Center);
+                        //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
                         starthole.Beam = startTouch.WinnerBeam;
                         startTouch.WinnerBeam.Holes.Add(starthole);
+                        if (startTouch.HasQiege)
+                        {
+                            startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
+                        }
                     }
                 }
                 else
@@ -4529,7 +4522,8 @@ namespace JwShapeCommon
                                 //jwPointBeam.Direct = ZhengfuType.Reduce;
                                 //2026年7月18日
                                 //2026年7月18日
-                                starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                                starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
+                                //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
                                 starthole.Beam = startTouch.WinnerBeam;
                                 startTouch.WinnerBeam.Holes.Add(starthole);
 
@@ -4538,8 +4532,14 @@ namespace JwShapeCommon
                             {
                                 starty = p.Location.Y + touchbanjing;
                                 //jwPointBeam.Direct = ZhengfuType.Reduce;
-                                starthole = p.AppendHole(false, startTouch.WinnerBeam);
+                                starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
+                                //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                                starthole.Beam = startTouch.WinnerBeam;
                                 startTouch.WinnerBeam.Holes.Add(starthole);
+                                if (startTouch.HasQiege)
+                                {
+                                    startTouch.QiegeZu.AJwBeam.Holes.Add(starthole);
+                                }
                             }
                         }
                         else
@@ -4550,7 +4550,8 @@ namespace JwShapeCommon
                             //jwPointBeam.Direct = ZhengfuType.Reduce;
                             //2026年7月18日
                             //2026年7月18日
-                            starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                            starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
+                            //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
                             starthole.Beam = startTouch.WinnerBeam;
                             startTouch.WinnerBeam.Holes.Add(starthole);
                         }
@@ -4570,7 +4571,8 @@ namespace JwShapeCommon
                                 //jwPointBeam.Direct = ZhengfuType.Reduce;
                                 //2026年7月18日
                                 //2026年7月18日
-                                starthole = startTouch.JwHoleG.AppendHole(true, startTouch.WinnerBeam);
+                                starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
+                                //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
                                 starthole.Beam = startTouch.WinnerBeam;
                                 startTouch.WinnerBeam.Holes.Add(starthole);
 
@@ -4579,7 +4581,9 @@ namespace JwShapeCommon
                             {
                                 starty = p.Location.Y - touchbanjing;
                                 //jwPointBeam.Direct = ZhengfuType.Reduce;
-                                starthole = p.AppendHole(false, startTouch.WinnerBeam);
+                                starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
+                                //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
+                                starthole.Beam = startTouch.WinnerBeam;
                                 startTouch.WinnerBeam.Holes.Add(starthole);
                             }
                         }
@@ -4591,13 +4595,17 @@ namespace JwShapeCommon
                             //jwPointBeam.Direct = ZhengfuType.Reduce;
                             //2026年7月18日
                             //2026年7月18日
-                            starthole = startTouch.JwHoleG.AppendHole(true, startTouch.WinnerBeam);
+                            //starthole = startTouch.JwHoleG.AppendHole(true, startTouch.WinnerBeam);
+                            //starthole.Beam = startTouch.WinnerBeam;
+                            //startTouch.WinnerBeam.Holes.Add(starthole);
+                            starthole = new JwHole(startTouch.WinnerBeam.Center, starty);
+                            //starthole = startTouch.JwHoleG.AppendHole(false, startTouch.WinnerBeam);
                             starthole.Beam = startTouch.WinnerBeam;
                             startTouch.WinnerBeam.Holes.Add(starthole);
                         }
                     }
                 }
-                end = new JwPointBeam(last,endTouch , true);
+                end = new JwPointBeam(last,endTouch , false);
                 if (endTouch.WinnerBeam.DirectionType == BeamDirectionType.Horizontal)
                 {
                     if (last.Y > endTouch.WinnerBeam.Center)

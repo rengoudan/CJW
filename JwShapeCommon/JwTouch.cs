@@ -38,6 +38,9 @@ namespace JwShapeCommon
         public JwHole JwHoleG { get; set; }
 
         public double BFCenter { get; set; }
+
+        public JwQiegeZu QiegeZu { get; set; }
+        public bool HasQiege { get; set; }
     }
 
     /// <summary>

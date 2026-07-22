@@ -1,6 +1,7 @@
 ﻿using JwCore;
 using JwShapeCommon.Model;
 using JwwHelper;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Primitives;
 using NetTopologySuite.Algorithm;
 using NetTopologySuite.Geometries;
@@ -2465,7 +2466,14 @@ namespace JwShapeCommon
                         nb.BeamTouchs.AddRange(qll);
                         nb.BeamTouchs.ForEach(t => t.WinnerBeam = nb);
                         relst.Add(nb);
+                        var ft = zlst.Find(t => t.BFCenter == endx);
+                        if (ft != null)
+                        {
+                            ft.QiegeZu = qiegeZu;
+                            ft.HasQiege = true;
+                        }
                         startx = endx;
+
                     }
                     var endright=beam.TopRight.X;
                     var edp = new JwBeam(beam, startx, endright, true, false);
