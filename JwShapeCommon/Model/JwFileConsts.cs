@@ -84,9 +84,15 @@ namespace JwShapeCommon
 
         public static double Lianghoudu = 5.5;
 
+
+        #region G端口
         public static double Gjubian = 35;
 
         public static double GBianjuZhongxin = 55;
+
+        //public static double
+        #endregion
+
 
         /// <summary>
         /// B构建 孔间距

@@ -240,6 +240,16 @@ namespace JwCore
         Right = 4
     }
 
+    /// <summary>
+    /// 2026年7月24日 
+    /// 增加连接件类型 关东地区负梁打链接孔
+    /// </summary>
+    public enum LianjieCompentType
+    {
+        BR8 = 0,
+        VPL = 1,
+    }
+
     public enum LianjieParsingMethod
     {
         [Description("梁端部")]
