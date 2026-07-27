@@ -61,7 +61,7 @@
             uiMarkLabel14 = new Sunny.UI.UIMarkLabel();
             uiComboBox8 = new Sunny.UI.UIComboBox();
             ucbfgm = new Sunny.UI.UIComboBox();
-            lianjiecompenttype = new Sunny.UI.UIComboBox();
+            lianjiecompenttypecbb = new Sunny.UI.UIComboBox();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -83,6 +83,7 @@
             uiButton1.Size = new Size(100, 35);
             uiButton1.TabIndex = 0;
             uiButton1.Text = "セーブ";
+            uiButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiButton1.Click += uiButton1_Click;
             // 
             // uiNearSpliteMax
@@ -558,29 +559,29 @@
             ucbfgm.TextAlignment = ContentAlignment.MiddleLeft;
             ucbfgm.Watermark = "";
             // 
-            // lianjiecompenttype
+            // lianjiecompenttypecbb
             // 
-            lianjiecompenttype.DataSource = null;
-            lianjiecompenttype.FillColor = Color.White;
-            lianjiecompenttype.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            lianjiecompenttype.ItemHoverColor = Color.FromArgb(155, 200, 255);
-            lianjiecompenttype.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
-            lianjiecompenttype.Location = new Point(383, 680);
-            lianjiecompenttype.Margin = new Padding(4, 5, 4, 5);
-            lianjiecompenttype.MinimumSize = new Size(63, 0);
-            lianjiecompenttype.Name = "lianjiecompenttype";
-            lianjiecompenttype.Padding = new Padding(0, 0, 30, 2);
-            lianjiecompenttype.Size = new Size(122, 29);
-            lianjiecompenttype.SymbolSize = 24;
-            lianjiecompenttype.TabIndex = 15;
-            lianjiecompenttype.TextAlignment = ContentAlignment.MiddleLeft;
-            lianjiecompenttype.Watermark = "";
+            lianjiecompenttypecbb.DataSource = null;
+            lianjiecompenttypecbb.FillColor = Color.White;
+            lianjiecompenttypecbb.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lianjiecompenttypecbb.ItemHoverColor = Color.FromArgb(155, 200, 255);
+            lianjiecompenttypecbb.ItemSelectForeColor = Color.FromArgb(235, 243, 255);
+            lianjiecompenttypecbb.Location = new Point(383, 680);
+            lianjiecompenttypecbb.Margin = new Padding(4, 5, 4, 5);
+            lianjiecompenttypecbb.MinimumSize = new Size(63, 0);
+            lianjiecompenttypecbb.Name = "lianjiecompenttypecbb";
+            lianjiecompenttypecbb.Padding = new Padding(0, 0, 30, 2);
+            lianjiecompenttypecbb.Size = new Size(122, 29);
+            lianjiecompenttypecbb.SymbolSize = 24;
+            lianjiecompenttypecbb.TabIndex = 15;
+            lianjiecompenttypecbb.TextAlignment = ContentAlignment.MiddleLeft;
+            lianjiecompenttypecbb.Watermark = "";
             // 
             // CustomerDesignSetting
             // 
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(683, 862);
-            Controls.Add(lianjiecompenttype);
+            Controls.Add(lianjiecompenttypecbb);
             Controls.Add(ucbfgm);
             Controls.Add(uiComboBox8);
             Controls.Add(uiMarkLabel14);
@@ -655,6 +656,6 @@
         private Sunny.UI.UIMarkLabel uiMarkLabel14;
         private Sunny.UI.UIComboBox uiComboBox8;
         private Sunny.UI.UIComboBox ucbfgm;
-        private Sunny.UI.UIComboBox lianjiecompenttype;
+        private Sunny.UI.UIComboBox lianjiecompenttypecbb;
     }
 }

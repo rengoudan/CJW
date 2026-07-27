@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -333,7 +334,14 @@ namespace JwShapeCommon
         {
             
             ChangeJwXianFromJwwSen();//jwwSen到jwxian处理
-            JudgmentJieChu();
+            if (JwFileConsts.LjCompentType == LianjieCompentType.BR8)
+            {
+                JudgmentJieChu();
+            }
+            else
+            {
+
+            }
            
 
             if (Beams == null || Beams.Count == 0)
@@ -2555,6 +2563,349 @@ namespace JwShapeCommon
             
             
         }
+
+        #region 胜负接触处理
+        public void JudgmentJieChu2()
+        {
+            if (_tempBeams == null || _tempBeams.Count == 0)
+                return;
+
+            HasBeam = true;
+
+            InitBeamGroups();
+            InitDirectionConfigs();
+
+            foreach (var cfg in DirectionConfigs)
+                cfg.Process();
+        }
+
+        public List<IGrouping<double, JwBeam>> HorizontalGroups { get; set; }
+        public List<IGrouping<double, JwBeam>> VerticalGroups { get; set; }
+
+        private void InitBeamGroups()
+        {
+            HorizontalBeams = _tempBeams.Where(t => t.DirectionType == BeamDirectionType.Horizontal).ToList();
+            VerticalBeams = _tempBeams.Where(t => t.DirectionType == BeamDirectionType.Vertical).ToList();
+
+            HorizontalGroups = HorizontalBeams.GroupBy(t => t.Center).OrderByDescending(t => t.Key).ToList();
+            VerticalGroups = VerticalBeams.GroupBy(t => t.Center).OrderBy(t => t.Key).ToList();
+
+            RowsPointY = HorizontalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
+            ColumnPointX = VerticalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
+        }
+
+        private List<DirectionConfig> DirectionConfigs;
+
+        private void InitDirectionConfigs()
+        {
+            double jxpd = JwFileConsts.JwJianxi / JwFileConsts.JwScale;
+
+            DirectionConfigs = new List<DirectionConfig>
+    {
+        new DirectionConfig(TaggDirect.Up,    HorizontalGroups, jxpd, MatchUp,    ProcessDirectionCore),
+        new DirectionConfig(TaggDirect.Down,  HorizontalGroups, jxpd, MatchDown,  ProcessDirectionCore),
+        new DirectionConfig(TaggDirect.Left,  VerticalGroups,   jxpd, MatchLeft,  ProcessDirectionCore),
+        new DirectionConfig(TaggDirect.Right, VerticalGroups,   jxpd, MatchRight, ProcessDirectionCore),
+    };
+        }
+
+
+        private List<(JwBeam winner, JwBeam loser, double qKey)> MatchUp(IGrouping<double, JwBeam> group)
+        {
+            double topY = group.Max(t => t.TopLeft.Y);
+
+            var losers = VerticalBeams
+                .Where(t => t.BottomLeft.Y > group.Key && t.BottomLeft.Y < topY + JwFileConsts.JwJianxi / JwFileConsts.JwScale)
+                .ToList();
+
+            if (losers.Count == 0) return new();
+
+            double lx = losers.Min(t => t.BottomLeft.X);
+
+            var winners = group.Where(t => t.TopRight.X > lx).ToList();
+
+            var result = new List<(JwBeam, JwBeam, double)>();
+
+            foreach (var w in winners)
+                foreach (var l in losers)
+                    if (l.Center > w.TopLeft.X && l.Center < w.TopRight.X)
+                        result.Add((w, l, group.Key));
+
+            return result;
+        }
+
+        private List<(JwBeam winner, JwBeam loser, double qKey)> MatchDown(IGrouping<double, JwBeam> group)
+        {
+            double bottomY = group.Max(t => t.BottomLeft.Y);
+
+            var losers = VerticalBeams
+                .Where(t => t.TopLeft.Y < group.Key && t.TopLeft.Y > bottomY - JwFileConsts.JwJianxi / JwFileConsts.JwScale)
+                .ToList();
+
+            if (losers.Count == 0) return new();
+
+            double lx = losers.Min(t => t.TopLeft.X);
+
+            var winners = group.Where(t => t.TopRight.X > lx).ToList();
+
+            var result = new List<(JwBeam, JwBeam, double)>();
+
+            foreach (var w in winners)
+                foreach (var l in losers)
+                    if (l.Center > w.TopLeft.X && l.Center < w.TopRight.X)
+                        result.Add((w, l, group.Key));
+
+            return result;
+        }
+
+        private List<(JwBeam winner, JwBeam loser, double qKey)> MatchLeft(IGrouping<double, JwBeam> group)
+        {
+            double leftX = group.Min(t => t.BottomLeft.X);
+
+            var losers = HorizontalBeams
+                .Where(t => t.TopRight.X < leftX && t.TopRight.X > leftX - JwFileConsts.JwJianxi / JwFileConsts.JwScale)
+                .ToList();
+
+            if (losers.Count == 0) return new();
+
+            double ly = losers.Max(t => t.TopLeft.Y);
+
+            var winners = group.Where(t => t.BottomLeft.Y < ly).ToList();
+
+            var result = new List<(JwBeam, JwBeam, double)>();
+
+            foreach (var w in winners)
+                foreach (var l in losers)
+                    if (l.Center > w.BottomLeft.Y && l.Center < w.TopLeft.Y)
+                        result.Add((w, l, group.Key));
+
+            return result;
+        }
+
+        private List<(JwBeam winner, JwBeam loser, double qKey)> MatchRight(IGrouping<double, JwBeam> group)
+        {
+            double rightX = group.Max(t => t.BottomRight.X);
+
+            var losers = HorizontalBeams
+                .Where(t => t.TopLeft.X > rightX && t.TopLeft.X < rightX + JwFileConsts.JwJianxi / JwFileConsts.JwScale)
+                .ToList();
+
+            if (losers.Count == 0) return new();
+
+            double ly = losers.Max(t => t.TopLeft.Y);
+
+            var winners = group.Where(t => t.BottomLeft.Y < ly).ToList();
+
+            var result = new List<(JwBeam, JwBeam, double)>();
+
+            foreach (var w in winners)
+                foreach (var l in losers)
+                    if (l.Center > w.BottomLeft.Y && l.Center < w.TopLeft.Y)
+                        result.Add((w, l, group.Key));
+
+            return result;
+        }
+
+        private void ProcessDirectionCore(JwBeam winner, JwBeam loser, double qKey, TaggDirect dir)
+        {
+            bool isStart = dir == TaggDirect.Up || dir == TaggDirect.Right;
+
+            double initialLoser = dir switch
+            {
+                TaggDirect.Up => loser.BottomLeft.Y,
+                TaggDirect.Down => loser.TopLeft.Y,
+                TaggDirect.Left => loser.TopRight.X,
+                TaggDirect.Right => loser.TopLeft.X,
+                _ => 0
+            };
+
+            if (isStart)
+            {
+                loser.StartCenter = winner.Center;
+                loser.ChangeStartCenter();
+            }
+            else
+            {
+                loser.EndCenter = winner.Center;
+                loser.ChangeEndCenter();
+            }
+
+            var (vertical, touch) = CreateVerticalTouch(
+                winner, loser, qKey, dir,
+                isStart ? PortType.Start : PortType.End,
+                initialLoser);
+
+            var sfLocation = new JWPoint(loser.Center, winner.Center);
+
+            var bfLocation = dir switch
+            {
+                TaggDirect.Up =>
+                    new JWPoint(loser.Center,
+                        loser.StartCenter + (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale),
+
+                TaggDirect.Down =>
+                    new JWPoint(loser.Center,
+                        loser.EndCenter - (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale),
+
+                TaggDirect.Left =>
+                    new JWPoint(
+                        loser.EndCenter - (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale,
+                        loser.Center),
+
+                TaggDirect.Right =>
+                    new JWPoint(
+                        loser.StartCenter + (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale,
+                        loser.Center),
+
+                _ => sfLocation
+            };
+
+            CreateHoleGroup(winner, loser, touch, sfLocation, bfLocation, isStart);
+            CreateLinkParts(winner, loser, dir);
+        }
+
+
+        private void CreateHoleGroup(
+    JwBeam winner,
+    JwBeam loser,
+    JwTouch touch,
+    JWPoint sfLocation,
+    JWPoint bfLocation,
+    bool isStartSide)
+        {
+            var sfHole = winner.AddAnyHoleReturn(sfLocation, HoleCreateFrom.JieChu);
+            touch.JwHoleG = sfHole;
+
+            loser.AddAnyHole(bfLocation, HoleCreateFrom.JieChuG, null, isStartSide, !isStartSide);
+
+            if (isStartSide)
+            {
+                loser.HasStartSide = true;
+                loser.StartTelosType = KongzuType.G;
+                loser.StartSide = new JwBeamSide
+                {
+                    KongZu = loser.Holes.Last(),
+                    SideType = KongzuType.G
+                };
+            }
+            else
+            {
+                loser.HasEndSide = true;
+                loser.EndTelosType = KongzuType.G;
+                loser.EndSide = new JwBeamSide
+                {
+                    KongZu = loser.Holes.Last(),
+                    SideType = KongzuType.G
+                };
+            }
+
+            loser.HasBFG = true;
+            loser.BaiFangGTBDistance = BaiFangGTBDistanceType.A35;
+        }
+
+        private void CreateLinkParts(JwBeam winner, JwBeam loser, TaggDirect dir)
+        {
+            var center = new JWPoint(Math.Round(loser.Center, 6), Math.Round(winner.Center, 6));
+
+            var main = new JwLinkPart
+            {
+                Directed = dir,
+                GouJianType = GouJianType.BG,
+                BujianName = "BG",
+                BjCenterPoint = center,
+                ParentBeam = winner,
+                BeamId = winner.Id,
+                BBeam = loser
+            };
+
+            var exist = AllLinkPart.FirstOrDefault(t => t.BjCenterPoint == center && t.Directed == dir);
+            if (exist != null)
+            {
+                exist.GouJianType = GouJianType.BG;
+                exist.BujianName = "BG";
+                exist.ParentBeam = winner;
+                exist.BeamId = winner.Id;
+                exist.BBeam = loser;
+            }
+            else
+            {
+                winner.LinkParts.Add(main);
+                AllLinkPart.Add(main);
+            }
+
+            TaggDirect opposite = dir switch
+            {
+                TaggDirect.Up => TaggDirect.Down,
+                TaggDirect.Down => TaggDirect.Up,
+                TaggDirect.Left => TaggDirect.Right,
+                TaggDirect.Right => TaggDirect.Left,
+                _ => TaggDirect.Up
+            };
+
+            if (!AllLinkPart.Any(t => t.BjCenterPoint == center && t.Directed == opposite))
+            {
+                var back = new JwLinkPart
+                {
+                    Directed = opposite,
+                    GouJianType = GouJianType.B,
+                    BujianName = "B",
+                    BjCenterPoint = center,
+                    ParentBeam = winner,
+                    BeamId = winner.Id
+                };
+
+                winner.LinkParts.Add(back);
+                AllLinkPart.Add(back);
+            }
+        }
+
+        private (JwBeamVertical vertical, JwTouch touch) CreateVerticalTouch(
+    JwBeam winner,
+    JwBeam loser,
+    double qKey,
+    TaggDirect dir,
+    PortType portType,
+    double initialLoser)
+        {
+            // 是否为水平败方（Left/Right）——对应你原来的 IsShuipingLoser
+            bool isShuipingLoser = dir == TaggDirect.Left || dir == TaggDirect.Right;
+
+            var vertical = new JwBeamVertical
+            {
+                Id = Guid.NewGuid().ToString(),
+                Position = dir,
+                PositionPoint = new JWPoint(
+                    dir == TaggDirect.Up || dir == TaggDirect.Down ? loser.Center : qKey,
+                    dir == TaggDirect.Up || dir == TaggDirect.Down ? qKey : loser.Center),
+                VerticalBeam = loser,
+                Center = loser.Center,
+                ParentBeamId = winner.Id,
+                LoserPortType = portType,
+                IsShuipingLoser = isShuipingLoser,
+                InitialLoser = initialLoser
+            };
+
+            winner.Baifangs.Add(vertical);
+
+            var touch = new JwTouch
+            {
+                WinnerBeam = winner,
+                JwBeamVertical = vertical,
+                LoserBeam = loser,
+                BFCenter = loser.Center,
+                JieChuPoint = new JWPoint(
+                    dir == TaggDirect.Up || dir == TaggDirect.Down ? loser.Center : winner.Center,
+                    dir == TaggDirect.Up || dir == TaggDirect.Down ? winner.Center : loser.Center)
+            };
+
+            Touchs.Add(touch);
+            winner.BeamTouchs.Add(touch);
+
+            return (vertical, touch);
+        }
+
+
+        #endregion
 
         public void panduanBlockGuishu()
         {

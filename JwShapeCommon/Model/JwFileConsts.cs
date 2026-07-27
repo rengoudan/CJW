@@ -23,6 +23,13 @@ namespace JwShapeCommon
         public static double CsvYTiaozheng= 0.0;
         #endregion
 
+        public static LianjieCompentType LjCompentType = LianjieCompentType.BR8;
+         
+        /// <summary>
+        /// 最少打孔策略
+        /// </summary>
+        public static bool MinimalStrategy = false;
+
         /// <summary>
         /// 未除scale的 最小链接件间距
         /// </summary>

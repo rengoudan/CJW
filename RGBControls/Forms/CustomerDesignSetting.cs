@@ -266,7 +266,7 @@ namespace RGBJWMain.Forms
             JwFileConsts.Ktype= (KPillarType)uiComboBox7.SelectedValue;
 
             JwFileConsts.EWaiKongColor=uiComboBox8.SelectedItem as JwColor;
-
+            JwFileConsts.LjCompentType=(LianjieCompentType) lianjiecompenttypecbb.SelectedValue;
             DialogResult = DialogResult.OK;
         }
 
@@ -324,6 +324,8 @@ namespace RGBJWMain.Forms
             uiComboBox8.DataSource = ls;
             uiComboBox8.DisplayMember = "JwColorName";
             uiComboBox8.ValueMember = "ColorNumber";
+
+            lianjiecompenttypecbb.DataSource = Enum.GetValues(typeof(LianjieCompentType));
 
             if (JwCustomer != null)
             {
