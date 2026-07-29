@@ -336,7 +336,7 @@ namespace JwShapeCommon
             ChangeJwXianFromJwwSen();//jwwSen到jwxian处理
             if (JwFileConsts.LjCompentType == LianjieCompentType.BR8)
             {
-                JudgmentJieChu();
+                JudgmentJieChu3();
             }
             else
             {
@@ -964,7 +964,7 @@ namespace JwShapeCommon
                 {
                     _shuipingceneters.Add(b.Center);
                 }
-                else
+                else if(b.DirectionType==BeamDirectionType.Vertical)
                 {
                     _chuzhiceneters.Add(b.Center);
                 }
@@ -2563,6 +2563,355 @@ namespace JwShapeCommon
             
             
         }
+
+
+        public void JudgmentJieChu3()
+        {
+            if (_tempBeams == null || _tempBeams.Count == 0) return;
+
+            HasBeam = true;
+
+            HorizontalBeams = _tempBeams.Where(t => t.DirectionType == BeamDirectionType.Horizontal).ToList();
+            VerticalBeams = _tempBeams.Where(t => t.DirectionType == BeamDirectionType.Vertical).ToList();
+            RowsPointY = HorizontalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
+            ColumnPointX = VerticalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
+
+            var jxpd = JwFileConsts.JwJianxi / JwFileConsts.JwScale;
+
+            ProcessHorizontalGroups(jxpd);
+            ProcessVerticalGroups(jxpd);
+        }
+
+        #region Horizontal processing (up / down)
+        private void ProcessHorizontalGroups(double jxpd)
+        {
+            var shuipinggroup = HorizontalBeams.GroupBy(t => t.Center).OrderByDescending(g => g.Key).ToList();
+
+            foreach (var group in shuipinggroup)
+            {
+                var groupBottomY = group.Max(t => t.BottomLeft.Y);
+                var groupTopY = group.Max(t => t.TopLeft.Y);
+
+                // 上方垂直梁（败方在上方）
+                var chuizhishang = VerticalBeams.Where(t => t.BottomLeft.Y > group.Key && t.BottomLeft.Y < (groupTopY + jxpd)).ToList();
+                if (chuizhishang.Count > 0)
+                {
+                    var minX = chuizhishang.Min(t => t.BottomLeft.X);
+                    var candidates = group.Where(t => t.TopRight.X > minX).ToList();
+                    foreach (var winner in candidates)
+                    {
+                        foreach (var loser in chuizhishang)
+                        {
+                            if (loser.Center > winner.TopLeft.X && loser.Center < winner.TopRight.X)
+                            {
+                                // 修改败方起点并记录原始值
+                                loser.StartCenter = winner.Center;
+                                double originalSy = loser.BottomLeft.Y;
+                                loser.ChangeStartCenter();
+
+                                var vertical = new JwBeamVertical
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Position = TaggDirect.Up,
+                                    PositionPoint = new JWPoint(loser.Center, group.Key),
+                                    VerticalBeam = loser,
+                                    Center = loser.Center,
+                                    ParentBeamId = winner.Id,
+                                    LoserPortType = PortType.Start,
+                                    IsShuipingLoser = false,
+                                    InitialLoser = originalSy
+                                };
+
+                                winner.Baifangs.Add(vertical);
+
+                                // 集中创建 touch、孔、LinkPart
+                                CreateTouchAndHoles(
+                                    winner: winner,
+                                    loser: loser,
+                                    vertical: vertical,
+                                    jiechuPoint: new JWPoint(loser.Center, winner.Center),
+                                    sflocation: new JWPoint(loser.Center, winner.Center),
+                                    pflocation: new JWPoint(loser.Center, loser.StartCenter + (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale),
+                                    directed: TaggDirect.Up,
+                                    loserIsStart: true,
+                                    loserIsEnd: false
+                                );
+                            }
+                        }
+                    }
+                }
+
+                // 下方垂直梁（败方在下方）
+                var chuizhixia = VerticalBeams.Where(t => t.TopLeft.Y < group.Key && t.TopLeft.Y > (groupBottomY - jxpd)).ToList();
+                if (chuizhixia.Count > 0)
+                {
+                    var minX = chuizhixia.Min(t => t.TopLeft.X);
+                    var candidates = group.Where(t => t.TopRight.X > minX).ToList();
+                    foreach (var winner in candidates)
+                    {
+                        foreach (var loser in chuizhixia)
+                        {
+                            if (loser.Center > winner.TopLeft.X && loser.Center < winner.TopRight.X)
+                            {
+                                loser.EndCenter = winner.Center;
+                                double originalSy = loser.TopLeft.Y;
+                                loser.ChangeEndCenter();
+
+                                var vertical = new JwBeamVertical
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Position = TaggDirect.Down,
+                                    PositionPoint = new JWPoint(loser.Center, group.Key),
+                                    VerticalBeam = loser,
+                                    Center = loser.Center,
+                                    ParentBeamId = winner.Id,
+                                    LoserPortType = PortType.End,
+                                    IsShuipingLoser = false,
+                                    InitialLoser = originalSy
+                                };
+
+                                winner.Baifangs.Add(vertical);
+
+                                CreateTouchAndHoles(
+                                    winner: winner,
+                                    loser: loser,
+                                    vertical: vertical,
+                                    jiechuPoint: new JWPoint(loser.Center, winner.Center),
+                                    sflocation: new JWPoint(loser.Center, winner.Center),
+                                    pflocation: new JWPoint(loser.Center, loser.EndCenter - (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale),
+                                    directed: TaggDirect.Down,
+                                    loserIsStart: false,
+                                    loserIsEnd: true
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Vertical processing (left / right)
+        private void ProcessVerticalGroups(double jxpd)
+        {
+            var chuizhigroup = VerticalBeams.GroupBy(t => t.Center).OrderBy(g => g.Key).ToList();
+
+            foreach (var group in chuizhigroup)
+            {
+                var groupLeft = group.Min(t => t.BottomLeft.X);
+                var groupRight = group.Max(t => t.BottomRight.X);
+
+                // 左侧水平梁（败方在左侧）
+                var shuipingleft = HorizontalBeams.Where(t => t.TopRight.X < groupLeft && t.TopRight.X > (groupLeft - jxpd)).ToList();
+                if (shuipingleft.Count > 0)
+                {
+                    var maxY = shuipingleft.Max(t => t.TopLeft.Y);
+                    var candidates = group.Where(t => t.BottomLeft.Y < maxY).ToList();
+                    foreach (var winner in candidates)
+                    {
+                        foreach (var loser in shuipingleft)
+                        {
+                            if (loser.Center > winner.BottomLeft.Y && loser.Center < winner.TopLeft.Y)
+                            {
+                                loser.EndCenter = winner.Center;
+                                double originalXjc = loser.TopRight.X;
+                                loser.ChangeEndCenter();
+
+                                var vertical = new JwBeamVertical
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Position = TaggDirect.Left,
+                                    PositionPoint = new JWPoint(group.Key, loser.Center),
+                                    VerticalBeam = loser,
+                                    Center = loser.Center,
+                                    ParentBeamId = winner.Id,
+                                    InitialLoser = originalXjc,
+                                    IsShuipingLoser = true,
+                                    LoserPortType = PortType.End
+                                };
+
+                                winner.Baifangs.Add(vertical);
+
+                                CreateTouchAndHoles(
+                                    winner: winner,
+                                    loser: loser,
+                                    vertical: vertical,
+                                    jiechuPoint: new JWPoint(winner.Center, loser.Center),
+                                    sflocation: new JWPoint(winner.Center, loser.Center),
+                                    pflocation: new JWPoint(loser.EndCenter - (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale, loser.Center),
+                                    directed: TaggDirect.Left,
+                                    loserIsStart: false,
+                                    loserIsEnd: true
+                                );
+                            }
+                        }
+                    }
+                }
+
+                // 右侧水平梁（败方在右侧）
+                var shuipingright = HorizontalBeams.Where(t => t.TopLeft.X > groupRight && t.TopLeft.X < (groupRight + jxpd)).ToList();
+                if (shuipingright.Count > 0)
+                {
+                    var maxY = shuipingright.Max(t => t.TopLeft.Y);
+                    var candidates = group.Where(t => t.BottomLeft.Y < maxY).ToList();
+                    foreach (var winner in candidates)
+                    {
+                        foreach (var loser in shuipingright)
+                        {
+                            if (loser.Center > winner.BottomLeft.Y && loser.Center < winner.TopLeft.Y)
+                            {
+                                loser.StartCenter = winner.Center;
+                                double originalXys = loser.TopLeft.X;
+                                loser.ChangeStartCenter();
+
+                                var vertical = new JwBeamVertical
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Position = TaggDirect.Right,
+                                    PositionPoint = new JWPoint(group.Key, loser.Center),
+                                    VerticalBeam = loser,
+                                    Center = loser.Center,
+                                    IsShuipingLoser = true,
+                                    InitialLoser = originalXys,
+                                    ParentBeamId = winner.Id,
+                                    LoserPortType = PortType.Start
+                                };
+
+                                winner.Baifangs.Add(vertical);
+
+                                CreateTouchAndHoles(
+                                    winner: winner,
+                                    loser: loser,
+                                    vertical: vertical,
+                                    jiechuPoint: new JWPoint(winner.Center, loser.Center),
+                                    sflocation: new JWPoint(winner.Center, loser.Center),
+                                    pflocation: new JWPoint(loser.StartCenter + (JwFileConsts.Gjubian + JwFileConsts.GBianjuZhongxin) / JwFileConsts.JwScale, loser.Center),
+                                    directed: TaggDirect.Right,
+                                    loserIsStart: true,
+                                    loserIsEnd: false
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region CreateTouchAndHoles and LinkPart helper
+        private void CreateTouchAndHoles(
+            JwBeam winner,
+            JwBeam loser,
+            JwBeamVertical vertical,
+            JWPoint jiechuPoint,
+            JWPoint sflocation,
+            JWPoint pflocation,
+            TaggDirect directed,
+            bool loserIsStart,
+            bool loserIsEnd)
+        {
+            // 创建 JwTouch 并加入集合
+            var jwt = new JwTouch
+            {
+                WinnerBeam = winner,
+                JwBeamVertical = vertical,
+                LoserBeam = loser,
+                BFCenter = loser.Center,
+                JieChuPoint = jiechuPoint
+            };
+
+            Touchs.Add(jwt);
+            winner.BeamTouchs.Add(jwt);
+
+            // 胜方孔（返回的孔对象记录到 jwt）
+            var shengfangjw = winner.AddAnyHoleReturn(sflocation, HoleCreateFrom.JieChu);
+            jwt.JwHoleG = shengfangjw;
+
+            // 败方端/起点孔与标志
+            loser.AddAnyHole(pflocation, HoleCreateFrom.JieChuG, null, loserIsStart, loserIsEnd);
+
+            if (loserIsStart)
+            {
+                loser.HasStartSide = true;
+                loser.StartTelosType = KongzuType.G;
+                loser.StartSide = new JwBeamSide { KongZu = loser.Holes.Last(), SideType = KongzuType.G };
+            }
+
+            if (loserIsEnd)
+            {
+                loser.HasEndSide = true;
+                loser.EndTelosType = KongzuType.G;
+                loser.EndSide = new JwBeamSide { KongZu = loser.Holes.Last(), SideType = KongzuType.G };
+            }
+
+            loser.HasBFG = true;
+            loser.BaiFangGTBDistance = BaiFangGTBDistanceType.A35;
+
+            // 维护 LinkPart（BG 与 对面的 B），保持原有逻辑
+            EnsureLinkParts(winner, loser, directed);
+        }
+        #endregion
+
+        #region EnsureLinkParts (unchanged逻辑)
+        private void EnsureLinkParts(JwBeam winner, JwBeam loser, TaggDirect directed)
+        {
+            var jbb = new JwLinkPart
+            {
+                Directed = directed,
+                GouJianType = GouJianType.BG,
+                BujianName = "BG",
+                BjCenterPoint = new JWPoint { X = Math.Round(loser.Center, 6), Y = Math.Round(winner.Center, 6) },
+                ParentBeam = winner,
+                BeamId = winner.Id,
+                BBeam = loser
+            };
+
+            var exist = AllLinkPart.Where(t => t.BjCenterPoint == jbb.BjCenterPoint && t.Directed == jbb.Directed).ToList();
+            if (exist.Count > 0)
+            {
+                var linkchang = exist.First();
+                if (linkchang != null)
+                {
+                    linkchang.GouJianType = GouJianType.BG;
+                    linkchang.BujianName = "BG";
+                    linkchang.ParentBeam = winner;
+                    linkchang.BeamId = winner.Id;
+                    linkchang.BBeam = loser;
+                }
+            }
+            else
+            {
+                winner.LinkParts.Add(jbb);
+                AllLinkPart.Add(jbb);
+            }
+
+            TaggDirect opposite = directed switch
+            {
+                TaggDirect.Up => TaggDirect.Down,
+                TaggDirect.Down => TaggDirect.Up,
+                TaggDirect.Left => TaggDirect.Right,
+                TaggDirect.Right => TaggDirect.Left,
+                _ => directed
+            };
+
+            var countOpp = AllLinkPart.Where(t => t.BjCenterPoint == jbb.BjCenterPoint && t.Directed == opposite).Count();
+            if (countOpp == 0)
+            {
+                var jbbeimian = new JwLinkPart
+                {
+                    Directed = opposite,
+                    GouJianType = GouJianType.B,
+                    BujianName = "B",
+                    BjCenterPoint = jbb.BjCenterPoint,
+                    ParentBeam = winner,
+                    BeamId = winner.Id
+                };
+                winner.LinkParts.Add(jbbeimian);
+                AllLinkPart.Add(jbbeimian);
+            }
+        }
+        #endregion
+
 
         #region 胜负接触处理
         public void JudgmentJieChu2()
