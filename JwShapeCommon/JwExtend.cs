@@ -729,8 +729,7 @@ namespace JwShapeCommon
                     HoleCreateFrom.JieChu => (true, true, true),   // 原逻辑：HasTop = true, HasBottom = true
                     HoleCreateFrom.JieChuG => (false, true, false),
                     HoleCreateFrom.FengeJ => (false, true, false),
-                    HoleCreateFrom.PillarG => (true, true, false),
-                    HoleCreateFrom.Other => (false, false, false),
+                    
                     _ => (false, false, false)
                 };
             }
