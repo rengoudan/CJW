@@ -13,6 +13,7 @@ namespace JwShapeCommon
 {
     public static class JwFileConsts
     {
+        public static double MaxErrorValue = 5;
 
         #region csv参数设置
 

@@ -562,82 +562,6 @@ namespace JwShapeCommon
 
             //}
         }
-
-
-        public static void AddAnyHole(
-    this JwBeam beam,
-    JWPoint location,
-    HoleCreateFrom createFrom,
-    JWPoint? locationcenter = null,
-    bool isStart = false,
-    bool isEnd = false)
-        {
-            // ① 定义 HoleCreateFrom → HasTop/HasCenter/HasBottom 映射表
-            (bool top, bool center, bool bottom) GetFlags(HoleCreateFrom from)
-            {
-                return from switch
-                {
-                    HoleCreateFrom.Pillar => (true, true, false),
-                    HoleCreateFrom.DownPillar => (false, true, true),
-                    HoleCreateFrom.JieChu => (false, true, false),   // 如需调整可改
-                    HoleCreateFrom.JieChuG => (true, true, true),
-                    HoleCreateFrom.FengeJ => (false, true, false),
-                    //HoleCreateFrom.PillarG => (true, true, false),
-                    //HoleCreateFrom.Other => (false, false, false),
-                    _ => (false, false, false)
-                };
-            }
-
-            var flags = GetFlags(createFrom);
-
-            // ② 查找是否已有 hole
-            var existing = beam.Holes.FirstOrDefault(t => t.Location.IsEqualsWithError(location));
-
-            // ============================
-            // ③ 已存在 hole → 合并属性
-            // ============================
-            if (existing != null)
-            {
-                // 合并（OR）
-                existing.HasTop = existing.HasTop || flags.top;
-                existing.HasCenter = existing.HasCenter || flags.center;
-                existing.HasBottom = existing.HasBottom || flags.bottom;
-
-                // 保留原有 changeByOther 逻辑
-                if (createFrom == HoleCreateFrom.FengeJ)
-                {
-                    existing.changeByOther(HoleCreateFrom.FengeJ);
-                }
-                else
-                {
-                    existing.changeByOther(HoleCreateFrom.Pillar);
-                }
-
-                return;
-            }
-
-            // ============================
-            // ④ 不存在 hole → 创建新 hole
-            // ============================
-            var hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd)
-            {
-                Beam = beam
-            };
-
-            // 设置 HoleCenter
-            hh.HoleCenter = beam.DirectionType == BeamDirectionType.Horizontal
-                ? location.X
-                : location.Y;
-
-            // 设置属性（不合并，因为是新 hole）
-            hh.HasTop = flags.top;
-            hh.HasCenter = flags.center;
-            hh.HasBottom = flags.bottom;
-
-            beam.Holes.Add(hh);
-        }
-
-
         /// <summary>
         /// 2025年6月24日 返回jwhole
         /// 2026年4月25日 增加addedhole的实现 额外增加孔
@@ -648,7 +572,7 @@ namespace JwShapeCommon
         /// <param name="locationcenter"></param>
         /// <param name="isStart"></param>
         /// <param name="isEnd"></param>
-        public static JwHole AddAnyHoleReturn(this JwBeam beam, JWPoint location, HoleCreateFrom createFrom, JWPoint? locationcenter = null, bool isStart = false, bool isEnd = false)
+        public static JwHole AddAnyHoleReturn1(this JwBeam beam, JWPoint location, HoleCreateFrom createFrom, JWPoint? locationcenter = null, bool isStart = false, bool isEnd = false)
         {
             JwHole hh = new JwHole();
             if (beam.Holes.Count > 0)
@@ -711,13 +635,40 @@ namespace JwShapeCommon
             return hh;
         }
 
-        public static JwHole AddAnyHoleReturn2(
-    this JwBeam beam,
+
+        public static void AddAnyHole(
+       this JwBeam beam,
+       JWPoint location,
+       HoleCreateFrom createFrom,
+       JWPoint? locationcenter = null,
+       bool isStart = false,
+       bool isEnd = false)
+        {
+            AddAnyHoleCore(beam, location, createFrom, locationcenter, isStart, isEnd, false);
+        }
+
+
+
+        public static JwHole AddAnyHoleReturn(
+      this JwBeam beam,
+      JWPoint location,
+      HoleCreateFrom createFrom,
+      JWPoint? locationcenter = null,
+      bool isStart = false,
+      bool isEnd = false)
+        {
+            return AddAnyHoleCore(beam, location, createFrom, locationcenter, isStart, isEnd, true);
+        }
+
+
+        private static JwHole AddAnyHoleCore(
+    JwBeam beam,
     JWPoint location,
     HoleCreateFrom createFrom,
-    JWPoint? locationcenter = null,
-    bool isStart = false,
-    bool isEnd = false)
+    JWPoint? locationcenter,
+    bool isStart,
+    bool isEnd,
+    bool returnHole)
         {
             // ① HoleCreateFrom → HasTop/HasCenter/HasBottom 映射表
             (bool top, bool center, bool bottom) GetFlags(HoleCreateFrom from)
@@ -726,10 +677,9 @@ namespace JwShapeCommon
                 {
                     HoleCreateFrom.Pillar => (true, true, false),
                     HoleCreateFrom.DownPillar => (false, true, true),
-                    HoleCreateFrom.JieChu => (true, true, true),   // 原逻辑：HasTop = true, HasBottom = true
+                    HoleCreateFrom.JieChu => (true, true, true),
                     HoleCreateFrom.JieChuG => (false, true, false),
                     HoleCreateFrom.FengeJ => (false, true, false),
-                    
                     _ => (false, false, false)
                 };
             }
@@ -744,26 +694,26 @@ namespace JwShapeCommon
             // ============================
             if (existing != null)
             {
-                // 合并（OR）
                 existing.HasTop |= flags.top;
                 existing.HasCenter |= flags.center;
                 existing.HasBottom |= flags.bottom;
-
-                // 原有特殊逻辑保留
-                if (createFrom == HoleCreateFrom.FengeJ)
+                existing.ChangeFrom = createFrom;
+                // 特殊逻辑
+                if (createFrom == HoleCreateFrom.JieChu)
                 {
+                    existing.KongNum = 4;
                     existing.changeByOther(HoleCreateFrom.FengeJ);
                 }
-                else if (createFrom == HoleCreateFrom.JieChu)
-                {
-                    existing.KongNum = 4;   // 原逻辑
-                }
-                else
-                {
-                    existing.changeByOther(HoleCreateFrom.Pillar);
-                }
+                //else if (createFrom == HoleCreateFrom.JieChu)
+                //{
+                    
+                //}
+                //else
+                //{
+                //    existing.changeByOther(HoleCreateFrom.Pillar);
+                //}
 
-                return existing;
+                return returnHole ? existing : null;
             }
 
             // ============================
@@ -774,24 +724,21 @@ namespace JwShapeCommon
                 Beam = beam
             };
 
-            // 设置 HoleCenter
             hh.HoleCenter = beam.DirectionType == BeamDirectionType.Horizontal
                 ? location.X
                 : location.Y;
 
-            // 设置属性（不合并，因为是新 hole）
             hh.HasTop = flags.top;
             hh.HasCenter = flags.center;
             hh.HasBottom = flags.bottom;
 
-            // 原有特殊逻辑：JieChu → KongNum = 4
             if (createFrom == HoleCreateFrom.JieChu)
             {
                 hh.KongNum = 4;
             }
 
             beam.Holes.Add(hh);
-            return hh;
+            return returnHole ? hh : null;
         }
 
 

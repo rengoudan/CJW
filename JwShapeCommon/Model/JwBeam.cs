@@ -6,6 +6,7 @@ using Microsoft.Extensions.Primitives;
 using NetTopologySuite.Algorithm;
 using NetTopologySuite.Geometries;
 using Sunny.UI;
+using Sunny.UI.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -93,6 +94,8 @@ namespace JwShapeCommon
         public double XXLength { get; set; }
 
         public string GongQu { get; set; } = "";
+
+        public JwBeam ParentBeam { get; set; }
 
 
 
@@ -2438,6 +2441,7 @@ namespace JwShapeCommon
         {
             List<JwBeam> relst = new List<JwBeam>();
             var zlst = beam.BeamTouchs;
+            var maxDiff = JwFileConsts.MaxErrorValue / JwFileConsts.JwScale;
             if (beam.HasQieGe)
             {
                 beam.IsParentBeam = true;
@@ -2449,6 +2453,15 @@ namespace JwShapeCommon
                     List<double> qieges = new List<double>();
                     for (int i = 0; i < beam.QieGePoints.Count; i++)
                     {
+                        var target = beam.QieGePoints[i].X;
+                        var result = zlst
+                            .Where(x => Math.Abs(x.BFCenter - target) < maxDiff)
+                            .OrderBy(x => Math.Abs(x.BFCenter - target))
+                            .FirstOrDefault();//处理分割于胜败中心不一致的问题
+                        if (result != null)
+                        {
+                            beam.QieGePoints[i].X = result.BFCenter;
+                        }
                         qieges.Add(beam.QieGePoints[i].X);
                         var endx= beam.QieGePoints[i].X;
                         var nb = new JwBeam(beam, startx, endx, qieges.Contains(startx), qieges.Contains(endx));
@@ -2466,17 +2479,19 @@ namespace JwShapeCommon
                         nb.BeamTouchs.AddRange(qll);
                         nb.BeamTouchs.ForEach(t => t.WinnerBeam = nb);
                         relst.Add(nb);
-                        var ft = zlst.Find(t => t.BFCenter == Math.Round(endx,2));
+                        var ft = zlst.Find(t => Math.Round(t.BFCenter,2) == Math.Round(endx,2));
                         if (ft != null)
                         {
                             ft.QiegeZu = qiegeZu;
                             ft.HasQiege = true;
                         }
+                        nb.ParentBeam = beam;
                         startx = endx;
 
                     }
                     var endright=beam.TopRight.X;
                     var edp = new JwBeam(beam, startx, endright, true, false);
+                    edp.ParentBeam = beam;
                     var pres = beam.jwQiegeZus.Last();
                     if (pres != null)
                     {
