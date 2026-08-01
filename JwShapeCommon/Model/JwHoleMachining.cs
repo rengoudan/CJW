@@ -42,6 +42,8 @@ namespace JwShapeCommon.Model
         /// </summary>
         public bool HasTop { get; set; }
 
+        public HoleCreateFrom HoleCreateFrom { get; set; }
+
 
         public string ToCsvString(double y)
         {

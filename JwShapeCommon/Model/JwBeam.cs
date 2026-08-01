@@ -1128,7 +1128,7 @@ namespace JwShapeCommon
                 jwBeamMarks.Add(mark);
                 precb = loc;
                 if (h.FirstCreateFrom == HoleCreateFrom.Lianjie)
-                    addLianjieMachining(sb, h);
+                    addLianjieMachining(sb, loc, h);
                 else
                     addMachining(sb, loc, h, false, false);
             }
@@ -1158,345 +1158,6 @@ namespace JwShapeCommon
         }
 
 
-        /// <summary>
-        /// 2025年10月28日本身在判断是否距离开始 150的时候判断了相对梁开始的距离 
-        /// 2025年10月28日 增加beammarkpoint的 RelativeStartDistance属性
-        /// 前提默认holes 是完整 包含首尾
-        /// 对holes进行排序 并生成需要计算区间的点数据
-        /// 2025年4月16日 由于endhole 
-        /// 统一一下起始和结束 端口 2及端口所包含的hole 
-        /// 2025年10月22日 起始点缺少prebeam
-        /// </summary>
-        public void holeorder1()
-        {
-            this.jwBeamMarks = new List<JwBeamMarkPoint>();
-            this.JwHoleMachinings = new List<JwHoleMachining>();
-            if (this.DirectionType == BeamDirectionType.Horizontal)
-            {
-                this.Holes = this.Holes.OrderBy(t => t.Location.X).ToList();
-            }
-            if (this.DirectionType == BeamDirectionType.Vertical)
-            {
-                this.Holes = this.Holes.OrderBy(t => t.Location.Y).ToList();
-            }
-
-            double pr = 0;
-            double sb = 0;//startbeam 起点坐标
-            double lastholes = 0;
-
-            double precb = 0;
-
-            var starthole = this.Holes.Find(t => t.IsStart);
-
-            var endhole = this.Holes.Find(t => t.IsEnd);
-
-            //处理beam开始 结束标记点信息
-            var es = new JwBeamMarkPoint(this, false, true);
-            es.PreBeamStartDistance = Math.Round(es.Coordinate - sb, 2);
-            this.jwBeamMarks.Add(es);
-            var endx = new JwBeamMarkPoint(this, true, false, true);//芯终点
-
-            //2026年5月15日 B端有接触的情况 重复孔 
-            if (endhole == null)
-            {
-                if(this.EndTelosType == KongzuType.B)
-                {
-                    //芯终点
-                    endx.Coordinate = es.Coordinate - 50 / JwFileConsts.JwScale;//不用区分水平和垂直
-                    endx.coordinated();
-
-                    double lastce = (es.Coordinate - precb) * JwFileConsts.JwScale;
-
-                    var fh=this.Holes.Find(t => t.Location.IsEqualsWithError(endx.Point));
-                    if (fh != null)
-                    {
-                        fh.IsEnd = true;
-                        endhole = fh;
-                        endx.HasAppend = true;
-                        endx.AppendHole = fh;
-                    }
-                    else
-                    {
-                        JwHole ewholeend;
-                        if (lastce >= 150)
-                        {
-                            endhole = new JwHole(true, endx.Point, KongzuType.BC);
-                            endhole.KongNum = 4;
-                            endx.AppendHole = endhole;
-                            endx.HasAppend = true;
-                        }
-                        else
-                        {
-                            endhole = new JwHole(true, endx.Point, KongzuType.BP);
-                            endhole.KongNum = 2;
-                            endx.IsBias = true;
-                            endx.AppendHole = endhole;
-                            endx.HasAppend = true;
-                        }
-                  
-                    }
-                }
-            }
-            else
-            {
-                //endhole = ewholeend;
-                endx.HasAppend = true;
-                //var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
-                //if (kshibf != null)
-                //{
-                //    endhole.HasBhLinkHole = kshibf.HasLast;
-                //    endhole.HasPreLinkHole = kshibf.HasPre;
-                //}
-                endx.AppendHole = endhole;
-            }
-
-                var centerholes = this.Holes.Where(t => !t.IsEnd && !t.IsStart).ToList();
-
-            
-
-            //处理beam开始 结束标记点信息
-            var bs = new JwBeamMarkPoint(this, true);
-            this.jwBeamMarks.Add(bs);
-            sb = bs.Coordinate;
-            //cbs 为芯起点 不是first 孔组中心点
-            var cbs = new JwBeamMarkPoint(this, true, true, false);//芯起点
-
-            //this.Baifangs = this.Baifangs.OrderBy(t => t.Center).ToList();
-            //for(int i=0; i < this.Baifangs.Count; i++)
-            //{
-            //    if (i == 0)
-            //    {
-            //        this.Baifangs[i].HasLast = true;
-            //    }
-            //    else if(i==this.Baifangs.Count-1)
-            //    {
-            //        this.Baifangs[i].HasPre = true;
-            //    }
-            //    else
-            //    {
-            //        this.Baifangs[i].HasPre = true;
-            //        this.Baifangs[i].HasLast = true;
-            //    }
-            //}
-
-            //处理B端
-            if (this.StartTelosType == KongzuType.B)
-            {
-                cbs.Coordinate = bs.Coordinate + 50 / JwFileConsts.JwScale;//不用区分水平和垂直
-                cbs.coordinated();
-                //this.jwBeamMarks.Add(cbs);
-                //cbs.PreCenterDistance = 0;//他就是中心点
-                //prcentercoordinate = cbs.Coordinate;
-                //starthole = new JwHole(true, cbs.Point, KongzuType.BC);
-                double pbmark = 0;
-                if (centerholes?.Count > 0)
-                {
-                    var fch=centerholes[0];
-                    double fcc = 0;
-                    if (this.DirectionType == BeamDirectionType.Horizontal)
-                    {
-                        fcc = fch.Location.X;
-                    }
-                    else if (this.DirectionType == BeamDirectionType.Vertical)
-                    {
-                        fcc = fch.Location.Y;
-                    }
-                    double ce=(fcc-sb)*JwFileConsts.JwScale;
-                    cbs.IsBias = true;
-                    JwHole tempstarthole;
-                    if (ce >= 150)
-                    {
-                        tempstarthole= new JwHole(true, cbs.Point, KongzuType.BC);
-                        tempstarthole.KongNum = 4;
-                        tempstarthole.IsStart = true;
-                    }
-                    else
-                    {
-                        tempstarthole = new JwHole(true, cbs.Point, KongzuType.BP);
-                        tempstarthole.KongNum = 2;
-                        tempstarthole.IsStart = true;
-                        cbs.IsBias = true;
-                    }
-                    if (starthole == null)
-                    {
-                        this.Holes.Add(tempstarthole);
-                        starthole = tempstarthole;
-                    }
-                    else
-                    {
-                        starthole= tempstarthole;
-                    }
-                }
-            }
-            else if (this.StartTelosType == KongzuType.G)
-            {
-                //g端的逻辑需要调整
-                cbs.Coordinate = this.StartCenter;
-                cbs.coordinated();
-            }
-            else if (this.StartTelosType == KongzuType.J)
-            {
-                cbs.Coordinate = this.StartCenter;
-                cbs.coordinated();
-            }
-            cbs.PreBeamStartDistance=Math.Round(cbs.Coordinate-sb,2);
-
-            this.jwBeamMarks.Add(cbs);
-            precb = cbs.Coordinate;
-            
-            //
-            if (starthole != null)
-            {
-                //hole的中心带你可以和mark的不一致  只有B是一致的
-                cbs.HasAppend = true;
-                //var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
-                //if (kshibf != null)
-                //{
-                //    starthole.HasBhLinkHole = kshibf.HasLast;
-                //    starthole.HasPreLinkHole= kshibf.HasPre;
-                //}
-                cbs.AppendHole = starthole;
-                
-
-                //var startholejmp = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
-                //if (this.DirectionType == BeamDirectionType.Horizontal)
-                //{
-                //    startholejmp.Coordinate = starthole.Location.X;
-                //}
-                //if (this.DirectionType == BeamDirectionType.Vertical)
-                //{
-                //    startholejmp.Coordinate = starthole.Location.Y;
-                //}
-                //startholejmp.PreCenterDistance = Math.Round(startholejmp.Coordinate - precb, 2);
-                //startholejmp.PreBeamStartDistance=Math.Round(startholejmp.Coordinate-sb,2);
-                //precb = startholejmp.Coordinate;
-            }
-
-            double realfirstholeloaction=0;
-            if (this.DirectionType == BeamDirectionType.Horizontal)
-            {
-                if(cbs.AppendHole!=null)
-                    realfirstholeloaction = cbs.AppendHole.Location.X;
-            }
-            else if (this.DirectionType == BeamDirectionType.Vertical)
-            {
-                if(cbs.AppendHole!=null)
-                    realfirstholeloaction = cbs.AppendHole.Location.Y;
-            }
-
-            addMachining(sb,realfirstholeloaction,cbs.AppendHole,true,false);
-
-            if (centerholes?.Count > 0)
-            {
-                //针对出了端口之外的中间的柱产生中心点， 确定之间距离是否存在各位 如果不存在保留1
-                //前提是遍历的holes都为pillar产生及胜方
-                for (int i = 0; i < centerholes.Count; i++)
-                {
-                    var h= centerholes[i];
-                   if(h.IsMachining)
-                    {
-                        if (h.FirstCreateFrom == HoleCreateFrom.Lianjie)
-                        {
-                            var cccc = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
-                            //cccc.Coordinate = h.HoleCenter;
-                            if (this.DirectionType == BeamDirectionType.Horizontal)
-                            {
-                                cccc.Coordinate=h.HoleCenter = centerholes[i].Location.X;
-                            }
-                            if (this.DirectionType == BeamDirectionType.Vertical)
-                            {
-                                cccc.Coordinate = h.HoleCenter = centerholes[i].Location.Y;
-                            }
-                            cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 1);
-                            cccc.PreBeamStartDistance = Math.Round(cccc.Coordinate - sb, 1);
-                            cccc.AppendHole = centerholes[i];
-                            cccc.HasAppend = true;
-                            this.jwBeamMarks.Add(cccc);
-                            precb = cccc.Coordinate;//循环完即为最后一个洞坐标非 首位端口的洞
-
-                            addLianjieMachining(sb, h);
-                        }
-                        else
-                        {
-                            var cccc = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
-                            if (this.DirectionType == BeamDirectionType.Horizontal)
-                            {
-                                cccc.Coordinate = centerholes[i].Location.X;
-                            }
-                            if (this.DirectionType == BeamDirectionType.Vertical)
-                            {
-                                cccc.Coordinate = centerholes[i].Location.Y;
-                            }
-                            cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 1);
-                            cccc.PreBeamStartDistance = Math.Round(cccc.Coordinate - sb, 1);
-                            cccc.AppendHole = centerholes[i];
-                            cccc.HasAppend = true;
-                            this.jwBeamMarks.Add(cccc);
-                            precb = cccc.Coordinate;//循环完即为最后一个洞坐标非 首位端口的洞
-
-                            addMachining(sb, cccc.Coordinate, cccc.AppendHole, false, false);
-                            //var fbf = this.Baifangs.Find(t => t.Center == cccc.Coordinate);
-
-                            //if(fbf != null)
-                            //{
-                            //    centerholes[i].HasPreLinkHole = fbf.HasPre;
-                            //    centerholes[i].HasBhLinkHole = fbf.HasLast;
-                            //}
-
-
-
-                        }
-                    }
-
-                    //if (i == centerholes.Count - 1)
-                    //{
-                    //    lastholes = cccc.Coordinate;
-                    //}
-                }
-
-              
-            }
-
-            
-
-            if (this.EndTelosType == KongzuType.B)
-            {
-            }
-            else
-            {
-                endx.Coordinate = this.EndCenter;
-                endx.coordinated();
-                if (endhole != null)
-                {
-                    endx.HasAppend = true;
-                    //var kshibf = this.Baifangs.Find(t => t.Center == cbs.Coordinate);
-                    //if (kshibf != null)
-                    //{
-                    //    endhole.HasBhLinkHole = kshibf.HasLast;
-                    //    endhole.HasPreLinkHole = kshibf.HasPre;
-                    //}
-                    endx.AppendHole = endhole;
-                    //precb = endholejmp.Coordinate;
-                }
-            }
-
-            double reallastholeloaction = 0;
-            if (this.DirectionType == BeamDirectionType.Horizontal)
-            {
-                reallastholeloaction = endx.AppendHole.Location.X;
-            }
-            else if (this.DirectionType == BeamDirectionType.Vertical)
-            {
-                reallastholeloaction = endx.AppendHole.Location.Y;
-            }
-            addMachining(sb, reallastholeloaction, endx.AppendHole,false,true);
-            endx.PreBeamStartDistance=Math.Round(endx.Coordinate-sb,2);
-            endx.PreCenterDistance=Math.Round(endx.Coordinate-precb,2);
-            this.jwBeamMarks.Add(endx);
-            var z = this.jwBeamMarks.Count;
-            double xxlength=this.jwBeamMarks.Sum(t=>t.PreCenterDistance);
-
-        }
 
         /// <summary>
         /// 记录加工点位信息
@@ -1524,8 +1185,10 @@ namespace JwShapeCommon
                     Id = Guid.NewGuid().ToString(),
                     RelativeStartDistance = Math.Round((singleleft - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = singleleft,
-                    HasLeft = true
+                    HasLeft = true,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
+                
                 //JwHoleMachinings.Add(preleft);
                 var singleright = Math.Round((location + (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
                 JwHoleMachining preright = new JwHoleMachining
@@ -1533,8 +1196,10 @@ namespace JwShapeCommon
                     Id = Guid.NewGuid().ToString(),
                     RelativeStartDistance = Math.Round((singleright - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = singleright,
-                    HasLeft = true
+                    HasLeft = true,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
+                
                 //JwHoleMachinings.Add(preright);
                 //处理加工点位-存在链接点 仅bottom增加
                 var weileft = Math.Round((location - (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
@@ -1543,7 +1208,8 @@ namespace JwShapeCommon
                     Id = Guid.NewGuid().ToString(),
                     RelativeStartDistance = Math.Round((weileft - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = weileft,
-                    HasLeft = true
+                    HasLeft = true,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
                 var touright = Math.Round((location + (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
                 JwHoleMachining jwtouright = new JwHoleMachining
@@ -1551,7 +1217,8 @@ namespace JwShapeCommon
                     Id = Guid.NewGuid().ToString(),
                     RelativeStartDistance = Math.Round((touright - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = touright,
-                    HasLeft = true
+                    HasLeft = true,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
 
                 JwHoleMachining machiningleft = new JwHoleMachining
@@ -1561,7 +1228,8 @@ namespace JwShapeCommon
                     RealLocation = holerealleft,
                     HasLeft = hole.HasTop,
                     HasRight = hole.HasBottom,
-                    HasTop = hole.HasCenter
+                    HasTop = hole.HasCenter,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
                 //JwHoleMachinings.Add(machiningleft);
                 JwHoleMachining machiningright = new JwHoleMachining
@@ -1571,7 +1239,8 @@ namespace JwShapeCommon
                     RealLocation = holerealright,
                     HasLeft = hole.HasTop,
                     HasRight = hole.HasBottom,
-                    HasTop = hole.HasCenter
+                    HasTop = hole.HasCenter,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
                 //JwHoleMachinings.Add(machiningright);
                 JwHoleMachining machiningsingle = new JwHoleMachining
@@ -1581,7 +1250,8 @@ namespace JwShapeCommon
                     RealLocation = location,
                     HasLeft = hole.HasTop,
                     HasRight = hole.HasBottom,
-                    HasTop = hole.HasCenter
+                    HasTop = hole.HasCenter,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
 
 
@@ -1593,6 +1263,7 @@ namespace JwShapeCommon
                     HasLeft = true,
                     HasRight = true,
                     HasTop = false,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
 
                 switch (hole.HoleType)
@@ -1732,11 +1403,11 @@ namespace JwShapeCommon
         /// <param name="ks"></param>
         /// <param name="location"></param>
         /// <param name="hole"></param>
-        public void addLianjieMachining(double ks, JwHole hole)
+        public void addLianjieMachining(double ks, double location, JwHole hole)
         {
             if (hole != null)
             {
-                var location=hole.HoleCenter;
+                //var location=hole.HoleCenter;
                 var singleleft = Math.Round(location, 2);
                 JwHoleMachining preleft = new JwHoleMachining
                 {
@@ -1745,7 +1416,8 @@ namespace JwShapeCommon
                     RealLocation = singleleft,
                     HasLeft = true,
                     HasRight=false,
-                    HasTop= false
+                    HasTop= false,
+                    HoleCreateFrom = hole.FirstCreateFrom
                 };
                 JwHoleMachinings.Add(preleft);
             }
