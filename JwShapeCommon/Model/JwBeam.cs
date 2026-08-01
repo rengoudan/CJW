@@ -1031,6 +1031,132 @@ namespace JwShapeCommon
 
         //存有 相对开始距离  需要打孔的位置 上下中 或者all
 
+        public void holeorder()
+        {
+            jwBeamMarks = new List<JwBeamMarkPoint>();
+            JwHoleMachinings = new List<JwHoleMachining>();
+
+            Holes = (DirectionType == BeamDirectionType.Horizontal)
+                ? Holes.OrderBy(h => h.Location.X).ToList()
+                : Holes.OrderBy(h => h.Location.Y).ToList();
+
+            double sb = 0, precb = 0;
+            var starthole = Holes.Find(h => h.IsStart);
+            var endhole = Holes.Find(h => h.IsEnd);
+            var centerholes = Holes.Where(h => !h.IsStart && !h.IsEnd).ToList();
+
+            var es = new JwBeamMarkPoint(this, false, true);
+            es.PreBeamStartDistance = Math.Round(es.Coordinate - sb, 2);
+            jwBeamMarks.Add(es);
+
+            var endx = new JwBeamMarkPoint(this, true, false, true);
+
+            if (endhole == null && EndTelosType == KongzuType.B)
+            {
+                endx.Coordinate = es.Coordinate - 50 / JwFileConsts.JwScale;
+                endx.coordinated();
+                double ce = (es.Coordinate - precb) * JwFileConsts.JwScale;
+                var fh = Holes.Find(h => h.Location.IsEqualsWithError(endx.Point));
+                endhole = fh ?? (ce >= 150
+                    ? new JwHole(true, endx.Point, KongzuType.BC) { KongNum = 4 }
+                    : new JwHole(true, endx.Point, KongzuType.BP) { KongNum = 2, IsBias = true });
+                endx.HasAppend = true;
+                endx.AppendHole = endhole;
+            }
+            else if (endhole != null)
+            {
+                endx.HasAppend = true;
+                endx.AppendHole = endhole;
+            }
+
+            var bs = new JwBeamMarkPoint(this, true);
+            jwBeamMarks.Add(bs);
+            sb = bs.Coordinate;
+
+            var cbs = new JwBeamMarkPoint(this, true, true, false);
+            if (StartTelosType == KongzuType.B)
+            {
+                cbs.Coordinate = sb + 50 / JwFileConsts.JwScale;
+                cbs.coordinated();
+                if (centerholes.Count > 0)
+                {
+                    double fcc = (DirectionType == BeamDirectionType.Horizontal)
+                        ? centerholes[0].Location.X
+                        : centerholes[0].Location.Y;
+                    double ce = (fcc - sb) * JwFileConsts.JwScale;
+                    cbs.IsBias = true;
+                    starthole = ce >= 150
+                        ? new JwHole(true, cbs.Point, KongzuType.BC) { KongNum = 4, IsStart = true }
+                        : new JwHole(true, cbs.Point, KongzuType.BP) { KongNum = 2, IsStart = true, IsBias = true };
+                    if (!Holes.Any(h => h.IsStart)) Holes.Add(starthole);
+                }
+            }
+            else
+            {
+                cbs.Coordinate = StartCenter;
+                cbs.coordinated();
+            }
+
+            cbs.PreBeamStartDistance = Math.Round(cbs.Coordinate - sb, 2);
+            jwBeamMarks.Add(cbs);
+            precb = cbs.Coordinate;
+
+            if (starthole != null)
+            {
+                cbs.HasAppend = true;
+                cbs.AppendHole = starthole;
+                double firstLoc = (DirectionType == BeamDirectionType.Horizontal)
+                    ? starthole.Location.X
+                    : starthole.Location.Y;
+                addMachining(sb, firstLoc, starthole, true, false);
+            }
+
+            foreach (var h in centerholes)
+            {
+                if (!h.IsMachining) continue;
+                double loc = (DirectionType == BeamDirectionType.Horizontal)
+                    ? h.Location.X
+                    : h.Location.Y;
+                var mark = new JwBeamMarkPoint(this, true, false, false)
+                {
+                    Coordinate = loc,
+                    PreCenterDistance = Math.Round(loc - precb, 1),
+                    PreBeamStartDistance = Math.Round(loc - sb, 1),
+                    AppendHole = h,
+                    HasAppend = true
+                };
+                jwBeamMarks.Add(mark);
+                precb = loc;
+                if (h.FirstCreateFrom == HoleCreateFrom.Lianjie)
+                    addLianjieMachining(sb, h);
+                else
+                    addMachining(sb, loc, h, false, false);
+            }
+
+            if (EndTelosType != KongzuType.B)
+            {
+                endx.Coordinate = EndCenter;
+                endx.coordinated();
+                if (endhole != null)
+                {
+                    endx.HasAppend = true;
+                    endx.AppendHole = endhole;
+                }
+            }
+
+            double lastLoc = (DirectionType == BeamDirectionType.Horizontal)
+                ? endx.AppendHole.Location.X
+                : endx.AppendHole.Location.Y;
+
+            addMachining(sb, lastLoc, endx.AppendHole, false, true);
+
+            endx.PreBeamStartDistance = Math.Round(endx.Coordinate - sb, 2);
+            endx.PreCenterDistance = Math.Round(endx.Coordinate - precb, 2);
+            jwBeamMarks.Add(endx);
+
+            XXLength = jwBeamMarks.Sum(m => m.PreCenterDistance);
+        }
+
 
         /// <summary>
         /// 2025年10月28日本身在判断是否距离开始 150的时候判断了相对梁开始的距离 
@@ -1041,7 +1167,7 @@ namespace JwShapeCommon
         /// 统一一下起始和结束 端口 2及端口所包含的hole 
         /// 2025年10月22日 起始点缺少prebeam
         /// </summary>
-        public void holeorder()
+        public void holeorder1()
         {
             this.jwBeamMarks = new List<JwBeamMarkPoint>();
             this.JwHoleMachinings = new List<JwHoleMachining>();
@@ -1272,7 +1398,15 @@ namespace JwShapeCommon
                         if (h.FirstCreateFrom == HoleCreateFrom.Lianjie)
                         {
                             var cccc = new JwBeamMarkPoint(this, true, false, false);//端口洞中心位置
-                            cccc.Coordinate = h.HoleCenter;
+                            //cccc.Coordinate = h.HoleCenter;
+                            if (this.DirectionType == BeamDirectionType.Horizontal)
+                            {
+                                cccc.Coordinate=h.HoleCenter = centerholes[i].Location.X;
+                            }
+                            if (this.DirectionType == BeamDirectionType.Vertical)
+                            {
+                                cccc.Coordinate = h.HoleCenter = centerholes[i].Location.Y;
+                            }
                             cccc.PreCenterDistance = Math.Round(cccc.Coordinate - precb, 1);
                             cccc.PreBeamStartDistance = Math.Round(cccc.Coordinate - sb, 1);
                             cccc.AppendHole = centerholes[i];

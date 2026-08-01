@@ -221,6 +221,7 @@ namespace JwShapeCommon.Model
             Id = Guid.NewGuid().ToString();
             IsMachining = true;
             FirstCreateFrom = ChangeFrom = HoleCreateFrom.Lianjie;
+            HasBottom = true;
             Location = new JWPoint(x, y);
         }
 

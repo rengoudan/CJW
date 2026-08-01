@@ -62,6 +62,8 @@
             uiComboBox8 = new Sunny.UI.UIComboBox();
             ucbfgm = new Sunny.UI.UIComboBox();
             lianjiecompenttypecbb = new Sunny.UI.UIComboBox();
+            uiMarkLabel15 = new Sunny.UI.UIMarkLabel();
+            uiSwitch1 = new Sunny.UI.UISwitch();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -69,7 +71,7 @@
             // 
             panel1.Controls.Add(uiButton1);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 809);
+            panel1.Location = new Point(0, 880);
             panel1.Name = "panel1";
             panel1.Size = new Size(683, 53);
             panel1.TabIndex = 0;
@@ -83,7 +85,6 @@
             uiButton1.Size = new Size(100, 35);
             uiButton1.TabIndex = 0;
             uiButton1.Text = "セーブ";
-            uiButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiButton1.Click += uiButton1_Click;
             // 
             // uiNearSpliteMax
@@ -577,10 +578,36 @@
             lianjiecompenttypecbb.TextAlignment = ContentAlignment.MiddleLeft;
             lianjiecompenttypecbb.Watermark = "";
             // 
+            // uiMarkLabel15
+            // 
+            uiMarkLabel15.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiMarkLabel15.ForeColor = Color.FromArgb(48, 48, 48);
+            uiMarkLabel15.Location = new Point(84, 830);
+            uiMarkLabel15.Name = "uiMarkLabel15";
+            uiMarkLabel15.Padding = new Padding(5, 0, 0, 0);
+            uiMarkLabel15.Size = new Size(168, 23);
+            uiMarkLabel15.TabIndex = 34;
+            uiMarkLabel15.Text = "穴処理方法";
+            uiMarkLabel15.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // uiSwitch1
+            // 
+            uiSwitch1.ActiveText = "穴最小";
+            uiSwitch1.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            uiSwitch1.InActiveText = "一般";
+            uiSwitch1.Location = new Point(520, 820);
+            uiSwitch1.MinimumSize = new Size(1, 1);
+            uiSwitch1.Name = "uiSwitch1";
+            uiSwitch1.Size = new Size(112, 44);
+            uiSwitch1.TabIndex = 35;
+            uiSwitch1.Text = "uiSwitch1";
+            // 
             // CustomerDesignSetting
             // 
             AutoScaleMode = AutoScaleMode.None;
-            ClientSize = new Size(683, 862);
+            ClientSize = new Size(683, 933);
+            Controls.Add(uiSwitch1);
+            Controls.Add(uiMarkLabel15);
             Controls.Add(lianjiecompenttypecbb);
             Controls.Add(ucbfgm);
             Controls.Add(uiComboBox8);
@@ -657,5 +684,7 @@
         private Sunny.UI.UIComboBox uiComboBox8;
         private Sunny.UI.UIComboBox ucbfgm;
         private Sunny.UI.UIComboBox lianjiecompenttypecbb;
+        private Sunny.UI.UIMarkLabel uiMarkLabel15;
+        private Sunny.UI.UISwitch uiSwitch1;
     }
 }

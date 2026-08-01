@@ -673,15 +673,30 @@ namespace JwShapeCommon
             // ① HoleCreateFrom → HasTop/HasCenter/HasBottom 映射表
             (bool top, bool center, bool bottom) GetFlags(HoleCreateFrom from)
             {
-                return from switch
+                if (JwFileConsts.MinimalStrategy)
                 {
-                    HoleCreateFrom.Pillar => (true, true, false),
-                    HoleCreateFrom.DownPillar => (false, true, true),
-                    HoleCreateFrom.JieChu => (true, true, true),
-                    HoleCreateFrom.JieChuG => (false, true, false),
-                    HoleCreateFrom.FengeJ => (false, true, false),
-                    _ => (false, false, false)
-                };
+                    return from switch
+                    {
+                        HoleCreateFrom.Pillar => (true, true, false),
+                        HoleCreateFrom.DownPillar => (false, true, true),
+                        HoleCreateFrom.JieChu => (false, true, false),
+                        HoleCreateFrom.JieChuG => (false, true, false),
+                        HoleCreateFrom.FengeJ => (false, true, false),
+                        _ => (false, false, false)
+                    };
+                }
+                else
+                {
+                    return from switch
+                    {
+                        HoleCreateFrom.Pillar => (true, true, false),
+                        HoleCreateFrom.DownPillar => (false, true, true),
+                        HoleCreateFrom.JieChu => (true, true, true),
+                        HoleCreateFrom.JieChuG => (false, true, false),
+                        HoleCreateFrom.FengeJ => (false, true, false),
+                        _ => (false, false, false)
+                    };
+                }   
             }
 
             var flags = GetFlags(createFrom);

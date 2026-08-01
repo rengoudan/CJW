@@ -267,6 +267,7 @@ namespace RGBJWMain.Forms
 
             JwFileConsts.EWaiKongColor=uiComboBox8.SelectedItem as JwColor;
             JwFileConsts.LjCompentType=(LianjieCompentType) lianjiecompenttypecbb.SelectedValue;
+            JwFileConsts.MinimalStrategy = uiSwitch1.Active;
             DialogResult = DialogResult.OK;
         }
 
