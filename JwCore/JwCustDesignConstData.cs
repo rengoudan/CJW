@@ -62,6 +62,11 @@ namespace JwCore
         /// </summary>
         public PillarDrawingMethod SplitDrawingMethod { get; set; }
 
+        /// <summary>
+        /// 用来区分是否关东VPL 使用败方孔 不额外打孔 还是BR8使用胜方额外打孔
+        /// </summary>
+        public LianjieCompentType LianjieCompentType { get; set; }
+
         public long? JwCustomerDataId { get; set; }
         public virtual JwCustomerData? JwCustomerData { get; set; } = null!;
 
