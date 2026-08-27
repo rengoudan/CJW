@@ -142,6 +142,7 @@ namespace RGBJWMain.Forms
                     data.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
                     data.PillarDrawingMethod= (PillarDrawingMethod)uiComboBox6.SelectedValue;
                     data.SplitDrawingMethod = (PillarDrawingMethod)ucbfgm.SelectedValue;
+                    data.LianjieCompentType = (LianjieCompentType)lianjiecompenttypecbb.SelectedValue;
                     await jwqitaService.AddJwCustDesignConstDataAsync(data);
                 }
                 else
@@ -173,6 +174,7 @@ namespace RGBJWMain.Forms
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;
                     }
+                    jwCustDesignConstData.LianjieCompentType = (LianjieCompentType)lianjiecompenttypecbb.SelectedValue;
                     await jwqitaService.UpdateJwCustDesignConstDataAsync(jwCustDesignConstData);
                 }
             }
@@ -203,6 +205,7 @@ namespace RGBJWMain.Forms
                     jwCustDesignConstData.LianjieParsingMethod = (LianjieParsingMethod)uiComboBox5.SelectedValue;
                         jwCustDesignConstData.PillarDrawingMethod = (PillarDrawingMethod)uiComboBox6.SelectedValue;
                     jwCustDesignConstData.SplitDrawingMethod=(PillarDrawingMethod)ucbfgm.SelectedValue;
+                    jwCustDesignConstData.LianjieCompentType = (LianjieCompentType)lianjiecompenttypecbb.SelectedValue;
                     if (JwCustomer != null)
                     {
                         jwCustDesignConstData.JwCustomerDataId = JwCustomer.Id;

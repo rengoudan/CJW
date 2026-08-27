@@ -334,14 +334,8 @@ namespace JwShapeCommon
         {
             
             ChangeJwXianFromJwwSen();//jwwSen到jwxian处理
-            if (JwFileConsts.LjCompentType == LianjieCompentType.BR8)
-            {
-                JudgmentJieChu3();
-            }
-            else
-            {
-
-            }
+            JudgmentJieChu3();
+            
            
 
             if (Beams == null || Beams.Count == 0)
@@ -3763,6 +3757,8 @@ namespace JwShapeCommon
         /// <summary>
         /// 对成对的 交叉线进一步筛选
         /// JwFileConsts.LianjieParsingMethod
+        /// 第一层先区分 绘制表示的链接方式
+        /// 第二层区分BR 还是VPL
         /// </summary>
         private void findlianjie()
         {
@@ -3846,6 +3842,7 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 暂时缺少对*4*2的判断
+        /// 如果是VPL 不额外打孔更改计算逻辑
         /// </summary>
         /// <param name="xian"></param>
         /// <returns></returns>
