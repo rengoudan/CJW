@@ -4540,6 +4540,13 @@ namespace JwShapeCommon
             catch { return (null, null, 0, 0); }
         }
 
+        /// <summary>
+        /// 针对vpl 修改
+        /// </summary>
+        /// <param name="pt"></param>
+        /// <param name="touch"></param>
+        /// <param name="isStart"></param>
+        /// <returns></returns>
         private (JwPointBeam pb, JwHole hole, double x, double y) BuildVPLPointBeamAndHoleSafe(JWPoint pt, JwTouch touch, bool isStart)
         {
             try
@@ -4557,8 +4564,9 @@ namespace JwShapeCommon
                 double x = 0, y = 0;
                 if (winner.DirectionType == BeamDirectionType.Horizontal)
                 {
-                    double center = winner.Center;
-                    pb.Position = (pt.Y > center) ? LianjiePosition.Up : LianjiePosition.Down;
+                    double center = loser.Center;
+                    pb.Position = isStart ? LianjiePosition.Right : LianjiePosition.Left;
+                    //pb.Position = (pt.X > center) ? LianjiePosition.Right : LianjiePosition.Left;
                     y = center + (pb.Position == LianjiePosition.Up ? banjing : -banjing);
 
                     var p = winner.Holes?.Where(h => h != null && h.FirstCreateFrom != HoleCreateFrom.Lianjie)
