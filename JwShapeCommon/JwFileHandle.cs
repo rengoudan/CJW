@@ -4540,6 +4540,66 @@ namespace JwShapeCommon
             catch { return (null, null, 0, 0); }
         }
 
+        private (JwPointBeam pb, JwHole hole, double x, double y) BuildVPLPointBeamAndHoleSafe(JWPoint pt, JwTouch touch, bool isStart)
+        {
+            try
+            {
+                if (pt == null || touch == null) return (null, null, 0, 0);
+                double scale = (JwFileConsts.JwScale == 0 || double.IsNaN(JwFileConsts.JwScale)) ? 1 : JwFileConsts.JwScale;
+                double banjing = JwFileConsts.EllipseSpacing / (2 * scale);
+                double touchbanjing = JwFileConsts.PianchaLianjieValue / scale;
+
+                var pb = new JwPointBeam(pt, touch, isStart);
+                var winner = touch.WinnerBeam; if (winner == null) return (pb, null, 0, 0);
+                
+                var loser = touch.LoserBeam; if (loser == null) return (pb, null, 0, 0);
+
+                double x = 0, y = 0;
+                if (winner.DirectionType == BeamDirectionType.Horizontal)
+                {
+                    double center = winner.Center;
+                    pb.Position = (pt.Y > center) ? LianjiePosition.Up : LianjiePosition.Down;
+                    y = center + (pb.Position == LianjiePosition.Up ? banjing : -banjing);
+
+                    var p = winner.Holes?.Where(h => h != null && h.FirstCreateFrom != HoleCreateFrom.Lianjie)
+                                .Where(h => isStart ? h.HoleCenter > pt.X : h.HoleCenter < pt.X)
+                                .OrderBy(h => h.HoleCenter * (isStart ? 1 : -1)).FirstOrDefault();
+
+                    double offset = isStart ? touchbanjing : -touchbanjing;
+                    x = (p != null && Math.Abs(p.HoleCenter - touch.BFCenter) * JwFileConsts.JwScale <= 168)
+                        ? (p.Location?.X ?? touch.JieChuPoint?.X ?? 0) + offset
+                        : (touch.JieChuPoint?.X ?? 0) + offset;
+
+                    var hole = CreateHoleSafe(touch, x, center, isStart);
+                    return (pb, hole, x, y);
+                }
+                else if (winner.DirectionType == BeamDirectionType.Vertical)
+                {
+                    double center = winner.Center;
+                    pb.Position = isStart ? LianjiePosition.Right : LianjiePosition.Left;
+                    x = center + (isStart ? banjing : -banjing);
+
+                    var loserCenter = touch.LoserBeam?.Center ?? double.NaN;
+                    var p = winner.Holes?.Where(h => h != null && h.FirstCreateFrom != HoleCreateFrom.Lianjie)
+                                .Where(h => double.IsNaN(loserCenter) ? false : (pt.Y > loserCenter ? h.HoleCenter > pt.Y : h.HoleCenter < pt.Y))
+                                .OrderBy(h => h.HoleCenter * (pt.Y > loserCenter ? 1 : -1)).FirstOrDefault();
+
+                    y = (p != null && Math.Abs(p.HoleCenter - touch.BFCenter) * JwFileConsts.JwScale <= 168)
+                        ? (p.Location?.Y ?? touch.JieChuPoint?.Y ?? 0) + (pt.Y > loserCenter ? touchbanjing : -touchbanjing)
+                        : (touch.JieChuPoint?.Y ?? 0) + (pt.Y > loserCenter ? touchbanjing : -touchbanjing);
+
+                    var hole = CreateHoleSafe(touch, center, y, isStart);
+                    return (pb, hole, x, y);
+                }
+                else
+                {
+                    return (null, null, 0, 0);
+                }
+            }
+            catch { return (null, null, 0, 0); }
+        }
+
+
         private JwHole CreateHoleSafe(JwTouch touch, double x, double y, bool isStart)
         {
             try

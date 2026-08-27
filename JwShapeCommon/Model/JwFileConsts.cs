@@ -25,7 +25,13 @@ namespace JwShapeCommon
         #endregion
 
         public static LianjieCompentType LjCompentType = LianjieCompentType.BR8;
-         
+
+        /// <summary>
+        /// VPL 链接件的宽度 2026年3月7日增加
+        /// 58 + 68
+        /// </summary>
+        public static double VPLCompentWidth = 126;
+
         /// <summary>
         /// 最少打孔策略
         /// </summary>

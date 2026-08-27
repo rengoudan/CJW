@@ -52,6 +52,17 @@ namespace JwCore
         public virtual KPillarType KPillarType { get; set; }
 
         public long JwProjectMainDataId { get; set; }
+
+        /// <summary>
+        /// 2026年8月27日 最小打孔策略
+        /// </summary>
+        public bool MinimalStrategy { get; set; } = false;
+
+        /// <summary>
+        /// 2026年8月27日 链接类型 BR8 VPL
+        /// </summary>
+        public LianjieCompentType LianjieCompentType { get; set; }
+
         public virtual JwProjectMainData JwProjectMainData { get; set; } = null!;
 
         public virtual ObservableCollectionListSource<JwBeamData> JwBeamDatas { get; } = new();
