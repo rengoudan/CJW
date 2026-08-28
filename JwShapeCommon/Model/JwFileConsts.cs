@@ -27,10 +27,15 @@ namespace JwShapeCommon
         public static LianjieCompentType LjCompentType = LianjieCompentType.BR8;
 
         /// <summary>
-        /// VPL 链接件的宽度 2026年3月7日增加
-        /// 58 + 68
+        /// 设计图角度 梁的宽度，只有上下面
         /// </summary>
-        public static double VPLCompentWidth = 126;
+        public static double BeamWidth = 100;
+
+        /// <summary>
+        /// VPL 链接件的宽度 2026年3月7日增加
+        /// 56/2 + 68
+        /// </summary>
+        public static double VPLCompentWidth = 96;
 
         /// <summary>
         /// 最少打孔策略
@@ -101,6 +106,11 @@ namespace JwShapeCommon
 
         #region G端口
         public static double Gjubian = 35;
+
+        /// <summary>
+        /// 2026年8月28日 无论是35 还是27 间距都是5
+        /// </summary>
+        public static double Gjianju = 5;
 
         public static double GBianjuZhongxin = 55;
 

@@ -41,6 +41,13 @@ namespace JwShapeCommon
 
         public JwQiegeZu QiegeZu { get; set; }
         public bool HasQiege { get; set; }
+
+        /// <summary>
+        /// 败方孔
+        /// </summary>
+        public JwHole BFJwHoleG { get; set; }
+
+        public bool LoserIsStart { get; set; }
     }
 
     /// <summary>
