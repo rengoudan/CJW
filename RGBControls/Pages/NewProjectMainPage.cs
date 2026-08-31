@@ -72,6 +72,8 @@ namespace RGBControls.Pages
                 new AntdUI.Column("FloorName", "階"),
                                 new AntdUI.Column("Biaochi", "縮尺"),
                                 new AntdUI.Column("MarkBeam", "符号"),
+                                new AntdUI.Column("LianjieCompentType", "BR8/VPL"),
+                                new AntdUI.Column("MinimalStrategy", "穴"),
                                 new AntdUI.Column("BeamCount", "梁数"),
                                 new AntdUI.Column("HorizontalBeamsCount", "水平梁数"),
                                 new AntdUI.Column("VerticalBeamsCount", "垂直梁数"),
