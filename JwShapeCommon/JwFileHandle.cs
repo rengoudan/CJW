@@ -1888,6 +1888,8 @@ namespace JwShapeCommon
             _subData.Height = Height.Value;
             _subData.Scale = this._scale;
             _subData.KPillarType = JwFileConsts.Ktype;
+            _subData.LianjieCompentType = JwFileConsts.LjCompentType;
+            _subData.MinimalStrategy = JwFileConsts.MinimalStrategy;
             if (this.MarkBeam.HasValue)
             {
                 _subData.MarkBeam = this.MarkBeam;

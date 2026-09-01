@@ -73,7 +73,14 @@ namespace RGBControls.Pages
                                 new AntdUI.Column("Biaochi", "縮尺"),
                                 new AntdUI.Column("MarkBeam", "符号"),
                                 new AntdUI.Column("LianjieCompentType", "BR8/VPL"),
-                                new AntdUI.Column("MinimalStrategy", "穴"),
+                                new AntdUI.Column("MinimalStrategy", "穴あけ策略")
+                                {
+                                    Render = (value, record, i_row) =>
+        {
+            bool b = value is bool v && v;
+            return b ? "穴あけ最小化" : "通常の穴あけ";   // true 显示 XX，false 显示 YY
+        }
+                                },
                                 new AntdUI.Column("BeamCount", "梁数"),
                                 new AntdUI.Column("HorizontalBeamsCount", "水平梁数"),
                                 new AntdUI.Column("VerticalBeamsCount", "垂直梁数"),
@@ -103,6 +110,7 @@ namespace RGBControls.Pages
                 new ContextMenuStripItem("消去","")
             };
 
+            
             GlobalEvent.GetGlobalEvent().UpdateCodeEvent.Subscribe(JwProjectMainPage_UpdateCodeEvent);
             GlobalEvent.GetGlobalEvent().RefreshDataEvent += GlobalEvent_RefreshDataEvent;
             base.InitData();
