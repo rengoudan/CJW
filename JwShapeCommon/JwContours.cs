@@ -5,123 +5,176 @@ using System.Drawing.Drawing2D;
 
 public enum BeamEndPosition
 {
-    LeftTop,
-    LeftBottom,
-    RightTop,
-    RightBottom
+    上左,
+    上右,
+    下左,
+    下右,
+    右上,
+    右下,
+    左上,
+    左下
 }
 
 public class BeamEndContour
 {
-    // ⭐ 输入参数：一个圆心 + 方位
     public PointF BaseCenter { get; set; }
-    public BeamEndPosition Position { get; set; } = BeamEndPosition.RightTop;
+    public BeamEndPosition Position { get; set; }
 
-    // ⭐ 固定几何参数（来自你的图纸）
-    private const float DX = 68;   // 左右圆心间距
-    private const float DY = 56;   // 上下圆心间距
+    // 固定几何参数（来自图纸）
+    private const float DX = 68f;
+    private const float DY = 56f;
 
-    private const float TopOffset = 35;
-    private const float BottomOffset = 35;
-    private const float LeftOffset = 26;
-    private const float ArcRadius = 35;
+    private const float TopOffset = 35f;
+    private const float BottomOffset = 35f;
+    private const float LeftOffset = 26f;
+    private const float ArcRadius = 35f;
 
-    // 绘制参数
-    public float Scale = 1f;
-    public PointF Offset = new PointF(0, 0);
+    public float HoleRadius { get; set; } = 20f;
+
+    public float Scale { get; set; } = 1f;
+    public PointF Offset { get; set; } = new PointF(0, 0);
+
+    // 三个圆心（自动计算）
+    public PointF C1 { get; private set; }   // 最左或最上
+    public PointF C2 { get; private set; }
+    public PointF C3 { get; private set; }   // 最右或最下
 
     public GraphicsPath BuildPath()
     {
         var path = new GraphicsPath();
 
-        // 1️⃣ 自动计算三个圆心（右下圆心为基准）
-        PointF C3 = BaseCenter;
-        PointF C2 = new PointF(C3.X - DX, C3.Y - DY);
-        PointF C1 = new PointF(C3.X - DX * 2, C3.Y - DY * 2);
+        ComputeCenters();
 
-        // 2️⃣ 根据方位自动镜像（左右）
-        bool mirrorX = Position == BeamEndPosition.LeftTop || Position == BeamEndPosition.LeftBottom;
-        if (mirrorX)
+        // 上边折线：C1 → C2 → C3 上移 TopOffset
+        var topPts = new List<PointF>
         {
-            float midX = C3.X;
-            C1 = MirrorX(C1, midX);
-            C2 = MirrorX(C2, midX);
-        }
-
-        // 3️⃣ 根据方位自动翻转（上下）
-        bool mirrorY = Position == BeamEndPosition.LeftBottom || Position == BeamEndPosition.RightBottom;
-        if (mirrorY)
-        {
-            float midY = C3.Y;
-            C1 = MirrorY(C1, midY);
-            C2 = MirrorY(C2, midY);
-        }
-
-        // 4️⃣ 计算轮廓直线边界
-        float yTop = Math.Min(C1.Y, Math.Min(C2.Y, C3.Y)) - TopOffset;
-        float yBottom = Math.Max(C1.Y, Math.Max(C2.Y, C3.Y)) + BottomOffset;
-
-        float xLeft = Math.Min(C1.X, Math.Min(C2.X, C3.X)) - LeftOffset;
-        float xRight = C3.X + ArcRadius;
-
-        // 5️⃣ 构造轮廓点（矩形部分）
-        var pts = new List<PointF>
-        {
-            new PointF(xLeft, yTop),
-            new PointF(xRight, yTop),
-            new PointF(xRight, yBottom),
-            new PointF(xLeft, yBottom)
+            new PointF(C1.X, C1.Y - TopOffset),
+            new PointF(C2.X, C2.Y - TopOffset),
+            new PointF(C3.X, C3.Y - TopOffset)
         };
 
-        // 6️⃣ 缩放 + 平移
-        for (int i = 0; i < pts.Count; i++)
+        // 下边折线：C3 → C2 → C1 下移 BottomOffset
+        var bottomPts = new List<PointF>
         {
-            pts[i] = new PointF(
-                pts[i].X * Scale + Offset.X,
-                pts[i].Y * Scale + Offset.Y
-            );
-        }
+            new PointF(C3.X, C3.Y + BottomOffset),
+            new PointF(C2.X, C2.Y + BottomOffset),
+            new PointF(C1.X, C1.Y + BottomOffset)
+        };
 
-        path.AddPolygon(pts.ToArray());
+        // 左边偏移
+        var leftTop = new PointF(C1.X - LeftOffset, C1.Y - TopOffset);
+        var leftBottom = new PointF(C1.X - LeftOffset, C1.Y + BottomOffset);
 
-        // 7️⃣ 添加圆弧（左右侧自动处理）
-        AddArc(path, C3);
+        // 右侧圆弧
+        bool arcOnRight =
+            Position == BeamEndPosition.上右 ||
+            Position == BeamEndPosition.下右 ||
+            Position == BeamEndPosition.右上 ||
+            Position == BeamEndPosition.右下;
 
+        float sign = arcOnRight ? 1f : -1f;
+
+        var arcRect = new RectangleF(
+            C3.X - ArcRadius * sign,
+            C3.Y - ArcRadius,
+            ArcRadius * 2 * sign,
+            ArcRadius * 2
+        );
+
+        float startAngle = arcOnRight ? -90f : 90f;
+        float sweepAngle = 180f * sign;
+
+        // 组合轮廓路径
+        path.StartFigure();
+        path.AddLine(leftTop, topPts[0]);
+        path.AddLines(topPts.ToArray());
+        path.AddArc(arcRect, startAngle, sweepAngle);
+        path.AddLines(bottomPts.ToArray());
+        path.AddLine(bottomPts[^1], leftBottom);
         path.CloseFigure();
+
+        // 缩放 + 平移
+        using var m = new Matrix();
+        m.Scale(Scale, Scale);
+        m.Translate(Offset.X, Offset.Y, MatrixOrder.Append);
+        path.Transform(m);
+
         return path;
     }
 
-    public void Draw(Graphics g, Pen pen)
+    public void Draw(Graphics g, Pen contourPen, Pen circlePen)
     {
         using var path = BuildPath();
-        g.DrawPath(pen, path);
+        g.DrawPath(contourPen, path);
+
+        DrawCircle(g, circlePen, C1);
+        DrawCircle(g, circlePen, C2);
+        DrawCircle(g, circlePen, C3);
     }
 
-    private void AddArc(GraphicsPath path, PointF center)
+    private void DrawCircle(Graphics g, Pen pen, PointF center)
     {
         var rect = new RectangleF(
-            (center.X - ArcRadius) * Scale + Offset.X,
-            (center.Y - ArcRadius) * Scale + Offset.Y,
-            ArcRadius * 2 * Scale,
-            ArcRadius * 2 * Scale
+            (center.X - HoleRadius) * Scale + Offset.X,
+            (center.Y - HoleRadius) * Scale + Offset.Y,
+            HoleRadius * 2 * Scale,
+            HoleRadius * 2 * Scale
         );
-
-        float startAngle = -90;
-        float sweepAngle = 180;
-
-        path.AddArc(rect, startAngle, sweepAngle);
+        g.DrawEllipse(pen, rect);
     }
 
-    private PointF MirrorX(PointF p, float midX)
+    private void ComputeCenters()
     {
-        float dx = p.X - midX;
-        return new PointF(midX - dx, p.Y);
-    }
+        // BaseCenter 是该方位的外侧圆心
+        switch (Position)
+        {
+            case BeamEndPosition.上左:
+                C1 = BaseCenter;
+                C2 = new PointF(C1.X + DX, C1.Y + DY);
+                C3 = new PointF(C1.X + DX * 2, C1.Y + DY * 2);
+                break;
 
-    private PointF MirrorY(PointF p, float midY)
-    {
-        float dy = p.Y - midY;
-        return new PointF(p.X, midY - dy);
+            case BeamEndPosition.上右:
+                C3 = BaseCenter;
+                C2 = new PointF(C3.X - DX, C3.Y + DY);
+                C1 = new PointF(C3.X - DX * 2, C3.Y + DY * 2);
+                break;
+
+            case BeamEndPosition.下左:
+                C1 = BaseCenter;
+                C2 = new PointF(C1.X + DX, C1.Y - DY);
+                C3 = new PointF(C1.X + DX * 2, C1.Y - DY * 2);
+                break;
+
+            case BeamEndPosition.下右:
+                C3 = BaseCenter;
+                C2 = new PointF(C3.X - DX, C3.Y - DY);
+                C1 = new PointF(C3.X - DX * 2, C3.Y - DY * 2);
+                break;
+
+            case BeamEndPosition.右上:
+                C1 = BaseCenter;
+                C2 = new PointF(C1.X + DX, C1.Y - DY);
+                C3 = new PointF(C1.X + DX * 2, C1.Y - DY * 2);
+                break;
+
+            case BeamEndPosition.右下:
+                C3 = BaseCenter;
+                C2 = new PointF(C3.X - DX, C3.Y - DY);
+                C1 = new PointF(C3.X - DX * 2, C3.Y - DY * 2);
+                break;
+
+            case BeamEndPosition.左上:
+                C1 = BaseCenter;
+                C2 = new PointF(C1.X - DX, C1.Y - DY);
+                C3 = new PointF(C1.X - DX * 2, C1.Y - DY * 2);
+                break;
+
+            case BeamEndPosition.左下:
+                C3 = BaseCenter;
+                C2 = new PointF(C3.X + DX, C3.Y - DY);
+                C1 = new PointF(C3.X + DX * 2, C3.Y - DY * 2);
+                break;
+        }
     }
 }
-
