@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AntdUI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,14 +25,17 @@ namespace RGBControls.Controls
 
             var shape = new BeamEndContour
             {
-                BaseCenter = new PointF(300, 400),
-                Position = BeamEndPosition.上左,
-                //Scale = 1.2f,
-                //Offset = new PointF(50, 50)
+                BaseCenter = new PointF(0, 0),   // 工程坐标系
+                Position = BeamEndPosition.上右,
+                Scale = 1.0f,
+                Offset = new PointF(300, 300)    // 屏幕坐标偏移
             };
 
-            shape.Draw(pe.Graphics, new Pen(Color.Yellow, 2), new Pen(Color.Yellow, 2));
-
+            shape.DrawWithCircles(
+        pe.Graphics,
+        new Pen(Color.Yellow, 1),
+        new Pen(Color.Cyan, 1)
+    );
             //Console.WriteLine(shape.Description);
         }
     }
