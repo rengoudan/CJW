@@ -26,7 +26,7 @@ namespace RGBControls.Controls
             var shape = new BeamEndContour
             {
                 BaseCenter = new PointF(0, 0),   // 工程坐标系
-                Position = BeamEndPosition.上右,
+                Position = BeamEndPosition.右上,
                 Scale = 1.0f,
                 Offset = new PointF(300, 300)    // 屏幕坐标偏移
             };
