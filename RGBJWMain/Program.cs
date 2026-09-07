@@ -70,8 +70,8 @@ namespace RGBJWMain
             }
 
             // 更新处理完毕后，启动主窗体
-            //Application.Run(new FMain());
-            Application.Run(new Form123());
+            Application.Run(new MainForm());
+            //Application.Run(new Form123());
         }
 
         public static void z()

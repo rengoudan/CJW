@@ -1,18 +1,9 @@
-﻿using System;
+﻿using JwCore;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-public enum BeamEndPosition
-{
-    上左,
-    上右,
-    下左,
-    下右,
-    左上,
-    右上,
-    左下,
-    右下
-}
+
 
 public class BeamEndContour
 {

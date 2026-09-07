@@ -4817,9 +4817,38 @@ namespace JwShapeCommon
                 double sfcenter = winner.Center;
                 if (winner.DirectionType == BeamDirectionType.Horizontal)
                 {
-                    pb.Position = isStart ? LianjiePosition.Right : LianjiePosition.Left;
-                    y = touch.LoserIsStart ? sfcenter + bfsuojin : sfcenter - bfsuojin;
+                    if (isStart)
+                    {
+                        pb.Position = LianjiePosition.Right;
+                        if (touch.LoserIsStart)
+                        {
+                            y = sfcenter + bfsuojin;
+                            pb.VPLPosition = BeamEndPosition.下右;
+                        }
+                        else
+                        {
+                            y = sfcenter - bfsuojin;
+                            pb.VPLPosition = BeamEndPosition.上右;
+                        }
+                    }
+                    else
+                    {
+                        pb.Position = LianjiePosition.Left;
+                        if (touch.LoserIsStart)
+                        {
+                            y = sfcenter + bfsuojin;
+                            pb.VPLPosition = BeamEndPosition.下左;
+                        }
+                        else
+                        {
+                            y = sfcenter - bfsuojin;
+                            pb.VPLPosition = BeamEndPosition.上左;
+                        }
+                    }
                     x = isStart ? loser.Center + vplww : loser.Center - vplww;
+                    //pb.Position = isStart ? LianjiePosition.Right : LianjiePosition.Left;
+                    //y = touch.LoserIsStart ? sfcenter + bfsuojin : sfcenter - bfsuojin;
+                    
 
                     return (pb, hole, x, y);
                 }
@@ -4828,7 +4857,29 @@ namespace JwShapeCommon
                     pb.Position = (pt.Y > center) ? LianjiePosition.Up : LianjiePosition.Down;
                     y = (pt.Y > center) ? loser.Center + vplww : loser.Center - vplww;
                     x = touch.LoserIsStart ? sfcenter + bfsuojin : sfcenter - bfsuojin;
-                    return (pb, hole, x, y);
+                    if (touch.LoserIsStart)
+                    {
+                        if (pt.Y > center)
+                        {
+                            pb.VPLPosition = BeamEndPosition.左上;
+                        }
+                        else
+                        {
+                            pb.VPLPosition = BeamEndPosition.左下;
+                        }
+                    }
+                    else
+                    {
+                        if (pt.Y > center)
+                        {
+                            pb.VPLPosition = BeamEndPosition.右上;
+                        }
+                        else
+                        {
+                            pb.VPLPosition = BeamEndPosition.右下;
+                        }
+                    }
+                        return (pb, hole, x, y);
                 }
                 else
                 {

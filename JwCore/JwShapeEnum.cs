@@ -7,6 +7,21 @@ using System.Threading.Tasks;
 
 namespace JwCore
 {
+    /// <summary>
+    /// VPL 需要
+    /// </summary>
+    public enum BeamEndPosition
+    {
+        上左,
+        上右,
+        下左,
+        下右,
+        左上,
+        右上,
+        左下,
+        右下
+    }
+
 
     /// <summary>
     /// 项目状态

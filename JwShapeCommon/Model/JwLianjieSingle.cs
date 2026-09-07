@@ -93,6 +93,13 @@ namespace JwShapeCommon.Model
         /// </summary>
         public LianjiePosition EndPosition { get; set; }
 
+        /// <summary>
+        /// 2026年9月7日 vpl使用 其他无意义
+        /// </summary>
+        public BeamEndPosition VPLStartPosition { get; set; }
+
+        public BeamEndPosition VPLEndPosition { get; set; }
+
         public JwLianjieData ToDbData()
         {
             JwLianjieData lianjieData = new JwLianjieData();
@@ -399,6 +406,8 @@ namespace JwShapeCommon.Model
         public bool HasChange { get; set; }
 
         public JwHole NewHole { get; set; }
+
+        public BeamEndPosition VPLPosition { get; set; }
 
     }
 

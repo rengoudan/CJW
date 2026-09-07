@@ -46,6 +46,13 @@ namespace JwCore
         public Point StartOriginal { get; set; }
 
         public Point EndOriginal { get; set; }
+
+        /// <summary>
+        /// 2026年9月7日 vpl使用 其他无意义
+        /// </summary>
+        public BeamEndPosition VPLStartPosition { get; set; }
+
+        public BeamEndPosition VPLEndPosition { get; set; }
     }
 
     //public class JwLianjieGroupData
