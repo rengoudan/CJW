@@ -116,6 +116,8 @@ namespace JwShapeCommon.Model
             //var dl = Math.Round(Length, 1) * JwFileConsts.JwScale;
             //dl = dl - 220;//减部件长度
             lianjieData.Length = Length;
+            lianjieData.VPLStartPosition= VPLStartPosition;
+            lianjieData.VPLEndPosition= VPLEndPosition;
             return lianjieData;
         }
 

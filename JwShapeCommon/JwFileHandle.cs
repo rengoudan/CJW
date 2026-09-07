@@ -4200,10 +4200,12 @@ namespace JwShapeCommon
                         if (xian.Ptwo.Y > xian.Pone.Y)
                         {
                             realy = pinbeam.Center + bfsuojin;
+                            jwLianjieSingle.VPLStartPosition=BeamEndPosition.下右;
                         }
                         else
                         {
                             realy=pinbeam.Center - bfsuojin;
+                            jwLianjieSingle.VPLStartPosition = BeamEndPosition.上右;
                         }
                         jwLianjieSingle.StartPosition = LianjiePosition.Right;
                     }
@@ -4217,11 +4219,13 @@ namespace JwShapeCommon
                             //水平梁上方
                             realy = f.LoserBeam.Center + vplww;
                             jwLianjieSingle.StartPosition = LianjiePosition.Up;
+                            jwLianjieSingle.VPLStartPosition = BeamEndPosition.左上;
                         }
                         else
                         {
                             realy = f.LoserBeam.Center - vplww;
                             jwLianjieSingle.StartPosition = LianjiePosition.Down;
+                            jwLianjieSingle.VPLStartPosition = BeamEndPosition.左下;
                         }
 
                     }
@@ -4232,10 +4236,12 @@ namespace JwShapeCommon
                         if (xian.Ptwo.Y > xian.Pone.Y)
                         {
                             endrealy = l.WinnerBeam.Center - bfsuojin;
+                            jwLianjieSingle.VPLEndPosition = BeamEndPosition.上左;
                         }
                         else
                         {
                             endrealy = l.WinnerBeam.Center + bfsuojin;
+                            jwLianjieSingle.VPLEndPosition = BeamEndPosition.下左;
                         }
                         
                     }
@@ -4245,13 +4251,15 @@ namespace JwShapeCommon
                         endrealx = l.WinnerBeam.Center -bfsuojin;
                         if (xian.Ptwo.Y > xian.Pone.Y)
                         {
-                            endrealy = l.JieChuPoint.Y + vplww;
+                            endrealy = l.JieChuPoint.Y - vplww;
                             jwLianjieSingle.EndPosition = LianjiePosition.Down;
+                            jwLianjieSingle.VPLEndPosition = BeamEndPosition.右下;
                         }
                         else
                         {
-                            endrealy = l.JieChuPoint.Y- vplww; 
+                            endrealy = l.JieChuPoint.Y+ vplww; 
                             jwLianjieSingle.StartPosition = LianjiePosition.Up;
+                            jwLianjieSingle.VPLEndPosition = BeamEndPosition.右上;
                         }
                         
                     }
@@ -4723,6 +4731,8 @@ namespace JwShapeCommon
                     if (double.IsNaN(dist) || double.IsInfinity(dist)) dist = 0;
                     double dl = Math.Round(dist, 1) * JwFileConsts.JwScale - 220;
                     lj.Length = Math.Round(dl / 10.0) * 10;
+                    lj.VPLEndPosition = end.pb.VPLPosition;
+                    lj.VPLStartPosition = start.pb.VPLPosition;
                 }
                 catch { lj.Length = 0; }
 
