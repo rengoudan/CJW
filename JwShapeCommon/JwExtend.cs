@@ -9,6 +9,7 @@ using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -1156,5 +1157,15 @@ namespace JwShapeCommon
             return new string(chars.ToArray());
         }
 
+        public static JWPoint GetArcEndPoint(JWPoint center, double radius, double startDeg, double sweepDeg)
+        {
+            double endDeg = startDeg + sweepDeg;
+            double rad = endDeg * (Math.PI / 180.0);
+
+            double x = center.X + radius * Math.Cos(rad);
+            double y = center.Y + radius * Math.Sin(rad);
+
+            return new JWPoint(x, y);
+        }
     }
 }
