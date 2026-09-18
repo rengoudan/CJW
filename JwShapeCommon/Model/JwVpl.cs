@@ -1,37 +1,65 @@
 ﻿using JwCore;
+using JwwHelper;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace JwShapeCommon.Model
 {
-    public class JwVpl
+    public class JwVpl:IDrawToJww
     {
 
         public JwVpl(JWPoint p,BeamEndPosition bep) 
         {
             Location = p;
             Position = bep;
+            createOther();
         }
 
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
+        /// <summary>
+        /// 链接点 即三个圆孔中的基准孔中心
+        /// </summary>
         public JWPoint Location { get; set; }
 
+        /// <summary>
+        /// 相对于Location的第二个孔位置
+        /// </summary>
         public JWPoint SecondLoaction { get; set; }
 
+        /// <summary>
+        /// 第三个孔位置一般为败方G 打孔位置
+        /// </summary>
         public JWPoint ThirdLocation { get; set; }
 
         public BeamEndPosition Position { get; set; }
 
+        /// <summary>
+        /// 部件侧边
+        /// </summary>
         public JwXian SideLine { get; set; }
 
+        /// <summary>
+        /// 部件顶边
+        /// </summary>
         public JwXian TopLine { get; set; }
 
+        /// <summary>
+        /// 部件底边
+        /// </summary>
         public JwXian BottomLine { get; set; }
 
+        /// <summary>
+        /// 部件倾斜轮廓线
+        /// </summary>
         public JwXian Slash { get; set; }
+
+        public JwArc Arc { get; set; }
 
         /// <summary>
         /// 
@@ -71,12 +99,13 @@ namespace JwShapeCommon.Model
                         var trx=cx-(jpSpacing/JwFileConsts.JwScale);
                         var topother = new JWPoint(trx, tpsy);
                         TopLine = new JwXian(topother, topside);
-                        break;
-
+                        var tlx=cy+JwFileConsts.EllipseSpacing/JwFileConsts.JwScale;
+                        ThirdLocation=new JWPoint(slx, tlx);
                         JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, -1.5707963267948966, 2.4035303736600242);
                         var l = ja.ArcFinish;
+                        this.Arc = ja;  
                         Slash=new JwXian(topother, l);
-
+                        break;
                     }
                 case BeamEndPosition.上左:
                     {
@@ -85,10 +114,37 @@ namespace JwShapeCommon.Model
 
             }
         }
+
+        public List<JwwData> DrawToJww()
+        {
+            List<JwwData> jwws = new List<JwwData>();
+            return jwws;
+        }
+
+        /// <summary>
+        /// 用来实现绘制到屏幕 需要增加缩放和便宜旋转等操作
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="pen"></param>
+        public void Draw(Graphics g, Pen pen)
+        {
+            //using var geoPath = BuildPath();
+            //using var screenPath = (GraphicsPath)geoPath.Clone();
+
+            //using var m = new Matrix();
+            //m.Scale(Scale, -Scale);
+            //m.Translate(Offset.X, Offset.Y, MatrixOrder.Append);
+
+            //screenPath.Transform(m);
+
+            //g.SmoothingMode = SmoothingMode.AntiAlias;
+            //g.DrawPath(pen, screenPath);
+        }
     }
 
     public class JwArc
     {
+        public string Id { get; set; }
         public JWPoint Center { get; }
         public double Radius { get; }
 
@@ -108,6 +164,7 @@ namespace JwShapeCommon.Model
 
         public JwArc(JWPoint center, double radius, double startAngle, double endAngle)
         {
+            Id=Guid.NewGuid().ToString();
             Center = center;
             Radius = radius;
             StartAngle = startAngle;
