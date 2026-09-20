@@ -9,7 +9,7 @@ using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
+//using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -94,17 +94,17 @@ namespace JwShapeCommon
         /// <returns></returns>
         public static JwPillar DataToJwPillar(this JwPillarData data)
         {
-            if(data.BaseType== PillarBaseType.KPillar)
+            if (data.BaseType == PillarBaseType.KPillar)
             {
-                JWPoint la=new JWPoint(data.FirstLocation!.X, data.FirstLocation!.Y);
-                JWPoint lb=new JWPoint(data.LastLocation!.X, data.LastLocation!.Y);
+                JWPoint la = new JWPoint(data.FirstLocation!.X, data.FirstLocation!.Y);
+                JWPoint lb = new JWPoint(data.LastLocation!.X, data.LastLocation!.Y);
                 double ds = data.CenterWidth.HasValue ? data.CenterWidth.Value : 0;
                 JwPillar pillar = new JwPillar(la, lb, ds);
                 return pillar;
             }
             else
             {
-                JWPoint l=new JWPoint(data.Location.X, data.Location.Y);
+                JWPoint l = new JWPoint(data.Location.X, data.Location.Y);
                 JwPillar pillar = new JwPillar(l, l, 0);
                 return pillar;
             }
@@ -119,11 +119,11 @@ namespace JwShapeCommon
         {
             JwDownPillarMark pillar = new JwDownPillarMark
             {
-                Id=data.Id,
+                Id = data.Id,
                 Line1 = new JwXian(data.LineAS.ToJwPoint(), data.LineAE.ToJwPoint()),
                 Line2 = new JwXian(data.LineBS.ToJwPoint(), data.LineBE.ToJwPoint()),
-                CenterPoint=data.Location.ToJwPoint(),
-                IsInBeamCenter=true,
+                CenterPoint = data.Location.ToJwPoint(),
+                IsInBeamCenter = true,
                 HasBeam = data.HasBeam,
                 HasPillar = data.HasPillar
             };
@@ -147,13 +147,13 @@ namespace JwShapeCommon
         {
             JwLianjie lianjie = new JwLianjie();
             lianjie.Start = new JWPoint(data.Start.X, data.Start.Y);
-            lianjie.StartOriginal=new JWPoint(data.StartOriginal.X, data.StartOriginal.Y);
+            lianjie.StartOriginal = new JWPoint(data.StartOriginal.X, data.StartOriginal.Y);
             lianjie.EndOriginal = new JWPoint(data.EndOriginal.X, data.EndOriginal.Y);
             lianjie.End = new JWPoint(data.End.X, data.End.Y);
             lianjie.Length = data.Length;
             lianjie.Id = data.Id;
-            lianjie.HasEndChange= data.HasEndChange;
-            lianjie.HasStartChange= data.HasStartChange;
+            lianjie.HasEndChange = data.HasEndChange;
+            lianjie.HasStartChange = data.HasStartChange;
             //lianjie.
             return lianjie;
         }
@@ -245,7 +245,7 @@ namespace JwShapeCommon
             reobj.KPillarCount = data.KPillarCount;
             reobj.SinglePillarCount = data.SinglePillarCount;
             reobj.Scale = string.IsNullOrEmpty(data.Biaochi) ? 0 : Convert.ToDouble(data.Biaochi);
-            JwFileConsts.JwScale= reobj.Scale;
+            JwFileConsts.JwScale = reobj.Scale;
             reobj.HorizontalBeamsCount = data.HorizontalBeamsCount;
             reobj.VerticalBeamsCount = data.VerticalBeamsCount;
             reobj.KPillarType = data.KPillarType;
@@ -272,11 +272,11 @@ namespace JwShapeCommon
                     jwbm.EndCenter = bm.EndCenter;
                     jwbm.GongQu = bm.GongQu;
                     jwbm.HasBFG = bm.HasBFG;
-                    jwbm.BaiFangGTBDistance= bm.BaiFangGTBDistance;
+                    jwbm.BaiFangGTBDistance = bm.BaiFangGTBDistance;
                     jwbm.InitialBeamCode = bm.InitialBeamCode;
                     jwbm.HasCsv = bm.HasCsv;
-                    jwbm.Jiaodu= bm.Jiaodu;
-                    jwbm.CenterPoint =  new JWPoint(bm.CenterPoint!.X, bm.CenterPoint!.Y);
+                    jwbm.Jiaodu = bm.Jiaodu;
+                    jwbm.CenterPoint = new JWPoint(bm.CenterPoint!.X, bm.CenterPoint!.Y);
                     //jwbm.HasEndSide=bm.has
                     if (bm.JwHoles.Count > 0)
                     {
@@ -333,10 +333,10 @@ namespace JwShapeCommon
                 }
             }
             //2026年3月17日 增加downpillar数据转换
-            if (data.JwDownPillarDatas.Count>0)
+            if (data.JwDownPillarDatas.Count > 0)
             {
                 reobj.JwDownPillarDatas = new List<JwDownPillarMark>();
-                foreach(var dp in data.JwDownPillarDatas)
+                foreach (var dp in data.JwDownPillarDatas)
                 {
                     var jwdp = dp.DataToJwDownPillar();
                     reobj.JwDownPillarDatas.Add(jwdp);
@@ -369,10 +369,10 @@ namespace JwShapeCommon
                     reobj.LianjieLsts.Add(jlj);
                 }
             }
-            reobj.Directeds=new List<JwDirected>();
-            if (data.JwCuttings.Count>0)
+            reobj.Directeds = new List<JwDirected>();
+            if (data.JwCuttings.Count > 0)
             {
-                foreach(var cutting in data.JwCuttings)
+                foreach (var cutting in data.JwCuttings)
                 {
                     List<JWPoint> points = new List<JWPoint>();
                     points.Add(cutting.FirstPoint.ToJwPoint());
@@ -383,9 +383,9 @@ namespace JwShapeCommon
                 }
             }
             reobj.AddedHoleMarks = new List<JwAddedHoleMark>();
-            if (data.JwAddedHoles.Count>0)
+            if (data.JwAddedHoles.Count > 0)
             {
-                foreach(var ah in data.JwAddedHoles)
+                foreach (var ah in data.JwAddedHoles)
                 {
                     JwAddedHoleMark mark = new JwAddedHoleMark();
                     mark.CenterPoint = new JWPoint(ah.Location.X, ah.Location.Y);
@@ -425,7 +425,7 @@ namespace JwShapeCommon
             jwbm.HasBFG = bm.HasBFG;
             jwbm.BaiFangGTBDistance = bm.BaiFangGTBDistance;
             jwbm.InitialBeamCode = bm.InitialBeamCode;
-            jwbm.HasCsv=bm.HasCsv;
+            jwbm.HasCsv = bm.HasCsv;
             //jwbm.HasEndSide=bm.has
             if (bm.JwHoles.Count > 0)
             {
@@ -506,7 +506,7 @@ namespace JwShapeCommon
                 if (fh == null)
                 {
                     hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
-                    hh.Beam= beam;
+                    hh.Beam = beam;
                     if (beam.DirectionType == BeamDirectionType.Horizontal)
                     {
                         hh.HoleCenter = location.X;
@@ -697,7 +697,7 @@ namespace JwShapeCommon
                         HoleCreateFrom.FengeJ => (false, true, false),
                         _ => (false, false, false)
                     };
-                }   
+                }
             }
 
             var flags = GetFlags(createFrom);
@@ -722,7 +722,7 @@ namespace JwShapeCommon
                 }
                 //else if (createFrom == HoleCreateFrom.JieChu)
                 //{
-                    
+
                 //}
                 //else
                 //{
@@ -1036,8 +1036,8 @@ namespace JwShapeCommon
             //double rotatedY = Math.Round(point.X,2) * Math.Sin(angleRadians) + point.Y * Math.Cos(angleRadians);
 
             // 平移
-            double newX = rotatedX*xb + block.m_DPKijunTen_x;
-            double newY = rotatedY*yb + block.m_DPKijunTen_y;
+            double newX = rotatedX * xb + block.m_DPKijunTen_x;
+            double newY = rotatedY * yb + block.m_DPKijunTen_y;
             //return new JWPoint(Math.Round(newX,6), Math.Round(newY,6));
             return new JWPoint(newX, newY);
         }
@@ -1167,5 +1167,21 @@ namespace JwShapeCommon
 
             return new JWPoint(x, y);
         }
+
+        /// <summary>
+        /// 传入JW的坐标系 根据缩放频移返回屏幕坐标
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static System.Drawing.PointF ToChangeCoordinate(this JWPoint point, double zoom, double axisx, double axisy)
+        {
+            //Y = y - Y;
+            //X = X + x;
+            var x = point.X * zoom + axisx;
+            var y = axisy - point.Y * zoom;
+            return new System.Drawing.PointF((float)x, (float)y);
+        }
+
+
     }
 }

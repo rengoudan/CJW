@@ -128,7 +128,7 @@ namespace JwShapeCommon.Model
         /// <param name="pen"></param>
         public void Draw(Graphics g, Pen pen)
         {
-            //using var geoPath = BuildPath();
+            using var geoPath = BuildPath();
             //using var screenPath = (GraphicsPath)geoPath.Clone();
 
             //using var m = new Matrix();
@@ -140,7 +140,56 @@ namespace JwShapeCommon.Model
             //g.SmoothingMode = SmoothingMode.AntiAlias;
             //g.DrawPath(pen, screenPath);
         }
+
+        /// <summary>
+        /// 根据缩放直接存放到path中 便于绘制到屏幕上
+        /// </summary>
+        /// <param name="zoom">缩放比例</param>
+        /// <param name="axisx"></param>
+        /// <param name="axisy"></param>
+        /// <returns></returns>
+        private GraphicsPath BuildPath(double zoom, double axisx, double axisy)
+        {
+            var path = new GraphicsPath();
+            //绘制三根线
+            path.AddLine(SideLine.Pone.ToChangeCoordinate(zoom,axisx, axisy), SideLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            path.AddLine(TopLine.Pone.ToChangeCoordinate(zoom, axisx, axisy), TopLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            path.AddLine(BottomLine.Pone.ToChangeCoordinate(zoom, axisx, axisy), BottomLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            path.AddLine(Slash.Pone.ToChangeCoordinate(zoom, axisx, axisy), Slash.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            var zoomradius= Arc.Radius * zoom;
+            var arcnewcenterx= Arc.Center.X * zoom + axisx;
+            var arcnewcentery = axisy - Arc.Center.Y * zoom;
+
+            path.AddArc(
+            (float)(arcnewcenterx - zoomradius), (float)(arcnewcentery - zoomradius),
+            (float)zoomradius * 2, (float)
+            zoomradius * 2,
+            (float)Arc.StartAngle,
+            (float)Arc.SweepAngle
+        );
+            return path;
+        }
+
+
+        private void DrawCircles(Graphics g, Pen pen, double zoom,double ax,double ay)
+        {
+            var pc = SecondLoaction.ToChangeCoordinate(zoom, ax, ay);
+
+            var holeradius=JwFileConsts.EllipseDiameter/JwFileConsts.JwScale*zoom;
+            var newradius = holeradius * zoom;
+            var rect = new RectangleF(
+                pc.X - (float)newradius,
+                pc.Y - (float)newradius,
+                (float)newradius * 2,
+                (float)newradius * 2
+            );
+
+            g.DrawEllipse(pen, rect);
+        }
+
     }
+
+
 
     public class JwArc
     {
