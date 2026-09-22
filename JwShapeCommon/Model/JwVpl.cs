@@ -1,9 +1,11 @@
 ﻿using JwCore;
 using JwwHelper;
+using Sunny.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,7 +103,7 @@ namespace JwShapeCommon.Model
                         TopLine = new JwXian(topother, topside);
                         var tlx=cy+JwFileConsts.EllipseSpacing/JwFileConsts.JwScale;
                         ThirdLocation=new JWPoint(slx, tlx);
-                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, -1.5707963267948966, 2.4035303736600242);
+                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, 1.5707963267948966, -2.4035303736600242);
                         var l = ja.ArcFinish;
                         this.Arc = ja;  
                         Slash=new JwXian(topother, l);
@@ -126,19 +128,15 @@ namespace JwShapeCommon.Model
         /// </summary>
         /// <param name="g"></param>
         /// <param name="pen"></param>
-        public void Draw(Graphics g, Pen pen)
+        public void Draw(Graphics g, Pen pen, double zoom, double axisx, double axisy)
         {
-            using var geoPath = BuildPath();
-            //using var screenPath = (GraphicsPath)geoPath.Clone();
-
-            //using var m = new Matrix();
-            //m.Scale(Scale, -Scale);
-            //m.Translate(Offset.X, Offset.Y, MatrixOrder.Append);
-
-            //screenPath.Transform(m);
+            using var geoPath = BuildPath(zoom,axisx,axisy);
+            4orm(m);
 
             //g.SmoothingMode = SmoothingMode.AntiAlias;
-            //g.DrawPath(pen, screenPath);
+            g.DrawPath(pen, geoPath);
+            //绘制圆圈
+            DrawCircles(g, pen, zoom, axisx, axisy);
         }
 
         /// <summary>
@@ -152,21 +150,20 @@ namespace JwShapeCommon.Model
         {
             var path = new GraphicsPath();
             //绘制三根线
-            path.AddLine(SideLine.Pone.ToChangeCoordinate(zoom,axisx, axisy), SideLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
             path.AddLine(TopLine.Pone.ToChangeCoordinate(zoom, axisx, axisy), TopLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            path.AddLine(SideLine.Pone.ToChangeCoordinate(zoom,axisx, axisy), SideLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
             path.AddLine(BottomLine.Pone.ToChangeCoordinate(zoom, axisx, axisy), BottomLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
-            path.AddLine(Slash.Pone.ToChangeCoordinate(zoom, axisx, axisy), Slash.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            //path.AddLine(Slash.Pone.ToChangeCoordinate(zoom, axisx, axisy), Slash.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
             var zoomradius= Arc.Radius * zoom;
             var arcnewcenterx= Arc.Center.X * zoom + axisx;
             var arcnewcentery = axisy - Arc.Center.Y * zoom;
-
             path.AddArc(
             (float)(arcnewcenterx - zoomradius), (float)(arcnewcentery - zoomradius),
             (float)zoomradius * 2, (float)
             zoomradius * 2,
-            (float)Arc.StartAngle,
-            (float)Arc.SweepAngle
-        );
+             JwExtend.RadToDeg((float)Arc.StartAngle),
+            JwExtend.RadToDeg((float)Arc.SweepAngle));
+            path.CloseFigure();
             return path;
         }
 
@@ -175,7 +172,7 @@ namespace JwShapeCommon.Model
         {
             var pc = SecondLoaction.ToChangeCoordinate(zoom, ax, ay);
 
-            var holeradius=JwFileConsts.EllipseDiameter/JwFileConsts.JwScale*zoom;
+            var holeradius=JwFileConsts.EllipseDiameter/JwFileConsts.JwScale;
             var newradius = holeradius * zoom;
             var rect = new RectangleF(
                 pc.X - (float)newradius,
@@ -183,14 +180,32 @@ namespace JwShapeCommon.Model
                 (float)newradius * 2,
                 (float)newradius * 2
             );
-
             g.DrawEllipse(pen, rect);
-        }
 
+            var pc2 = ThirdLocation.ToChangeCoordinate(zoom, ax, ay);
+            var rect2 = new RectangleF(
+                pc2.X - (float)newradius,
+                pc2.Y - (float)newradius,
+                (float)newradius * 2,
+                (float)newradius * 2
+            );
+            g.DrawEllipse(pen, rect2);
+
+            var pc3 = Location.ToChangeCoordinate(zoom, ax, ay);
+            var rect3 = new RectangleF(
+                pc3.X - (float)newradius,
+                pc3.Y - (float)newradius,
+                (float)newradius * 2,
+                (float)newradius * 2
+            );
+            g.DrawEllipse(pen, rect3);
+        }
     }
 
 
-
+    /// <summary>
+    /// jw圆弧
+    /// </summary>
     public class JwArc
     {
         public string Id { get; set; }

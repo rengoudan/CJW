@@ -154,6 +154,8 @@ namespace JwShapeCommon
             lianjie.Id = data.Id;
             lianjie.HasEndChange = data.HasEndChange;
             lianjie.HasStartChange = data.HasStartChange;
+            lianjie.VPLStartPosition = data.VPLStartPosition;
+            lianjie.VPLEndPosition = data.VPLEndPosition;
             //lianjie.
             return lianjie;
         }
@@ -1182,6 +1184,14 @@ namespace JwShapeCommon
             return new System.Drawing.PointF((float)x, (float)y);
         }
 
+        public static float DegToRad(float deg)
+        {
+            return deg * MathF.PI / 180f;
+        }
 
+        public static float RadToDeg(float rad)
+        {
+            return rad * 180f / MathF.PI;
+        }
     }
 }

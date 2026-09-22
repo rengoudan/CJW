@@ -40,6 +40,14 @@ namespace JwShapeCommon
         /// </summary>
         public List<JwCuttingDraw> CuttingDraws = new List<JwCuttingDraw>();
 
+        public double Beilv { get; set; } = 1;
+
+        public double AxisX { get; set; } = 0;
+
+        public double AxisY { get; set; } = 0;
+
+        public List<JwVpl> Vpls = new List<JwVpl>();
+
         public void Draw(int wwidth, int wheight, int xoffset, int yoffset)
         {
 
@@ -57,10 +65,13 @@ namespace JwShapeCommon
                 var wb = Math.Round((double)(wwidth - xoffset) / jwCanvas.Width, 2);
                 var hb = Math.Round((double)(wheight - yoffset) / jwCanvas.Height, 2);
                 var _minbeilv = wb > hb ? hb : wb;
+                Beilv= _minbeilv;
                 var cx = (wwidth) / 2;
                 var cy = (wheight) / 2;
                 var axisX = cx - jwCanvas.CenterPoint.X * _minbeilv;
                 var axisY = cy + jwCanvas.CenterPoint.Y * _minbeilv;
+                AxisX = axisX;
+                AxisY= axisY;
                 foreach (var bm in jwCanvas.Beams)
                 {
                     JwDrawShape beamsp = new JwDrawShape(bm);
@@ -261,6 +272,17 @@ namespace JwShapeCommon
                                 wjx2.DrawRectangleF = rect;
                                 wjx2.ShapeType = DrawShapeType.Star;
                                 controls.Add(wjx2);
+                            }
+                            JwVpl vpl = new JwVpl(jlj.Start, jlj.VPLStartPosition);
+                            if (jlj.VPLStartPosition == BeamEndPosition.上右)
+                            {
+                                Vpls.Add(vpl);
+                            }
+                            
+                            JwVpl vpl2=new JwVpl(jlj.End, jlj.VPLEndPosition);
+                            if (jlj.VPLEndPosition == BeamEndPosition.上右)
+                            {
+                                Vpls.Add(vpl2);
                             }
                         }
                     }

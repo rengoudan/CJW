@@ -182,6 +182,13 @@ namespace JwShapeCommon.Model
 
         public bool IsAddOrReduce { get; set; }
 
+        /// <summary>
+        /// 2026年9月7日 vpl使用 其他无意义
+        /// </summary>
+        public BeamEndPosition VPLStartPosition { get; set; }
+
+        public BeamEndPosition VPLEndPosition { get; set; }
+
         public List<JwwData> DrawToJww()
         {
             double jd=Start.LineAngle(End);

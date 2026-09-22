@@ -4272,7 +4272,7 @@ namespace JwShapeCommon
                         Position = jwLianjieSingle.StartPosition
 
                     };
-                 
+                    jwLianjieSingle.Start.RealPointOriginal= jwLianjieSingle.Start.RealPoint;
                     jwLianjieSingle.End = new JwPointBeam
                     {
                         RealPoint = new JWPoint(endrealx, endrealy),
@@ -4281,7 +4281,7 @@ namespace JwShapeCommon
                         HasChange = false,
                         Position = jwLianjieSingle.EndPosition
                     };
-                   
+                    jwLianjieSingle.End.RealPointOriginal = jwLianjieSingle.End.RealPoint;
                     jwLianjieSingle.IsCreateSuccess = true;
                     var lg = JwExtend.Distance(jwLianjieSingle.Start.RealPoint, jwLianjieSingle.End.RealPoint);
                     var dl = Math.Round(lg, 1) * JwFileConsts.JwScale;

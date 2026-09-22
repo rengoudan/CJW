@@ -571,6 +571,13 @@ namespace RGBJWMain.Controls
                             DrawLineWithLength(pe.Graphics, penlj, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite, ljl.Distance);
                         }
                     }
+                    if(CanvasDraw.Vpls.Count> 0)
+                    {
+                        foreach(var v in CanvasDraw.Vpls)
+                        {
+                           v.Draw(pe.Graphics, penlj, CanvasDraw.Beilv,CanvasDraw.AxisX,CanvasDraw.AxisY);
+                        }
+                    }
                     var wjxlst = CanvasDraw.controls.Where(t => t.ShapeType == DrawShapeType.Star).ToList();
                     if (wjxlst?.Count > 0)
                     {
