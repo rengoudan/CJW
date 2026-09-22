@@ -19,6 +19,7 @@ namespace JwShapeCommon.Model
         {
             Location = p;
             Position = bep;
+            //createOther();
             createOther();
         }
 
@@ -111,11 +112,293 @@ namespace JwShapeCommon.Model
                     }
                 case BeamEndPosition.上左:
                     {
+                        var cx = Location.X;
+                        var cy = Location.Y;
+                        var sly = cy;
+                        var slx = cx + (secondCenterSpacing / JwFileConsts.JwScale);
+                        SecondLoaction = new JWPoint(slx, sly);
+                        var by = cy - (bottomSpacing / JwFileConsts.JwScale);
+                        var bx = cx + (longestsideLength / JwFileConsts.JwScale);
+                        var sidebottom = new JWPoint(bx, by);
+                        var ul = new JWPoint(cx, by);
+                        BottomLine = new JwXian(sidebottom, ul);
+                        var tpsy = cy + ((sideLength - bottomSpacing) / JwFileConsts.JwScale);
+                        var topside = new JWPoint(bx, tpsy);
+                        SideLine = new JwXian(sidebottom, topside);
+                        var trx = cx + (jpSpacing / JwFileConsts.JwScale);
+                        var topother = new JWPoint(trx, tpsy);
+                        TopLine = new JwXian(topother, topside);
+                        var tlx = cy + JwFileConsts.EllipseSpacing / JwFileConsts.JwScale;
+                        ThirdLocation = new JWPoint(slx, tlx);
+                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, 1.5707963267948966, 2.4035303736600242);
+                        var l = ja.ArcFinish;
+                        this.Arc = ja;
+                        Slash = new JwXian(topother, l);
+                        break;
+                    }
+                case BeamEndPosition.下右:
+                    {
+                        var cx = Location.X;
+                        var cy = Location.Y;
+                        var sly = cy;
+                        var slx = cx - (secondCenterSpacing / JwFileConsts.JwScale);
+                        SecondLoaction = new JWPoint(slx, sly);
+                        var by = cy + (bottomSpacing / JwFileConsts.JwScale);
+                        var bx = cx - (longestsideLength / JwFileConsts.JwScale);
+                        var sidebottom = new JWPoint(bx, by);
+                        var ul = new JWPoint(cx, by);
+                        BottomLine = new JwXian(sidebottom, ul);
+                        var tpsy = cy - ((sideLength - bottomSpacing) / JwFileConsts.JwScale);
+                        var topside = new JWPoint(bx, tpsy);
+                        SideLine = new JwXian(sidebottom, topside);
+                        var trx = cx - (jpSpacing / JwFileConsts.JwScale);
+                        var topother = new JWPoint(trx, tpsy);
+                        TopLine = new JwXian(topother, topside);
+                        var tlx = cy - JwFileConsts.EllipseSpacing / JwFileConsts.JwScale;
+                        ThirdLocation = new JWPoint(slx, tlx);
+                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, -1.5707963267948966, 2.4035303736600242);
+                        var l = ja.ArcFinish;
+                        this.Arc = ja;
+                        Slash = new JwXian(topother, l);
+                        break;
+                    }
+
+                case BeamEndPosition.下左:
+                    {
+                        var cx = Location.X;
+                        var cy = Location.Y;
+                        var sly = cy;
+                        var slx = cx + (secondCenterSpacing / JwFileConsts.JwScale);
+                        SecondLoaction = new JWPoint(slx, sly);
+                        var by = cy + (bottomSpacing / JwFileConsts.JwScale);
+                        var bx = cx + (longestsideLength / JwFileConsts.JwScale);
+                        var sidebottom = new JWPoint(bx, by);
+                        var ul = new JWPoint(cx, by);
+                        BottomLine = new JwXian(sidebottom, ul);
+                        var tpsy = cy - ((sideLength - bottomSpacing) / JwFileConsts.JwScale);
+                        var topside = new JWPoint(bx, tpsy);
+                        SideLine = new JwXian(sidebottom, topside);
+                        var trx = cx + (jpSpacing / JwFileConsts.JwScale);
+                        var topother = new JWPoint(trx, tpsy);
+                        TopLine = new JwXian(topother, topside);
+                        var tlx = cy - JwFileConsts.EllipseSpacing / JwFileConsts.JwScale;
+                        ThirdLocation = new JWPoint(slx, tlx);
+                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, -1.5707963267948966, -2.4035303736600242);
+                        var l = ja.ArcFinish;
+                        this.Arc = ja;
+                        Slash = new JwXian(topother, l);
+                        break;
+                    }
+                case BeamEndPosition.左上:
+                    {
+                        var cx = Location.X;
+                        var cy = Location.Y;
+                        var sly = cy - (secondCenterSpacing / JwFileConsts.JwScale);
+                        var slx = cx;
+                        SecondLoaction = new JWPoint(slx, sly);
+                        var by = cy - (longestsideLength / JwFileConsts.JwScale);
+                        var bx = cx+ (bottomSpacing / JwFileConsts.JwScale);  
+                        var sidebottom = new JWPoint(bx, by);
+                        var ul = new JWPoint(bx, cy);
+                        BottomLine = new JwXian(sidebottom, ul);
+                        var tpsx = cx - ((sideLength - bottomSpacing) / JwFileConsts.JwScale);
+                        var topside = new JWPoint(tpsx, by);
+                        SideLine = new JwXian(sidebottom, topside);
+                        var trxy = cy - (jpSpacing / JwFileConsts.JwScale);
+                        var topother = new JWPoint(tpsx, trxy);
+                        TopLine = new JwXian(topother, topside);
+                        var tlx = cx - JwFileConsts.EllipseSpacing / JwFileConsts.JwScale;
+                        ThirdLocation = new JWPoint(tlx,sly);
+                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, 0, -2.4035303736600242);
+                        var l = ja.ArcFinish;
+                        this.Arc = ja;
+                        Slash = new JwXian(topother, l);
+                        break;
+                    }
+                case BeamEndPosition.左下:
+                    {
+                        var cx = Location.X;
+                        var cy = Location.Y;
+                        var sly = cy + (secondCenterSpacing / JwFileConsts.JwScale);
+                        var slx = cx;
+                        SecondLoaction = new JWPoint(slx, sly);
+                        var by = cy + (longestsideLength / JwFileConsts.JwScale);
+                        var bx = cx + (bottomSpacing / JwFileConsts.JwScale);
+                        var sidebottom = new JWPoint(bx, by);
+                        var ul = new JWPoint(bx, cy);
+                        BottomLine = new JwXian(sidebottom, ul);
+                        var tpsx = cx - ((sideLength - bottomSpacing) / JwFileConsts.JwScale);
+                        var topside = new JWPoint(tpsx, by);
+                        SideLine = new JwXian(sidebottom, topside);
+                        var trxy = cy + (jpSpacing / JwFileConsts.JwScale);
+                        var topother = new JWPoint(tpsx, trxy);
+                        TopLine = new JwXian(topother, topside);
+                        var tlx = cx - JwFileConsts.EllipseSpacing / JwFileConsts.JwScale;
+                        ThirdLocation = new JWPoint(tlx, sly);
+                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, 0, 2.4035303736600242);
+                        var l = ja.ArcFinish;
+                        this.Arc = ja;
+                        Slash = new JwXian(topother, l);
+                        break;
+                    }
+
+                case BeamEndPosition.右上:
+                    {
+                        var cx = Location.X;
+                        var cy = Location.Y;
+                        var sly = cy - (secondCenterSpacing / JwFileConsts.JwScale);
+                        var slx = cx;
+                        SecondLoaction = new JWPoint(slx, sly);
+                        var by = cy - (longestsideLength / JwFileConsts.JwScale);
+                        var bx = cx - (bottomSpacing / JwFileConsts.JwScale);
+                        var sidebottom = new JWPoint(bx, by);
+                        var ul = new JWPoint(bx, cy);
+                        BottomLine = new JwXian(sidebottom, ul);
+                        var tpsx = cx + ((sideLength - bottomSpacing) / JwFileConsts.JwScale);
+                        var topside = new JWPoint(tpsx, by);
+                        SideLine = new JwXian(sidebottom, topside);
+                        var trxy = cy - (jpSpacing / JwFileConsts.JwScale);
+                        var topother = new JWPoint(tpsx, trxy);
+                        TopLine = new JwXian(topother, topside);
+                        var tlx = cx + JwFileConsts.EllipseSpacing / JwFileConsts.JwScale;
+                        ThirdLocation = new JWPoint(tlx, sly);
+                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, 3.1415926535897931, 2.4035303736600242);
+                        var l = ja.ArcFinish;
+                        this.Arc = ja;
+                        Slash = new JwXian(topother, l);
+                        break;
+                    }
+                case BeamEndPosition.右下:
+                    {
+                        var cx = Location.X;
+                        var cy = Location.Y;
+                        var sly = cy + (secondCenterSpacing / JwFileConsts.JwScale);
+                        var slx = cx;
+                        SecondLoaction = new JWPoint(slx, sly);
+                        var by = cy + (longestsideLength / JwFileConsts.JwScale);
+                        var bx = cx - (bottomSpacing / JwFileConsts.JwScale);
+                        var sidebottom = new JWPoint(bx, by);
+                        var ul = new JWPoint(bx, cy);
+                        BottomLine = new JwXian(sidebottom, ul);
+                        var tpsx = cx + ((sideLength - bottomSpacing) / JwFileConsts.JwScale);
+                        var topside = new JWPoint(tpsx, by);
+                        SideLine = new JwXian(sidebottom, topside);
+                        var trxy = cy + (jpSpacing / JwFileConsts.JwScale);
+                        var topother = new JWPoint(tpsx, trxy);
+                        TopLine = new JwXian(topother, topside);
+                        var tlx = cx + JwFileConsts.EllipseSpacing / JwFileConsts.JwScale;
+                        ThirdLocation = new JWPoint(tlx, sly);
+                        JwArc ja = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, 3.1415926535897931, -2.4035303736600242);
+                        var l = ja.ArcFinish;
+                        this.Arc = ja;
+                        Slash = new JwXian(topother, l);
                         break;
                     }
 
             }
         }
+
+        //enum TemplateType { Horizontal, Vertical }
+
+        //struct DirConfig
+        //{
+        //    public TemplateType Type;
+        //    public bool MirrorX;
+        //    public bool MirrorY;
+        //    public double ArcStart;
+        //    public double ArcSweep;
+        //}
+
+        //private static readonly Dictionary<BeamEndPosition, DirConfig> DirMap =
+        //    new Dictionary<BeamEndPosition, DirConfig>
+        //    {
+        //        // 水平模板（上/下）
+        //        [BeamEndPosition.上右] = new DirConfig { Type = TemplateType.Horizontal, MirrorX = false, MirrorY = false, ArcStart = Math.PI / 2, ArcSweep = -2.4035303736600242 },
+        //        [BeamEndPosition.上左] = new DirConfig { Type = TemplateType.Horizontal, MirrorX = true, MirrorY = false, ArcStart = Math.PI / 2, ArcSweep = 2.4035303736600242 },
+
+        //        [BeamEndPosition.下右] = new DirConfig { Type = TemplateType.Horizontal, MirrorX = false, MirrorY = true, ArcStart = -Math.PI / 2, ArcSweep = 2.4035303736600242 },
+        //        [BeamEndPosition.下左] = new DirConfig { Type = TemplateType.Horizontal, MirrorX = true, MirrorY = true, ArcStart = -Math.PI / 2, ArcSweep = -2.4035303736600242 },
+
+        //        // 垂直模板（左/右）
+        //        [BeamEndPosition.左上] = new DirConfig { Type = TemplateType.Vertical, MirrorX = false, MirrorY = false, ArcStart = 0, ArcSweep = -2.4035303736600242 },
+        //        [BeamEndPosition.左下] = new DirConfig { Type = TemplateType.Vertical, MirrorX = false, MirrorY = true, ArcStart = 0, ArcSweep = 2.4035303736600242 },
+
+        //        [BeamEndPosition.右上] = new DirConfig { Type = TemplateType.Vertical, MirrorX = true, MirrorY = false, ArcStart = Math.PI, ArcSweep = 2.4035303736600242 },
+        //        [BeamEndPosition.右下] = new DirConfig { Type = TemplateType.Vertical, MirrorX = true, MirrorY = true, ArcStart = Math.PI, ArcSweep = -2.4035303736600242 },
+        //    };
+        //private JWPoint ApplyOffset(double dx, double dy, DirConfig cfg)
+        //{
+        //    if (cfg.MirrorX) dx = -dx;
+        //    if (cfg.MirrorY) dy = -dy;
+
+        //    return new JWPoint(
+        //        Location.X + dx / JwFileConsts.JwScale,
+        //        Location.Y + dy / JwFileConsts.JwScale
+        //    );
+        //}
+        //private void createOther1()
+        //{
+        //    var cfg = DirMap[Position];
+
+        //    // -------------------------
+        //    // 水平模板（上/下）
+        //    // -------------------------
+        //    if (cfg.Type == TemplateType.Horizontal)
+        //    {
+        //        // 第二孔
+        //        SecondLoaction = ApplyOffset(-secondCenterSpacing, 0, cfg);
+
+        //        // 底边
+        //        var sidebottom = ApplyOffset(-longestsideLength, -bottomSpacing, cfg);
+        //        var ul = ApplyOffset(0, -bottomSpacing, cfg);
+        //        BottomLine = new JwXian(sidebottom, ul);
+
+        //        // 侧边
+        //        var topside = ApplyOffset(-longestsideLength, sideLength - bottomSpacing, cfg);
+        //        SideLine = new JwXian(sidebottom, topside);
+
+        //        // 顶边
+        //        var topother = ApplyOffset(-jpSpacing, sideLength - bottomSpacing, cfg);
+        //        TopLine = new JwXian(topother, topside);
+
+        //        // 第三孔
+        //        ThirdLocation = ApplyOffset(0, JwFileConsts.EllipseSpacing, cfg);
+
+        //        // 圆弧
+        //        Arc = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, cfg.ArcStart, cfg.ArcSweep);
+        //        Slash = new JwXian(topother, Arc.ArcFinish);
+        //        return;
+        //    }
+
+        //    // -------------------------
+        //    // 垂直模板（左/右）
+        //    // -------------------------
+        //    {
+        //        // 第二孔
+        //        SecondLoaction = ApplyOffset(0, -secondCenterSpacing, cfg);
+
+        //        // 底边
+        //        var sidebottom = ApplyOffset(bottomSpacing, -longestsideLength, cfg);
+        //        var ul = ApplyOffset(bottomSpacing, 0, cfg);
+        //        BottomLine = new JwXian(sidebottom, ul);
+
+        //        // 侧边
+        //        var topside = ApplyOffset(-(sideLength - bottomSpacing), -longestsideLength, cfg);
+        //        SideLine = new JwXian(sidebottom, topside);
+
+        //        // 顶边
+        //        var topother = ApplyOffset(-(sideLength - bottomSpacing), -jpSpacing, cfg);
+        //        TopLine = new JwXian(topother, topside);
+
+        //        // 第三孔
+        //        ThirdLocation = ApplyOffset(-JwFileConsts.EllipseSpacing, -secondCenterSpacing, cfg);
+
+        //        // 圆弧
+        //        Arc = new JwArc(Location, bottomSpacing / JwFileConsts.JwScale, cfg.ArcStart, cfg.ArcSweep);
+        //        Slash = new JwXian(topother, Arc.ArcFinish);
+        //    }
+        //}
+
 
         public List<JwwData> DrawToJww()
         {
