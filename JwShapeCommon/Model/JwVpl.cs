@@ -131,7 +131,28 @@ namespace JwShapeCommon.Model
         public void Draw(Graphics g, Pen pen, double zoom, double axisx, double axisy)
         {
             using var geoPath = BuildPath(zoom,axisx,axisy);
-            4orm(m);
+            //g.DrawLine(pen,SideLine.Pone.ToChangeCoordinate(zoom, axisx, axisy), SideLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            //g.DrawLine(pen, TopLine.Pone.ToChangeCoordinate(zoom, axisx, axisy), TopLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            //g.DrawLine(pen, BottomLine.Pone.ToChangeCoordinate(zoom, axisx, axisy), BottomLine.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            //g.DrawLine(pen, Slash.Pone.ToChangeCoordinate(zoom, axisx, axisy), Slash.Ptwo.ToChangeCoordinate(zoom, axisx, axisy));
+            //var zoomradius = Arc.Radius * zoom;
+            //var arcnewcenterx = Arc.Center.X * zoom + axisx;
+            //var arcnewcentery = axisy - Arc.Center.Y * zoom;
+            //var qsh= JwExtend.RadToDeg((float)Arc.StartAngle);
+            //var xz= JwExtend.RadToDeg((float)Arc.SweepAngle);
+            //g.DrawArc(pen,
+            //(float)(arcnewcenterx - zoomradius), (float)(arcnewcentery - zoomradius),
+            //(float)zoomradius * 2, (float)
+            //zoomradius * 2,
+            // JwExtend.RadToDeg((float)Arc.StartAngle),
+            //JwExtend.RadToDeg((float)Arc.SweepAngle));
+            //using var screenPath = (GraphicsPath)geoPath.Clone();
+
+            //using var m = new Matrix();
+            //m.Scale(Scale, -Scale);
+            //m.Translate(Offset.X, Offset.Y, MatrixOrder.Append);
+
+            //screenPath.Transform(m);
 
             //g.SmoothingMode = SmoothingMode.AntiAlias;
             g.DrawPath(pen, geoPath);
