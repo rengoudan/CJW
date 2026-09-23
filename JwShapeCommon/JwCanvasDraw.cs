@@ -273,22 +273,25 @@ namespace JwShapeCommon
                                 wjx2.ShapeType = DrawShapeType.Star;
                                 controls.Add(wjx2);
                             }
-                            JwVpl vpl = new JwVpl(jlj.Start, jlj.VPLStartPosition);
-                            //if (jlj.VPLStartPosition == BeamEndPosition.上右)
-                            //{
-                            //    Vpls.Add(vpl);
-                            //}
-                            Vpls.Add(vpl);
-                            JwVpl vpl2=new JwVpl(jlj.End, jlj.VPLEndPosition);
-                            Vpls.Add(vpl2);
-                            //if (jlj.VPLEndPosition == BeamEndPosition.上右||jlj.VPLEndPosition==BeamEndPosition.上左||jlj.VPLEndPosition==BeamEndPosition.下左||jlj.VPLEndPosition==BeamEndPosition.右上)
-                            //{
-                            //    Vpls.Add(vpl2);
-                            //}
-                            //if (jlj.VPLStartPosition == BeamEndPosition.下右||jlj.VPLStartPosition==BeamEndPosition.下左||jlj.VPLStartPosition==BeamEndPosition.左上||jlj.VPLStartPosition==BeamEndPosition.左下)
-                            //{
-                            //    Vpls.Add(vpl);
-                            //}
+                            if (jwCanvas.JwProjectSubData.LianjieCompentType==LianjieCompentType.VPL)
+                            {
+                                JwVpl vpl = new JwVpl(jlj.Start, jlj.VPLStartPosition);
+                                //if (jlj.VPLStartPosition == BeamEndPosition.上右)
+                                //{
+                                //    Vpls.Add(vpl);
+                                //}
+                                Vpls.Add(vpl);
+                                JwVpl vpl2 = new JwVpl(jlj.End, jlj.VPLEndPosition);
+                                Vpls.Add(vpl2);
+                                //if (jlj.VPLEndPosition == BeamEndPosition.上右||jlj.VPLEndPosition==BeamEndPosition.上左||jlj.VPLEndPosition==BeamEndPosition.下左||jlj.VPLEndPosition==BeamEndPosition.右上)
+                                //{
+                                //    Vpls.Add(vpl2);
+                                //}
+                                //if (jlj.VPLStartPosition == BeamEndPosition.下右||jlj.VPLStartPosition==BeamEndPosition.下左||jlj.VPLStartPosition==BeamEndPosition.左上||jlj.VPLStartPosition==BeamEndPosition.左下)
+                                //{
+                                //    Vpls.Add(vpl);
+                                //} 
+                            }
                         }
                     }
                 }

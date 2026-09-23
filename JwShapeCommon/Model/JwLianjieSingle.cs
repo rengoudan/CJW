@@ -105,9 +105,25 @@ namespace JwShapeCommon.Model
             JwLianjieData lianjieData = new JwLianjieData();
             lianjieData.Id = Id;
             lianjieData.Start=new Point(Start.RealPoint.X, Start.RealPoint.Y);
-            lianjieData.StartOriginal= new Point(Start.RealPointOriginal.X, Start.RealPointOriginal.Y);
+            if(object.Equals(Start.RealPointOriginal,null))
+            {
+                lianjieData.StartOriginal = new Point(Start.RealPoint.X, Start.RealPoint.Y);
+            }
+            else
+            {
+                lianjieData.StartOriginal = new Point(Start.RealPointOriginal.X, Start.RealPointOriginal.Y);
+            }
+                
             lianjieData.End = new Point(End.RealPoint.X, End.RealPoint.Y);
-            lianjieData.EndOriginal = new Point(End.RealPointOriginal.X, End.RealPointOriginal.Y);
+            if(object.Equals(End.RealPointOriginal,null))
+            {
+                lianjieData.EndOriginal = new Point(End.RealPoint.X, End.RealPoint.Y);
+            }
+            else
+            {
+                lianjieData.EndOriginal = new Point(End.RealPointOriginal.X, End.RealPointOriginal.Y);
+            }
+            //lianjieData.EndOriginal = new Point(End.RealPointOriginal.X, End.RealPointOriginal.Y);
             lianjieData.HasEndChange= HasEndChange;
             lianjieData.HasStartChange= HasStartChange;
             ////lianjieData.Id=Guid.NewGuid().ToString();
@@ -189,6 +205,10 @@ namespace JwShapeCommon.Model
 
         public BeamEndPosition VPLEndPosition { get; set; }
 
+        /// <summary>
+        /// 2026年9月23日
+        /// </summary>
+        /// <returns></returns>
         public List<JwwData> DrawToJww()
         {
             double jd=Start.LineAngle(End);
@@ -221,6 +241,11 @@ namespace JwShapeCommon.Model
             tentwo.m_start_x = End.X;
             tentwo.m_start_y = End.Y;
             jwwDatas.Add(tentwo);
+
+            JwVpl vpl = new JwVpl(Start, VPLStartPosition);
+
+            JwVpl vpl2=new JwVpl(End, VPLEndPosition);
+
             return jwwDatas;
         }
 
