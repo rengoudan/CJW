@@ -4062,7 +4062,7 @@ namespace JwShapeCommon
                     else
                     {
                         //垂直梁
-                        endrealx = l.WinnerBeam.Center + banjing;
+                        endrealx = l.WinnerBeam.Center - banjing;
                         //if (xian.Pone.X > l.WinnerBeam.Center)
                         //{
                         //    //垂直梁右侧
