@@ -253,6 +253,7 @@ namespace JwShapeCommon
             reobj.KPillarType = data.KPillarType;
             reobj.Beams = new List<JwBeam>();
             reobj.FloorName = data.FloorName;
+            reobj.LianjieCompentType=data.LianjieCompentType;
             if (data.BeamCount > 0)
             {
                 foreach (var bm in data.JwBeamDatas)

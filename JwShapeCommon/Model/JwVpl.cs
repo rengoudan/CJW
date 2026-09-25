@@ -403,6 +403,11 @@ namespace JwShapeCommon.Model
         public List<JwwData> DrawToJww()
         {
             List<JwwData> jwws = new List<JwwData>();
+            jwws.Add(SideLine.ToJwwData(DrawShapeType.ConnectingLine));
+            jwws.Add(TopLine.ToJwwData(DrawShapeType.ConnectingLine));
+            jwws.Add(BottomLine.ToJwwData(DrawShapeType.ConnectingLine));
+            jwws.Add(Slash.ToJwwData(DrawShapeType.ConnectingLine));
+            jwws.Add(Arc.ToJwwData(DrawShapeType.ConnectingLine));
             return jwws;
         }
 
@@ -540,28 +545,24 @@ namespace JwShapeCommon.Model
             ArcFinish=JwExtend.GetArcEndPoint(center,radius, startAngle, endAngle);
         }
 
-        public JwArc(JWPoint center, float radius, PointF start, PointF end, float verticalX)
+
+        public JwwData ToJwwData(DrawShapeType shapeType)
         {
-            Center = center;
-            Radius = radius;
-
-            StartAngle = AngleFromPoints(center, start);
-            double endAngle = AngleFromPoints(center, end);
-
-            double sweep = endAngle - StartAngle;
-
-            if ((verticalX > center.X && sweep < 0) ||
-                (verticalX < center.X && sweep > 0))
-            {
-                sweep = -sweep;
-            }
-
-            SweepAngle = sweep;
-        }
-
-        double AngleFromPoints(JWPoint center, PointF pt)
-        {
-            return Math.Atan2(pt.Y - center.Y, pt.X - center.X) * 180.0 / Math.PI;
+            var sen = new JwwEnko();
+            //sen.m_nPenWidth=1/
+            //sen.m_nPenColor = 2;
+            sen.m_start_x = Center.X;
+            sen.m_start_y = Center.Y;
+            sen.m_dHankei=Radius;
+            sen.m_nLayer = (short)((int)shapeType + 1);
+            sen.m_nPenColor = (short)((int)shapeType);
+            sen.m_nPenStyle = 1;
+            sen.m_nPenWidth = 0;
+            sen.m_radEnkoKaku = -SweepAngle;
+            sen.m_radKaishiKaku= StartAngle;
+            sen.m_bZenEnFlg = 0;
+            sen.m_dHenpeiRitsu = 1;
+            return sen;
         }
     }
 

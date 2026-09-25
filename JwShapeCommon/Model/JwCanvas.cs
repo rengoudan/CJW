@@ -96,6 +96,8 @@ namespace JwShapeCommon
 
         public KPillarType KPillarType { get; set; }
 
+        public LianjieCompentType LianjieCompentType { get; set; }
+
         public JwCanvas() { }
 
         public JwCanvas(JWPoint? topLeft,JWPoint? topRight,JWPoint? bottomLeft,JWPoint? bottomRight, List<JwBeam> _beams, List<JWPoint> _points,double? width,double? height,List<JwPillar> pillars,List<JwBeam> _parentbeams) 
@@ -259,12 +261,25 @@ namespace JwShapeCommon
                     jd.Add(dd.ToJwwData());
                 }
             }
-            foreach (var lj in LianjieLsts)
+            if (this.LianjieCompentType == LianjieCompentType.VPL)
             {
-                jd.AddRange(lj.DrawToJww());
+                foreach (var lj in LianjieLsts)
+                {
+                    jd.AddRange(lj.DrawToJww());
+                    JwVpl vpls = new JwVpl(lj.Start, lj.VPLStartPosition);
+                    jd.AddRange(vpls.DrawToJww());
+                    JwVpl vple = new JwVpl(lj.End, lj.VPLEndPosition);
+                    jd.AddRange(vple.DrawToJww());
+                }
             }
-
-            return jd;
+            else
+            {
+                foreach (var lj in LianjieLsts)
+                {
+                    jd.AddRange(lj.DrawToJww());
+                }
+            }
+                return jd;
         }
 
 

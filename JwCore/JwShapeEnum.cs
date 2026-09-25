@@ -66,6 +66,10 @@ namespace JwCore
         柱 = 1,
         金物 = 2
     }
+
+    /// <summary>
+    /// 2026年9月25日 增加ConnectingLine 用来匹配绘制vpl的颜色
+    /// </summary>
     public enum DrawShapeType
     {
         None = 0,
@@ -78,7 +82,8 @@ namespace JwCore
         Text = 7,
         Cutting = 8,
         AddedHole = 9,
-        Star=10
+        Star = 10,
+        ConnectingLine = 11
     }
 
     /// <summary>
