@@ -403,11 +403,11 @@ namespace JwShapeCommon.Model
         public List<JwwData> DrawToJww()
         {
             List<JwwData> jwws = new List<JwwData>();
-            jwws.Add(SideLine.ToJwwData(DrawShapeType.ConnectingLine));
-            jwws.Add(TopLine.ToJwwData(DrawShapeType.ConnectingLine));
-            jwws.Add(BottomLine.ToJwwData(DrawShapeType.ConnectingLine));
-            jwws.Add(Slash.ToJwwData(DrawShapeType.ConnectingLine));
-            jwws.Add(Arc.ToJwwData(DrawShapeType.ConnectingLine));
+            jwws.Add(SideLine.ToJwwData(DrawShapeType.Pillar));
+            jwws.Add(TopLine.ToJwwData(DrawShapeType.Pillar));
+            jwws.Add(BottomLine.ToJwwData(DrawShapeType.Pillar));
+            jwws.Add(Slash.ToJwwData(DrawShapeType.Pillar));
+            jwws.Add(Arc.ToJwwData(DrawShapeType.Pillar));
             return jwws;
         }
 
@@ -542,7 +542,7 @@ namespace JwShapeCommon.Model
             Radius = radius;
             StartAngle = startAngle;
             SweepAngle = endAngle;
-            ArcFinish=JwExtend.GetArcEndPoint(center,radius, startAngle, endAngle);
+            ArcFinish=JwExtend.GetArcEndPoint(center,radius, -startAngle, -endAngle);
         }
 
 
@@ -550,7 +550,8 @@ namespace JwShapeCommon.Model
         {
             var sen = new JwwEnko();
             //sen.m_nPenWidth=1/
-            //sen.m_nPenColor = 2;
+            sen.m_nPenColor = (short)shapeType;
+
             sen.m_start_x = Center.X;
             sen.m_start_y = Center.Y;
             sen.m_dHankei=Radius;
@@ -559,7 +560,7 @@ namespace JwShapeCommon.Model
             sen.m_nPenStyle = 1;
             sen.m_nPenWidth = 0;
             sen.m_radEnkoKaku = -SweepAngle;
-            sen.m_radKaishiKaku= StartAngle;
+            sen.m_radKatamukiKaku= -StartAngle;
             sen.m_bZenEnFlg = 0;
             sen.m_dHenpeiRitsu = 1;
             return sen;

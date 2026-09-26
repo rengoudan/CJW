@@ -1163,10 +1163,10 @@ namespace JwShapeCommon
         public static JWPoint GetArcEndPoint(JWPoint center, double radius, double startDeg, double sweepDeg)
         {
             double endDeg = startDeg + sweepDeg;
-            double rad = endDeg * (Math.PI / 180.0);
+            //double rad = endDeg * (Math.PI / 180.0);
 
-            double x = center.X + radius * Math.Cos(rad);
-            double y = center.Y + radius * Math.Sin(rad);
+            double x = center.X + radius * Math.Cos(endDeg);
+            double y = center.Y + radius * Math.Sin(endDeg);
 
             return new JWPoint(x, y);
         }
