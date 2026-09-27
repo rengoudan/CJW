@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace JwShapeCommon.Model
 {
@@ -402,12 +403,26 @@ namespace JwShapeCommon.Model
 
         public List<JwwData> DrawToJww()
         {
+            var banjing = JwFileConsts.EllipseDiameter / (2 * JwFileConsts.JwScale);
             List<JwwData> jwws = new List<JwwData>();
-            jwws.Add(SideLine.ToJwwData(DrawShapeType.Pillar));
-            jwws.Add(TopLine.ToJwwData(DrawShapeType.Pillar));
-            jwws.Add(BottomLine.ToJwwData(DrawShapeType.Pillar));
-            jwws.Add(Slash.ToJwwData(DrawShapeType.Pillar));
-            jwws.Add(Arc.ToJwwData(DrawShapeType.Pillar));
+            jwws.Add(SideLine.ToJwwData(DrawShapeType.LinkPart));
+            jwws.Add(TopLine.ToJwwData(DrawShapeType.LinkPart));
+            jwws.Add(BottomLine.ToJwwData(DrawShapeType.LinkPart));
+            jwws.Add(Slash.ToJwwData(DrawShapeType.LinkPart));
+            jwws.Add(Arc.ToJwwData(DrawShapeType.LinkPart));
+            JwwEnko enko = new JwwEnko();
+            enko.m_nPenColor = 2;
+            enko.m_dHankei = banjing;
+            enko.m_radKaishiKaku = 0;
+            enko.m_radEnkoKaku = 6.2831853;
+            enko.m_radKatamukiKaku = 0;
+            enko.m_dHenpeiRitsu = 1;
+            enko.m_bZenEnFlg = 1;
+            enko.m_start_x = Location.X;
+            enko.m_start_y = Location.Y;
+            enko.m_nLayer = (int)DrawShapeType.LinkPart + 1;
+            //tentwo.m_nLayer = (int)DrawShapeType.LinkPart + 1;
+            jwws.Add(enko);
             return jwws;
         }
 

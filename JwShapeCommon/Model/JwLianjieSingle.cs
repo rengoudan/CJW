@@ -228,18 +228,21 @@ namespace JwShapeCommon.Model
             sunpou.m_Moji.m_dSizeX = 2;
             sunpou.m_Moji.m_dSizeY = 3;
             sunpou.m_Moji.m_degKakudo = jd;
+            sunpou.m_nLayer= (int)DrawShapeType.LinkPart + 1;
             jwwDatas.Add(sunpou);
             JwwTen tenone=new JwwTen();
             tenone.m_nPenColor = 9;
             tenone.m_nPenStyle = 1;
             tenone.m_start_x = Start.X;
             tenone.m_start_y = Start.Y;
+            tenone.m_nLayer = (int)DrawShapeType.LinkPart + 1;
             jwwDatas.Add(tenone);
             JwwTen tentwo = new JwwTen();
             tentwo.m_nPenColor = 9;
             tentwo.m_nPenStyle = 1;
             tentwo.m_start_x = End.X;
             tentwo.m_start_y = End.Y;
+            tentwo.m_nLayer = (int)DrawShapeType.LinkPart + 1;
             jwwDatas.Add(tentwo);
 
             JwVpl vpl = new JwVpl(Start, VPLStartPosition);

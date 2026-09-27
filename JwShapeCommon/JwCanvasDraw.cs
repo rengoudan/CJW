@@ -208,7 +208,21 @@ namespace JwShapeCommon
                             wjx2.ShapeType = DrawShapeType.Star;
                             controls.Add(wjx2);
                         }
-
+                        if(JwFileConsts.LjCompentType==LianjieCompentType.VPL)
+                        {
+                            try
+                            {
+                                JwVpl vpl = new JwVpl(zlianjie.Start.RealPoint, zlianjie.VPLStartPosition);
+                                Vpls.Add(vpl);
+                                JwVpl vpl2 = new JwVpl(zlianjie.End.RealPoint, zlianjie.VPLEndPosition);
+                                Vpls.Add(vpl2);
+                            }
+                            catch (Exception ex)
+                            {
+                                var msg = ex.Message;
+                            }
+                            
+                        }
                     }
                 }
                 if (jwCanvas.IsFromData)
