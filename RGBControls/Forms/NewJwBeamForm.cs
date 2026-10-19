@@ -46,7 +46,7 @@ namespace RGBJWMain.Forms
             beamShow();
         }
 
-        public NewJwBeamForm(JwBeam jwbeam,JwCanvas canvas)
+        public NewJwBeamForm(JwBeam jwbeam, JwCanvas canvas)
         {
 
             //this.Name = this._jwbeam.BeamCode;
@@ -55,7 +55,7 @@ namespace RGBJWMain.Forms
             this._jwbeam = jwbeam;
             beamData = _jwProjectMainService.FindBeamDataById(jwbeam.Id);
 
-            
+
             this.uiComboBox1.Visible = false;
             this.button1.Visible = false;
             this._jwCanvas = canvas;
@@ -183,7 +183,7 @@ namespace RGBJWMain.Forms
                         _jwbeam.GongQu = args.NewCode;
                     }
                 }
-                if(GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent!=null)
+                if (GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent != null)
                 {
                     GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent(this, EventArgs.Empty);
                 }
@@ -289,7 +289,27 @@ namespace RGBJWMain.Forms
         private async void switch1_CheckedChanged(object sender, AntdUI.BoolEventArgs e)
         {
             this._jwbeam.HasCsv = e.Value;
-            await _jwProjectMainService.ChangeBeamHasCsv(this._jwbeam.Id,e.Value);
+            await _jwProjectMainService.ChangeBeamHasCsv(this._jwbeam.Id, e.Value);
+        }
+
+        /// <summary>
+        /// xiugailiangfuhao
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void button3_Click(object sender, EventArgs e)
+        {
+            if (IsNewBeam)
+            {
+                this._jwbeam.BeamCode = this.input19.Text;
+            }
+            else
+            {
+                this._jwbeam.BeamCode = this.input19.Text;
+                await _jwProjectMainService.ChangeBeamCode(this._jwbeam.Id, this.input19.Text);
+            }
+            this.pageHeader1.Text = string.Format("梁閲覧-{0}", this._jwbeam.BeamCode);
+            this.SuccessModal("操作が成功しました。");
         }
     }
 }

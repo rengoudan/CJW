@@ -490,156 +490,6 @@ namespace JwShapeCommon
             }
         }
 
-        /// <summary>
-        /// 为addhole 增加优先级别  first为接触 接触为全局的hole
-        /// 第二为pillar 第三为分割J
-        /// </summary>
-        /// <param name="beam"></param>
-        /// <param name="location"></param>
-        /// <param name="createFrom"></param>
-        /// <param name="locationcenter"></param>
-        /// <param name="isStart"></param>
-        /// <param name="isEnd"></param>
-        public static void AddAnyHole1(this JwBeam beam, JWPoint location, HoleCreateFrom createFrom, JWPoint? locationcenter = null, bool isStart = false, bool isEnd = false)
-        {
-            JwHole hh;
-            if (beam.Holes.Count > 0)
-            {
-                var fh = beam.Holes.Find(t => t.Location.IsEqualsWithError(location));
-                if (fh == null)
-                {
-                    hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
-                    hh.Beam = beam;
-                    if (beam.DirectionType == BeamDirectionType.Horizontal)
-                    {
-                        hh.HoleCenter = location.X;
-                    }
-                    if (beam.DirectionType == BeamDirectionType.Vertical)
-                    {
-                        hh.HoleCenter = location.Y;
-                    }
-                    beam.Holes.Add(hh);
-                }
-                else
-                {
-                    if (createFrom == HoleCreateFrom.FengeJ)
-                    {
-                        hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
-                        hh.Beam = beam;
-                        if (beam.DirectionType == BeamDirectionType.Horizontal)
-                        {
-                            hh.HoleCenter = location.X;
-                        }
-                        if (beam.DirectionType == BeamDirectionType.Vertical)
-                        {
-                            hh.HoleCenter = location.Y;
-                        }
-                        //beam.Holes.Add(hh);
-                        fh.changeByOther(HoleCreateFrom.FengeJ);
-                    }
-                    else
-                    {
-                        fh.changeByOther(HoleCreateFrom.Pillar);
-                    }
-                }
-            }
-            else
-            {
-                hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
-                hh.Beam = beam;
-                if (beam.DirectionType == BeamDirectionType.Horizontal)
-                {
-                    hh.HoleCenter = location.X;
-                }
-                if (beam.DirectionType == BeamDirectionType.Vertical)
-                {
-                    hh.HoleCenter = location.Y;
-                }
-                beam.Holes.Add(hh);
-            }
-            //if (createFrom == HoleCreateFrom.JieChu)
-            //{
-            //    if (hh != null)
-            //    {
-            //        hh.HasSG = true;
-            //    }
-
-            //}
-        }
-        /// <summary>
-        /// 2025年6月24日 返回jwhole
-        /// 2026年4月25日 增加addedhole的实现 额外增加孔
-        /// </summary>
-        /// <param name="beam"></param>
-        /// <param name="location"></param>
-        /// <param name="createFrom"></param>
-        /// <param name="locationcenter"></param>
-        /// <param name="isStart"></param>
-        /// <param name="isEnd"></param>
-        public static JwHole AddAnyHoleReturn1(this JwBeam beam, JWPoint location, HoleCreateFrom createFrom, JWPoint? locationcenter = null, bool isStart = false, bool isEnd = false)
-        {
-            JwHole hh = new JwHole();
-            if (beam.Holes.Count > 0)
-            {
-                var fh = beam.Holes.Find(t => t.Location == location);
-                if (fh == null)
-                {
-                    hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
-                    if (beam.DirectionType == BeamDirectionType.Horizontal)
-                    {
-                        hh.HoleCenter = location.X;
-                    }
-                    if (beam.DirectionType == BeamDirectionType.Vertical)
-                    {
-                        hh.HoleCenter = location.Y;
-                    }
-                    beam.Holes.Add(hh);
-                }
-                else
-                {
-                    if (createFrom == HoleCreateFrom.FengeJ)
-                    {
-                        hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
-                        if (beam.DirectionType == BeamDirectionType.Horizontal)
-                        {
-                            hh.HoleCenter = location.X;
-                        }
-                        if (beam.DirectionType == BeamDirectionType.Vertical)
-                        {
-                            hh.HoleCenter = location.Y;
-                        }
-                        //beam.Holes.Add(hh);
-                        fh.changeByOther(HoleCreateFrom.FengeJ);
-                    }
-                    else
-                    {
-                        if (createFrom == HoleCreateFrom.JieChu)
-                        {
-                            fh.KongNum = 4;
-                            fh.HasTop = true;
-                            fh.HasBottom = true;
-                        }
-                        hh = fh;
-                    }
-                }
-            }
-            else
-            {
-                hh = new JwHole(location, createFrom, locationcenter, isStart, isEnd);
-                if (beam.DirectionType == BeamDirectionType.Horizontal)
-                {
-                    hh.HoleCenter = location.X;
-                }
-                if (beam.DirectionType == BeamDirectionType.Vertical)
-                {
-                    hh.HoleCenter = location.Y;
-                }
-                beam.Holes.Add(hh);
-            }
-            return hh;
-        }
-
-
         public static void AddAnyHole(
        this JwBeam beam,
        JWPoint location,
@@ -651,8 +501,6 @@ namespace JwShapeCommon
             AddAnyHoleCore(beam, location, createFrom, locationcenter, isStart, isEnd, false);
         }
 
-
-
         public static JwHole AddAnyHoleReturn(
       this JwBeam beam,
       JWPoint location,
@@ -663,7 +511,6 @@ namespace JwShapeCommon
         {
             return AddAnyHoleCore(beam, location, createFrom, locationcenter, isStart, isEnd, true);
         }
-
 
         private static JwHole AddAnyHoleCore(
     JwBeam beam,
@@ -723,14 +570,6 @@ namespace JwShapeCommon
                     existing.KongNum = 4;
                     existing.changeByOther(HoleCreateFrom.FengeJ);
                 }
-                //else if (createFrom == HoleCreateFrom.JieChu)
-                //{
-
-                //}
-                //else
-                //{
-                //    existing.changeByOther(HoleCreateFrom.Pillar);
-                //}
 
                 return returnHole ? existing : null;
             }
@@ -760,14 +599,12 @@ namespace JwShapeCommon
             return returnHole ? hh : null;
         }
 
-
         /// <summary>
         /// 2025年4月25日 针对J 记录偏差位置 方便查询下方打连接孔
         /// </summary>
         /// <param name="beam"></param>
         /// <param name="location"></param>
-        /// <param name="createFrom"></param>
-        /// <param name="locationcenter"></param>
+        /// <param name="pccenter"></param>
         /// <param name="isStart"></param>
         /// <param name="isEnd"></param>
         public static void AddAnyHole(this JwBeam beam, JWPoint location, double pccenter = 0, bool isStart = false, bool isEnd = false)
@@ -779,33 +616,14 @@ namespace JwShapeCommon
                 if (fh == null)
                 {
                     hh = new JwHole(location, HoleCreateFrom.FengeJ, location, isStart, isEnd);
-                    //if (beam.DirectionType == BeamDirectionType.Horizontal)
-                    //{
-                    //    hh.HoleCenter = location.X;
-                    //}
-                    //if (beam.DirectionType == BeamDirectionType.Vertical)
-                    //{
-                    //    hh.HoleCenter = location.Y;
-                    //}
-                    hh.HoleCenter = pccenter;//2025年6月24日 根据此判断
+                    hh.HoleCenter = pccenter;
                     beam.Holes.Add(hh);
                 }
                 else
                 {
-
                     hh = new JwHole(location, HoleCreateFrom.FengeJ, location, isStart, isEnd);
-                    //if (beam.DirectionType == BeamDirectionType.Horizontal)
-                    //{
-                    //    hh.HoleCenter = location.X;
-                    //}
-                    //if (beam.DirectionType == BeamDirectionType.Vertical)
-                    //{
-                    //    hh.HoleCenter = location.Y;
-                    //}
                     hh.HoleCenter = pccenter;
                     beam.Holes.Add(hh);
-                    //fh.changeByOther(HoleCreateFrom.FengeJ);
-
                 }
             }
             else
@@ -1004,11 +822,6 @@ namespace JwShapeCommon
             return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
         }
 
-        public static double Distancewithscale(JWPoint p1, JWPoint p2)
-        {
-            return Math.Sqrt(Math.Pow(p1.X * JwFileConsts.JwScale - p2.X * JwFileConsts.JwScale, 2) + Math.Pow(p1.Y * JwFileConsts.JwScale - p2.Y + JwFileConsts.JwScale, 2));
-        }
-
         // 判断点是否在直线上
         public static bool LineContainsPoint(JwXian line, JWPoint point)
         {
@@ -1035,13 +848,10 @@ namespace JwShapeCommon
             // 旋转公式
             double rotatedX = point.X * Math.Cos(angleRadians) - point.Y * Math.Sin(angleRadians);
             double rotatedY = point.X * Math.Sin(angleRadians) + point.Y * Math.Cos(angleRadians);
-            //double rotatedX = Math.Round(point.X,2) * Math.Cos(angleRadians) - point.Y * Math.Sin(angleRadians);
-            //double rotatedY = Math.Round(point.X,2) * Math.Sin(angleRadians) + point.Y * Math.Cos(angleRadians);
 
             // 平移
             double newX = rotatedX * xb + block.m_DPKijunTen_x;
             double newY = rotatedY * yb + block.m_DPKijunTen_y;
-            //return new JWPoint(Math.Round(newX,6), Math.Round(newY,6));
             return new JWPoint(newX, newY);
         }
 
@@ -1067,7 +877,6 @@ namespace JwShapeCommon
         {
             return new JWPoint(point.X, point.Y);
         }
-
 
         public static bool DoubleEqual(double a, double b)
         {
@@ -1134,7 +943,6 @@ namespace JwShapeCommon
             return false;
         }
 
-
         public static readonly char[] Letters =
 {
     'A','B','C','D','E','F','G','H',
@@ -1163,7 +971,6 @@ namespace JwShapeCommon
         public static JWPoint GetArcEndPoint(JWPoint center, double radius, double startDeg, double sweepDeg)
         {
             double endDeg = startDeg + sweepDeg;
-            //double rad = endDeg * (Math.PI / 180.0);
 
             double x = center.X + radius * Math.Cos(endDeg);
             double y = center.Y + radius * Math.Sin(endDeg);
@@ -1178,8 +985,6 @@ namespace JwShapeCommon
         /// <returns></returns>
         public static System.Drawing.PointF ToChangeCoordinate(this JWPoint point, double zoom, double axisx, double axisy)
         {
-            //Y = y - Y;
-            //X = X + x;
             var x = point.X * zoom + axisx;
             var y = axisy - point.Y * zoom;
             return new System.Drawing.PointF((float)x, (float)y);
