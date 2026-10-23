@@ -450,6 +450,16 @@ namespace JwShapeCommon
         }
 
 
+        /// <summary>
+        /// 2026年10月23日 
+        /// 第一遍 qiegestart fasle qiegeend 为true
+        /// 如果qiegeend为fasle
+        /// </summary>
+        /// <param name="parenbeam"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="qiegestart"></param>
+        /// <param name="qiegeend"></param>
         public JwBeam(JwBeam parenbeam,double start,double end,bool qiegestart,bool qiegeend)
         {
             Id = Guid.NewGuid().ToString();
@@ -693,6 +703,8 @@ namespace JwShapeCommon
 
         /// <summary>
         /// jwmian里的point是经过极角排序后的
+        /// 2026年10月23日 在此处 处理默认B端的结束中心点位置
+        /// 2026年10月21日 梁符号不对的情况因为在处理垂直的结束中心点 应该减 不应该加
         /// </summary>
         /// <param name="mian"></param>
         /// <param name="frompoints"></param>
@@ -722,7 +734,7 @@ namespace JwShapeCommon
                 BottomLeft = points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First().Jiangjingdu();
                 BottomRight = points.OrderByDescending(t => t.X).ThenBy(t => t.Y).First().Jiangjingdu();
                 StartCenter = Math.Round((TopLeft.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
-                EndCenter = Math.Round((TopRight.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                EndCenter = Math.Round((TopRight.X - (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 Center = CenterPoint.Y;
             }
             //默认起始 梁起 +50 终-50 /除去scale
@@ -736,7 +748,7 @@ namespace JwShapeCommon
                 BottomLeft = points.OrderBy(t => t.X).ThenBy(t => t.Y).ToList().First().Jiangjingdu();
                 BottomRight = points.OrderByDescending(t => t.X).ThenBy(t => t.Y).First().Jiangjingdu();
                 StartCenter = Math.Round((BottomLeft.Y + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
-                EndCenter = Math.Round((TopLeft.Y + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                EndCenter = Math.Round((TopLeft.Y - (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 Center = CenterPoint.X;
             }
             else
@@ -810,7 +822,7 @@ namespace JwShapeCommon
                 
                 DirectionType = BeamDirectionType.Horizontal;
                 StartCenter = Math.Round((TopLeft.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
-                EndCenter = Math.Round((TopRight.X + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                EndCenter = Math.Round((TopRight.X - (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 Center = CenterPoint.Y;
             }
             else if(Jiaodu==90)
@@ -831,7 +843,7 @@ namespace JwShapeCommon
                 Width = Math.Round(main.Height * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 DirectionType = BeamDirectionType.Vertical;
                 StartCenter = Math.Round((BottomLeft.Y + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
-                EndCenter = Math.Round((TopLeft.Y + (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
+                EndCenter = Math.Round((TopLeft.Y - (50 / JwFileConsts.JwScale)) * JwFileConsts.JwScale, JwFileConsts.JiangjingduInt - 2) / JwFileConsts.JwScale;
                 Center = CenterPoint.X;
             }
             //else if(Jiaodu<90)
