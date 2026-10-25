@@ -4122,8 +4122,10 @@ namespace JwShapeCommon
                             //2026年7月18日
                             endhole = l.JwHoleG.AppendHole(true, l.WinnerBeam);
                             endhole.Beam = l.WinnerBeam;
+
                             //endhole.Direct = endtype;
                             endhole.IsPairedChanged = false;
+                            l.WinnerBeam.Holes.Add(endhole);
                             if(l.WinnerBeam.IsParentBeam)
                             {
                                 var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
