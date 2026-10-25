@@ -2305,10 +2305,19 @@ namespace JwShapeCommon
                         }
                         nb.ParentBeam = beam;
 
-                        //if(qieges.Contains(startx))
-                        //{
-                        //    nb.HasQiegeStart = true;
-                        //}
+                        if (!qieges.Contains(startx))
+                        {
+                            var m = nb.BeamTouchs.Min(t => t.BFCenter);
+                            var fxt = zlst.Find(t => Math.Round(t.BFCenter, 2) < Math.Round(m, 2) && t.BFCenter > Math.Round(startx, 2));
+                            if (ft != null)
+                            {
+                                ft.QiegeZu = qiegeZu;
+                                ft.HasQiege = true;
+                                ft.WinnerBeam = nb;
+                                nb.BeamTouchs.Add(ft);
+                            }
+
+                        }
 
 
                         startx = endx;
@@ -2323,7 +2332,7 @@ namespace JwShapeCommon
                         pres.AJwBeam = edp;
                     }
                     edp.BeamCode = beam.BeamCode + "-" + (beam.QieGePoints.Count + 1).ToString();
-                    var ql = zlst.Where(t => t.BFCenter > startx && t.BFCenter < endright).ToList();
+                    var ql = zlst.Where(t => t.BFCenter >Math.Round(edp.StartCenter,2) && t.BFCenter < endright).ToList();
                     edp.BeamTouchs.AddRange(ql);
                     edp.BeamTouchs.ForEach(t => t.WinnerBeam = edp);
                     relst.Add(edp);
@@ -2351,10 +2360,25 @@ namespace JwShapeCommon
                             pre.AJwBeam = nb;
                         }
                         beam.jwQiegeZus.Add(qiegeZu);
-                        var qll = zlst.Where(t => t.BFCenter > starty && t.BFCenter < endy).ToList();
+                        var qll = zlst.Where(t => t.BFCenter > Math.Round(nb.StartCenter,2) && t.BFCenter < Math.Round(nb.EndCenter, 2)).ToList();
                         
                         nb.BeamTouchs.AddRange(qll);
                         nb.BeamTouchs.ForEach(t=>t.WinnerBeam= nb);
+
+                        if (!qieges.Contains(starty))
+                        {
+                            var m = nb.BeamTouchs.Min(t => t.BFCenter);
+                            var ft= zlst.Find(t => Math.Round(t.BFCenter, 2) < Math.Round(m, 2)&&t.BFCenter>Math.Round(starty,2));
+                            if (ft != null)
+                            {
+                                ft.QiegeZu = qiegeZu;
+                                ft.HasQiege = true;
+                                ft.WinnerBeam= nb;
+                                nb.BeamTouchs.Add(ft);
+                            }
+                        }
+
+
                         relst.Add(nb);
 
                         starty = endy;
@@ -2367,8 +2391,8 @@ namespace JwShapeCommon
                     {
                         pres.AJwBeam = endbeam;
                     }
-                    var ql = zlst.Where(t => t.BFCenter > starty && t.BFCenter < endtop).ToList();
-                    ql.ForEach(t=>t.WinnerBeam=endbeam);
+                    var ql = zlst.Where(t => t.BFCenter > Math.Round(endbeam.StartCenter,2) && t.BFCenter < Math.Round(endtop, 2)).ToList();
+                    //ql.ForEach(t=>t.WinnerBeam=endbeam);
                     endbeam.BeamTouchs.AddRange(ql);
                     endbeam.BeamTouchs.ForEach(t => t.WinnerBeam = endbeam);
                     relst.Add(endbeam);
