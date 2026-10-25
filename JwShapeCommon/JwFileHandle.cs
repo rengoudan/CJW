@@ -3976,15 +3976,19 @@ namespace JwShapeCommon
                             //starthole.Direct = starttype;
                             starthole.IsPairedChanged = false;
                             f.WinnerBeam.Holes.Add(starthole);
-                            var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
-                            if (ff != null)
+                            if (f.WinnerBeam.IsParentBeam)
                             {
-                                //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.AJwBeam.holesorder();
-                                ff.AJwBeam.Holes.First().HasBhLinkHole = true;
-                                //2026年7月18日
-                                ff.AJwBeam.Holes.Add(starthole);
+                                var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
+                                if (ff != null)
+                                {
+                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                                    ff.AJwBeam.holesorder();
+                                    ff.AJwBeam.Holes.First().HasBhLinkHole = true;
+                                    //2026年7月18日
+                                    ff.AJwBeam.Holes.Add(starthole);
+                                }
                             }
+                            
                         }
                         else
                         {
@@ -3996,14 +4000,19 @@ namespace JwShapeCommon
                             starthole = f.JwHoleG.AppendHole(true, f.WinnerBeam);
                             starthole.Beam = f.WinnerBeam;
                             f.WinnerBeam.Holes.Add(starthole);
-                            var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
-                            if (ff != null)
+                            
+                            if (f.WinnerBeam.IsParentBeam)
                             {
-                                //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.Last().HasPreLinkHole = true;//2026年7月18日
-                                ff.RJwBeam.Holes.Add(starthole);
+                                var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
+                                if (ff != null)
+                                {
+                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                                    ff.RJwBeam.holesorder();
+                                    ff.RJwBeam.Holes.Last().HasPreLinkHole = true;//2026年7月18日
+                                    ff.RJwBeam.Holes.Add(starthole);
+                                }
                             }
+                            
                         }
                     }
                     if(l.WinnerBeam.DirectionType==BeamDirectionType.Horizontal)
@@ -4089,13 +4098,17 @@ namespace JwShapeCommon
                             //endhole.Direct = endtype;
                             endhole.IsPairedChanged = false;
                             l.WinnerBeam.Holes.Add(endhole);
-                            var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
-                            if (ff != null)
+                            if (l.WinnerBeam.IsParentBeam)
                             {
-                                //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.AJwBeam.holesorder();
-                                ff.AJwBeam.Holes.First().HasBhLinkHole = true;
-                                ff.AJwBeam.Holes.Add(endhole);
+                                var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                                if (ff != null)
+                                {
+                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                                    ff.AJwBeam.holesorder();
+                                    ff.AJwBeam.Holes.First().HasBhLinkHole = true;
+                                    ff.AJwBeam.Holes.Add(endhole);
+                                }
+
                             }
 
                         }
@@ -4105,20 +4118,25 @@ namespace JwShapeCommon
                             endrealy = l.LoserBeam.Center - pinyi;
                             
                             l.JwHoleG.HasPreLinkHole = true;
-                            var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                            
                             //2026年7月18日
                             endhole = l.JwHoleG.AppendHole(true, l.WinnerBeam);
                             endhole.Beam = l.WinnerBeam;
                             //endhole.Direct = endtype;
                             endhole.IsPairedChanged = false;
-                            l.WinnerBeam.Holes.Add(endhole);
-                            if (ff != null)
+                            if(l.WinnerBeam.IsParentBeam)
                             {
-                                //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                ff.RJwBeam.holesorder();
-                                ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
-                                ff.RJwBeam.Holes.Add(endhole);
+                                var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                                l.WinnerBeam.Holes.Add(endhole);
+                                if (ff != null)
+                                {
+                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                                    ff.RJwBeam.holesorder();
+                                    ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                                    ff.RJwBeam.Holes.Add(endhole);
+                                }
                             }
+                            
                         }
                     }
                     jwLianjieSingle.Start = new JwPointBeam

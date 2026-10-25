@@ -449,7 +449,15 @@ namespace JwShapeCommon
 
         }
 
-
+        /// <summary>
+        /// 切割beam生成
+        /// 借用hasqiegestart 和end 对touch进行删选
+        /// </summary>
+        /// <param name="parenbeam"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="qiegestart"></param>
+        /// <param name="qiegeend"></param>
         public JwBeam(JwBeam parenbeam,double start,double end,bool qiegestart,bool qiegeend)
         {
             Id = Guid.NewGuid().ToString();
@@ -647,7 +655,7 @@ namespace JwShapeCommon
             jbb.Directed = TaggDirect.Up;
             jbb.GouJianType = GouJianType.BG;
             jbb.BujianName = "BG";
-            var bflst = parenbeam.Baifangs.Where(t => t.Center >= start && t.Center <= end).ToList();
+            var bflst = parenbeam.Baifangs.Where(t => t.Center >= Math.Round(start,2) && t.Center <= Math.Round(end,2)).ToList();
             this.Baifangs.AddRange(bflst);
         }
 
@@ -2280,7 +2288,7 @@ namespace JwShapeCommon
                         beam.jwQiegeZus.Add(qiegeZu);
                         int t = i + 1;
                         nb.BeamCode = beam.BeamCode + "-" + t.ToString();
-                        var qll = zlst.Where(t => t.BFCenter > startx && t.BFCenter < endx).ToList();
+                        var qll = zlst.Where(t => t.BFCenter > Math.Round(nb.StartCenter,2) && t.BFCenter < Math.Round(nb.EndCenter,2)).ToList();
                         
                         nb.BeamTouchs.AddRange(qll);
                         nb.BeamTouchs.ForEach(t => t.WinnerBeam = nb);
@@ -2292,6 +2300,13 @@ namespace JwShapeCommon
                             ft.HasQiege = true;
                         }
                         nb.ParentBeam = beam;
+
+                        //if(qieges.Contains(startx))
+                        //{
+                        //    nb.HasQiegeStart = true;
+                        //}
+
+
                         startx = endx;
 
                     }
