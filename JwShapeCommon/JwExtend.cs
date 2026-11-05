@@ -968,6 +968,26 @@ namespace JwShapeCommon
             return new string(chars.ToArray());
         }
 
+        public static string GetSuffixK(int index)
+        {
+            // index 从 0 开始：0=A, 1=B...
+            int baseN = Letters.Length;
+            List<char> chars = new List<char>();
+
+            //index++; // 让 0 对应 A，而不是空
+
+            while (index > 0)
+            {
+                index--;
+                chars.Add(Letters[index % baseN]);
+                index /= baseN;
+            }
+
+            chars.Reverse();
+            return new string(chars.ToArray());
+        }
+
+
         public static JWPoint GetArcEndPoint(JWPoint center, double radius, double startDeg, double sweepDeg)
         {
             double endDeg = startDeg + sweepDeg;

@@ -3430,7 +3430,15 @@ namespace JwShapeCommon
                             //    //code += GetSuffix(i - 1);
                             //    code += JwExtend.GetSuffix(i - 1);
                             //}
-                            code += JwExtend.GetSuffix(i);
+                            if (code.Contains("+"))
+                            {
+                                code += JwExtend.GetSuffixK(i);
+                            }
+                            else
+                            {
+                                code += JwExtend.GetSuffix(i);
+                            }
+                                
 
                             foreach (var b in subGroups[i])
                                 b.BeamCode = code;
