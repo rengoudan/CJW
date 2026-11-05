@@ -3418,21 +3418,30 @@ namespace JwShapeCommon
                     {
                         basecode = basecode[..^1];
                     }
-                    for (int i=0;i<subGroups.Count;i++)
+                    if (subGroups.Count > 1)
                     {
-                        
-                        string code = basecode ;
+                        for (int i = 0; i < subGroups.Count; i++)
+                        {
 
-                        //if (i > 0)
-                        //{
-                        //    //code += GetSuffix(i - 1);
-                        //    code += JwExtend.GetSuffix(i - 1);
-                        //}
-                        code += JwExtend.GetSuffix(i);
+                            string code = basecode;
 
-                        foreach (var b in subGroups[i])
-                            b.BeamCode = code;
+                            //if (i > 0)
+                            //{
+                            //    //code += GetSuffix(i - 1);
+                            //    code += JwExtend.GetSuffix(i - 1);
+                            //}
+                            code += JwExtend.GetSuffix(i);
+
+                            foreach (var b in subGroups[i])
+                                b.BeamCode = code;
+                        }
                     }
+                    else
+                    {
+                        foreach (var b in subGroups[0])
+                            b.BeamCode = basecode;
+                    }
+                        
                 }
             }
         }
