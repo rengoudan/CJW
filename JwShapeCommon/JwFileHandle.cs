@@ -3317,11 +3317,11 @@ namespace JwShapeCommon
                     b.Height = Math.Round(wd, 2);
                 }
                 double xcd = 0;
-                foreach(var c in b.jwBeamMarks)
-                {
-                    xcd= xcd+(c.HasError ? c.PreCenterCorrect : c.PreCenterDistance);
-                }
-
+                //foreach(var c in b.jwBeamMarks)
+                //{
+                //    xcd= xcd+(c.HasError ? c.PreCenterCorrect : c.PreCenterDistance);
+                //}
+                xcd = b.EndCenter - b.StartCenter;
                 var s = b.StartTelosType == KongzuType.Center ? "B" : b.StartTelosType.ToString();
                 var e = b.EndTelosType == KongzuType.Center ? "B" : b.EndTelosType.ToString();
                 b.XXLength =Math.Round( Math.Round(xcd, 2) * JwFileConsts.JwScale,0);
