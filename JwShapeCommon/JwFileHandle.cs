@@ -3845,7 +3845,7 @@ namespace JwShapeCommon
             {
                 jwLianjie.GroupId = jwChengduiXian.GroupId;
                 LianjieSingles.Add(jwLianjie);
-                maxlg=Math.Max(maxlg, jwLianjie.Length);
+                //maxlg=Math.Max(maxlg, jwLianjie.Length);
 
             }
             JwLianjieSingle jwLianjies = findBeam3(jwChengduiXian.XianTwo);
@@ -3853,10 +3853,16 @@ namespace JwShapeCommon
             {
                 jwLianjies.GroupId = jwChengduiXian.GroupId;
                 LianjieSingles.Add(jwLianjies);
-                maxlg = Math.Max(maxlg, jwLianjies.Length);
+                //maxlg = Math.Max(maxlg, jwLianjies.Length);
             }
-            jwLianjies.Length = maxlg;
-            jwLianjie.Length = maxlg;
+             if (Math.Abs(jwLianjies.Length - jwLianjie.Length) <= 30)
+{
+    var minLength = Math.Min(jwLianjies.Length, jwLianjie.Length);
+                jwLianjies.Length = minLength;
+                jwLianjie.Length = minLength;
+}
+            //jwLianjies.Length = maxlg;
+            //jwLianjie.Length = maxlg;
         }
 
         private void processCenterChengdui(JwChengduiXian jwChengduiXian)
@@ -3872,7 +3878,7 @@ namespace JwShapeCommon
             {
                 jwLianjie.GroupId = jwChengduiXian.GroupId;
                 LianjieSingles.Add(jwLianjie);
-                maxlg = Math.Max(maxlg, jwLianjie.Length);
+                //maxlg = Math.Max(maxlg, jwLianjie.Length);
             }
             JwLianjieSingle jwLianjie1= findCenter(jwChengduiXian.XianTwo);
 
@@ -3880,10 +3886,16 @@ namespace JwShapeCommon
             {
                 LianjieSingles.Add(jwLianjie1);
                 jwLianjie1.GroupId = jwChengduiXian.GroupId;
-                maxlg = Math.Max(maxlg, jwLianjie1.Length);
+                //maxlg = Math.Max(maxlg, jwLianjie1.Length);
             }
-            jwLianjie.Length = maxlg;
-            jwLianjie1.Length = maxlg;
+            if (Math.Abs(jwLianjie1.Length - jwLianjie.Length) <= 30)
+            {
+                var minLength = Math.Min(jwLianjie1.Length, jwLianjie.Length);
+                jwLianjie1.Length = minLength;
+                jwLianjie.Length = minLength;
+            }
+            //jwLianjie.Length = maxlg;
+            //jwLianjie1.Length = maxlg;
         }
 
         private void processCenterVPLChengdui(JwChengduiXian jwChengduiXian)
@@ -4610,13 +4622,14 @@ namespace JwShapeCommon
                 var h2 = ordered[i + 1];
 
                 double diff = Math.Abs(h2.HoleCenter - h1.HoleCenter);
-
+                if (diff != 0) { 
                 // 3. 差值小于 43 → 视为成对
                 if (diff < Math.Round(JwFileConsts.LianjieSpacing/JwFileConsts.JwScale,2))
                 {
                     h1.PairedHole = h2;
                     h2.PairedHole = h1;
                     result.Add((h1, h2));
+                }
                 }
             }
 
