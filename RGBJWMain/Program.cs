@@ -47,9 +47,13 @@ namespace RGBJWMain
 
                                 if (result == DialogResult.Yes)
                                 {
-                                    AutoUpdater.DownloadUpdate(updateArgs);
-                                    System.Threading.Thread.Sleep(3000);
-                                    Application.Exit();
+                                    //AutoUpdater.DownloadUpdate(updateArgs);
+                                    //System.Threading.Thread.Sleep(3000);
+                                    //Application.Exit();
+                                    if (AutoUpdater.DownloadUpdate(updateArgs))
+                                    {
+                                        Application.Exit();
+                                    }
                                 }
                                 else
                                 {

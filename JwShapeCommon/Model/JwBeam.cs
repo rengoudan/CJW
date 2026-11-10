@@ -2307,16 +2307,22 @@ namespace JwShapeCommon
 
                         if (!qieges.Contains(startx))
                         {
-                            var m = nb.BeamTouchs.Min(t => t.BFCenter);
-                            var fxt = zlst.Find(t => Math.Round(t.BFCenter, 2) < Math.Round(m, 2) && t.BFCenter > Math.Round(startx, 2));
-                            if (ft != null)
+                            if (nb.BeamTouchs!=null)
                             {
-                                ft.QiegeZu = qiegeZu;
-                                ft.HasQiege = true;
-                                ft.WinnerBeam = nb;
-                                nb.BeamTouchs.Add(ft);
-                            }
+                                if(nb.BeamTouchs.Count>0)
+                                {
+                                    var m = nb.BeamTouchs.Min(t => t.BFCenter);
+                                    var fxt = zlst.Find(t => Math.Round(t.BFCenter, 2) < Math.Round(m, 2) && t.BFCenter > Math.Round(startx, 2));
+                                    if (ft != null)
+                                    {
+                                        ft.QiegeZu = qiegeZu;
+                                        ft.HasQiege = true;
+                                        ft.WinnerBeam = nb;
+                                        nb.BeamTouchs.Add(ft);
+                                    }
 
+                                }
+                            }
                         }
 
 
