@@ -1167,7 +1167,7 @@ namespace JwShapeCommon
             endx.PreCenterDistance = Math.Round(endx.Coordinate - precb, 2);
             checkAddMark(endx);
 
-            XXLength = jwBeamMarks.Sum(m => m.PreCenterDistance);
+            //XXLength = jwBeamMarks.Sum(m => m.PreCenterDistance);
         }
 
         private void checkAddMark(JwBeamMarkPoint mark)
@@ -1460,10 +1460,16 @@ namespace JwShapeCommon
             
             if (jwHoleMachining.RealLocation < maxb && jwHoleMachining.RealLocation > minb)
             {
-                var z = JwHoleMachinings.Find(t => Math.Round(t.RealLocation, 2) == Math.Round(jwHoleMachining.RealLocation));
+                var z = JwHoleMachinings.Find(t => Math.Round(t.RealLocation, 2) == Math.Round(jwHoleMachining.RealLocation,2));
                 if (z == null)
                 {
                     this.JwHoleMachinings.Add(jwHoleMachining);
+                }
+                else
+                {
+                    z.HasLeft = z.HasLeft || jwHoleMachining.HasLeft;
+                    z.HasRight = z.HasRight || jwHoleMachining.HasRight;
+                    z.HasTop = z.HasTop || jwHoleMachining.HasTop;
                 }
             }
             

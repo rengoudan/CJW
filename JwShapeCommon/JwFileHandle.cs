@@ -1913,7 +1913,11 @@ namespace JwShapeCommon
                             {
                                 JwHoleData jhd = hd.ToData();
                                 jhd.JwBeamDataId = beamData.Id;
-
+                                //if (_holeDatas.Count(t => t.Id == jhd.Id) > 0)
+                                //{
+                                //    var ad = 112;
+                                //}
+                                    
                                 _holeDatas.Add(jhd);
                             }
                         }
@@ -3992,14 +3996,14 @@ namespace JwShapeCommon
                                 sf.Holes.Add(starthole);
                             }
                         }
-                        var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
-                            if (ff != null)
-                            {
-                                ff.AJwBeam.holesorder();
-                                ff.AJwBeam.Holes.First().HasBhLinkHole = true;
-                            //2026年7月18日
-                            ff.AJwBeam.Holes.Add(starthole);
-                        }
+                        //var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
+                        //    if (ff != null)
+                        //    {
+                        //        ff.AJwBeam.holesorder();
+                        //        ff.AJwBeam.Holes.First().HasBhLinkHole = true;
+                        //    //2026年7月18日
+                        //    ff.AJwBeam.Holes.Add(starthole);
+                        //}
                     }
                     else
                     {
@@ -4027,18 +4031,18 @@ namespace JwShapeCommon
                                     sf.Holes.Add(starthole);
                                 }
                             }
-                            if (f.WinnerBeam.IsParentBeam)
-                            {
-                                var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
-                                if (ff != null)
-                                {
-                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                    ff.AJwBeam.holesorder();
-                                    ff.AJwBeam.Holes.First().HasBhLinkHole = true;
-                                    //2026年7月18日
-                                    ff.AJwBeam.Holes.Add(starthole);
-                                }
-                            }
+                            //if (f.WinnerBeam.IsParentBeam)
+                            //{
+                            //    var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
+                            //    if (ff != null)
+                            //    {
+                            //        //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            //        ff.AJwBeam.holesorder();
+                            //        ff.AJwBeam.Holes.First().HasBhLinkHole = true;
+                            //        //2026年7月18日
+                            //        ff.AJwBeam.Holes.Add(starthole);
+                            //    }
+                            //}
                             
                         }
                         else
@@ -4061,17 +4065,17 @@ namespace JwShapeCommon
                                     sf.Holes.Add(starthole);
                                 }
                             }
-                            if (f.WinnerBeam.IsParentBeam)
-                            {
-                                var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
-                                if (ff != null)
-                                {
-                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                    ff.RJwBeam.holesorder();
-                                    ff.RJwBeam.Holes.Last().HasPreLinkHole = true;//2026年7月18日
-                                    ff.RJwBeam.Holes.Add(starthole);
-                                }
-                            }
+                            //if (f.WinnerBeam.IsParentBeam)
+                            //{
+                            //    var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
+                            //    if (ff != null)
+                            //    {
+                            //        //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            //        ff.RJwBeam.holesorder();
+                            //        ff.RJwBeam.Holes.Last().HasPreLinkHole = true;//2026年7月18日
+                            //        ff.RJwBeam.Holes.Add(starthole);
+                            //    }
+                            //}
                             
                         }
                     }
@@ -4112,14 +4116,14 @@ namespace JwShapeCommon
                                 sf.Holes.Add(endhole);
                             }
                         }
-                        var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
-                        if (ff != null)
-                        {
-                            //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                            ff.RJwBeam.holesorder();
-                            ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
-                            ff.RJwBeam.Holes.Add(endhole);
-                        }
+                        //var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                        //if (ff != null)
+                        //{
+                        //    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                        //    ff.RJwBeam.holesorder();
+                        //    ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                        //    ff.RJwBeam.Holes.Add(endhole);
+                        //}
                         //if (xian.Pone.X > xian.Ptwo.X)
                         //{
                         //    //垂直梁右侧
@@ -4178,18 +4182,18 @@ namespace JwShapeCommon
                                     sf.Holes.Add(endhole);
                                 }
                             }
-                            if (l.WinnerBeam.IsParentBeam)
-                            {
-                                var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
-                                if (ff != null)
-                                {
-                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                    ff.AJwBeam.holesorder();
-                                    ff.AJwBeam.Holes.First().HasBhLinkHole = true;
-                                    ff.AJwBeam.Holes.Add(endhole);
-                                }
+                            //if (l.WinnerBeam.IsParentBeam)
+                            //{
+                            //    var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                            //    if (ff != null)
+                            //    {
+                            //        //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            //        ff.AJwBeam.holesorder();
+                            //        ff.AJwBeam.Holes.First().HasBhLinkHole = true;
+                            //        ff.AJwBeam.Holes.Add(endhole);
+                            //    }
 
-                            }
+                            //}
 
                         }
                         else
@@ -4216,18 +4220,18 @@ namespace JwShapeCommon
                                     sf.Holes.Add(endhole);
                                 }
                             }
-                            if (l.WinnerBeam.IsParentBeam)
-                            {
-                                var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
-                                l.WinnerBeam.Holes.Add(endhole);
-                                if (ff != null)
-                                {
-                                    //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
-                                    ff.RJwBeam.holesorder();
-                                    ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
-                                    ff.RJwBeam.Holes.Add(endhole);
-                                }
-                            }
+                            //if (l.WinnerBeam.IsParentBeam)
+                            //{
+                            //    var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
+                            //    l.WinnerBeam.Holes.Add(endhole);
+                            //    if (ff != null)
+                            //    {
+                            //        //f.RJwBeam.EndSide.KongZu.HasPreLinkHole = true;
+                            //        ff.RJwBeam.holesorder();
+                            //        ff.RJwBeam.Holes.Last().HasPreLinkHole = true;
+                            //        ff.RJwBeam.Holes.Add(endhole);
+                            //    }
+                            //}
                             
                         }
                     }
