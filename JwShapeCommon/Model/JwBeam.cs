@@ -1238,8 +1238,8 @@ namespace JwShapeCommon
                     Id = Guid.NewGuid().ToString(),
                     RelativeStartDistance = Math.Round((holerealleft - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = holerealleft,
-                    HasLeft = hole.HasTop,
-                    HasRight = hole.HasBottom,
+                    HasLeft = hole.HasBottom,
+                    HasRight = hole.HasTop,
                     HasTop = hole.HasCenter,
                     HoleCreateFrom = hole.FirstCreateFrom
                 };
@@ -1249,8 +1249,8 @@ namespace JwShapeCommon
                     Id = Guid.NewGuid().ToString(),
                     RelativeStartDistance = Math.Round((holerealright - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = holerealright,
-                    HasLeft = hole.HasTop,
-                    HasRight = hole.HasBottom,
+                    HasLeft = hole.HasBottom,
+                    HasRight = hole.HasTop,
                     HasTop = hole.HasCenter,
                     HoleCreateFrom = hole.FirstCreateFrom
                 };
@@ -1260,8 +1260,8 @@ namespace JwShapeCommon
                     Id = Guid.NewGuid().ToString(),
                     RelativeStartDistance = Math.Round((location - ks), 2) * JwFileConsts.JwScale,
                     RealLocation = location,
-                    HasLeft = hole.HasTop,
-                    HasRight = hole.HasBottom,
+                    HasLeft = hole.HasBottom,
+                    HasRight = hole.HasTop,
                     HasTop = hole.HasCenter,
                     HoleCreateFrom = hole.FirstCreateFrom
                 };
@@ -1439,6 +1439,7 @@ namespace JwShapeCommon
 
         /// <summary>
         /// 导出加工csv
+        /// 右上  左下
         /// </summary>
         /// <returns></returns>
         public string ToProcessCsv()
@@ -1741,6 +1742,11 @@ namespace JwShapeCommon
             return enko;
         }
 
+        /// <summary>
+        /// 单独梁显示 也采用此方法
+        /// left对应 实际的bottom right对应实际的top？？
+        /// </summary>
+        /// <returns></returns>
         public List<JwwData> DrawToJwwwSingle()
         {
             if(this.DirectionType!=BeamDirectionType.QingXie)
