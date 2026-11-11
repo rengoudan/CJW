@@ -132,9 +132,9 @@ namespace JwShapeCommon.Model
                     KongNum = 4;
                     break;
                 case HoleCreateFrom.AddedHole:
-                    HasCenter = false;
+                    HasCenter = true;
                     HasTop = true;
-                    HasBottom = false;
+                    HasBottom = true;
                     KongNum = 2;
                     HoleType = KongzuType.AddedHole;
                     IsFromPillar = false;

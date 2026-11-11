@@ -16,6 +16,7 @@ using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using static System.Windows.Forms.AxHost;
 
 namespace JwShapeCommon
@@ -1164,12 +1165,32 @@ namespace JwShapeCommon
 
             endx.PreBeamStartDistance = Math.Round(endx.Coordinate - sb, 2);
             endx.PreCenterDistance = Math.Round(endx.Coordinate - precb, 2);
-            jwBeamMarks.Add(endx);
+            checkAddMark(endx);
 
             XXLength = jwBeamMarks.Sum(m => m.PreCenterDistance);
         }
 
-
+        private void checkAddMark(JwBeamMarkPoint mark)
+        {
+            var maxb = this.EndCenter;
+            var minb = this.StartCenter;
+            if (StartTelosType == KongzuType.B)
+            {
+                minb = minb - 50 / JwFileConsts.JwScale;
+            }
+            if (EndTelosType == KongzuType.B)
+            {
+                maxb = maxb + 50 / JwFileConsts.JwScale;
+            }
+            if (mark.Coordinate <= maxb && mark.Coordinate >= minb)
+            {
+                var z = this.jwBeamMarks.Find(t => Math.Round(t.Coordinate, 2) == Math.Round(mark.Coordinate, 2));
+                if (z == null)
+                {
+                    this.jwBeamMarks.Add(mark);
+                }
+            }
+        }
 
         /// <summary>
         /// 记录加工点位信息
@@ -1191,47 +1212,47 @@ namespace JwShapeCommon
                 var holerealright = location + wc;
                 //处理加工点位-存在链接点 仅bottom增加 bottom对应 加工的right 还是left 需要确认 目前认定left
 
-                var singleleft = Math.Round((location - (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
-                JwHoleMachining preleft = new JwHoleMachining
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    RelativeStartDistance = Math.Round((singleleft - ks), 2) * JwFileConsts.JwScale,
-                    RealLocation = singleleft,
-                    HasLeft = true,
-                    HoleCreateFrom = hole.FirstCreateFrom
-                };
+                //var singleleft = Math.Round((location - (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
+                //JwHoleMachining preleft = new JwHoleMachining
+                //{
+                //    Id = Guid.NewGuid().ToString(),
+                //    RelativeStartDistance = Math.Round((singleleft - ks), 2) * JwFileConsts.JwScale,
+                //    RealLocation = singleleft,
+                //    HasLeft = true,
+                //    HoleCreateFrom = hole.FirstCreateFrom
+                //};
                 
-                //JwHoleMachinings.Add(preleft);
-                var singleright = Math.Round((location + (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
-                JwHoleMachining preright = new JwHoleMachining
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    RelativeStartDistance = Math.Round((singleright - ks), 2) * JwFileConsts.JwScale,
-                    RealLocation = singleright,
-                    HasLeft = true,
-                    HoleCreateFrom = hole.FirstCreateFrom
-                };
+                ////JwHoleMachinings.Add(preleft);
+                //var singleright = Math.Round((location + (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
+                //JwHoleMachining preright = new JwHoleMachining
+                //{
+                //    Id = Guid.NewGuid().ToString(),
+                //    RelativeStartDistance = Math.Round((singleright - ks), 2) * JwFileConsts.JwScale,
+                //    RealLocation = singleright,
+                //    HasLeft = true,
+                //    HoleCreateFrom = hole.FirstCreateFrom
+                //};
                 
-                //JwHoleMachinings.Add(preright);
-                //处理加工点位-存在链接点 仅bottom增加
-                var weileft = Math.Round((location - (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
-                JwHoleMachining jwweileft = new JwHoleMachining
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    RelativeStartDistance = Math.Round((weileft - ks), 2) * JwFileConsts.JwScale,
-                    RealLocation = weileft,
-                    HasLeft = true,
-                    HoleCreateFrom = hole.FirstCreateFrom
-                };
-                var touright = Math.Round((location + (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
-                JwHoleMachining jwtouright = new JwHoleMachining
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    RelativeStartDistance = Math.Round((touright - ks), 2) * JwFileConsts.JwScale,
-                    RealLocation = touright,
-                    HasLeft = true,
-                    HoleCreateFrom = hole.FirstCreateFrom
-                };
+                ////JwHoleMachinings.Add(preright);
+                ////处理加工点位-存在链接点 仅bottom增加
+                //var weileft = Math.Round((location - (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
+                //JwHoleMachining jwweileft = new JwHoleMachining
+                //{
+                //    Id = Guid.NewGuid().ToString(),
+                //    RelativeStartDistance = Math.Round((weileft - ks), 2) * JwFileConsts.JwScale,
+                //    RealLocation = weileft,
+                //    HasLeft = true,
+                //    HoleCreateFrom = hole.FirstCreateFrom
+                //};
+                //var touright = Math.Round((location + (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
+                //JwHoleMachining jwtouright = new JwHoleMachining
+                //{
+                //    Id = Guid.NewGuid().ToString(),
+                //    RelativeStartDistance = Math.Round((touright - ks), 2) * JwFileConsts.JwScale,
+                //    RealLocation = touright,
+                //    HasLeft = true,
+                //    HoleCreateFrom = hole.FirstCreateFrom
+                //};
 
                 JwHoleMachining machiningleft = new JwHoleMachining
                 {
@@ -1282,8 +1303,10 @@ namespace JwShapeCommon
                 {
                     case KongzuType.BC:
                         //4孔
-                        JwHoleMachinings.Add(machiningleft);
-                        JwHoleMachinings.Add(machiningright);
+                        reifneedaddm(machiningleft);
+                        reifneedaddm(machiningright);
+                        //JwHoleMachinings.Add(machiningleft);
+                        //JwHoleMachinings.Add(machiningright);
                         //if (hole.HasBhLinkHole)
                         //{
                         //    //JwHoleMachinings.Add(preright);
@@ -1298,7 +1321,9 @@ namespace JwShapeCommon
                     case KongzuType.BP:
                         if (isstart)
                         {
-                            JwHoleMachinings.Add(machiningleft);
+                            //JwHoleMachinings.Add(machiningleft);
+                            reifneedaddm(machiningleft);
+                            
                             //if (hole.HasBhLinkHole)
                             //{
                             //    JwHoleMachinings.Add(jwtouright);
@@ -1307,7 +1332,8 @@ namespace JwShapeCommon
 
                         if (isend)
                         {
-                            JwHoleMachinings.Add(machiningright);
+                            reifneedaddm(machiningright);
+                            //JwHoleMachinings.Add(machiningright);
                             //if (hole.HasPreLinkHole)
                             //{
                             //    JwHoleMachinings.Add(jwweileft);
@@ -1315,7 +1341,8 @@ namespace JwShapeCommon
                         }
                         break;
                     case KongzuType.J:
-                        JwHoleMachinings.Add(machiningsingle);
+                        reifneedaddm(machiningsingle);
+                        //JwHoleMachinings.Add(machiningsingle);
                         //if (hole.HasBhLinkHole)
                         //{
                         //    JwHoleMachinings.Add(jwtouright);
@@ -1328,7 +1355,8 @@ namespace JwShapeCommon
                     case KongzuType.G:
                         machiningsingle.HasLeft = false;
                         machiningsingle.HasRight = false;
-                        JwHoleMachinings.Add(machiningsingle);
+                        reifneedaddm(machiningsingle);
+                        //JwHoleMachinings.Add(machiningsingle);
                        
                        
                        
@@ -1337,6 +1365,7 @@ namespace JwShapeCommon
                         {
                             if (this.BaiFangGTBDistance == BaiFangGTBDistanceType.A29)
                             {
+                                
                                 machiningsingletopbottomg.RealLocation = machiningsingle.RealLocation - 6 / JwFileConsts.JwScale;
                                 machiningsingletopbottomg.RelativeStartDistance = machiningsingle.RelativeStartDistance - 6 ;
 
@@ -1347,8 +1376,10 @@ namespace JwShapeCommon
                                 machiningsingletopbottomg.RelativeStartDistance = machiningsingle.RelativeStartDistance;
                             }
                             var addgbt = machiningsingletopbottomg.GTopBottomAddHole(true);
-                            JwHoleMachinings.Add(machiningsingletopbottomg);
-                            JwHoleMachinings.Add(addgbt);
+                            reifneedaddm(machiningsingletopbottomg);
+                            //JwHoleMachinings.Add(machiningsingletopbottomg);
+                            reifneedaddm(addgbt);
+                            //JwHoleMachinings.Add(addgbt);
                             //if (hole.HasBhLinkHole)
                             //{
                             //    JwHoleMachinings.Add(jwtouright);
@@ -1371,8 +1402,10 @@ namespace JwShapeCommon
                                 machiningsingletopbottomg.RelativeStartDistance = machiningsingle.RelativeStartDistance;
                             }
                                 var addgbt = machiningsingletopbottomg.GTopBottomAddHole(false);
-                            JwHoleMachinings.Add(machiningsingletopbottomg);
-                            JwHoleMachinings.Add(addgbt);
+                            reifneedaddm(machiningsingletopbottomg);
+                            reifneedaddm(addgbt);
+                            //JwHoleMachinings.Add(machiningsingletopbottomg);
+                            //JwHoleMachinings.Add(addgbt);
                             //if (hole.HasPreLinkHole)
                             //{
                             //    JwHoleMachinings.Add(jwweileft);
@@ -1383,7 +1416,8 @@ namespace JwShapeCommon
 
                         break;
                     case KongzuType.AddedHole:
-                        JwHoleMachinings.Add(machiningsingle);
+                        reifneedaddm(machiningsingle);
+                        //JwHoleMachinings.Add(machiningsingle);
                         //if (hole.HasBhLinkHole)
                         //{
                         //    JwHoleMachinings.Add(preright);
@@ -1394,8 +1428,10 @@ namespace JwShapeCommon
                         //}
                         break;
                     default:
-                        JwHoleMachinings.Add(machiningleft);
-                        JwHoleMachinings.Add(machiningright);
+                        //JwHoleMachinings.Add(machiningleft);
+                        //JwHoleMachinings.Add(machiningright);
+                        reifneedaddm(machiningleft);
+                        reifneedaddm(machiningright);
                         //if (hole.HasBhLinkHole)
                         //{
                         //    JwHoleMachinings.Add(preright);
@@ -1407,6 +1443,30 @@ namespace JwShapeCommon
                         break;
                 }
             }
+        }
+
+        private void reifneedaddm(JwHoleMachining jwHoleMachining)
+        {
+            var maxb = this.EndCenter;
+            var minb= this.StartCenter;
+            if (StartTelosType == KongzuType.B)
+            {
+                minb = minb - 50 / JwFileConsts.JwScale;
+            }
+            if (EndTelosType == KongzuType.B)
+            {
+                maxb = maxb + 50 / JwFileConsts.JwScale;
+            }
+            
+            if (jwHoleMachining.RealLocation < maxb && jwHoleMachining.RealLocation > minb)
+            {
+                var z = JwHoleMachinings.Find(t => Math.Round(t.RealLocation, 2) == Math.Round(jwHoleMachining.RealLocation));
+                if (z == null)
+                {
+                    this.JwHoleMachinings.Add(jwHoleMachining);
+                }
+            }
+            
         }
 
         /// <summary>
@@ -1431,7 +1491,8 @@ namespace JwShapeCommon
                     HasTop= false,
                     HoleCreateFrom = hole.FirstCreateFrom
                 };
-                JwHoleMachinings.Add(preleft);
+                //JwHoleMachinings.Add(preleft);
+                reifneedaddm(preleft);
             }
         }
 
@@ -2298,7 +2359,7 @@ namespace JwShapeCommon
                         beam.jwQiegeZus.Add(qiegeZu);
                         int t = i + 1;
                         nb.BeamCode = beam.BeamCode + "-" + t.ToString();
-                        var qll = zlst.Where(t => t.BFCenter > Math.Round(nb.StartCenter,2) && t.BFCenter < Math.Round(nb.EndCenter,2)).ToList();
+                        var qll = zlst.Where(t => Math.Round(t.BFCenter,2) > Math.Round(nb.StartCenter,2) && Math.Round(t.BFCenter,2) < Math.Round(nb.EndCenter,2)).ToList();
                         
                         nb.BeamTouchs.AddRange(qll);
                         nb.BeamTouchs.ForEach(t => t.WinnerBeam = nb);
@@ -2310,26 +2371,26 @@ namespace JwShapeCommon
                             ft.HasQiege = true;
                         }
                         nb.ParentBeam = beam;
+                        ///2026年11月11日  通过修改链接center 来处理 beam方式的同样需要修改
+                        //if (!qieges.Contains(startx))
+                        //{
+                        //    if (nb.BeamTouchs!=null)
+                        //    {
+                        //        if(nb.BeamTouchs.Count>0)
+                        //        {
+                        //            var m = nb.BeamTouchs.Min(t => t.BFCenter);
+                        //            var fxt = zlst.Find(t => Math.Round(t.BFCenter, 2) < Math.Round(m, 2) && t.BFCenter > Math.Round(startx, 2));
+                        //            if (ft != null)
+                        //            {
+                        //                ft.QiegeZu = qiegeZu;
+                        //                ft.HasQiege = true;
+                        //                ft.WinnerBeam = nb;
+                        //                nb.BeamTouchs.Add(ft);
+                        //            }
 
-                        if (!qieges.Contains(startx))
-                        {
-                            if (nb.BeamTouchs!=null)
-                            {
-                                if(nb.BeamTouchs.Count>0)
-                                {
-                                    var m = nb.BeamTouchs.Min(t => t.BFCenter);
-                                    var fxt = zlst.Find(t => Math.Round(t.BFCenter, 2) < Math.Round(m, 2) && t.BFCenter > Math.Round(startx, 2));
-                                    if (ft != null)
-                                    {
-                                        ft.QiegeZu = qiegeZu;
-                                        ft.HasQiege = true;
-                                        ft.WinnerBeam = nb;
-                                        nb.BeamTouchs.Add(ft);
-                                    }
-
-                                }
-                            }
-                        }
+                        //        }
+                        //    }
+                        //}
 
 
                         startx = endx;
@@ -2377,18 +2438,18 @@ namespace JwShapeCommon
                         nb.BeamTouchs.AddRange(qll);
                         nb.BeamTouchs.ForEach(t=>t.WinnerBeam= nb);
 
-                        if (!qieges.Contains(starty))
-                        {
-                            var m = nb.BeamTouchs.Min(t => t.BFCenter);
-                            var ft= zlst.Find(t => Math.Round(t.BFCenter, 2) < Math.Round(m, 2)&&t.BFCenter>Math.Round(starty,2));
-                            if (ft != null)
-                            {
-                                ft.QiegeZu = qiegeZu;
-                                ft.HasQiege = true;
-                                ft.WinnerBeam= nb;
-                                nb.BeamTouchs.Add(ft);
-                            }
-                        }
+                        //if (!qieges.Contains(starty))
+                        //{
+                        //    var m = nb.BeamTouchs.Min(t => t.BFCenter);
+                        //    var ft= zlst.Find(t => Math.Round(t.BFCenter, 2) < Math.Round(m, 2)&&t.BFCenter>Math.Round(starty,2));
+                        //    if (ft != null)
+                        //    {
+                        //        ft.QiegeZu = qiegeZu;
+                        //        ft.HasQiege = true;
+                        //        ft.WinnerBeam= nb;
+                        //        nb.BeamTouchs.Add(ft);
+                        //    }
+                        //}
 
 
                         relst.Add(nb);

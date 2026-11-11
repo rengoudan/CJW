@@ -3982,6 +3982,16 @@ namespace JwShapeCommon
                         //starthole.Direct=starttype;
                         starthole.IsPairedChanged = false;
                         f.WinnerBeam.Holes.Add(starthole);
+                        if (f.WinnerBeam.IsParentBeam)
+                        {
+                            var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == f.WinnerBeam.Id).ToList();
+                            var sf = clst.FirstOrDefault(t => t.Contains(starthole.Location));
+                            if (sf != null)
+                            {
+                                starthole.Beam = sf;
+                                sf.Holes.Add(starthole);
+                            }
+                        }
                         var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
                             if (ff != null)
                             {
@@ -4009,6 +4019,16 @@ namespace JwShapeCommon
                             f.WinnerBeam.Holes.Add(starthole);
                             if (f.WinnerBeam.IsParentBeam)
                             {
+                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == f.WinnerBeam.Id).ToList();
+                                var sf = clst.FirstOrDefault(t => t.Contains(starthole.Location));
+                                if (sf != null)
+                                {
+                                    starthole.Beam = sf;
+                                    sf.Holes.Add(starthole);
+                                }
+                            }
+                            if (f.WinnerBeam.IsParentBeam)
+                            {
                                 var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
                                 if (ff != null)
                                 {
@@ -4031,7 +4051,16 @@ namespace JwShapeCommon
                             starthole = f.JwHoleG.AppendHole(true, f.WinnerBeam);
                             starthole.Beam = f.WinnerBeam;
                             f.WinnerBeam.Holes.Add(starthole);
-                            
+                            if (f.WinnerBeam.IsParentBeam)
+                            {
+                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == f.WinnerBeam.Id).ToList();
+                                var sf = clst.FirstOrDefault(t => t.Contains(starthole.Location));
+                                if (sf != null)
+                                {
+                                    starthole.Beam = sf;
+                                    sf.Holes.Add(starthole);
+                                }
+                            }
                             if (f.WinnerBeam.IsParentBeam)
                             {
                                 var ff = f.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(f.LoserBeam.Center, 2));
@@ -4073,6 +4102,16 @@ namespace JwShapeCommon
                         //endhole.Direct = endtype;
                         endhole.IsPairedChanged = false;
                         l.WinnerBeam.Holes.Add(endhole);
+                        if (l.WinnerBeam.IsParentBeam)
+                        {
+                            var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == l.WinnerBeam.Id).ToList();
+                            var sf = clst.FirstOrDefault(t => t.Contains(endhole.Location));
+                            if (sf != null)
+                            {
+                                endhole.Beam = sf;
+                                sf.Holes.Add(endhole);
+                            }
+                        }
                         var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
                         if (ff != null)
                         {
@@ -4131,6 +4170,16 @@ namespace JwShapeCommon
                             l.WinnerBeam.Holes.Add(endhole);
                             if (l.WinnerBeam.IsParentBeam)
                             {
+                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == l.WinnerBeam.Id).ToList();
+                                var sf = clst.FirstOrDefault(t => t.Contains(endhole.Location));
+                                if (sf != null)
+                                {
+                                    endhole.Beam = sf;
+                                    sf.Holes.Add(endhole);
+                                }
+                            }
+                            if (l.WinnerBeam.IsParentBeam)
+                            {
                                 var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
                                 if (ff != null)
                                 {
@@ -4157,7 +4206,17 @@ namespace JwShapeCommon
                             //endhole.Direct = endtype;
                             endhole.IsPairedChanged = false;
                             l.WinnerBeam.Holes.Add(endhole);
-                            if(l.WinnerBeam.IsParentBeam)
+                            if (l.WinnerBeam.IsParentBeam)
+                            {
+                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == l.WinnerBeam.Id).ToList();
+                                var sf = clst.FirstOrDefault(t => t.Contains(endhole.Location));
+                                if (sf != null)
+                                {
+                                    endhole.Beam = sf;
+                                    sf.Holes.Add(endhole);
+                                }
+                            }
+                            if (l.WinnerBeam.IsParentBeam)
                             {
                                 var ff = l.WinnerBeam.jwQiegeZus.Find(t => Math.Round(t.Qiegezb, 2) == Math.Round(l.LoserBeam.Center, 2));
                                 l.WinnerBeam.Holes.Add(endhole);
