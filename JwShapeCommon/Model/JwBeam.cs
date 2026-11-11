@@ -1205,55 +1205,10 @@ namespace JwShapeCommon
         {
             if (hole != null)
             {
-
-
                 var wc = Math.Round((JwFileConsts.Kongjing / JwFileConsts.JwScale) / 2, 2);
                 var holerealleft = location - wc;
                 var holerealright = location + wc;
                 //处理加工点位-存在链接点 仅bottom增加 bottom对应 加工的right 还是left 需要确认 目前认定left
-
-                //var singleleft = Math.Round((location - (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
-                //JwHoleMachining preleft = new JwHoleMachining
-                //{
-                //    Id = Guid.NewGuid().ToString(),
-                //    RelativeStartDistance = Math.Round((singleleft - ks), 2) * JwFileConsts.JwScale,
-                //    RealLocation = singleleft,
-                //    HasLeft = true,
-                //    HoleCreateFrom = hole.FirstCreateFrom
-                //};
-                
-                ////JwHoleMachinings.Add(preleft);
-                //var singleright = Math.Round((location + (JwFileConsts.PianchaLianjieValue / JwFileConsts.JwScale)), 2);
-                //JwHoleMachining preright = new JwHoleMachining
-                //{
-                //    Id = Guid.NewGuid().ToString(),
-                //    RelativeStartDistance = Math.Round((singleright - ks), 2) * JwFileConsts.JwScale,
-                //    RealLocation = singleright,
-                //    HasLeft = true,
-                //    HoleCreateFrom = hole.FirstCreateFrom
-                //};
-                
-                ////JwHoleMachinings.Add(preright);
-                ////处理加工点位-存在链接点 仅bottom增加
-                //var weileft = Math.Round((location - (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
-                //JwHoleMachining jwweileft = new JwHoleMachining
-                //{
-                //    Id = Guid.NewGuid().ToString(),
-                //    RelativeStartDistance = Math.Round((weileft - ks), 2) * JwFileConsts.JwScale,
-                //    RealLocation = weileft,
-                //    HasLeft = true,
-                //    HoleCreateFrom = hole.FirstCreateFrom
-                //};
-                //var touright = Math.Round((location + (JwFileConsts.Kongjing / JwFileConsts.JwScale)), 2);
-                //JwHoleMachining jwtouright = new JwHoleMachining
-                //{
-                //    Id = Guid.NewGuid().ToString(),
-                //    RelativeStartDistance = Math.Round((touright - ks), 2) * JwFileConsts.JwScale,
-                //    RealLocation = touright,
-                //    HasLeft = true,
-                //    HoleCreateFrom = hole.FirstCreateFrom
-                //};
-
                 JwHoleMachining machiningleft = new JwHoleMachining
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -1305,61 +1260,27 @@ namespace JwShapeCommon
                         //4孔
                         reifneedaddm(machiningleft);
                         reifneedaddm(machiningright);
-                        //JwHoleMachinings.Add(machiningleft);
-                        //JwHoleMachinings.Add(machiningright);
-                        //if (hole.HasBhLinkHole)
-                        //{
-                        //    //JwHoleMachinings.Add(preright);
-                        //    JwHoleMachinings.Add(preright);
-                        //}
-                        //if (hole.HasPreLinkHole)
-                        //{
-                        //    //JwHoleMachinings.Add(preleft);
-                        //    JwHoleMachinings.Add(preleft);
-                        //}
+                       
                         break;
                     case KongzuType.BP:
                         if (isstart)
                         {
                             //JwHoleMachinings.Add(machiningleft);
                             reifneedaddm(machiningleft);
-                            
-                            //if (hole.HasBhLinkHole)
-                            //{
-                            //    JwHoleMachinings.Add(jwtouright);
-                            //}
                         }
 
                         if (isend)
                         {
                             reifneedaddm(machiningright);
-                            //JwHoleMachinings.Add(machiningright);
-                            //if (hole.HasPreLinkHole)
-                            //{
-                            //    JwHoleMachinings.Add(jwweileft);
-                            //}
                         }
                         break;
                     case KongzuType.J:
                         reifneedaddm(machiningsingle);
-                        //JwHoleMachinings.Add(machiningsingle);
-                        //if (hole.HasBhLinkHole)
-                        //{
-                        //    JwHoleMachinings.Add(jwtouright);
-                        //}
-                        //if (hole.HasPreLinkHole)
-                        //{
-                        //    JwHoleMachinings.Add(jwweileft);
-                        //}
                         break;
                     case KongzuType.G:
                         machiningsingle.HasLeft = false;
                         machiningsingle.HasRight = false;
                         reifneedaddm(machiningsingle);
-                        //JwHoleMachinings.Add(machiningsingle);
-                       
-                       
-                       
                         //2026年3月20日如果是开始 上下增加一组孔 x+offset
                         if (isstart)
                         {
@@ -1377,15 +1298,7 @@ namespace JwShapeCommon
                             }
                             var addgbt = machiningsingletopbottomg.GTopBottomAddHole(true);
                             reifneedaddm(machiningsingletopbottomg);
-                            //JwHoleMachinings.Add(machiningsingletopbottomg);
                             reifneedaddm(addgbt);
-                            //JwHoleMachinings.Add(addgbt);
-                            //if (hole.HasBhLinkHole)
-                            //{
-                            //    JwHoleMachinings.Add(jwtouright);
-                            //}
-                            //var addg = machiningsingle.GTopBottomAddHole(true);
-                            //JwHoleMachinings.Add(addg);
                         }
                         //2026年3月20日如果是开始 上下增加一组孔 x-offset
                         if (isend)
@@ -1404,42 +1317,17 @@ namespace JwShapeCommon
                                 var addgbt = machiningsingletopbottomg.GTopBottomAddHole(false);
                             reifneedaddm(machiningsingletopbottomg);
                             reifneedaddm(addgbt);
-                            //JwHoleMachinings.Add(machiningsingletopbottomg);
-                            //JwHoleMachinings.Add(addgbt);
-                            //if (hole.HasPreLinkHole)
-                            //{
-                            //    JwHoleMachinings.Add(jwweileft);
-                            //}
-                            //var addg = machiningsingle.GTopBottomAddHole(false);
-                            //JwHoleMachinings.Add(addg);
                         }
 
                         break;
                     case KongzuType.AddedHole:
                         reifneedaddm(machiningsingle);
-                        //JwHoleMachinings.Add(machiningsingle);
-                        //if (hole.HasBhLinkHole)
-                        //{
-                        //    JwHoleMachinings.Add(preright);
-                        //}
-                        //if (hole.HasPreLinkHole)
-                        //{
-                        //    JwHoleMachinings.Add(preleft);
-                        //}
                         break;
                     default:
                         //JwHoleMachinings.Add(machiningleft);
                         //JwHoleMachinings.Add(machiningright);
                         reifneedaddm(machiningleft);
                         reifneedaddm(machiningright);
-                        //if (hole.HasBhLinkHole)
-                        //{
-                        //    JwHoleMachinings.Add(preright);
-                        //}
-                        //if (hole.HasPreLinkHole)
-                        //{
-                        //    JwHoleMachinings.Add(preleft);
-                        //}
                         break;
                 }
             }
@@ -1578,13 +1466,14 @@ namespace JwShapeCommon
             return sb.ToString();
         }
 
-        public string ToProcessCsv(string jiebie,string fuhao)
+        public string ToProcessCsv(string jiebie,string fuhao,int xh)
         {
             if (this.HasCsv)
             {
+                var S = xh.ToString("D4");
                 StringBuilder sb = new StringBuilder();
                 sb.Append("START\r\n");
-                sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", this.GongQu, this.BeamCode, jiebie, "H-200x100x5.5x8", Length, "1"));
+                sb.Append(string.Format("{0},{1},{2},{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", xh.ToString("D4"), "H-", this.BeamCode, "", "H-200x100x5.5x8", Length, "1"));
                 sb.Append("0, 0, 0, , 0, 0\r\n");
                 var rights = JwHoleMachinings.Where(t => t.HasRight).OrderBy(t => t.RelativeStartDistance).ToList();
 
@@ -1593,9 +1482,24 @@ namespace JwShapeCommon
                 var tops = JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RelativeStartDistance).ToList();
                 double ry = JwFileConsts.Kongjing / 2;
                 ry = ry - JwFileConsts.CsvYTiaozheng;
+                
+                double cy = 100 - JwFileConsts.Kongjing / 2;
+                cy = cy + JwFileConsts.CsvYTiaozheng;
+                sb.Append("上面穴\r\n");
+                if (tops.Count > 0)
+                {
+                    
+                    foreach (var h in tops)
+                    {
+                        sb.Append(h.ToCsvString(cy));
+                        //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
+                    }
+                }
+                sb.Append("下面穴\r\n"); 
+                sb.Append("右面穴\r\n");
                 if (rights.Count > 0)
                 {
-                    sb.Append("右面穴\r\n");
+                    
                     foreach (var h in rights)
                     {
                         sb.Append(h.ToCsvString(-ry));
@@ -1603,24 +1507,13 @@ namespace JwShapeCommon
 
                     }
                 }
+                sb.Append("左面穴\r\n");
                 if (lefts.Count > 0)
                 {
-                    sb.Append("左面穴\r\n");
+                    
                     foreach (var h in lefts)
                     {
                         sb.Append(h.ToCsvString(-ry));
-                        //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-                    }
-                }
-
-                double cy = 100 - JwFileConsts.Kongjing / 2;
-                cy = cy + JwFileConsts.CsvYTiaozheng;
-                if (tops.Count > 0)
-                {
-                    sb.Append("上面穴\r\n");
-                    foreach (var h in tops)
-                    {
-                        sb.Append(h.ToCsvString(cy));
                         //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
                     }
                 }

@@ -719,10 +719,10 @@ namespace RGBControls.Controls
                     {
                         string fName = saveDataSend.FileName;   // 获取文件名
                                                                 // 参数1：写入文件的文件名；参数2：写入文件的内容
-                        byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(csvstr);
-                        bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
-                        string q = Encoding.Default.GetString(bs);
-                        System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+                        //byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(csvstr);
+                        //bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
+                        //string q = Encoding.Default.GetString(bs);
+                        System.IO.File.WriteAllText(fName, csvstr, Encoding.GetEncoding(932));   // 向文件中写入内容
                         AntdUI.Modal.open(new AntdUI.Modal.Config(this.ParentForm, "完了プロンプト", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
                         {
                             OnButtonStyle = (id, btn) =>

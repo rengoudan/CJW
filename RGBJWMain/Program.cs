@@ -29,45 +29,73 @@ namespace RGBJWMain
             // 创建一个隐藏窗体，用于处理更新逻辑
             using (Form tempForm = new Form { ShowInTaskbar = false, WindowState = FormWindowState.Minimized })
             {
+                bool updateFinished = false;
                 tempForm.Load += (s, e) =>
                 {
-                    AutoUpdater.CheckForUpdateEvent += (updateArgs) =>
+                    try
                     {
-                        tempForm.Invoke(new Action(() =>
+
+
+                        AutoUpdater.CheckForUpdateEvent += (updateArgs) =>
                         {
-                            string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RGBControls.dll");
-                            Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
-                            Version serverVersion = new Version(updateArgs.CurrentVersion);
-
-                            if (serverVersion > localDllVersion)
+                            updateFinished = true;
+                            tempForm.Invoke(new Action(() =>
                             {
-                                DialogResult result = MessageBox.Show(
-                                    $"新しいバージョンのDLLが見つかりました {serverVersion}，アップデート？\n\n",
-                            "アップデートのヒント", MessageBoxButtons.YesNo);
-
-                                if (result == DialogResult.Yes)
+                                if (!Version.TryParse(updateArgs.CurrentVersion, out Version? serverVersion))
                                 {
-                                    //AutoUpdater.DownloadUpdate(updateArgs);
-                                    //System.Threading.Thread.Sleep(3000);
-                                    //Application.Exit();
-                                    if (AutoUpdater.DownloadUpdate(updateArgs))
+                                    tempForm.Close();
+                                    return;
+                                }
+                                string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RGBControls.dll");
+                                Version localDllVersion = Assembly.LoadFrom(dllPath).GetName().Version;
+                                //Version serverVersion = new Version(updateArgs.CurrentVersion);
+
+                                if (serverVersion > localDllVersion)
+                                {
+                                    DialogResult result = MessageBox.Show(
+                                        $"新しいバージョンのDLLが見つかりました {serverVersion}，アップデート？\n\n",
+                                "アップデートのヒント", MessageBoxButtons.YesNo);
+
+                                    if (result == DialogResult.Yes)
                                     {
-                                        Application.Exit();
+                                        //AutoUpdater.DownloadUpdate(updateArgs);
+                                        //System.Threading.Thread.Sleep(3000);
+                                        //Application.Exit();
+                                        if (AutoUpdater.DownloadUpdate(updateArgs))
+                                        {
+                                            Application.Exit();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        tempForm.Close(); // 关闭临时窗体，继续启动主窗体
                                     }
                                 }
                                 else
                                 {
-                                    tempForm.Close(); // 关闭临时窗体，继续启动主窗体
+                                    tempForm.Close(); // 没有更新，继续启动主窗体
                                 }
-                            }
-                            else
-                            {
-                                tempForm.Close(); // 没有更新，继续启动主窗体
-                            }
-                        }));
-                    };
+                            }));
+                        };
 
-                    AutoUpdater.Start("https://www.rgballwin.com/zupdate.xml");
+                        AutoUpdater.Start("https://www.rgballwin.com/zupdate.xml");
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(6000);
+
+                            if (!updateFinished)
+                            {
+                                tempForm.Invoke(() =>
+                                {
+                                    tempForm.Close();
+                                });
+                            }
+                        });
+                    }
+                    catch
+                    {
+                        tempForm.Close();
+                    }
                 };
 
                 tempForm.ShowDialog(); // 用 ShowDialog 启动消息循环

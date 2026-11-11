@@ -169,11 +169,12 @@ namespace JwShapeCommon
             StringBuilder sb = new StringBuilder();
             sb.Append("CBF V2.0\r\n");
             //sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", "", "", "", "H-200x100x5.5x8", "", ""));
+            int i = 1;
             foreach (var item in Beams)
             {
                 
-                sb.Append(item.ToProcessCsv(JwProjectSubData.FloorName,JwProjectSubData.DefaultBeamXHName));
-                
+                sb.Append(item.ToProcessCsv(JwProjectSubData.FloorName,JwProjectSubData.DefaultBeamXHName,i));
+                i++;
             }
             //foreach (var item in ExcelSubDatas)
             //{
