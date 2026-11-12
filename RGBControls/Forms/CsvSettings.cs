@@ -26,18 +26,33 @@ namespace RGBControls.Forms
             this.Zxnum = config.Csv.Zxnum;
             this.Zxjianju=config.Csv.Zxjianju;
             this.Kongjing= config.Csv.Kongjing;
+            this.Ytiaozheng= config.Csv.Ytiaozheng;
             input1.Text = this.Hxnum.ToString();
             input2.Text = this.Hxjianju.ToString();
             input3.Text = this.Zxnum.ToString();
             input4.Text = this.Zxjianju.ToString();
             input5.Text = this.Kongjing.ToString();
+            uiDoubleUpDown1.Value = this.Ytiaozheng;
             input1.TextChanged += Input1_TextChanged;
             input2.TextChanged += Input2_TextChanged;
             input3.TextChanged += Input3_TextChanged;
             input4.TextChanged += Input4_TextChanged;
             
             input5.TextChanged += Input5_TextChanged;
+            uiDoubleUpDown1.ValueChanged += UiDoubleUpDown1_ValueChanged;
             //
+        }
+
+        private void UiDoubleUpDown1_ValueChanged(object sender, double value)
+        {
+            try
+            {
+                _ytiaozheng= (double)value;
+            }
+            catch
+            {
+
+            }
         }
 
         private void Input5_TextChanged(object? sender, EventArgs e)

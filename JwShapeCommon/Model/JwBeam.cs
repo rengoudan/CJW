@@ -1481,7 +1481,7 @@ namespace JwShapeCommon
 
                 var tops = JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RelativeStartDistance).ToList();
                 double ry = JwFileConsts.Kongjing / 2;
-                ry = ry - JwFileConsts.CsvYTiaozheng;
+                ry = ry + JwFileConsts.CsvYTiaozheng;
                 
                 double cy = 100 - JwFileConsts.Kongjing / 2;
                 cy = cy + JwFileConsts.CsvYTiaozheng;

@@ -48,6 +48,7 @@ namespace RGBControls
             JwFileConsts.CsvZxJianju = config.Csv.Zxjianju;
             JwFileConsts.CsvZxNum = config.Csv.Zxnum;
             JwFileConsts.EllipseDiameter = config.Csv.Kongjing;
+            JwFileConsts.CsvYTiaozheng = config.Csv.Ytiaozheng;
         }
 
         
@@ -62,6 +63,7 @@ namespace RGBControls
                 JwFileConsts.CsvZxJianju = settingsForm.Zxjianju;
                 JwFileConsts.CsvZxNum = settingsForm.Zxnum;
                 JwFileConsts.EllipseDiameter = settingsForm.Kongjing;
+                JwFileConsts.CsvYTiaozheng = settingsForm.Ytiaozheng;
                 var config = AppConfigManager.Current;
 
                 config.Csv.Hxnum = JwFileConsts.CsvHxNum;
@@ -69,6 +71,7 @@ namespace RGBControls
                 config.Csv.Zxjianju = JwFileConsts.CsvZxJianju;
                 config.Csv.Zxnum= JwFileConsts.CsvZxNum;
                 config.Csv.Kongjing = JwFileConsts.EllipseDiameter;
+                config.Csv.Ytiaozheng = JwFileConsts.CsvYTiaozheng;
                 //config.Database.TimeoutSeconds = 60;
                 AppConfigManager.Save();
                 Refresh();

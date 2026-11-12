@@ -3983,7 +3983,7 @@ namespace JwShapeCommon
                         //2026年7月18日
                         starthole = f.JwHoleG.AppendHole(false,f.WinnerBeam);
                         starthole.Beam = f.WinnerBeam;
-                        //starthole.Direct=starttype;
+                                   //starthole.Direct=starttype;
                         starthole.IsPairedChanged = false;
                         f.WinnerBeam.Holes.Add(starthole);
                         if (f.WinnerBeam.IsParentBeam)
