@@ -3988,7 +3988,7 @@ namespace JwShapeCommon
                         f.WinnerBeam.Holes.Add(starthole);
                         if (f.WinnerBeam.IsParentBeam)
                         {
-                            var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == f.WinnerBeam.Id).ToList();
+                            var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam?.Id == f.WinnerBeam.Id).ToList();
                             var sf = clst.FirstOrDefault(t => t.Contains(starthole.Location));
                             if (sf != null)
                             {
@@ -4023,7 +4023,7 @@ namespace JwShapeCommon
                             f.WinnerBeam.Holes.Add(starthole);
                             if (f.WinnerBeam.IsParentBeam)
                             {
-                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == f.WinnerBeam.Id).ToList();
+                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam?.Id == f.WinnerBeam.Id).ToList();
                                 var sf = clst.FirstOrDefault(t => t.Contains(starthole.Location));
                                 if (sf != null)
                                 {
@@ -4057,7 +4057,7 @@ namespace JwShapeCommon
                             f.WinnerBeam.Holes.Add(starthole);
                             if (f.WinnerBeam.IsParentBeam)
                             {
-                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == f.WinnerBeam.Id).ToList();
+                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam?.Id == f.WinnerBeam.Id).ToList();
                                 var sf = clst.FirstOrDefault(t => t.Contains(starthole.Location));
                                 if (sf != null)
                                 {
@@ -4108,7 +4108,7 @@ namespace JwShapeCommon
                         l.WinnerBeam.Holes.Add(endhole);
                         if (l.WinnerBeam.IsParentBeam)
                         {
-                            var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == l.WinnerBeam.Id).ToList();
+                            var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam?.Id == l.WinnerBeam.Id).ToList();
                             var sf = clst.FirstOrDefault(t => t.Contains(endhole.Location));
                             if (sf != null)
                             {
@@ -4174,7 +4174,7 @@ namespace JwShapeCommon
                             l.WinnerBeam.Holes.Add(endhole);
                             if (l.WinnerBeam.IsParentBeam)
                             {
-                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == l.WinnerBeam.Id).ToList();
+                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam?.Id == l.WinnerBeam.Id).ToList();
                                 var sf = clst.FirstOrDefault(t => t.Contains(endhole.Location));
                                 if (sf != null)
                                 {
@@ -4212,7 +4212,7 @@ namespace JwShapeCommon
                             l.WinnerBeam.Holes.Add(endhole);
                             if (l.WinnerBeam.IsParentBeam)
                             {
-                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam.Id == l.WinnerBeam.Id).ToList();
+                                var clst = Beams.Where(t => t.IsQiegeBeam && t.ParentBeam?.Id == l.WinnerBeam.Id).ToList();
                                 var sf = clst.FirstOrDefault(t => t.Contains(endhole.Location));
                                 if (sf != null)
                                 {
