@@ -660,6 +660,7 @@ namespace JwShapeCommon
             jbb.BujianName = "BG";
             var bflst = parenbeam.Baifangs.Where(t => t.Center >= Math.Round(start,2) && t.Center <= Math.Round(end,2)).ToList();
             this.Baifangs.AddRange(bflst);
+            this.ParentBeam = parenbeam;
         }
 
         private void desginScale()
@@ -1485,6 +1486,17 @@ namespace JwShapeCommon
                 
                 double cy = 100 - JwFileConsts.Kongjing / 2;
                 cy = cy + JwFileConsts.CsvYTiaozheng;
+                sb.Append("右面穴\r\n");
+                if (rights.Count > 0)
+                {
+
+                    foreach (var h in rights)
+                    {
+                        sb.Append(h.ToCsvString(-ry));
+                        //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
+
+                    }
+                }
                 sb.Append("上面穴\r\n");
                 if (tops.Count > 0)
                 {
@@ -1493,18 +1505,6 @@ namespace JwShapeCommon
                     {
                         sb.Append(h.ToCsvString(cy));
                         //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-                    }
-                }
-                sb.Append("下面穴\r\n"); 
-                sb.Append("右面穴\r\n");
-                if (rights.Count > 0)
-                {
-                    
-                    foreach (var h in rights)
-                    {
-                        sb.Append(h.ToCsvString(-ry));
-                        //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-
                     }
                 }
                 sb.Append("左面穴\r\n");

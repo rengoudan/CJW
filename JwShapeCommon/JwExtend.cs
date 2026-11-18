@@ -533,7 +533,7 @@ namespace JwShapeCommon
                         HoleCreateFrom.JieChu => (false, true, false),
                         HoleCreateFrom.JieChuG => (false, true, false),
                         HoleCreateFrom.FengeJ => (false, true, false),
-                        HoleCreateFrom.AddedHole => (true, true, true),
+                        HoleCreateFrom.AddedHole => (true, false, false),
                         _ => (false, false, false)
                     };
                 }
@@ -546,7 +546,7 @@ namespace JwShapeCommon
                         HoleCreateFrom.JieChu => (true, true, true),
                         HoleCreateFrom.JieChuG => (false, true, false),
                         HoleCreateFrom.FengeJ => (false, true, false),
-                        HoleCreateFrom.AddedHole => (true, true, true),
+                        HoleCreateFrom.AddedHole => (true, false, false),
                         _ => (false, false, false)
                     };
                 }
