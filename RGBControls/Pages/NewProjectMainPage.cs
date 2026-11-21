@@ -504,30 +504,10 @@ namespace RGBControls.Pages
         }
 
 
-        private async Task Progress(Action action)
-        {
-            await AntdUI.Spin.open(_parentForm, AntdUI.Localization.Get("Loading2", "読み込み中..."), async config =>
-            {
-                Thread.Sleep(100);
-                this.Invoke(() =>
-                {
-                    action();
-                });
-                for (int i = 0; i < 101; i++)
-                {
-                    config.Value = i / 100F;
-                    config.Text = AntdUI.Localization.Get("Processing", "処理") + " " + i + "%";
-                    Thread.Sleep(20);
-                }
-                Thread.Sleep(500);
-                config.Value = null;
-                config.Text = AntdUI.Localization.Get("PleaseWait", "お待ちください。...");
-                Thread.Sleep(1000);
-            }, () =>
-            {
-                System.Diagnostics.Debug.WriteLine("仕上げる");
-            });
-        }
+        // 2026年11月21日 改为真正等待任务完成（见 SpinRunner）。async lambda 会优先匹配 Func<Task> 重载。
+        private Task Progress(Func<Task> work) => SpinRunner.RunAsync(_parentForm, work);
+
+        private Task Progress(Action action) => SpinRunner.RunAsync(_parentForm, action);
 
         private string _nowsavefold = "";
 

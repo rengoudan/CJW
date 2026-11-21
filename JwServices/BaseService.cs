@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace JwServices
 {
-    public abstract class BaseService
+    public abstract partial class BaseService
     {
         protected readonly IDbContextFactory<JwData.JwDataContext> ContextFactory;
 
@@ -91,31 +91,31 @@ namespace JwServices
 
 
         // ✅ 新增实体
-        protected async Task AddAsync<T>(T entity) where T : class 
-        { 
-            //using var context = CreateContext(); 
-            context.Set<T>().Add(entity); 
-            await context.SaveChangesAsync(); 
-        }
+        protected Task AddAsync<T>(T entity) where T : class => WriteAsync(async () =>
+        {
+            //using var context = CreateContext();
+            context.Set<T>().Add(entity);
+            await context.SaveChangesAsync();
+        }, $"Add<{typeof(T).Name}>");
 
-        protected async Task<bool> DeleteAsync<T>(object id) where T : class 
-        { 
-            //using var context = CreateContext(); 
-            var entity = await context.Set<T>().FindAsync(id); 
-            if (entity == null) 
-                return false; 
-            context.Set<T>().Remove(entity); 
-            await context.SaveChangesAsync(); 
-            return true; 
-        }
+        protected Task<bool> DeleteAsync<T>(object id) where T : class => WriteAsync(async () =>
+        {
+            //using var context = CreateContext();
+            var entity = await context.Set<T>().FindAsync(id);
+            if (entity == null)
+                return false;
+            context.Set<T>().Remove(entity);
+            await context.SaveChangesAsync();
+            return true;
+        }, $"Delete<{typeof(T).Name}>");
 
-        protected async Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        protected Task<int> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class => WriteAsync(async () =>
         {
             //using var context = CreateContext();
             var entities = context.Set<T>().Where(predicate);
             context.Set<T>().RemoveRange(entities);
             return await context.SaveChangesAsync();
-        }
+        }, $"DeleteWhere<{typeof(T).Name}>");
 
         /// <summary>
         /// 原有方法 如果在context = CreateContext(); 生成新的上下文
@@ -126,18 +126,18 @@ namespace JwServices
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        protected async Task UpdateAsync<T>(T entity) where T : class 
-        { 
+        protected Task UpdateAsync<T>(T entity) where T : class => WriteAsync(async () =>
+        {
             //using var context = CreateContext();
-            context.Set<T>().Attach(entity); 
+            context.Set<T>().Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
-            await context.SaveChangesAsync(); 
-        }
+            await context.SaveChangesAsync();
+        }, $"Update<{typeof(T).Name}>");
 
-        protected async Task<bool> UpdateFieldsAsync<T>(
+        protected Task<bool> UpdateFieldsAsync<T>(
      object id,
      Dictionary<Expression<Func<T, object>>, object> updates
- ) where T : class
+ ) where T : class => WriteAsync(async () =>
         {
             //using var context = CreateContext();
             var entity = await context.Set<T>().FindAsync(id);
@@ -165,12 +165,12 @@ namespace JwServices
 
             await context.SaveChangesAsync();
             return true;
-        }
+        }, $"UpdateFields<{typeof(T).Name}>");
 
-        protected async Task SaveAsync(JwDataContext context) 
-        { 
-            await context.SaveChangesAsync(); 
-        }
+        protected Task SaveAsync(JwDataContext context) => WriteAsync(async () =>
+        {
+            await context.SaveChangesAsync();
+        }, "Save");
 
 
         protected async Task LoadCollectionAsync<TEntity, TProperty>(JwDataContext context, TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> navigation) where TEntity : class where TProperty : class 

@@ -150,7 +150,10 @@ namespace JwServices
         /// <param name="id"></param>
         /// <param name="shapeType"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteSquare(string id,string subid, DrawShapeType shapeType)
+        public Task<bool> DeleteSquare(string id, string subid, DrawShapeType shapeType)
+            => WriteAsync(() => DeleteSquareCore(id, subid, shapeType));
+
+        private async Task<bool> DeleteSquareCore(string id,string subid, DrawShapeType shapeType)
         {
             var re = false;
             switch (shapeType)
@@ -179,7 +182,9 @@ namespace JwServices
             return re;
         }
 
-        public async Task DeletMain(long mainId)
+        public Task DeletMain(long mainId) => WriteAsync(() => DeletMainCore(mainId));
+
+        private async Task DeletMainCore(long mainId)
         {
             var maindata = await GetByIdAsync<JwProjectMainData>(mainId);
             if (maindata != null)
@@ -193,7 +198,9 @@ namespace JwServices
             }
         }
 
-        public async Task DeleteSubData(string subId)
+        public Task DeleteSubData(string subId) => WriteAsync(() => DeleteSubDataCore(subId));
+
+        private async Task DeleteSubDataCore(string subId)
         {
             var subdata = await GetByIdAsync<JwProjectSubData>(subId, p => p.JwProjectMainData);
             if (subdata != null)
@@ -231,7 +238,9 @@ namespace JwServices
         /// </summary>
         /// <param name="subId"></param>
         /// <returns></returns>
-        public async Task ReCalculateSub(string subId)
+        public Task ReCalculateSub(string subId) => WriteAsync(() => ReCalculateSubCore(subId));
+
+        private async Task ReCalculateSubCore(string subId)
         {
             var subdata = await GetByIdAsync<JwProjectSubData>(subId,p=>p.JwProjectMainData);
             var maindata=await FindAsync<JwProjectMainData>(p=>p.Id==subdata.JwProjectMainDataId);
@@ -272,7 +281,9 @@ namespace JwServices
             }
         }
 
-        public async Task ReCalculateMain(long id)
+        public Task ReCalculateMain(long id) => WriteAsync(() => ReCalculateMainCore(id));
+
+        private async Task ReCalculateMainCore(long id)
         {
             var maindata=await GetByIdAsync<JwProjectMainData>(id);
             await LoadSubDataAsync(maindata);
@@ -295,7 +306,9 @@ namespace JwServices
         /// </summary>
         /// <param name="fileHandle"></param>
         /// <returns></returns>
-        public async Task SaveNewParseResult(JwFileHandle fileHandle)
+        public Task SaveNewParseResult(JwFileHandle fileHandle) => WriteAsync(() => SaveNewParseResultCore(fileHandle));
+
+        private async Task SaveNewParseResultCore(JwFileHandle fileHandle)
         {
             fileHandle._subData.DefaultBeamXHId = fileHandle.ProjectPathModel.MaterialData.Id;
             fileHandle._subData.DefaultBeamXHName = fileHandle.ProjectPathModel.MaterialData.GeneralTitle;
@@ -385,7 +398,9 @@ namespace JwServices
             await UpdateAsync<JwProjectMainData>(md);
         }
 
-        public async Task UnifyBeamCode(long mainid)
+        public Task UnifyBeamCode(long mainid) => WriteAsync(() => UnifyBeamCodeCore(mainid));
+
+        private async Task UnifyBeamCodeCore(long mainid)
         {
             var lstsub= await GetAllAsync<JwProjectSubData>(p => p.JwProjectMainDataId == mainid);
             var subidlst = lstsub.Select(t => t.Id).ToList();

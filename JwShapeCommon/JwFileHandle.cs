@@ -2028,7 +2028,7 @@ namespace JwShapeCommon
         /// 删除指定形状
         /// </summary>
         /// <param name="e"></param>
-        public async void DeleteSquare(ControlSelectedSquareArgs e)
+        public void DeleteSquare(ControlSelectedSquareArgs e)
         {
             if (e != null)
             {
