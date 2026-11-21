@@ -50,6 +50,7 @@ namespace RGBControls
             JwFileConsts.CsvZxNum = config.Csv.Zxnum;
             JwFileConsts.EllipseDiameter = config.Csv.Kongjing;
             JwFileConsts.CsvYTiaozheng = config.Csv.Ytiaozheng;
+            JwFileConsts.ExcludeDegenerateRectangles = config.Parse.ExcludeDegenerateRectangles;
         }
 
         

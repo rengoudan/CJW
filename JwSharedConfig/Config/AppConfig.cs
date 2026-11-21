@@ -11,6 +11,8 @@ namespace JwSharedConfig.Config
     {
         //public ApiSettings Api { get; set; } = new();
         public CsvSettings Csv { get; set; } = new();
+
+        public ParseSettings Parse { get; set; } = new();
         //public FeatureFlags Features { get; set; } = new();
     }
 }

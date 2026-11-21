@@ -271,12 +271,14 @@ namespace RGBJWMain.Forms
             JwFileConsts.EWaiKongColor=uiComboBox8.SelectedItem as JwColor;
             JwFileConsts.LjCompentType=(LianjieCompentType) lianjiecompenttypecbb.SelectedValue;
             JwFileConsts.MinimalStrategy = uiSwitch1.Active;
+            ApplyExperimentalOptions(); // 2026年11月21日 退化矩形を除外（試験）
             DialogResult = DialogResult.OK;
         }
 
         private async void CustomerDesignSetting_Load(object sender, EventArgs e)
         {
             //base.OnLoad(e);
+            AddExperimentalOptions(); // 2026年11月21日 见 CustomerDesignSetting.Experimental.cs
             dbContext = ContextFactory.GetContext();
             List<JwColor> ls = JwFileConsts.GetJwColors();
             List<JwPenStyle> ps = JwFileConsts.GetJwPenStyles();

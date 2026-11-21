@@ -53,6 +53,8 @@ namespace JwShapeCommon
             });
 
             var sync = new object();
+            bool excludeDegenerate = JwFileConsts.ExcludeDegenerateRectangles;
+            int excludedCount = 0;
             var nonDegenerateKeys = new HashSet<string>(StringComparer.Ordinal);
             var byVertex = new Dictionary<(double, double), List<List<JwXian>>>();
 
@@ -85,6 +87,18 @@ namespace JwShapeCommon
                                     : nonDegenerateKeys.Contains(key!);
                                 if (exists) continue;
 
+                                if (degenerate && excludeDegenerate)
+                                {
+                                    // 试验开关开启：仍参与去重（登记到顶点索引），但不生成 Mian
+                                    excludedCount++;
+                                    foreach (var v in points.Select(VertexKey).Distinct())
+                                    {
+                                        if (!byVertex.TryGetValue(v, out var exList)) byVertex[v] = exList = new List<List<JwXian>>();
+                                        exList.Add(rectangle);
+                                    }
+                                    continue;
+                                }
+
                                 // 以下与原实现相同
                                 JWMian m = new JWMian();
                                 var storlst = rectangle.OrderByDescending(t => t.Distance());
@@ -111,6 +125,12 @@ namespace JwShapeCommon
                     }
                 }
             });
+
+            if (excludeDegenerate)
+            {
+                JwLogging.AppLog.Info("退化矩形を除外 {Count}件 (残り {Mians}件) file={File}", excludedCount, Mians.Count, LogFileName);
+                if (excludedCount > 0) SendMsg($"面積0の候選矩形を {excludedCount} 件除外しました（設定：退化矩形を除外）");
+            }
         }
 
         /// <summary>

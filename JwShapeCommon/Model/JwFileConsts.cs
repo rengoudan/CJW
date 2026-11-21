@@ -41,6 +41,10 @@ namespace JwShapeCommon
         /// 最少打孔策略
         /// </summary>
         public static bool MinimalStrategy = false;
+        /// <summary>
+        /// 2026年11月21日 试验开关：识别梁时排除退化矩形（有重复顶点、面积为 0）。默认关闭＝原有行为。
+        /// </summary>
+        public static bool ExcludeDegenerateRectangles = false;
 
         /// <summary>
         /// 未除scale的 最小链接件间距
