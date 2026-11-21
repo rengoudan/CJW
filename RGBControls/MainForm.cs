@@ -42,6 +42,7 @@ namespace RGBControls
             uiNavBar1.CreateNode(AddPage(new JwBudgePage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwCustomerPage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new NewBaseDataPage(), ++pageIndex));
+            uiNavBar1.CreateNode(AddPage(new LogPage(), ++pageIndex));
             var config = AppConfigManager.Current;
             JwFileConsts.CsvHxJianju = config.Csv.Hxjianju;
             JwFileConsts.CsvHxNum = config.Csv.Hxnum;

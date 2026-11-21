@@ -37,7 +37,7 @@ namespace JwShapeCommon.Event
             catch (Exception ex)
             {
                 // 你可以在这里记录日志或抛出自定义异常
-                Console.Error.WriteLine($"AsyncEvent handler exception: {ex}");
+                JwLogging.AppLog.Error(ex, "AsyncEvent handler exception");
             }
         }
     }

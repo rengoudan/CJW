@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwSharedConfig", "JwSharedC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwData.Migrations.SqlServer", "JwData.Migrations.SqlServer\JwData.Migrations.SqlServer.csproj", "{780744DD-55A6-472B-BBC2-CA3D963F275C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwLogging", "JwLogging\JwLogging.csproj", "{A0CA02FF-337D-46B5-A8A6-221FB984C109}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +176,18 @@ Global
 		{C03D5ECA-452A-4A6F-8E58-EBDE2E8011A7}.Release|x64.Build.0 = Release|Any CPU
 		{C03D5ECA-452A-4A6F-8E58-EBDE2E8011A7}.Release|x86.ActiveCfg = Release|Any CPU
 		{C03D5ECA-452A-4A6F-8E58-EBDE2E8011A7}.Release|x86.Build.0 = Release|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Debug|x64.Build.0 = Debug|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Debug|x86.Build.0 = Debug|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Release|x64.ActiveCfg = Release|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Release|x64.Build.0 = Release|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Release|x86.ActiveCfg = Release|Any CPU
+		{A0CA02FF-337D-46B5-A8A6-221FB984C109}.Release|x86.Build.0 = Release|Any CPU
 		{780744DD-55A6-472B-BBC2-CA3D963F275C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{780744DD-55A6-472B-BBC2-CA3D963F275C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{780744DD-55A6-472B-BBC2-CA3D963F275C}.Debug|x64.ActiveCfg = Debug|Any CPU

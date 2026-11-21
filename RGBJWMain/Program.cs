@@ -25,6 +25,7 @@ namespace RGBJWMain
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+            RGBControls.Errors.ErrorReporter.Install();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             // 创建一个隐藏窗体，用于处理更新逻辑
             using (Form tempForm = new Form { ShowInTaskbar = false, WindowState = FormWindowState.Minimized })
@@ -92,8 +93,9 @@ namespace RGBJWMain
                             }
                         });
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        JwLogging.AppLog.Warn(ex, "AutoUpdater check failed");
                         tempForm.Close();
                     }
                 };

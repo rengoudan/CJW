@@ -74,8 +74,7 @@ namespace RGBJWMain.Pages
             }
             catch (Exception exception)
             {
-                //textBox1.Text = "";
-                //MessageBox.Show(exception.Message, "Error");
+                RGBControls.Errors.ErrorReporter.Report(exception, "ファイルの処理中にエラーが発生しました。");
             }
         }
 

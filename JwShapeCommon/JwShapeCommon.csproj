@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JwCore\JwCore.csproj" />
+    <ProjectReference Include="..\JwLogging\JwLogging.csproj" />
     <ProjectReference Include="..\JwwHelper\JwwHelper.vcxproj" />
   </ItemGroup>
 
