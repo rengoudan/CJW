@@ -27,18 +27,20 @@ namespace JwShapeCommon.Model
         public double RealLocation { get; set; }
 
         /// <summary>
-        /// 工字梁上面
+        /// 工字梁下翼缘 = CSV「左面穴」（来自 JwHole.HasBottom）
+        /// 2026年11月22日 订正：原注释误写为「工字梁上面」
         /// </summary>
         public bool HasLeft { get; set; }
 
 
         /// <summary>
-        /// 工字梁下面
+        /// 工字梁上翼缘 = CSV「右面穴」（来自 JwHole.HasTop）
+        /// 2026年11月22日 订正：原注释误写为「工字梁下面」
         /// </summary>
         public bool HasRight { get; set; }
 
         /// <summary>
-        /// 工字梁中间
+        /// 工字梁腹板（中间）= CSV「上面穴」（来自 JwHole.HasCenter）
         /// </summary>
         public bool HasTop { get; set; }
 

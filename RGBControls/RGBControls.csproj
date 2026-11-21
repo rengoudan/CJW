@@ -30,6 +30,7 @@
     <ProjectReference Include="..\JwCore\JwCore.csproj" />
     <ProjectReference Include="..\JwData\JwData.csproj" />
     <ProjectReference Include="..\JwLogging\JwLogging.csproj" />
+    <ProjectReference Include="..\JwBeam3D\JwBeam3D.csproj" />
     <ProjectReference Include="..\JwServices\JwServices.csproj" />
     <ProjectReference Include="..\JwShapeCommon\JwShapeCommon.csproj" />
     <ProjectReference Include="..\JwSharedConfig\JwSharedConfig.csproj" />

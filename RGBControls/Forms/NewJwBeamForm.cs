@@ -93,6 +93,7 @@ namespace RGBJWMain.Forms
                 //this.newSingleBeamControl1.ShowBeam = this._jwbeam;
                 var csvshow = this._jwbeam.ToProcessCsv();
                 this.uiTextBox1.Text = csvshow;
+                InitViewSwitch(); // 2026年11月21日 2D/3D 切り替え（NewJwBeamForm.View3D.cs）
                 if (!string.IsNullOrEmpty(this._jwbeam.GongQu))
                 {
                     this.select7.SelectedValue = this._jwbeam.GongQu;

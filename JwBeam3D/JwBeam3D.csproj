@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    梁の 3D 表示（CSV フォーマット V2.2 を解析して描画）。
+    WPF（HelixToolkit）を使うため、WinForms 側の大きなプロジェクトに UseWPF を入れず、ここに分離している。
+    入力は CSV 文字列のみで、他の業務プロジェクトには依存しない。
+  -->
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HelixToolkit.Core.Wpf" Version="2.27.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JwLogging\JwLogging.csproj" />
+  </ItemGroup>
+
+</Project>
