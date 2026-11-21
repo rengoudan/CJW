@@ -1416,43 +1416,28 @@ namespace JwShapeCommon
             sb.Append("START\r\n");
             sb.Append(string.Format("{0},{1}-,{2}-,{3},,, {4}, 0.0, {5}, {6}, 0, 0.0, 0.0\r\n", "", this.GongQu, "", "", "H-200x100x5.5x8", Length, "1"));
             sb.Append("0, 0, 0, , 0, 0\r\n");
-            var rights=  JwHoleMachinings.Where(t => t.HasRight).OrderBy(t=>t.RelativeStartDistance).Distinct(new JwHoleMachiningComparint()).ToList();
+            var rights=  JwHoleMachinings.Where(t => t.HasRight).OrderBy(t=>t.RelativeStartDistance).ToList();
 
-            var lefts= JwHoleMachinings.Where(t => t.HasLeft).OrderBy(t => t.RelativeStartDistance).Distinct(new JwHoleMachiningComparint()).ToList();
+            var lefts= JwHoleMachinings.Where(t => t.HasLeft).OrderBy(t => t.RelativeStartDistance).ToList();
 
-            var tops= JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RelativeStartDistance).Distinct(new JwHoleMachiningComparint()).ToList();
-            double ry = JwFileConsts.Kongjing / 2;
-            ry = ry - JwFileConsts.CsvYTiaozheng;
+            var tops= JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RelativeStartDistance).ToList();
+            double ry = CsvFlangeOffset();
             if(rights.Count>0)
             {
-                sb.Append("右面穴\r\n");   
-                foreach (var h in rights)
-                {
-                    sb.Append(h.ToCsvString(-ry));
-                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-
-                }
+                sb.Append("右面穴\r\n");
+                AppendCsvHoleLines(sb, rights, -ry);
             }
             if(lefts.Count>0)
             {
                 sb.Append("左面穴\r\n");
-                foreach (var h in lefts)
-                {
-                    sb.Append(h.ToCsvString(-ry));
-                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-                }
+                AppendCsvHoleLines(sb, lefts, -ry);
             }
-            
-            double cy = 100 - JwFileConsts.Kongjing / 2;
-            cy = cy + JwFileConsts.CsvYTiaozheng;
+
+            double cy = CsvWebY();
             if(tops.Count>0)
             {
                 sb.Append("上面穴\r\n");
-                foreach (var h in tops)
-                {
-                    sb.Append(h.ToCsvString(cy));
-                    //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-                }
+                AppendCsvHoleLines(sb, tops, cy);
             }
             sb.Append("END\r\n");
             sb.Append("\r\n");
@@ -1479,6 +1464,30 @@ namespace JwShapeCommon
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 翼缘（右面/左面）孔的 Y 偏移量：翼缘面的 Y 原点在该面中线，输出值为 -(孔距/2 - 调整量)。
+        /// </summary>
+        private static double CsvFlangeOffset() => JwFileConsts.Kongjing / 2 - JwFileConsts.CsvYTiaozheng;
+
+        /// <summary>
+        /// 腹板（上面）孔的 Y：原点在面的边缘（规格书第 19 页 ②），= 100 - 孔距/2 + 调整量。
+        /// </summary>
+        private static double CsvWebY() => 100 - JwFileConsts.Kongjing / 2 + JwFileConsts.CsvYTiaozheng;
+
+        /// <summary>
+        /// 2026年11月21日 输出某一面的孔行，并去掉完全相同的行（同一位置不重复钻孔）。
+        /// 原来的 Distinct(JwHoleMachiningComparint) 按 Id(GUID) 比较，实际不会去掉任何重复。
+        /// </summary>
+        private static void AppendCsvHoleLines(StringBuilder sb, IEnumerable<JwHoleMachining> holes, double y)
+        {
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var h in holes)
+            {
+                var line = h.ToCsvString(y);
+                if (seen.Add(line)) sb.Append(line);
+            }
+        }
+
         public string ToProcessCsv(string jiebie,string fuhao,int xh)
         {
             if (this.HasCsv)
@@ -1493,41 +1502,25 @@ namespace JwShapeCommon
                 var lefts = JwHoleMachinings.Where(t => t.HasLeft).OrderBy(t => t.RelativeStartDistance).ToList();
 
                 var tops = JwHoleMachinings.Where(t => t.HasTop).OrderBy(t => t.RelativeStartDistance).ToList();
-                double ry = JwFileConsts.Kongjing / 2;
-                ry = ry + JwFileConsts.CsvYTiaozheng;
-                
-                double cy = 100 - JwFileConsts.Kongjing / 2;
-                cy = cy + JwFileConsts.CsvYTiaozheng;
+                // 2026年11月21日 Y 的计算与预览（无参版）统一：原来这里是 ry + 调整量，
+                // 使翼缘与腹板朝相反方向平移，且与预览显示的数据不一致
+                double ry = CsvFlangeOffset();
+
+                double cy = CsvWebY();
                 sb.Append("右面穴\r\n");
                 if (rights.Count > 0)
                 {
-
-                    foreach (var h in rights)
-                    {
-                        sb.Append(h.ToCsvString(-ry));
-                        //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-
-                    }
+                    AppendCsvHoleLines(sb, rights, -ry);
                 }
                 sb.Append("上面穴\r\n");
                 if (tops.Count > 0)
                 {
-                    
-                    foreach (var h in tops)
-                    {
-                        sb.Append(h.ToCsvString(cy));
-                        //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-                    }
+                    AppendCsvHoleLines(sb, tops, cy);
                 }
                 sb.Append("左面穴\r\n");
                 if (lefts.Count > 0)
                 {
-                    
-                    foreach (var h in lefts)
-                    {
-                        sb.Append(h.ToCsvString(-ry));
-                        //sb.Append(string.Format("0, {0}, , , , , , , , \r\n", h.RelativeStartDistance.ToString("0.00")));
-                    }
+                    AppendCsvHoleLines(sb, lefts, -ry);
                 }
                 sb.Append("END\r\n");
                 sb.Append("\r\n");
