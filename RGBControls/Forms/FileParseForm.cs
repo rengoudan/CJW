@@ -3,6 +3,7 @@ using JwData;
 using JwServices;
 using JwShapeCommon;
 using RGBControls.Classes;
+using RGBControls.Errors;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,18 @@ namespace RGBJWMain.Forms
                 {
                     _path = jwProjectPathModel.Path;
                     this.ShowProcessForm(200);
-                    readjww();
+                    try
+                    {
+                        readjww();
+                    }
+                    catch (Exception ex)
+                    {
+                        // 2026年11月21日 解析失败：先关进度窗，再提示失败的步骤，然后关闭本窗体
+                        this.HideProcessForm();
+                        var msg = (ex as ParseStepException)?.UserMessage ?? "図面解析中にエラーが発生しました。";
+                        ErrorReporter.Report(ex, msg + "\n" + Path.GetFileName(_path));
+                        this.Close();
+                    }
 
                     //ThreadStart start = new ThreadStart(readjww);
                     //Thread thread = new Thread(start);
@@ -183,47 +195,44 @@ namespace RGBJWMain.Forms
             if (_jwFileHandle != null)
             {
                 this.ShowProcessForm(200);
-                _jwFileHandle.CreateData();
-                if (_jwFileHandle._subData != null)
+                try
                 {
-                    string fn = _jwFileHandle._subData.FloorName;
-                    var sbd =await JwProjectMainService.FindSubData(t => t.FloorName == fn && t.JwProjectMainDataId == jwProjectPathModel.MainData.Id);
-                    if (sbd == null)
+                    _jwFileHandle.CreateData();
+                    if (_jwFileHandle._subData != null)
                     {
-                        SaveData();
+                        string fn = _jwFileHandle._subData.FloorName;
+                        var sbd =await JwProjectMainService.FindSubData(t => t.FloorName == fn && t.JwProjectMainDataId == jwProjectPathModel.MainData.Id);
+                        if (sbd == null)
+                        {
+                            await SaveDataAsync();
+                        }
+                        else
+                        {
+                            UIMessageBox.ShowError("このフロアは識別されアップロードされました");
+                        }
                     }
-                    else
-                    {
-                        UIMessageBox.ShowError("このフロアは識別されアップロードされました");
-                    }
+                }
+                catch (Exception ex)
+                {
+                    // 2026年11月21日 保存失败时不关闭窗体（不返回 OK），提示后允许用户重试或关闭
+                    this.HideProcessForm();
+                    ErrorReporter.Report(ex, "解析結果の保存に失敗しました。");
+                    return;
                 }
             }
             DialogResult = DialogResult.OK;
             this.HideProcessForm();
         }
 
-        private void SaveData()
+        /// <summary>
+        /// 2026年11月21日 原来用 Invoke(async lambda) 触发保存且不等待，窗体可能在保存完成前就关闭并刷新列表，
+        /// 保存异常也无法被捕获。按钮事件本身就在 UI 线程，直接 await。
+        /// </summary>
+        private async Task SaveDataAsync()
         {
-            if (this.InvokeRequired)
+            if (_jwFileHandle?._subData != null)
             {
-                this.Invoke(new Action(async () =>
-                {
-                    if (_jwFileHandle._subData != null)
-                    {
-
-                        await JwProjectMainService.SaveNewParseResult(_jwFileHandle);
-                    }
-                }));
-            }
-            else
-            {
-                this.Invoke(new Action(async () =>
-                {
-                    if (_jwFileHandle._subData != null)
-                    {
-                        await JwProjectMainService.SaveNewParseResult(_jwFileHandle);
-                    }
-                }));
+                await JwProjectMainService.SaveNewParseResult(_jwFileHandle);
             }
         }
 

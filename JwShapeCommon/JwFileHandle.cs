@@ -39,7 +39,7 @@ namespace JwShapeCommon
     /// top 对应 csv 右面 原点为 中间  Y+向天 X+向右
     /// bottom  对应 csv 左面 原点为 中间  Y+向天 X+向右
     /// </summary>
-    public class JwFileHandle
+    public partial class JwFileHandle
     {
 
         #region 私有共有变量
@@ -285,6 +285,7 @@ namespace JwShapeCommon
                     return;
                 }
                 SendMsg("jwファイルの読み込みを開始します");
+                JwLogging.AppLog.Info("jww読み込み開始 {Path}", _path);
                 using (var reader = new JwwHelper.JwwReader())
                 {
                     reader.Read(_path, Completed);
@@ -294,6 +295,9 @@ namespace JwShapeCommon
             catch (Exception ex)
             {
                 IsSuccessRead = false;
+                ReadError = ex;
+                JwLogging.AppLog.Error(ex, "jww読み込み失敗 {Path}", _path);
+                SendMsg($"【エラー】jwファイルの読み込みに失敗しました: {ex.Message}");
             }
 
 
@@ -332,43 +336,51 @@ namespace JwShapeCommon
         /// </summary>
         public void FollowTheStep()
         {
-            
-            ChangeJwXianFromJwwSen();//jwwSen到jwxian处理
-            JudgmentJieChu3();
-            
-           
+            // 2026年11月21日 每一步用 Step 包装：记录耗时，失败时抛出带步骤名的 ParseStepException
+            if (!IsSuccessRead)
+            {
+                throw new ParseStepException("ファイル読み込み", nameof(ReadJwFile),
+                    ReadError ?? new InvalidOperationException("jwファイルが読み込まれていません"));
+            }
+            SuppressedErrors.Clear();
+            var total = System.Diagnostics.Stopwatch.StartNew();
+
+            Step("梁線の変換", nameof(ChangeJwXianFromJwwSen), ChangeJwXianFromJwwSen);//jwwSen到jwxian处理
+            Step("梁の識別", nameof(JudgmentJieChu3), JudgmentJieChu3);
+
 
             if (Beams == null || Beams.Count == 0)
             {
                 var errbeamstr = string.Format("{0}番の色ではビームを識別できません", JwFileConsts.BeamParseColor.ColorNumber);
                 SendMsg(errbeamstr);
+                JwLogging.AppLog.Warn("梁が識別されませんでした color={Color} file={File}", JwFileConsts.BeamParseColor.ColorNumber, LogFileName);
             }
 
-            ChangePillarFromJwwSolid();//处理文件solid
+            Step("柱ソリッドの読み込み", nameof(ChangePillarFromJwwSolid), ChangePillarFromJwwSolid);//处理文件solid
             //ChangeQieGeSolis();//读取切割点内容
-            Findqiege();
+            Step("切断位置の識別", nameof(Findqiege), Findqiege);
 
 
             if (JwFileConsts.PillarDrawingMethod == PillarDrawingMethod.Line)
             {
-                ParsePillarsByXians();
+                Step("柱の識別", nameof(ParsePillarsByXians), ParsePillarsByXians);
             }
             else
             {
-                ParseSquareCreatePillar();//对处处理的pillar 精加工
+                Step("柱の識別", nameof(ParseSquareCreatePillar), ParseSquareCreatePillar);//对处处理的pillar 精加工
             }
-                
-            judgePillarBeam();
+
+            Step("柱と梁の関係判定", nameof(judgePillarBeam), judgePillarBeam);
             //parsePillarBeam();
-            panduanBlockGuishu();
+            Step("ブロック帰属の判定", nameof(panduanBlockGuishu), panduanBlockGuishu);
             //Thread.Sleep(3000);
-            ChangeJwwEnojiToText();//文件内文字处理 待完善
-            SecondExtendTextPillar();
-            ThirdExtendTextPillar();
-            LastTextPillar();
-           
-            CreateQieGeBeams();//生成具体的beam
-            StatisticalBBGquantity();
+            Step("文字の識別(1)", nameof(ChangeJwwEnojiToText), ChangeJwwEnojiToText);//文件内文字处理 待完善
+            Step("文字の識別(2)", nameof(SecondExtendTextPillar), SecondExtendTextPillar);
+            Step("文字の識別(3)", nameof(ThirdExtendTextPillar), ThirdExtendTextPillar);
+            Step("文字の識別(4)", nameof(LastTextPillar), LastTextPillar);
+
+            Step("切断梁の生成", nameof(CreateQieGeBeams), CreateQieGeBeams);//生成具体的beam
+            Step("B/BG数の集計", nameof(StatisticalBBGquantity), StatisticalBBGquantity);
             if (Pillars==null|| Pillars.Count == 0)
             {
                 var errbeamstr = string.Format("色番号{0}は柱を識別できません", JwFileConsts.BeamPillarParseColor.ColorNumber);
@@ -379,14 +391,14 @@ namespace JwShapeCommon
             //生成beam 的每个标记位置点
 
             //createBeamAbsolutePD();
-            ewaikongHandle();
-            parseDownPillars();
-            parsenLianjie();//寻找连接线
+            Step("追加穴の処理", nameof(ewaikongHandle), ewaikongHandle);
+            Step("下階柱の識別", nameof(parseDownPillars), parseDownPillars);
+            Step("連結の識別", nameof(parsenLianjie), parsenLianjie);//寻找连接线
 
-            JudgementSpacing();
+            Step("連結間隔の判定", nameof(JudgementSpacing), JudgementSpacing);
 
             //在之前判断链接件之间距离是否
-            Revision();
+            Step("最終補正", nameof(Revision), Revision);
 
             if (HasBeam)
             {
@@ -395,6 +407,10 @@ namespace JwShapeCommon
                     SendMsg(item.ToString() + Environment.NewLine);
                 }
             }
+
+            ReportSuppressedSummary();
+            JwLogging.AppLog.Info("解析完了 {Ms}ms beams={Beams} pillars={Pillars} file={File}",
+                total.ElapsedMilliseconds, Beams?.Count ?? 0, Pillars?.Count ?? 0, LogFileName);
         }
 
         int nownumber = -1;
@@ -1869,7 +1885,7 @@ namespace JwShapeCommon
         /// 2026年3月17日  发现未存储下方柱解析出的数据 增加之
         /// 由于需要重新绘制到jw里 所以需要存储交叉线数据
         /// </summary>
-        public async void CreateData()
+        public void CreateData()
         {
             _subData = new JwProjectSubData();
             _subData.JwProjectMainDataId = _projectMaindata.Id;
@@ -4737,9 +4753,9 @@ namespace JwShapeCommon
                     
                 }
             }
-            catch {
-
-                return new JwLianjieSingle { IsCreateSuccess = false }; 
+            catch (Exception ex) {
+                Suppressed("連結の識別", ex, $"line=({xian?.Pone?.X},{xian?.Pone?.Y})-({xian?.Ptwo?.X},{xian?.Ptwo?.Y})");
+                return new JwLianjieSingle { IsCreateSuccess = false };
             }
         }
 
@@ -4759,10 +4775,10 @@ namespace JwShapeCommon
                         if (double.IsNaN(v.InitialLoser)) continue;
                         if (Math.Abs(v.InitialLoser - bb) <= 0.05) return t;
                     }
-                    catch { continue; }
+                    catch (Exception ex) { Suppressed("接触点の検索", ex, $"pt=({pt.X},{pt.Y})"); continue; }
                 }
             }
-            catch { }
+            catch (Exception ex) { Suppressed("接触点の検索", ex, $"pt=({pt?.X},{pt?.Y})"); }
             return null;
         }
 
@@ -4803,11 +4819,11 @@ namespace JwShapeCommon
                     double dl = Math.Round(dist, 1) * JwFileConsts.JwScale - 220;
                     lj.Length = Math.Round(dl / 10.0) * 10;
                 }
-                catch { lj.Length = 0; }
+                catch (Exception ex) { Suppressed("連結長さの計算", ex); lj.Length = 0; }
 
                 return lj;
             }
-            catch { return new JwLianjieSingle { IsCreateSuccess = false }; }
+            catch (Exception ex) { Suppressed("連結の生成", ex); return new JwLianjieSingle { IsCreateSuccess = false }; }
         }
 
         private JwLianjieSingle BuildVPLLianjieSingleSafe(
@@ -4849,11 +4865,11 @@ namespace JwShapeCommon
                     lj.VPLEndPosition = end.pb.VPLPosition;
                     lj.VPLStartPosition = start.pb.VPLPosition;
                 }
-                catch { lj.Length = 0; }
+                catch (Exception ex) { Suppressed("連結長さの計算", ex); lj.Length = 0; }
 
                 return lj;
             }
-            catch { return new JwLianjieSingle { IsCreateSuccess = false }; }
+            catch (Exception ex) { Suppressed("連結の生成", ex); return new JwLianjieSingle { IsCreateSuccess = false }; }
         }
 
 
@@ -4911,7 +4927,7 @@ namespace JwShapeCommon
                     return (null, null, 0, 0);
                 }
             }
-            catch { return (null, null, 0, 0); }
+            catch (Exception ex) { Suppressed("穴位置の計算", ex, $"pt=({pt?.X},{pt?.Y}) start={isStart}"); return (null, null, 0, 0); }
         }
 
         /// <summary>
@@ -5011,7 +5027,7 @@ namespace JwShapeCommon
                     return (null, null, 0, 0);
                 }
             }
-            catch { return (null, null, 0, 0); }
+            catch (Exception ex) { Suppressed("穴位置の計算", ex, $"pt=({pt?.X},{pt?.Y}) start={isStart}"); return (null, null, 0, 0); }
         }
 
 
@@ -5028,7 +5044,7 @@ namespace JwShapeCommon
                 if (!beam.Holes.Contains(hole)) beam.Holes.Add(hole);
                 return hole;
             }
-            catch { return null; }
+            catch (Exception ex) { Suppressed("穴の生成", ex, $"({x},{y}) start={isStart}"); return null; }
         }
 
 
