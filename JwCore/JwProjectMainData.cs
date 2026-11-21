@@ -55,6 +55,13 @@ namespace JwCore
 
         public long? JwCustomerDataId { get; set; }
         public virtual JwCustomerData? JwCustomerData { get; set; } = null!;
+
+        /// <summary>
+        /// 2026年11月21日 一覧表示用の顧客名（NewProjectMainPage の「顧客名」列が参照）。
+        /// JwCustomerData を Include して読み込んだ場合に値が入る。DB 列ではない。
+        /// </summary>
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public string CustomerName => JwCustomerData?.CompanyName ?? "";
         public virtual ObservableCollectionListSource<JwProjectSubData> JwProjectSubDatas { get;  } = new();
     }
 }
