@@ -1045,6 +1045,11 @@ namespace JwShapeCommon
 
         //存有 相对开始距离  需要打孔的位置 上下中 或者all
 
+        /// <summary>
+        /// 2026年11月21日 最近一次 holeorder 时未找到终点孔（终端类型非 B）。此时终点加工被跳过，需人工确认。
+        /// </summary>
+        public bool MissingEndHole { get; private set; }
+
         public void holeorder()
         {
             jwBeamMarks = new List<JwBeamMarkPoint>();
@@ -1158,11 +1163,18 @@ namespace JwShapeCommon
                 }
             }
 
-            double lastLoc = (DirectionType == BeamDirectionType.Horizontal)
-                ? endx.AppendHole.Location.X
-                : endx.AppendHole.Location.Y;
+            // 2026年11月21日 与起点侧（if (starthole != null)）对称地做空值保护。
+            // 终端类型非 B 且没有终点孔时（如以梁色绘制的小符号被识别成梁），原来在此处 NullReferenceException 使整个解析失败。
+            // 现在跳过终点加工并标记，由 JwFileHandle 在解析结束时汇总提示。
+            MissingEndHole = endx.AppendHole == null;
+            if (endx.AppendHole != null)
+            {
+                double lastLoc = (DirectionType == BeamDirectionType.Horizontal)
+                    ? endx.AppendHole.Location.X
+                    : endx.AppendHole.Location.Y;
 
-            addMachining(sb, lastLoc, endx.AppendHole, false, true);
+                addMachining(sb, lastLoc, endx.AppendHole, false, true);
+            }
 
             endx.PreBeamStartDistance = Math.Round(endx.Coordinate - sb, 2);
             endx.PreCenterDistance = Math.Round(endx.Coordinate - precb, 2);

@@ -349,7 +349,9 @@ namespace JwShapeCommon
             Step("梁の識別", nameof(JudgmentJieChu3), JudgmentJieChu3);
 
 
-            if (Beams == null || Beams.Count == 0)
+
+            // 2026年11月21日 此时识别结果在 _tempBeams 中（Beams 要到 CreateQieGeBeams 才填充），原来检查 Beams 必然误报
+            if (_tempBeams == null || _tempBeams.Count == 0)
             {
                 var errbeamstr = string.Format("{0}番の色ではビームを識別できません", JwFileConsts.BeamParseColor.ColorNumber);
                 SendMsg(errbeamstr);
@@ -645,90 +647,7 @@ namespace JwShapeCommon
         }
 
 
-        private void FindRectangles(List<JwXian> segments)
-        {
-            List<List<JwXian>> rectangles = new List<List<JwXian>>();
-            Mians = new List<JWMian>();
-            // 创建 R-tree 索引
-            var rtree = new STRtree<JwXian>();
-            foreach (var segment in segments)
-            {
-                var lineString = segment.ToLineString();
-                rtree.Insert(lineString.EnvelopeInternal, segment);
-            }
-            // 使用 Parallel 并行处理外层循环
-            Parallel.For(0, segments.Count, i =>
-            {
-                var seg1 = segments[i];
-                var lineString1 = seg1.ToLineString();
-
-                // 查询与 seg1 直接相交的线段
-                var directIntersections = rtree.Query(lineString1.EnvelopeInternal)
-                                              .Where(seg => seg.ToLineString().Intersects(lineString1))
-                                              .ToList();
-
-                // 遍历与 seg1 直接相交的线段
-                foreach (var seg2 in directIntersections)
-                {
-                    if (seg2.Equals(seg1)) continue; // 跳过自身
-
-                    // 查询与 seg2 相交的其他线段
-                    var indirectIntersections = rtree.Query(seg2.ToLineString().EnvelopeInternal)
-                                                    .Where(seg => seg.ToLineString().Intersects(seg2.ToLineString()))
-                                                    .ToList();
-
-                    // 遍历与 seg2 相交的线段
-                    foreach (var seg3 in indirectIntersections)
-                    {
-                        if (seg3.Equals(seg1) || seg3.Equals(seg2)) continue; // 跳过已处理的线段
-
-                        // 查询与 seg3 相交的其他线段
-                        var finalIntersections = rtree.Query(seg3.ToLineString().EnvelopeInternal)
-                                                     .Where(seg => seg.ToLineString().Intersects(seg3.ToLineString()))
-                                                     .ToList();
-
-                        // 遍历与 seg3 相交的线段
-                        foreach (var seg4 in finalIntersections)
-                        {
-                            if (seg4.Equals(seg1) || seg4.Equals(seg2) || seg4.Equals(seg3)) continue; // 跳过已处理的线段
-                            List<JWPoint> points = new List<JWPoint>();
-                            //IsRectangle(seg1, seg2, seg3, seg4, out points);
-                            // 检查四条线段是否形成矩形
-                            if (IsRectangle(seg1, seg2, seg3, seg4, out points))
-                            {
-                                lock (rectangles)
-                                {
-                                    var s1 = new JwXian(points[0], points[1]);
-                                    var s2=new JwXian(points[1], points[2]);
-                                    var s3=new JwXian(points[2],points[3]);
-                                    var s4 = new JwXian(points[3], points[0]);
-                                    // 避免重复添加矩形
-                                    var rectangle = new List<JwXian> { s1, s2, s3, s4 };
-                                    bool rexist = rectangles.Any(r => AreRectanglesEqual(r, rectangle));
-                                    if (!rexist)
-                                    {
-                                        JWMian m = new JWMian();
-                                        var storlst = rectangle.OrderByDescending(t => t.Distance());
-                                        var maxd= rectangle.OrderByDescending(t => t.Distance()).First();
-                                        var mind = storlst.Last();
-                                        m.Width = maxd.Distance();
-                                        m.Length = m.Width;
-                                        m.Height=mind.Distance();
-                                        bool isbiancha = false;
-                                        m.Jiaodu= maxd.Jiaodu(out isbiancha);
-                                        m.IsJiaoduPiancha= isbiancha;
-                                        m.Xians = new List<JwXian>(rectangle);
-                                        m.Points = points;
-                                        Mians.Add(m);
-                                        rectangles.Add(rectangle);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+        // FindRectangles 已移至 JwFileHandle.Rectangles.cs（2026年11月21日 性能重写）
 
         private bool AreRectanglesEqual(List<JwXian> rect1, List<JwXian> rect2)
         {
@@ -753,11 +672,16 @@ namespace JwShapeCommon
             // 移除无效的交点（不相交的情况）
             //intersections.RemoveWhere(p => double.IsNaN(p.X) || double.IsNaN(p.Y));
             intersections.RemoveWhere(p => !p.IsValid);
+            // 如果没有四个交点，则不能组成矩形
+            // 2026年11月21日 先判断再排序：4 条线两两平行（如共线重叠）时交点为空，
+            // 原来对空列表排序会在 SortPointsClockwise 的 Average 处抛出 "Sequence contains no elements"，导致整个解析失败
+            if (intersections.Count != 4)
+            {
+                interpoints = new List<JWPoint>();
+                return false;
+            }
             var points = SortPointsClockwise(new List<JWPoint>(intersections));//按照极坐标排序
             interpoints = points;
-            // 如果没有四个交点，则不能组成矩形
-            if (intersections.Count != 4)
-                return false;
             //return IsRectangleFromPoints(points);
             return true;
             //if(points.Count != 4) 

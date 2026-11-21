@@ -29,14 +29,15 @@ namespace RGBControls.Forms
         public ShowAllBeams(JwProjectMainData mainData)
         {
             _selectedMainData = mainData;
-            createData();
             InitializeComponent();
             initTable();
-            table1.DataSource = _beamHuiZongs;
+            // 2026年11月21日 原来在构造函数里"触发不等待"地加载数据，表格可能在数据到达前就已绑定空列表。
+            // 改为在 ShowAllBeams_Load 中 await 加载完成后再绑定。
         }
 
-        private async void createData()
+        private async Task createData()
         {
+            _beamHuiZongs = new List<JwBeamHuiZong>();
             if (_selectedMainData != null)
             {
                 var beams = await JwProjectMainService.GetBeamDatasByMainAsync(_selectedMainData.Id);
@@ -90,10 +91,10 @@ namespace RGBControls.Forms
             };
         }
 
-        private void ShowAllBeams_Load(object sender, EventArgs e)
+        private async void ShowAllBeams_Load(object sender, EventArgs e)
         {
+            await createData();
             table1.DataSource = _beamHuiZongs;
-
         }
 
         private void table1_SelectIndexChanged(object sender, EventArgs e)

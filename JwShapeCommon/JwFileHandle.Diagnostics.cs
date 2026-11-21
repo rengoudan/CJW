@@ -59,6 +59,16 @@ namespace JwShapeCommon
         /// </summary>
         private void ReportSuppressedSummary()
         {
+            // 终点孔缺失的梁：逐根记录位置，便于在图上找到并删除/修正
+            var missing = Beams?.Where(b => b.MissingEndHole).ToList() ?? new List<JwBeam>();
+            if (missing.Count > 0)
+            {
+                foreach (var b in missing.Take(20))
+                    AppLog.Warn("終端穴が見つからない梁 dir={Dir} TL=({X},{Y}) end={End} file={File}",
+                        b.DirectionType, b.TopLeft?.X, b.TopLeft?.Y, b.EndTelosType, LogFileName);
+                SendMsg($"【注意】終端穴が見つからない梁が {missing.Count} 本あります（終端の加工は出力されません）。図面の該当箇所を確認してください。");
+            }
+
             if (SuppressedErrors.Count == 0) return;
             var summary = string.Join("、", SuppressedErrors.Select(kv => $"{kv.Key} {kv.Value}件"));
             AppLog.Warn("解析中に回避された例外の集計: {Summary} file={File}", summary, LogFileName);
