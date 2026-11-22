@@ -202,7 +202,9 @@ namespace RGBJWMain.Forms
                     ////jsForm.ShowBeam = js;
                     ////jsForm.sha
                     //jsForm.ShowDialog();
-                    NewJwBeamForm j=new NewJwBeamForm(z);
+                    // 2026年11月22日 同じ階の梁を「前へ／次へ」で切り替えられるよう、図と梁の一覧も渡す
+                    var canvas = jwCanvasControl1.CanvasDraw?.jwCanvas;
+                    NewJwBeamForm j = canvas != null ? new NewJwBeamForm(z, canvas, canvas.Beams) : new NewJwBeamForm(z);
                     j.ShowDialog();
                 }
             }
@@ -229,6 +231,13 @@ namespace RGBJWMain.Forms
                             UIMessageBox.ShowError("このフロアは識別されアップロードされました");
                         }
                     }
+                }
+                catch (FloorLimitException ex)
+                {
+                    // 2026年11月22日 工事の階数を超える取り込み（別の窓で先に保存された場合など）。何も保存されていない
+                    this.HideProcessForm();
+                    UIMessageBox.ShowWarning(ex.Message);
+                    return;
                 }
                 catch (Exception ex)
                 {

@@ -102,7 +102,7 @@ namespace RGBControls.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
             if (_mainData != null)
             {
@@ -112,11 +112,36 @@ namespace RGBControls.Forms
                     UIMessageBox.ShowError(emsg);
                     return;
                 }
+                // 2026年11月22日 工事の階数分を取り込み済みなら、それ以上は取り込めない
+                var blocked = await JwProjectMainService.CheckImportAsync(_mainData.Id);
+                if (blocked != null)
+                {
+                    UIMessageBox.ShowWarning(blocked);
+                    return;
+                }
                 var f = new OpenFileDialog();
                 f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
+                f.Multiselect = true; // 2026年11月22日 複数の階をまとめて取り込める
                 if (f.ShowDialog() != DialogResult.OK) return;
-                OpenFile(f.FileName, _mainData);
+                // 2026年11月22日 簡易確認・複数ファイルに対応した共通の流れ（Classes/FloorImportFlow.cs）
+                int saved = await RGBControls.Classes.FloorImportFlow.ImportFilesAsync(this, _mainData, f.FileNames);
+                if (saved > 0) AddNewFloorTabs();
             }
+        }
+
+        /// <summary>
+        /// 2026年11月22日 取り込んだ階のタブだけを追加する。
+        /// 原来调用 initload()，会把已有楼层的标签页再加一遍（重复）。
+        /// </summary>
+        private void AddNewFloorTabs()
+        {
+            var existing = new HashSet<string>();
+            foreach (var p in tabs1.Pages) if (p.Name != null) existing.Add(p.Name);
+            var added = _mainData.JwProjectSubDatas
+                .Where(s => !existing.Contains(s.Id))
+                .Select(s => (s.Id, s.FloorName ?? "", (Func<UserControl>)(() => new Sub(s))))
+                .ToList();
+            if (added.Count > 0) InitializeTabs(added);
         }
 
         /// <summary>

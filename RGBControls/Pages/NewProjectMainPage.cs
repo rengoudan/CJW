@@ -95,6 +95,8 @@ namespace RGBControls.Pages
             };
             menulist = new AntdUI.IContextMenuStripItem[]
             {
+                new AntdUI.ContextMenuStripItem("要確認の梁を表示", ""), // 2026年11月22日
+                new AntdUI.ContextMenuStripItemDivider(),
                 new AntdUI.ContextMenuStripItem("梁JW出力", "バッチ"),
                 new AntdUI.ContextMenuStripItem("番付図上JW出力", ""),
                 new AntdUI.ContextMenuStripItem("番付図下JW出力", ""),
@@ -109,12 +111,15 @@ namespace RGBControls.Pages
             {
                 new ContextMenuStripItem("梁番号の一括付け直し",""),
                 new ContextMenuStripItem("梁統計",""),
+                new ContextMenuStripItem("一括出力",""), // 2026年11月22日
+                new ContextMenuStripItem("階数を変更",""), // 2026年11月22日
                 new ContextMenuStripItem("削除","")
             };
 
             
             GlobalEvent.GetGlobalEvent().UpdateCodeEvent.Subscribe(JwProjectMainPage_UpdateCodeEvent);
             GlobalEvent.GetGlobalEvent().RefreshDataEvent += GlobalEvent_RefreshDataEvent;
+            InitExportBar(); // 2026年11月22日 NewProjectMainPage.ExportBar.cs
             base.InitData();
         }
 
@@ -159,36 +164,62 @@ namespace RGBControls.Pages
                         UIMessageBox.ShowError(emsg);
                         return;
                     }
+                    // 2026年11月22日 工事の階数分を取り込み済みなら、それ以上は取り込めない
+                    var blocked = await JwProjectMainService.CheckImportAsync(selectedmaindata.Id);
+                    if (blocked != null)
+                    {
+                        UIMessageBox.ShowWarning(blocked);
+                        return;
+                    }
                     var f = new OpenFileDialog();
                     f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
+                    f.Multiselect = true; // 2026年11月22日 複数の階をまとめて取り込める
                     if (f.ShowDialog() != DialogResult.OK) return;
-                    await OpenFile(f.FileName, selectedmaindata);
+                    // 2026年11月22日 簡易確認・複数ファイルに対応した共通の流れ（Classes/FloorImportFlow.cs）
+                    int saved = await FloorImportFlow.ImportFilesAsync(this, selectedmaindata, f.FileNames);
+                    if (saved > 0) await ReloadData();
                 }
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 2026年11月22日「識別色確認」：原来只是读取文件（早期的测试代码，读完什么也不显示）。
+        /// 改为打开「色分布の確認」（参照のみ）。工事を選択していれば、その顧客の保存済みの色設定と照合する。
+        /// </summary>
+        private async void button3_Click(object sender, EventArgs e)
         {
-            var f = new OpenFileDialog();
-            f.Filter = "Jww Files|*.jww|Jws Files|*.jws|All Files|*.*";
+            using var f = new OpenFileDialog { Filter = "Jw_cad 図面 (*.jww)|*.jww", Title = "色分布を確認する図面を選択" };
             if (f.ShowDialog() != DialogResult.OK) return;
 
-            if (Path.GetExtension(f.FileName).ToLower() == ".jww")
+            var assignments = new List<ColorPreviewForm.Assignment>();
+            JwProjectMainData? main = projectmaintable.SelectedIndex > 0
+                ? projectmaintable[projectmaintable.SelectedIndex - 1].record as JwProjectMainData : null;
+            try
             {
-                //JwwReaderが読み込み用のクラス。
-                using var reader = new JwwHelper.JwwReader();
-                //Completedは読み込み完了時に実行される関数。
-                reader.Read(f.FileName, Completed);
-                //var a = reader.Header.m_jwwDataVersion;
+                if (main?.JwCustomerDataId != null)
+                {
+                    long cid = main.JwCustomerDataId.Value;
+                    var c = await jwqitaService.FindCustDesignConstData(t => t.JwCustomerDataId == cid);
+                    if (c != null)
+                    {
+                        assignments.Add(new("梁輪郭線", c.BeamParseColorNumber));
+                        assignments.Add(new("梁符号の文字", c.BeamSymbolTextColorNumber));
+                        assignments.Add(new("柱", c.BeamPillarParseColor));
+                        assignments.Add(new("継手記号", c.BeamSplitParseColor));
+                        assignments.Add(new("下階柱記号", c.DownPillarColorNumber));
+                        assignments.Add(new("ブレース", c.LianjieColorNumber));
+                    }
+                }
 
-
+                JwwColorStats stats = null!;
+                await Progress(async () => stats = await Task.Run(() => JwwColorStats.Read(f.FileName)));
+                string title = main != null ? $"{Path.GetFileName(f.FileName)}（{main.ProjectName} の顧客設定と照合）" : Path.GetFileName(f.FileName);
+                using var dlg = new ColorPreviewForm(stats, title, assignments, allowAssign: false);
+                dlg.ShowDialog(this);
             }
-            else if (Path.GetExtension(f.FileName) == ".jws")
+            catch (Exception ex)
             {
-                UIMessageBox.ShowError("JWSを処理できません");
-                ////jwsも読めますが、このプロジェクトでは確認用のコードがありません。
-                //using var a = new JwwHelper.JwsReader();
-                //a.Read(path, Completed2);
+                RGBControls.Errors.ErrorReporter.Report(ex, "図面を読み込めませんでした。");
             }
         }
 
@@ -206,6 +237,8 @@ namespace RGBControls.Pages
                     await JwProjectMainService.LoadSubDataAsync(_selectedMainData);
                     //this.dbContext.Entry(selecteddata).Collection(e => e.JwProjectSubDatas).Load();
                     this.table1.DataSource = _selectedMainData.JwProjectSubDatas.ToList();
+                    selectedsubData = null!; // 2026年11月22日 別の工事を選んだら階の選択を解除
+                    UpdateExportBar();
                 }
                 HasSelectedRow = true;
                 /*                SelectedRow = projectmaintable.DataSource[projectmaintable.SelectedIndex]*/
@@ -223,6 +256,11 @@ namespace RGBControls.Pages
             if (selectedsubData != null)
             {
                 await JwProjectMainService.LoadSubCollectionAsync(selectedsubData);
+            }
+            if (e.Text.Equals("要確認の梁を表示") && selectedsubData != null)
+            {
+                await OpenFloorViewAsync(selectedsubData, needCheck: true); // 2026年11月22日
+                return;
             }
             if (e.Text.Equals("梁JW出力"))
             {
@@ -314,6 +352,16 @@ namespace RGBControls.Pages
         /// <param name="e"></param>
         private async void contextMenuStrip2_Opening(ContextMenuStripItem e)
         {
+            if (e.Text.Equals("一括出力"))
+            {
+                await BatchExportAsync(); // NewProjectMainPage.BatchExport.cs
+                return;
+            }
+            if (e.Text.Equals("階数を変更"))
+            {
+                await ChangeFloorQuantityAsync(); // NewProjectMainPage.Floors.cs
+                return;
+            }
             if (e.Text.Equals("削除"))
             {
                 if (_selectedMainData!=null)
@@ -393,6 +441,26 @@ namespace RGBControls.Pages
             //    });
 
             //}
+
+            // 2026年11月22日 工事をダブルクリック → 階の作業台（SubsForm）を開く。原来双击没有任何反应。
+            // 作業台は渡された工事の階・梁・穴を使うので、先に読み込んでから開く（上のコメントの処理と同じ）
+            if (e.RowIndex <= 0) return;
+            if (projectmaintable[e.RowIndex - 1].record is not JwProjectMainData main) return;
+            await Progress(async () =>
+            {
+                await JwProjectMainService.LoadSubDataAsync(main);
+                foreach (var sub in main.JwProjectSubDatas)
+                {
+                    await JwProjectMainService.LoadSubCollectionAsync(sub);
+                    foreach (var bd in sub.JwBeamDatas)
+                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
+                }
+            });
+            using (var form = new SubsForm(main))
+            {
+                form.ShowDialog(this);
+            }
+            await ReloadData();
         }
 
         private void projectmaintable_CellClick(object sender, TableClickEventArgs e)
@@ -414,8 +482,10 @@ namespace RGBControls.Pages
             }
         }
 
-        private void table1_CellClick(object sender, TableClickEventArgs e)
+        private async void table1_CellClick(object sender, TableClickEventArgs e)
         {
+            // 2026年11月22日 状態列の「要確認」をクリックすると、その階の要確認の梁を表示
+            if (await TryOpenNeedCheckFromStatusCellAsync(e)) return;
             if (e.Button == MouseButtons.Right)
             {
                 if (e.RowIndex > 0)
@@ -436,45 +506,10 @@ namespace RGBControls.Pages
 
         private async void table1_CellDoubleClick(object sender, TableClickEventArgs e)
         {
-            if (e.RowIndex > -1)
-            {
-
-                var z = table1[e.RowIndex - 1].record as JwProjectSubData;
-
-                await JwProjectMainService.LoadSubCollectionAsync(z);
-
-                if (z.JwBeamDatas.Count > 0)
-                {
-                    foreach (var bd in z.JwBeamDatas)
-                    {
-                        await JwProjectMainService.LoadBeamCollectionAsync(bd);
-                        //this.dbContext.Entry(bd).Collection(e => e.JwHoles).Load();
-                        //this.dbContext.Entry(bd).Collection(e => e.JwBeamVerticalDatas).Load();
-                    }
-                }
-                //MessageBox.Show(z.CompanyName);
-                if (z != null)
-                {
-
-                    //ShowJwCanvasForm showJw = new ShowJwCanvasForm();
-                    //showJw.jwCanvas = canvas;
-                    //showJw.ShowDialog();
-                    Sub sub = new Sub(z);
-                    ShowSubForm subForm = new ShowSubForm(z, sub);
-                    subForm.WindowState = FormWindowState.Maximized;
-
-                    //sub.Dock= DockStyle.Fill;
-
-                    ////sub.AutoSize = true;
-                    //subForm.Controls.Add(sub);
-                    //sub.BringToFront();
-                    //sub.Focus();
-
-
-                    subForm.ShowDialog();
-                }
-
-            }
+            // 2026年11月22日 階画面を開く処理は NewProjectMainPage.Interaction.cs に移した（要確認の表示と共用）。
+            // 原来的条件 e.RowIndex > -1 在双击表头（0）时会读取第 -1 行，改为 > 0
+            if (e.RowIndex > 0 && table1[e.RowIndex - 1].record is JwProjectSubData z)
+                await OpenFloorViewAsync(z, needCheck: false);
         }
 
         #endregion
@@ -503,9 +538,10 @@ namespace RGBControls.Pages
             }
             else
             {
-                this.table1.DataSource = null; 
+                this.table1.DataSource = null;
                 this.table1.Refresh();
             }
+            UpdateExportBar(); // 2026年11月22日 再読み込みで選択が外れたらボタンも無効に
         }
 
 
@@ -521,21 +557,30 @@ namespace RGBControls.Pages
 
         private async Task SaveSubBeams(JwProjectSubData data)
         {
-
-            var maindata = await JwProjectMainService.GetByIdAsync(data.JwProjectMainDataId);
-
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
 
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.BeamJw) == DialogResult.OK)
+            {
+                await SaveSubBeamsTo(data, dialog.SelectedPath, clearProjectFolder: true);
+            }
+        }
+
+        /// <summary>
+        /// 2026年11月22日 選んだフォルダへ梁図を書き出す（一括出力と共用。中身は原来的处理）。
+        /// clearProjectFolder：原来是把「工事名」文件夹整个删掉再建（单层导出保持不变）；一括出力では消さない。
+        /// </summary>
+        private async Task SaveSubBeamsTo(JwProjectSubData data, string selectedPath, bool clearProjectFolder)
+        {
+            var maindata = await JwProjectMainService.GetByIdAsync(data.JwProjectMainDataId);
             {
                 //this.ShowProcessForm(200);
-                string foldPath = dialog.SelectedPath + "\\" + maindata.ProjectName;
+                string foldPath = selectedPath + "\\" + maindata.ProjectName;
                 if (!Directory.Exists(foldPath))
                 {
                     Directory.CreateDirectory(foldPath);
                 }
-                else
+                else if (clearProjectFolder)
                 {
                     Directory.Delete(foldPath, true);
                     Directory.CreateDirectory(foldPath);
@@ -600,9 +645,17 @@ namespace RGBControls.Pages
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.BanzukeTop) == DialogResult.OK)
             {
-                string foldPath = dialog.SelectedPath;// + "\\" + data.FloorName;
+                await SaveSubTopCanvasTo(data, dialog.SelectedPath);
+            }
+        }
+
+        /// <summary>2026年11月22日 選んだフォルダへ番付図（上）を書き出す（一括出力と共用。中身は原来的处理）。</summary>
+        private async Task SaveSubTopCanvasTo(JwProjectSubData data, string selectedPath)
+        {
+            {
+                string foldPath = selectedPath;// + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
                 {
                     Directory.CreateDirectory(foldPath);
@@ -643,9 +696,17 @@ namespace RGBControls.Pages
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.BanzukeBottom) == DialogResult.OK)
             {
-                string foldPath = dialog.SelectedPath;// + "\\" + data.FloorName;
+                await SaveSubBottomCanvasTo(data, dialog.SelectedPath);
+            }
+        }
+
+        /// <summary>2026年11月22日 選んだフォルダへ番付図（下）を書き出す（一括出力と共用。中身は原来的处理）。</summary>
+        private async Task SaveSubBottomCanvasTo(JwProjectSubData data, string selectedPath)
+        {
+            {
+                string foldPath = selectedPath;// + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
                 {
                     Directory.CreateDirectory(foldPath);
@@ -685,10 +746,18 @@ namespace RGBControls.Pages
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
-            string flname = string.Format("{0}_ブレース施工図.jww", data.FloorName);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.Brace) == DialogResult.OK)
             {
-                string foldPath = dialog.SelectedPath + "\\" + data.FloorName;
+                await SaveSubCanvasLinesTo(data, dialog.SelectedPath);
+            }
+        }
+
+        /// <summary>2026年11月22日 選んだフォルダへブレース施工図を書き出す（一括出力と共用。中身は原来的处理）。</summary>
+        private async Task SaveSubCanvasLinesTo(JwProjectSubData data, string selectedPath)
+        {
+            string flname = string.Format("{0}_ブレース施工図.jww", data.FloorName);
+            {
+                string foldPath = selectedPath + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
                 {
                     Directory.CreateDirectory(foldPath);
@@ -723,6 +792,18 @@ namespace RGBControls.Pages
             }
         }
 
+        /// <summary>
+        /// 2026年11月22日 CSV ファイルの書き込み（原来写在 ExportCsv 里的处理，一括出力と共用。編码处理不变）。
+        /// </summary>
+        private static void WriteCsvFile(string fName, string csvstr)
+        {
+            // 参数1：写入文件的文件名；参数2：写入文件的内容
+            byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(csvstr);
+            bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
+            string q = Encoding.Default.GetString(bs);
+            System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+        }
+
         /// <returns>ファイルを書き出したら true（キャンセル・データなしは false）</returns>
         private bool ExportCsv(JwProjectSubData data)
         {
@@ -733,20 +814,18 @@ namespace RGBControls.Pages
                 var csvstr = canvas.ToProcessCsv();
                 if (!string.IsNullOrEmpty(csvstr))
                 {
+                    // 2026年11月22日 出力前に内容を確認（CSV の内容は変えない）
+                    if (!CsvExportConfirmForm.Confirm(this, data, csvstr)) return false;
                     SaveFileDialog saveDataSend = new SaveFileDialog();
                     // Environment.SpecialFolder.MyDocuments 表示在我的文档中
                     saveDataSend.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);   // 获取文件路径
                     saveDataSend.Filter = "*.csv|csv file";   // 设置文件类型为文本文件
                     saveDataSend.DefaultExt = ".csv";   // 默认文件的拓展名
                     saveDataSend.FileName = string.Format("{0}-3015-2.csv", data.FloorName);   // 文件默认名
-                    if (saveDataSend.ShowDialog() == DialogResult.OK)   // 显示文件框，并且选择文件
+                    if (RGBControls.Classes.ExportFolders.Show(saveDataSend, RGBControls.Classes.ExportFolders.Csv) == DialogResult.OK)   // 显示文件框，并且选择文件
                     {
                         string fName = saveDataSend.FileName;   // 获取文件名
-                                                                // 参数1：写入文件的文件名；参数2：写入文件的内容
-                        byte[] bs = Encoding.GetEncoding("UTF-8").GetBytes(csvstr);
-                        bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
-                        string q = Encoding.Default.GetString(bs);
-                        System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+                        WriteCsvFile(fName, csvstr);
                         written = true;
                         AntdUI.Modal.open(new AntdUI.Modal.Config(this, "完了", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
                         {
@@ -774,7 +853,7 @@ namespace RGBControls.Pages
             option.Text = "追加";
             option.AddText("ProjectName", "工事名", null, true);
             option.AddText("SiteAddress", "建設現場住所", null, true);
-            option.AddInteger("FloorQuantity", "階数", 0);
+            option.AddInteger("FloorQuantity", "階数", 1); // 2026年11月22日 取り込める階の上限になる（1 以上）
             //option.AddText("JwCustomerDataId", "顧客", null, false);
             //option.AddText("Telephone", "電話", null, false);
 
@@ -813,6 +892,13 @@ namespace RGBControls.Pages
             {
                 e.Form.SetEditorFocus("ProjectName");
                 ShowWarningTip("工事名を入力してください");
+                return false;
+            }
+            // 2026年11月22日 階数は取り込める階の上限になるので 1 以上
+            if (!int.TryParse(e.Form["FloorQuantity"]?.ToString(), out var floors) || floors < 1)
+            {
+                e.Form.SetEditorFocus("FloorQuantity");
+                ShowWarningTip("階数は 1 以上を入力してください");
                 return false;
             }
             //if (Convert.ToDouble(e.Form["UnitPrice"]) == 0)

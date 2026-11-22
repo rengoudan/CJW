@@ -43,6 +43,21 @@ namespace JwServices
             return rows.Select(r => new FloorCheck(r.Id, r.JwProjectMainDataId, r.Pillars, r.Beams, r.NoHole)).ToList();
         }
 
+        /// <summary>
+        /// 保存済みの梁ごとの穴の数（読み取りのみ）。DB に無い梁（解析直後で未保存）はキーに含まれない。
+        /// 梁画面の「要確認のみ」用（状態列・階画面と同じ「穴が 0 個」の判定にそろえる）。
+        /// </summary>
+        public Dictionary<string, int> GetSavedHoleCounts(IEnumerable<string> beamIds)
+        {
+            var ids = beamIds.Where(i => !string.IsNullOrEmpty(i)).Distinct().ToList();
+            var result = context.JwBeamDatas.AsNoTracking().Where(b => ids.Contains(b.Id)).Select(b => b.Id).ToList()
+                .ToDictionary(id => id, _ => 0);
+            foreach (var g in context.JwHoleDatas.AsNoTracking().Where(h => ids.Contains(h.JwBeamDataId))
+                         .GroupBy(h => h.JwBeamDataId).Select(g => new { g.Key, Count = g.Count() }).ToList())
+                if (result.ContainsKey(g.Key)) result[g.Key] = g.Count;
+            return result;
+        }
+
         /// <summary>CSV 導出に成功したときに呼ぶ。更新後の回数を返す（階が見つからなければ -1）。</summary>
         public Task<int> IncrementExportCountAsync(string subId) => WriteAsync(async () =>
         {

@@ -53,6 +53,7 @@ namespace RGBJWMain.Forms
         /// </summary>
         protected override void OnLoad(EventArgs e)
         {
+            PrepareAutoConfirm(); // 2026年11月22日 簡易確認から開いたときは見せない（CustomerDesignSetting.Import.cs）
             base.OnLoad(e); // CustomerDesignSetting_Load（包括追加试验选项那一行）在这里先执行
             AddColorPreviewButton(); // 2026年11月22日 见 CustomerDesignSetting.ColorPreview.cs
             RGBControls.Classes.FormLayoutHelper.FitToWorkingArea(this, allowScroll: true);

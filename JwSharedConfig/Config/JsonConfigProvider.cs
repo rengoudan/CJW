@@ -13,7 +13,10 @@ namespace JwSharedConfig.Config
 
         public JsonConfigProvider(string filePath = "appconfig.json")
         {
-            _filePath = filePath;
+            // 2026年11月22日 相対パスはプログラムのフォルダ基準にする。
+            // 原来按「当前目录」解析：运行中当前目录被改变时（部分文件对话框会改），设置会读写到别的文件夹。
+            // 通常启动时当前目录就是程序文件夹，所以读写的仍是原来那个文件。
+            _filePath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(AppContext.BaseDirectory, filePath);
         }
 
         public AppConfig Load()

@@ -49,6 +49,7 @@ namespace RGBControls.Controls
             InitializeComponent();
             SubData = subdata;
             inittable();
+            SetupNeedCheckUi(); // 2026年11月22日 Sub.NeedCheck.cs
             //this.Resize += Sub_Resize;
             GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent += GlobalEvent_RefreshShowBeamsEvent;
 
@@ -138,7 +139,8 @@ namespace RGBControls.Controls
                     //this.jwShowBeams1.ShowGoujiantext = false;
                     //this.jwShowBeams1.ShowPillar = true;
 
-                    this.liangtable.DataSource = _subdata.JwBeamDatas.OrderBy(t => t.BeamCode).ToList();
+                    ApplyBeamFilter(); // 2026年11月22日 梁番号順（「要確認のみ」なら絞り込み）
+                    if (StartWithNeedCheck) BeginInvoke(new Action(FocusFirstNeedCheck));
 
                     this.zhutable.DataSource = _subdata.JwPillarDatas;
 
@@ -299,7 +301,7 @@ namespace RGBControls.Controls
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
 
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.BeamJw) == DialogResult.OK)
             {
                 //this.ShowProcessForm(200);
                 string foldPath = dialog.SelectedPath + "\\" + maindata.ProjectName;
@@ -366,7 +368,7 @@ namespace RGBControls.Controls
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.BanzukeTop) == DialogResult.OK)
             {
                 string foldPath = dialog.SelectedPath;// + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
@@ -411,7 +413,7 @@ namespace RGBControls.Controls
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.BanzukeBottom) == DialogResult.OK)
             {
                 string foldPath = dialog.SelectedPath;// + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
@@ -455,7 +457,7 @@ namespace RGBControls.Controls
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
             dialog.Description = "";
             string flname = string.Format("{0}_ブレース施工図.jww", data.FloorName);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.Brace) == DialogResult.OK)
             {
                 string foldPath = dialog.SelectedPath + "\\" + data.FloorName;
                 if (!Directory.Exists(foldPath))
@@ -625,7 +627,7 @@ namespace RGBControls.Controls
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
                     saveFileDialog.FileName = string.Format("ブレース寸法{0}-{1}.xlsx", _subdata.JwProjectMainData.ProjectName, _subdata.FloorName);
-                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    if (RGBControls.Classes.ExportFolders.Show(saveFileDialog, RGBControls.Classes.ExportFolders.BraceExcel) == DialogResult.OK)
                     {
                         using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
                         {
@@ -692,13 +694,15 @@ namespace RGBControls.Controls
                 var csvstr = canvas.ToProcessCsv();
                 if (!string.IsNullOrEmpty(csvstr))
                 {
+                    // 2026年11月22日 出力前に内容を確認（CSV の内容は変えない）
+                    if (!RGBControls.Forms.CsvExportConfirmForm.Confirm(this.FindForm(), data, csvstr)) return false;
                     SaveFileDialog saveDataSend = new SaveFileDialog();
                     // Environment.SpecialFolder.MyDocuments 表示在我的文档中
                     saveDataSend.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);   // 获取文件路径
                     saveDataSend.Filter = "*.csv|csv file";   // 设置文件类型为文本文件
                     saveDataSend.DefaultExt = ".csv";   // 默认文件的拓展名
                     saveDataSend.FileName = string.Format("{0}-3015-2.csv", data.FloorName);   // 文件默认名
-                    if (saveDataSend.ShowDialog() == DialogResult.OK)   // 显示文件框，并且选择文件
+                    if (RGBControls.Classes.ExportFolders.Show(saveDataSend, RGBControls.Classes.ExportFolders.Csv) == DialogResult.OK)   // 显示文件框，并且选择文件
                     {
                         string fName = saveDataSend.FileName;   // 获取文件名
                                                                 // 参数1：写入文件的文件名；参数2：写入文件的内容

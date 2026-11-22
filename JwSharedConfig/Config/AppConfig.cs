@@ -13,6 +13,9 @@ namespace JwSharedConfig.Config
         public CsvSettings Csv { get; set; } = new();
 
         public ParseSettings Parse { get; set; } = new();
+
+        /// <summary>2026年11月22日 画面操作（出力先フォルダの記憶など）</summary>
+        public UiSettings Ui { get; set; } = new();
         //public FeatureFlags Features { get; set; } = new();
     }
 }

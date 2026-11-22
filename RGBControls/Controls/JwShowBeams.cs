@@ -797,7 +797,8 @@ namespace RGBJWMain.Controls
                             {
                                 SelectedBeam.AbsolutePD = SelectedBeam.BottomLeft.Y;
                             }
-                            NewJwBeamForm jsForm = new NewJwBeamForm(SelectedBeam, _canvasDraw.jwCanvas);
+                            // 2026年11月22日 同じ階の梁を「前へ／次へ」で切り替えられるよう、梁の一覧も渡す
+                            NewJwBeamForm jsForm = new NewJwBeamForm(SelectedBeam, _canvasDraw.jwCanvas, _canvasDraw.jwCanvas.Beams);
                             //JwSingleBeamForm jwSingleBeamDraw = new JwSingleBeamForm(SelectedBeam);
                             //jwSingleBeamDraw.Show();
                             jsForm.IsNewBeam = IsNewCanvas;

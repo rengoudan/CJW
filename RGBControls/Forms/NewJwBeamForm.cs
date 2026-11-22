@@ -114,7 +114,7 @@ namespace RGBJWMain.Forms
                 {
                     FolderBrowserDialog dialog = new FolderBrowserDialog();
                     dialog.Description = "";
-                    if (dialog.ShowDialog() == DialogResult.OK)
+                    if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.BeamJw) == DialogResult.OK)
                     {
                         string foldPath = dialog.SelectedPath;
                         if (!Directory.Exists(foldPath))
@@ -215,7 +215,7 @@ namespace RGBJWMain.Forms
                 saveDataSend.Filter = "*.csv|csv file";   // 设置文件类型为文本文件
                 saveDataSend.DefaultExt = ".csv";   // 默认文件的拓展名
                 saveDataSend.FileName = string.Format("{0}-3015-2.csv", data.BeamCode);   // 文件默认名
-                if (saveDataSend.ShowDialog() == DialogResult.OK)   // 显示文件框，并且选择文件
+                if (RGBControls.Classes.ExportFolders.Show(saveDataSend, RGBControls.Classes.ExportFolders.Csv) == DialogResult.OK)   // 显示文件框，并且选择文件
                 {
                     string fName = saveDataSend.FileName;   // 获取文件名
                                                             // 参数1：写入文件的文件名；参数2：写入文件的内容

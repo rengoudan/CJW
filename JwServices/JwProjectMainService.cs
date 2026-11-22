@@ -218,6 +218,8 @@ namespace JwServices
                 if (maindata != null)
                 {
                     //maindata.ParsedQuantity -= 1;
+                    // 工事の階数（FloorQuantity）は工事作成時に決める値なので、階を削除しても変えない。
+                    // 解析数は ReCalculateMain で実際の階データ件数に合わせる → 空いた分だけ再び取り込める
                     await ReCalculateMain(maindata.Id);
                 }
             }
@@ -306,7 +308,12 @@ namespace JwServices
         /// </summary>
         /// <param name="fileHandle"></param>
         /// <returns></returns>
-        public Task SaveNewParseResult(JwFileHandle fileHandle) => WriteAsync(() => SaveNewParseResultCore(fileHandle));
+        public async Task SaveNewParseResult(JwFileHandle fileHandle)
+        {
+            // 2026年11月22日 工事の階数を超える取り込みは不可（書き込みを始める前に確認する）
+            await EnsureCanImportAsync(fileHandle.ProjectPathModel.MainData.Id);
+            await WriteAsync(() => SaveNewParseResultCore(fileHandle));
+        }
 
         private async Task SaveNewParseResultCore(JwFileHandle fileHandle)
         {
@@ -394,7 +401,8 @@ namespace JwServices
             md.PillarCount += fileHandle._subData.PillarCount;
             md.KPillarCount += fileHandle._subData.KPillarCount;
             md.SinglePillarCount += fileHandle._subData.SinglePillarCount;
-            md.ParsedQuantity += 1;
+            // 2026年11月22日 原来是 += 1，删除等操作后会和实际楼层数对不上；改为按实际的阶数据件数
+            md.ParsedQuantity = await context.JwProjectSubDatas.CountAsync(s => s.JwProjectMainDataId == md.Id);
             await UpdateAsync<JwProjectMainData>(md);
         }
 

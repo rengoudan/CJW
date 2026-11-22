@@ -37,7 +37,8 @@ namespace RGBControls.Forms
         public IReadOnlyList<Assignment> Changes =>
             _assignments.Where(a => _original.TryGetValue(a.Setting, out var o) && o != a.Color).ToList();
 
-        public ColorPreviewForm(JwwColorStats stats, string fileName, IEnumerable<Assignment> assignments)
+        /// <param name="allowAssign">false なら参照のみ（割り当て・反映の操作を出さない。設定画面以外から開くとき）</param>
+        public ColorPreviewForm(JwwColorStats stats, string fileName, IEnumerable<Assignment> assignments, bool allowAssign = true)
         {
             _stats = stats;
             _assignments = assignments.ToList();
@@ -61,7 +62,9 @@ namespace RGBControls.Forms
                 Height = (int)(56 * k),
                 Padding = new Padding(10, 8, 0, 0),
                 Text = $"縮尺 1/{stats.Scale}　線 {stats.Lines.Count:N0}・ソリッド {stats.Solids.Count:N0}・文字 {stats.Texts.Count:N0}（ブロック {stats.BlockCount:N0} 個を展開済み）"
-                       + Environment.NewLine + "上の一覧で設定項目を選び、下の一覧で線色を選んで「割り当て」（ダブルクリック・右クリックでも可）。",
+                       + Environment.NewLine + (allowAssign
+                           ? "上の一覧で設定項目を選び、下の一覧で線色を選んで「割り当て」（ダブルクリック・右クリックでも可）。"
+                           : "一覧で色を選ぶと、右の図で赤く表示します（参照のみ。色の変更は解析設定画面で行います）。"),
             };
 
             // ── 設定項目の一覧 ──
@@ -111,8 +114,11 @@ namespace RGBControls.Forms
                     mi.Enabled = _assignments[i].Color != c;
                 }
             };
-            _colorList.ContextMenuStrip = colorMenu;
-            _colorList.DoubleClick += (s, e) => AssignToTarget();
+            if (allowAssign)
+            {
+                _colorList.ContextMenuStrip = colorMenu;
+                _colorList.DoubleClick += (s, e) => AssignToTarget();
+            }
 
             _settingList.SelectedIndexChanged += (s, e) => OnSettingSelected();
             _colorList.SelectedIndexChanged += (s, e) => OnColorSelected();
@@ -138,7 +144,8 @@ namespace RGBControls.Forms
             settingBox.Controls.Add(_settingList);
             var colorBox = new GroupBox { Text = "線色ごとの件数", Dock = DockStyle.Fill, Padding = new Padding(6) };
             colorBox.Controls.Add(_colorList);
-            colorBox.Controls.Add(bar);
+            if (allowAssign) colorBox.Controls.Add(bar);
+            else _settingList.ContextMenuStrip = null;
             foreach (var lv in new[] { _settingList, _colorList })
                 lv.ClientSizeChanged += (s, e) => FillLastColumn((ListView)s!);
             var left = new Panel { Dock = DockStyle.Left, Width = (int)(600 * k), Padding = new Padding(8, 0, 4, 0) };
@@ -156,7 +163,8 @@ namespace RGBControls.Forms
             _status = new Label { AutoSize = false, Location = new Point(12, (int)(12 * k)), Height = (int)(24 * k), ForeColor = Color.RoyalBlue };
             _applyButton = new Button { Text = "設定に反映", AutoSize = true, Padding = new Padding(16, 2, 16, 2), Enabled = false };
             _applyButton.Click += (s, e) => { DialogResult = DialogResult.OK; Close(); };
-            var cancel = new Button { Text = "キャンセル", AutoSize = true, Padding = new Padding(16, 2, 16, 2) };
+            var cancel = new Button { Text = allowAssign ? "キャンセル" : "閉じる", AutoSize = true, Padding = new Padding(16, 2, 16, 2) };
+            _applyButton.Visible = allowAssign;
             cancel.Click += (s, e) => Close();
             var bottom = new Panel { Dock = DockStyle.Bottom, Height = (int)(48 * k) };
             bottom.Controls.AddRange(new Control[] { _status, _applyButton, cancel });

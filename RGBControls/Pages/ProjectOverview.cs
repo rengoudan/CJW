@@ -171,7 +171,7 @@ namespace RGBJWMain.Pages
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Excel ファイル(*.xls)|*.xls|Excel ファイル(*.xlsx)|*.xlsx";
                 saveFileDialog.FileName = string.Format("ブレース寸法-{0}-all.xlsx", _projectMainData.ProjectName);
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                if (RGBControls.Classes.ExportFolders.Show(saveFileDialog, RGBControls.Classes.ExportFolders.BraceExcel) == DialogResult.OK)
                 {
                     using (var stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
                     {
@@ -292,7 +292,7 @@ namespace RGBJWMain.Pages
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.Description = "";
 
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (RGBControls.Classes.ExportFolders.Show(dialog, RGBControls.Classes.ExportFolders.BeamJw) == DialogResult.OK)
             {
                 this.ShowProcessForm(200);
                 string foldPath = dialog.SelectedPath + "\\" + data.ProjectName;

@@ -112,6 +112,8 @@ namespace RGBJWMain.Forms
         /// <param name="e"></param>
         private async void uiButton1_Click(object sender, EventArgs e)
         {
+            // 2026年11月22日 階名の重複は解析前に確認する（CustomerDesignSetting.Import.cs）
+            if (!await CheckFloorNameAsync()) return;
             if (JwCustomer != null && jwCustDesignConstData == null)
             {
                 if (jwCustDesignConstData == null)
@@ -374,8 +376,10 @@ namespace RGBJWMain.Forms
                 {
                     UIMessageBox.ShowError("基礎データが未登録です");
                     this.Close();
+                    return;
                 }
             }
+            AfterSettingsLoaded(); // 2026年11月22日 CustomerDesignSetting.Import.cs（簡易確認からの自動確定など）
 
            
 
