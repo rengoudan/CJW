@@ -1,6 +1,4 @@
 using System.Drawing;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace RGBControls.Classes
@@ -10,7 +8,7 @@ namespace RGBControls.Classes
     /// 设计器里各窗体写死的是「宋体」（中文字体，汉字按中文字形显示），首页用的是「微软雅黑」。
     /// 运行时把这些字体换成日文界面字体 Meiryo UI：只换字体名，字号、粗细、单位都不变。
     /// 本机没有安装 Meiryo UI 时（例如中文开发机）什么都不做，保持原样。
-    /// 生效时机：窗体激活之前（Load 之后、第一次绘制之前），因此不会先显示宋体再跳变；之后追加的控件也会处理。
+    /// 生效时机由 <see cref="UiHook"/> 决定：窗体激活之前（Load 之后、第一次绘制之前），之后追加的控件也会处理。
     /// 多行文本框（日志、CSV 预览）换成等宽的 MS Gothic，保持字符对齐。
     /// </summary>
     public static class UiFont
@@ -29,39 +27,21 @@ namespace RGBControls.Classes
         private static string? _target;
         private static string? _mono;
         private static readonly Dictionary<(string, float, FontStyle, GraphicsUnit), Font> Cache = new();
-        private static readonly ConditionalWeakTable<Control, object> Hooked = new();
-
-        private delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
-        private static HookProc? _proc; // GC されないよう保持
-        private static IntPtr _hook;
 
         public static bool Enabled => _target != null;
 
         /// <summary>起動時に一度だけ呼ぶ。対象フォントが無い環境では何もしない。</summary>
         public static void Install(string target = DefaultTarget, string monospace = DefaultMonospace)
         {
-            if (_hook != IntPtr.Zero) return;
+            if (_target != null) return;
             if (!IsInstalled(target)) return;
             _target = target;
             _mono = IsInstalled(monospace) ? monospace : null;
-            try
-            {
-                _proc = CbtProc;
-                _hook = SetWindowsHookEx(WH_CBT, _proc, IntPtr.Zero, GetCurrentThreadId());
-            }
-            catch (Exception ex)
-            {
-                JwLogging.AppLog.Warn(ex, "UiFont: hook install failed");
-            }
+            UiHook.Register(FixControl);
         }
 
         /// <summary>指定したコントロール以下に適用する（以後追加される子コントロールにも適用）。</summary>
-        public static void Apply(Control root)
-        {
-            if (_target == null) return;
-            try { ApplyTree(root); }
-            catch (Exception ex) { JwLogging.AppLog.Warn(ex, "UiFont: apply failed on {Control}", root.GetType().Name); }
-        }
+        public static void Apply(Control root) => UiHook.Apply(root);
 
         private static bool IsInstalled(string name)
         {
@@ -74,23 +54,6 @@ namespace RGBControls.Classes
             {
                 return false;
             }
-        }
-
-        private static void ApplyTree(Control c)
-        {
-            FixControl(c);
-            foreach (Control child in c.Controls) ApplyTree(child);
-            if (c.ContextMenuStrip != null) FixToolStrip(c.ContextMenuStrip);
-            if (!Hooked.TryGetValue(c, out _))
-            {
-                Hooked.Add(c, null!);
-                c.ControlAdded += OnControlAdded;
-            }
-        }
-
-        private static void OnControlAdded(object? sender, ControlEventArgs e)
-        {
-            if (e.Control != null) Apply(e.Control);
         }
 
         private static bool IsTarget(Font? f) =>
@@ -112,6 +75,7 @@ namespace RGBControls.Classes
 
         private static void FixControl(Control c)
         {
+            if (_target == null) return;
             // 親から継承しているフォントは親を直した時点で新しいフォントになっているので、ここでは一致しない
             if (IsTarget(c.Font))
             {
@@ -121,9 +85,10 @@ namespace RGBControls.Classes
                 }
                 else
                 {
-                    c.Font = Get(c.Font, _target!);
+                    c.Font = Get(c.Font, _target);
                 }
             }
+            if (c.ContextMenuStrip != null) FixToolStrip(c.ContextMenuStrip);
             if (c is DataGridView g) FixGrid(g);
             else if (c is ToolStrip ts) FixToolStrip(ts);
         }
@@ -156,35 +121,5 @@ namespace RGBControls.Classes
             if (item is ToolStripDropDownItem dd && dd.HasDropDownItems)
                 foreach (ToolStripItem sub in dd.DropDownItems) FixItem(sub);
         }
-
-        // ── 窓のアクティブ化直前（表示前）に適用するためのスレッド内 CBT フック ──
-        private const int WH_CBT = 5;
-        private const int HCBT_ACTIVATE = 5;
-
-        private static IntPtr CbtProc(int code, IntPtr wParam, IntPtr lParam)
-        {
-            if (code == HCBT_ACTIVATE)
-            {
-                try
-                {
-                    if (Control.FromHandle(wParam) is Form f && !Hooked.TryGetValue(f, out _))
-                        Apply(f);
-                }
-                catch
-                {
-                    // フックの中では例外を外へ出さない
-                }
-            }
-            return CallNextHookEx(_hook, code, wParam, lParam);
-        }
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hMod, uint dwThreadId);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
-
-        [DllImport("kernel32.dll")]
-        private static extern uint GetCurrentThreadId();
     }
 }

@@ -23,6 +23,8 @@ namespace RGBControls
         public MainForm()
         {
             RGBControls.Classes.UiFont.Install(); // 2026年11月22日 画面フォントを Meiryo UI に統一（未インストールなら何もしない）
+            RGBControls.Classes.UiTableTheme.Install(); // 2026年11月22日 表の配色を窓の配色（青テーマ）にそろえる
+            RGBControls.Classes.AntdJapanese.Install(); // 2026年11月22日 AntdUI の組み込み文言（データなし・OK/キャンセル）を日本語に
             InitializeComponent();
             int pageIndex = 1000;
 
