@@ -215,7 +215,7 @@ namespace RGBJWMain.Pages
                         //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
                     }
                 }
-                UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
+                UIMessageBox.ShowSuccess("ブレース寸法を出力しました");
             }
 
 
@@ -386,7 +386,7 @@ namespace RGBJWMain.Pages
                         bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
                         string q = Encoding.Default.GetString(bs);
                         System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
-                        AntdUI.Modal.open(new AntdUI.Modal.Config(this, "完了プロンプト", "Some contents...Some contents...Some contents...Some contents...Some contents...Some contents...Some contents...", AntdUI.TType.Success)
+                        AntdUI.Modal.open(new AntdUI.Modal.Config(this, "完了", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
                         {
                             OnButtonStyle = (id, btn) =>
                             {
@@ -408,7 +408,7 @@ namespace RGBJWMain.Pages
         /// <param name="e"></param>
         private void uiButton1_Click(object sender, EventArgs e)
         {
-            if (UIMessageBox.ShowAsk("プロジェクトデータをすべてエクスポートするかどうか"))
+            if (UIMessageBox.ShowAsk("この階のすべての梁図をJWで出力しますか？"))
             {
 
                 SaveSubBeams(_subData);

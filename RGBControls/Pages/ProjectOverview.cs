@@ -41,7 +41,7 @@ namespace RGBJWMain.Pages
             if (_projectMainData != null)
             {
                 //this.uiLine1.Text = _projectMainData.ProjectName;
-                this.Text = string.Format("{0} -プロジェクトの詳細", _projectMainData.ProjectName);
+                this.Text = string.Format("{0} - 工事の詳細", _projectMainData.ProjectName);
                 this.uiMarkLabel2.Text = _projectMainData.JwProjectSubDatas.Count.ToString();
                 this.uiMarkLabel3.Text = _projectMainData.BeamsNumber.ToString();
                 this.uiMarkLabel4.Text = _projectMainData.PillarCount.ToString();
@@ -149,13 +149,13 @@ namespace RGBJWMain.Pages
                     var _subData = _projectMainData.JwProjectSubDatas.FirstOrDefault();
                     if (_subData == null)
                     {
-                        UIMessageBox.ShowWarning("プロジェクトにサブデータがありません。");
+                        UIMessageBox.ShowWarning("この工事には階データがありません。");
                         return;
                     }
                 }
                 else
                 {
-                    UIMessageBox.ShowWarning("プロジェクトにサブデータがありません。");
+                    UIMessageBox.ShowWarning("この工事には階データがありません。");
                     return;
                 }
                 string compname = _projectMainData.JwCustomerData?.CompanyName;
@@ -179,7 +179,7 @@ namespace RGBJWMain.Pages
                         //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
                     }
                 }
-                UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
+                UIMessageBox.ShowSuccess("ブレース寸法を出力しました");
 
 
 

@@ -58,7 +58,7 @@ namespace RGBControls.Forms
                         {
                             var floorName = floorGroup.Key;
                             var floorCount = floorGroup.Count();
-                            db.Remark += $"{floorName}:{floorCount}根;";
+                            db.Remark += $"{floorName}:{floorCount}本;";
                         });
                         db.BeamDatas = group.ToList();
                         _beamHuiZongs.Add(db);
@@ -73,7 +73,7 @@ namespace RGBControls.Forms
         {
             table1.Columns = new AntdUI.ColumnCollection
             {
-            new AntdUI.Column("InitialBeamCode", "初期化梁番号"),
+            new AntdUI.Column("InitialBeamCode", "初期梁番号"),
                                 new AntdUI.Column("BeamCode", "梁番号"),
                                 new AntdUI.Column("BeamCount", "梁数"),
                                 new AntdUI.Column("TotalLength", "梁長さ"),

@@ -37,7 +37,7 @@ namespace RGBJWMain.Pages
             option.Text = "予算の作成";
             var cuslst =await jwProjectMainService.GetAllAsync();
 
-            option.AddCombobox("ProjectMainId", "プロジェクト", cuslst, "ProjectName", "Id", 0);
+            option.AddCombobox("ProjectMainId", "工事", cuslst, "ProjectName", "Id", 0);
 
             var matype = JwExtend.CreateBindList<MaterialType>();
 
@@ -65,14 +65,14 @@ namespace RGBJWMain.Pages
                     }
                     else
                     {
-                        UIMessageBox.ShowError("プロジェクトの図面はまだ解決されていません!");
+                        UIMessageBox.ShowError("図面がまだ解析されていません");
                     }
                 }
                 else
                 {
                     if (budgetlst.Count() != 0)
                     {
-                        if (UIMessageBox.ShowAsk("このプロジェクトの予算はすでに存在します。再生成しますか?"))
+                        if (UIMessageBox.ShowAsk("この工事の予算はすでに存在します。再生成しますか？"))
                         {
                             UIMessageBox.ShowError("この機能は開発中です");
                         }
@@ -395,7 +395,7 @@ namespace RGBJWMain.Pages
                     //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
                 }
             }
-            UIMessageBox.ShowSuccess("見積が正常にエクスポートされました");
+            UIMessageBox.ShowSuccess("見積書を出力しました");
 
             //return _jwProjectsExcelExporter.ExportToFile(jwProjectListDtos);
 

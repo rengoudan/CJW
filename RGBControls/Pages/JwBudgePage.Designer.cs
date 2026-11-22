@@ -313,7 +313,7 @@
             uiSymbolButton1.Size = new Size(134, 35);
             uiSymbolButton1.Symbol = 261891;
             uiSymbolButton1.TabIndex = 5;
-            uiSymbolButton1.Text = "輸出EXCEL";
+            uiSymbolButton1.Text = "EXCEL出力";
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // uilbprojectname
@@ -337,7 +337,7 @@
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(160, 22);
-            toolStripMenuItem1.Text = "輸出予算EXCEL";
+            toolStripMenuItem1.Text = "予算EXCEL出力";
             toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
             // budgetItemNameDataGridViewTextBoxColumn

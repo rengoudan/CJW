@@ -66,7 +66,7 @@
             uiButton1.Name = "uiButton1";
             uiButton1.Size = new Size(100, 35);
             uiButton1.TabIndex = 0;
-            uiButton1.Text = "セーブ";
+            uiButton1.Text = "保存";
             uiButton1.Click += uiButton1_Click;
             // 
             // panel2

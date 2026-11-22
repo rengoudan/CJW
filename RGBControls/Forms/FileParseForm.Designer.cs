@@ -200,7 +200,7 @@
             uiSymbolButton1.Size = new Size(178, 35);
             uiSymbolButton1.Symbol = 557697;
             uiSymbolButton1.TabIndex = 0;
-            uiSymbolButton1.Text = "セーブ";
+            uiSymbolButton1.Text = "保存";
             uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 

@@ -194,7 +194,7 @@
             uiSymbolButton1.Size = new Size(77, 35);
             uiSymbolButton1.Symbol = 300043;
             uiSymbolButton1.TabIndex = 2;
-            uiSymbolButton1.Text = "增";
+            uiSymbolButton1.Text = "追加";
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // JwCustomerPage

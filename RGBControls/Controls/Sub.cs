@@ -151,7 +151,7 @@ namespace RGBControls.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Sub控件加载失败: " + ex.Message);
+                MessageBox.Show("階データの表示に失敗しました: " + ex.Message);
             }
 
         }
@@ -241,13 +241,13 @@ namespace RGBControls.Controls
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            if (AntdUI.Modal.open(this.ParentForm, "ヒント", "プロジェクトデータをすべてエクスポートするかどうか") == DialogResult.OK)
+            if (AntdUI.Modal.open(this.ParentForm, "確認", "この階のすべての梁図をJWで出力しますか？") == DialogResult.OK)
             {
                 await Progress(async () => { await SaveSubBeams(_subdata); });
                 if (!string.IsNullOrEmpty(_nowsavefold))
                 {
-                    this.ParentForm.SuccessModal("エクスポートされたビーム-->" + _nowsavefold);
-                    //UIMessageBox.ShowSuccess("エクスポートされたビーム-->" + _nowsavefold);
+                    this.ParentForm.SuccessModal("梁図を出力しました：" + _nowsavefold);
+                    //UIMessageBox.ShowSuccess("梁図を出力しました：" + _nowsavefold);
                 }
             }
         }
@@ -633,7 +633,7 @@ namespace RGBControls.Controls
                             //_tempFileCacheManager.SetFile(files.FileToken, stream.ToArray());
                         }
                     }
-                    UIMessageBox.ShowSuccess("ブレース寸法正常にエクスポートされました");
+                    UIMessageBox.ShowSuccess("ブレース寸法を出力しました");
                 }
                 else
                 {
@@ -703,7 +703,7 @@ namespace RGBControls.Controls
                         //bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
                         //string q = Encoding.Default.GetString(bs);
                         System.IO.File.WriteAllText(fName, csvstr, Encoding.GetEncoding(932));   // 向文件中写入内容
-                        AntdUI.Modal.open(new AntdUI.Modal.Config(this.ParentForm, "完了プロンプト", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
+                        AntdUI.Modal.open(new AntdUI.Modal.Config(this.ParentForm, "完了", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
                         {
                             OnButtonStyle = (id, btn) =>
                             {

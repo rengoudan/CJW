@@ -372,7 +372,7 @@ namespace RGBJWMain.Forms
                 }
                 else
                 {
-                    UIMessageBox.ShowError("基礎データがまだ整備されていない");
+                    UIMessageBox.ShowError("基礎データが未登録です");
                     this.Close();
                 }
             }

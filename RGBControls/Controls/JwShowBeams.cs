@@ -850,7 +850,7 @@ namespace RGBJWMain.Controls
                     //{
                     //    RightKey(it);
                     //}, menulist);
-                    menulist.Add(new AntdUI.ContextMenuStripItem("消去-梁"));
+                    menulist.Add(new AntdUI.ContextMenuStripItem("削除-梁"));
                 }
                 var pillarsbs = _bounds.Where(t => t.ShapeType == DrawShapeType.Pillar).ToList();
                 if (pillarsbs.Count > 0)
@@ -866,7 +866,7 @@ namespace RGBJWMain.Controls
                         //{
                         //    RightKey(it);
                         //}, menulist);
-                        menulist.Add(new AntdUI.ContextMenuStripItem("消去-柱"));
+                        menulist.Add(new AntdUI.ContextMenuStripItem("削除-柱"));
                     }
                 }
                 
@@ -883,7 +883,7 @@ namespace RGBJWMain.Controls
                         //}, menulist);
                         _selectedlinkpart= lp;
                         candeletelinkpart = true;
-                        menulist.Add(new AntdUI.ContextMenuStripItem("消去-B/BG"));
+                        menulist.Add(new AntdUI.ContextMenuStripItem("削除-B/BG"));
                     }
                 }
 
@@ -904,7 +904,7 @@ namespace RGBJWMain.Controls
         }
         private void RightKey(AntdUI.ContextMenuStripItem it)
         {
-            if (it.Text.Equals("消去-梁"))
+            if (it.Text.Equals("削除-梁"))
             {
 
                 if(GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent!=null)
@@ -928,7 +928,7 @@ namespace RGBJWMain.Controls
                 // 执行对应的操作
                 //MessageBox.Show("你点击了新增按钮！");
             }
-            if (it.Text.Equals("消去-柱"))
+            if (it.Text.Equals("削除-柱"))
             {
                 if (GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent != null)
                 {
@@ -949,7 +949,7 @@ namespace RGBJWMain.Controls
                     }
                 }
             }
-            if (it.Text.Equals("消去-B/BG"))
+            if (it.Text.Equals("削除-B/BG"))
             {
                 if (GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent != null)
                 {

@@ -73,7 +73,7 @@ namespace RGBControls.Pages
                                 new AntdUI.Column("Biaochi", "縮尺"),
                                 new AntdUI.Column("MarkBeam", "符号"),
                                 new AntdUI.Column("LianjieCompentType", "BR8/VPL"),
-                                new AntdUI.Column("MinimalStrategy", "穴あけ策略")
+                                new AntdUI.Column("MinimalStrategy", "穴あけ方式")
                                 {
                                     Render = (value, record, i_row) =>
         {
@@ -93,21 +93,21 @@ namespace RGBControls.Pages
             };
             menulist = new AntdUI.IContextMenuStripItem[]
             {
-                new AntdUI.ContextMenuStripItem("輸出-梁JW", "バッチ"),
-                new AntdUI.ContextMenuStripItem("輸出-番付図上JW", ""),
-                new AntdUI.ContextMenuStripItem("輸出-番付図下JW", ""),
+                new AntdUI.ContextMenuStripItem("梁JW出力", "バッチ"),
+                new AntdUI.ContextMenuStripItem("番付図上JW出力", ""),
+                new AntdUI.ContextMenuStripItem("番付図下JW出力", ""),
                 new AntdUI.ContextMenuStripItem("ブレース施工図", ""),
                 new AntdUI.ContextMenuStripItemDivider(),
                 new AntdUI.ContextMenuStripItem("梁製造CSV", ""),
-                new AntdUI.ContextMenuStripItem("消去", ""),
+                new AntdUI.ContextMenuStripItem("削除", ""),
             };
 
             //2026年4月17日 增加整个项目梁编号重新生成的功能
             mainmenulist = new IContextMenuStripItem[]
             {
-                new ContextMenuStripItem("統合ビーム番号付け",""),
+                new ContextMenuStripItem("梁番号の一括付け直し",""),
                 new ContextMenuStripItem("梁統計",""),
-                new ContextMenuStripItem("消去","")
+                new ContextMenuStripItem("削除","")
             };
 
             
@@ -222,23 +222,23 @@ namespace RGBControls.Pages
             {
                 await JwProjectMainService.LoadSubCollectionAsync(selectedsubData);
             }
-            if (e.Text.Equals("輸出-梁JW"))
+            if (e.Text.Equals("梁JW出力"))
             {
                 if (selectedsubData != null)
                 {
 
-                    if (AntdUI.Modal.open(this, "ヒント", "プロジェクトデータをすべてエクスポートするかどうか") == DialogResult.OK)
+                    if (AntdUI.Modal.open(this, "確認", "この階のすべての梁図をJWで出力しますか？") == DialogResult.OK)
                     {
                         await Progress(async () => { await SaveSubBeams(selectedsubData); });
                         if (!string.IsNullOrEmpty(_nowsavefold))
                         {
-                            this.SuccessModal("エクスポートされたビーム-->" + _nowsavefold);
-                            //UIMessageBox.ShowSuccess("エクスポートされたビーム-->" + _nowsavefold);
+                            this.SuccessModal("梁図を出力しました：" + _nowsavefold);
+                            //UIMessageBox.ShowSuccess("梁図を出力しました：" + _nowsavefold);
                         }
                     }
                 }
             }
-            if (e.Text.Equals("輸出-番付図上JW"))
+            if (e.Text.Equals("番付図上JW出力"))
             {
                 if (selectedsubData != null)
                 {
@@ -246,7 +246,7 @@ namespace RGBControls.Pages
                     //SaveSubTopCanvas(selectedsubData);
                 }
             }
-            if (e.Text.Equals("輸出-番付図下JW"))
+            if (e.Text.Equals("番付図下JW出力"))
             {
                 if (selectedsubData != null)
                 {
@@ -267,12 +267,12 @@ namespace RGBControls.Pages
                     //SaveSubCanvasLines(selectedsubData);
                 }
             }
-            if (e.Text.Equals("消去"))
+            if (e.Text.Equals("削除"))
             {
                 if (selectedsubData != null)
                 {
                     var tishimsg = string.Format("選択した階データ {0} を削除しますか？", selectedsubData.FloorName);
-                    if (AntdUI.Modal.open(this, "ヒント", tishimsg) == DialogResult.OK)
+                    if (AntdUI.Modal.open(this, "確認", tishimsg) == DialogResult.OK)
                     {
                         await Progress(async () =>
                         {
@@ -310,12 +310,12 @@ namespace RGBControls.Pages
         /// <param name="e"></param>
         private async void contextMenuStrip2_Opening(ContextMenuStripItem e)
         {
-            if (e.Text.Equals("消去"))
+            if (e.Text.Equals("削除"))
             {
                 if (_selectedMainData!=null)
                 {
-                        var tishimsg = string.Format("選択したプロジェクト {0} を削除しますか？", _selectedMainData.ProjectName);
-                        if (AntdUI.Modal.open(this, "ヒント", tishimsg) == DialogResult.OK)
+                        var tishimsg = string.Format("選択した工事 {0} を削除しますか？", _selectedMainData.ProjectName);
+                        if (AntdUI.Modal.open(this, "確認", tishimsg) == DialogResult.OK)
                         {
                             await Progress(async () =>
                             {
@@ -325,14 +325,14 @@ namespace RGBControls.Pages
                         }   
                 }
             }
-            if(e.Text.Equals("統合ビーム番号付け"))
+            if(e.Text.Equals("梁番号の一括付け直し"))
                 {
                     if (_selectedMainData != null)
                     {
                         await Progress(async () =>
                         {
                              await JwProjectMainService.UnifyBeamCode(_selectedMainData.Id);
-                            var msg = $"プロジェクト {_selectedMainData.ProjectName} の梁番号を再生成しました。";
+                            var msg = $"工事 {_selectedMainData.ProjectName} の梁番号を再生成しました。";
                             this.SuccessModal(msg);
                         });
                     }
@@ -740,7 +740,7 @@ namespace RGBControls.Pages
                         bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
                         string q = Encoding.Default.GetString(bs);
                         System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
-                        AntdUI.Modal.open(new AntdUI.Modal.Config(this, "完了プロンプト", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
+                        AntdUI.Modal.open(new AntdUI.Modal.Config(this, "完了", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
                         {
                             OnButtonStyle = (id, btn) =>
                             {
@@ -763,7 +763,7 @@ namespace RGBControls.Pages
             UIEditOption option = new UIEditOption();
             option.AutoLabelWidth = true;
             option.Text = "追加";
-            option.AddText("ProjectName", "プロジェクト", null, true);
+            option.AddText("ProjectName", "工事名", null, true);
             option.AddText("SiteAddress", "建設現場住所", null, true);
             option.AddInteger("FloorQuantity", "階数", 0);
             //option.AddText("JwCustomerDataId", "顧客", null, false);
@@ -803,7 +803,7 @@ namespace RGBControls.Pages
             if (string.IsNullOrEmpty(e.Form["ProjectName"].ToString()))
             {
                 e.Form.SetEditorFocus("ProjectName");
-                ShowWarningTip("プロジェクトを空にすることはできません");
+                ShowWarningTip("工事名を入力してください");
                 return false;
             }
             //if (Convert.ToDouble(e.Form["UnitPrice"]) == 0)

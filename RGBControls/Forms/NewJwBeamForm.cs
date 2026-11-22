@@ -223,7 +223,7 @@ namespace RGBJWMain.Forms
                     bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
                     string q = Encoding.Default.GetString(bs);
                     System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
-                    AntdUI.Modal.open(new AntdUI.Modal.Config(this.ParentForm, "完了プロンプト", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
+                    AntdUI.Modal.open(new AntdUI.Modal.Config(this.ParentForm, "完了", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
                     {
                         OnButtonStyle = (id, btn) =>
                         {

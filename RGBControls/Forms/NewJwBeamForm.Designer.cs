@@ -184,7 +184,7 @@
             pageHeader1.ShowButton = true;
             pageHeader1.Size = new Size(1561, 53);
             pageHeader1.TabIndex = 31;
-            pageHeader1.Text = "梁预览";
+            pageHeader1.Text = "梁プレビュー";
             // 
             // panel5
             // 

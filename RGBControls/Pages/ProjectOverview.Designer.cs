@@ -314,7 +314,7 @@
             uiSymbolButton3.Size = new Size(150, 52);
             uiSymbolButton3.Symbol = 563560;
             uiSymbolButton3.TabIndex = 2;
-            uiSymbolButton3.Text = "増加";
+            uiSymbolButton3.Text = "追加";
             uiSymbolButton3.Visible = false;
             uiSymbolButton3.Click += uiSymbolButton3_Click;
             // 
@@ -327,7 +327,7 @@
             uiSymbolButton2.Size = new Size(150, 52);
             uiSymbolButton2.Symbol = 61891;
             uiSymbolButton2.TabIndex = 1;
-            uiSymbolButton2.Text = "輸出リンクEXCEL";
+            uiSymbolButton2.Text = "リンクEXCEL出力";
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
             // uiSymbolButton1
@@ -339,7 +339,7 @@
             uiSymbolButton1.Size = new Size(115, 52);
             uiSymbolButton1.Symbol = 358486;
             uiSymbolButton1.TabIndex = 0;
-            uiSymbolButton1.Text = "輸出全て梁";
+            uiSymbolButton1.Text = "全梁出力";
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
             // panel1

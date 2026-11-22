@@ -138,8 +138,8 @@ namespace RGBJWMain.Pages
         {
             if (String.IsNullOrEmpty(e.FormattedValue.ToString()))
             {
-                string fmsg = string.Format("{0} 列目空ではない", e.ColumnIndex + 1);
-                uiDataGridView1.Rows[e.RowIndex].ErrorText = string.Format("{0} 列目空ではない", e.ColumnIndex + 1);
+                string fmsg = string.Format("{0} 列目は必須です", e.ColumnIndex + 1);
+                uiDataGridView1.Rows[e.RowIndex].ErrorText = string.Format("{0} 列目は必須です", e.ColumnIndex + 1);
                 UIMessageBox.ShowError(fmsg);
                 e.Cancel = true;
             }

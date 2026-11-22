@@ -582,7 +582,7 @@
             uiButton1.Name = "uiButton1";
             uiButton1.Size = new Size(165, 40);
             uiButton1.TabIndex = 0;
-            uiButton1.Text = "輸出梁設計図";
+            uiButton1.Text = "梁設計図出力";
             uiButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiButton1.Click += uiButton1_Click;
             // 
@@ -1187,7 +1187,7 @@
             uiSymbolButton2.Size = new Size(100, 35);
             uiSymbolButton2.Symbol = 557669;
             uiSymbolButton2.TabIndex = 2;
-            uiSymbolButton2.Text = "手動増加";
+            uiSymbolButton2.Text = "手動追加";
             uiSymbolButton2.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton2.Click += uiSymbolButton2_Click;
             // 
@@ -1200,7 +1200,7 @@
             uiSymbolButton1.Size = new Size(129, 35);
             uiSymbolButton1.Symbol = 61891;
             uiSymbolButton1.TabIndex = 1;
-            uiSymbolButton1.Text = "輸出";
+            uiSymbolButton1.Text = "出力";
             uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 

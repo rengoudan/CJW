@@ -29,8 +29,8 @@ namespace RGBControls.Pages
             UIEditOption option = new UIEditOption();
             option.AutoLabelWidth = true;
             option.Text = "追加";
-            option.AddText("MaterialTypeName", "タイプ名稱", null, true);
-            //option.AddText("GeneralTitle", "通用标识", null, true);
+            option.AddText("MaterialTypeName", "タイプ名", null, true);
+            //option.AddText("GeneralTitle", "共通識別子", null, true);
             //option.AddDouble("UnitPrice", "単価", 0);
             var matype = JwExtend.CreateBindList<MaterialType>();
 
@@ -83,7 +83,7 @@ namespace RGBControls.Pages
                 option.AddText("MaterialName", "材料名称", null, true);
                 option.AddText("MaterialParameter", "仕     様", null, true);
 
-                option.AddText("GeneralTitle", "通用标识", null, true);
+                option.AddText("GeneralTitle", "共通識別子", null, true);
                 option.AddText("UnitName", "単位", null, true);
 
                 option.AddDouble("UnitPrice", "単価", 0);

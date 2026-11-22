@@ -167,7 +167,7 @@
             uiSymbolButton1.Name = "uiSymbolButton1";
             uiSymbolButton1.Size = new Size(112, 39);
             uiSymbolButton1.TabIndex = 0;
-            uiSymbolButton1.Text = "もちろん";
+            uiSymbolButton1.Text = "OK";
             uiSymbolButton1.TipsFont = new Font("宋体", 9F, FontStyle.Regular, GraphicsUnit.Point);
             uiSymbolButton1.Click += uiSymbolButton1_Click;
             // 
