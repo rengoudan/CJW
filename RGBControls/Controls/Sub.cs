@@ -57,8 +57,10 @@ namespace RGBControls.Controls
 
         private void GlobalEvent_RefreshShowBeamsEvent(object? sender, EventArgs e)
         {
+            if (IsDisposed || !IsHandleCreated) return; // 閉じた後に届いた通知は無視（Sub.Refresh.cs で購読も解除）
             this.Invalidate();
             this.jwCanvasControl1.Refresh();
+            RefreshBeamList(); // 2026年11月23日 梁一覧の工区なども更新（Sub.Refresh.cs）
         }
 
         private void inittable()
@@ -131,6 +133,7 @@ namespace RGBControls.Controls
                     _thisCanvas = _subdata.DataToCanvas();
                     JwFileConsts.JwScale = _subdata.Scale;
                     JwCanvasDraw canvasDraw = new JwCanvasDraw(_thisCanvas);
+                    this.jwCanvasControl1.ViewKey = "floor"; // 2026年11月23日 階画面の表示モードを記憶
                     this.jwCanvasControl1.CanvasDraw = canvasDraw;
                     //this.jwShowBeams1.ShowBeams = true;
                     //this.jwShowBeams1.ShowDownB = true;

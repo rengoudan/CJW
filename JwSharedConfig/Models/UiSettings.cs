@@ -7,5 +7,8 @@ namespace JwSharedConfig.Models
     {
         /// <summary>出力の種類ごとに最後に選んだ保存先フォルダ（キー：出力の種類）。</summary>
         public Dictionary<string, string> ExportFolders { get; set; } = new();
+
+        /// <summary>2026年11月23日 図の表示モード・レイヤー（キー：画面の種類 parse／floor／canvas）。</summary>
+        public Dictionary<string, string> CanvasViews { get; set; } = new();
     }
 }

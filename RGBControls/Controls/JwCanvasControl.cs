@@ -21,6 +21,7 @@ namespace RGBJWMain.Controls
         {
 
             InitializeComponent();
+            InitViewToolbar(); // 2026年11月23日 表示モード・レイヤー・検索・状態バー（JwCanvasControl.Toolbar.cs）
             this.MouseDown += JwCanvasControl_MouseDown;
             // 在窗体的构造函数或 Load 事件中添加：
             //this.Resize += (s, e) =>
@@ -76,6 +77,7 @@ namespace RGBJWMain.Controls
                     uiSwitch6.Active = true;
                     jwShowBeams1.IsNewCanvas = IsNewCanvas;
                     jwShowBeams1.CanvasDraw = _canvasDraw;
+                    OnCanvasLoaded(); // 2026年11月23日 表示モードの適用・要確認・件数（JwCanvasControl.Toolbar.cs）
 
                     Invalidate();
                     //_canvasDraw.Draw(Width, Height, 20, 20);

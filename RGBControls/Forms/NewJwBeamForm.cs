@@ -292,6 +292,8 @@ namespace RGBJWMain.Forms
         {
             this._jwbeam.HasCsv = e.Value;
             await _jwProjectMainService.ChangeBeamHasCsv(this._jwbeam.Id, e.Value);
+            // 2026年11月23日 CSV 出力なしの梁は図で灰色になるので、上の画面の図・梁一覧を描き直す
+            GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

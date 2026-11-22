@@ -28,6 +28,7 @@ namespace RGBJWMain.Controls
             //GlobalEvent.GetGlobalEvent().RefreshShowBeamsEvent += GlobalEvent_RefreshShowBeamsEvent;
             this.MouseWheel += JwShowBeams_MouseWheel;
             this.MouseClick += JwShowBeams_MouseClick;
+            InitInteraction(); // 2026年11月23日 ホイール拡大・ドラッグ移動・ホバー情報など（JwShowBeams.Interaction.cs）
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
               ControlStyles.UserPaint |
               ControlStyles.OptimizedDoubleBuffer, true);
@@ -36,7 +37,9 @@ namespace RGBJWMain.Controls
 
         private void GlobalEvent_RefreshShowBeamsEvent(object? sender, EventArgs e)
         {
-            this.Invalidate();
+            // 2026年11月23日 色も取り直す（JwShowBeams.Colors.cs）。購読は OnHandleCreated で行う
+            if (IsDisposed || !IsHandleCreated) return;
+            Rehua();
         }
 
         private void controlSelectedEvent(object sender, ControlSelectedSquareArgs e)
@@ -159,12 +162,15 @@ namespace RGBJWMain.Controls
         {
             if (canvasDraw != null)
             {
-                canvasDraw.Draw(Width, Height, 40, 40);
+                // 2026年11月23日 通り芯の寸法を表示するときは、図の周りに寸法の分の余白を空ける（左右・上下で合計）
+                int margin = _showDimension ? DimensionFitMargin : 40;
+                canvasDraw.Draw(Width, Height, margin, margin);
                 //_jwDrawShape.Draw();
                 if (canvasDraw.controls != null)
                 {
                     HasCreated = true;
                     _bounds = canvasDraw.controls;
+                    UpdateBeamColors(); // 2026年11月23日 表示モードに合わせた梁の色
                     Invalidate();
                 }
             }
@@ -292,6 +298,7 @@ namespace RGBJWMain.Controls
             set
             {
                 _showcolor = value;
+                UpdateBeamColors(); // 2026年11月23日 工区の色の表示を切り替える
                 Invalidate();
             }
         }
@@ -369,6 +376,7 @@ namespace RGBJWMain.Controls
 
         public void Rehua()
         {
+            UpdateBeamColors(); // 2026年11月23日 工区・CSV 出力の変更を色に反映（JwShowBeams.Colors.cs）
             Invalidate();
         }
         private void drawControls(PaintEventArgs pe)
@@ -546,7 +554,7 @@ namespace RGBJWMain.Controls
 
 
                             }
-                            if (_showGoujiantext)
+                            if (_showGoujiantext && ShowDetailText) // 2026年11月23日 縮小時は省く
                             {
                                 using var font = new Font("Arial", 12, FontStyle.Regular);
                                 pe.Graphics.DrawString(showtxt, font, Color.Yellow, txtx, txty);
@@ -563,12 +571,12 @@ namespace RGBJWMain.Controls
                         if (ljl.IsSelected)
                         {
                             pe.Graphics.DrawLine(penljselected, ljl.DrawStart, ljl.DrawEnd);
-                            DrawLineWithLength(pe.Graphics, penljselected, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite, ljl.Distance);
+                            if (ShowDetailText) DrawLineWithLength(pe.Graphics, penljselected, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite, ljl.Distance); // 2026年11月23日 縮小時は省く
                         }
                         else
                         {
                             pe.Graphics.DrawLine(penlj, ljl.DrawStart, ljl.DrawEnd);
-                            DrawLineWithLength(pe.Graphics, penlj, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite, ljl.Distance);
+                            if (ShowDetailText) DrawLineWithLength(pe.Graphics, penlj, ljl.DrawStart, ljl.DrawEnd, this.Font, bushwhite, ljl.Distance); // 2026年11月23日 縮小時は省く
                         }
                     }
                     if(CanvasDraw.Vpls.Count> 0)
@@ -698,10 +706,11 @@ namespace RGBJWMain.Controls
             pe.Graphics.TranslateTransform(origin.X, origin.Y);
             pe.Graphics.ScaleTransform(scale, scale);
             drawControls(pe);
-            if (this.ShowColor)
-            {
-                DrawLetterColorLegend(pe.Graphics, this.ClientRectangle);
-            }
+            DrawGridDimensions(pe.Graphics); // 2026年11月23日 通り芯の寸法（JwShowBeams.Dimensions.cs）
+            DrawWorldOverlays(pe.Graphics);  // 2026年11月23日 要確認の枠・ホバー・強調（JwShowBeams.Interaction.cs）
+            // 2026年11月23日 凡例・情報カードは画面座標で描く（原来的图例在缩放变换之后绘制，会跟着放大缩小）
+            pe.Graphics.ResetTransform();
+            DrawScreenOverlays(pe.Graphics);
         }
 
         private void DrawLetterColorLegend(Graphics g, Rectangle bounds)
@@ -765,7 +774,8 @@ namespace RGBJWMain.Controls
 
         protected override void OnClick(EventArgs e)
         {
-            
+            // 2026年11月23日 ドラッグで図を動かした後のクリックは選択にしない
+            if (_suppressClick) { _suppressClick = false; return; }
             if(HasCreated&& nowisleftdown)
             {
                 var z = MouseDownPoint;
@@ -993,27 +1003,9 @@ namespace RGBJWMain.Controls
         // 添加缺失的 JwShowBeams_MouseWheel 事件处理方法
         private void JwShowBeams_MouseWheel(object sender, MouseEventArgs e)
         {
-            if ((ModifierKeys & Keys.Control) == Keys.Control)
-            {
-                // 可以根据需要实现缩放或其他功能，这里暂时留空
-                // 例如：Invalidate();
-                float oldScale = scale;
-                scale += e.Delta > 0 ? 0.1f : -0.1f;
-                scale = Math.Max(1f, scale); // 防止缩得太小
-                                             // 以鼠标位置为中心进行缩放
-                origin.X = e.X - (e.X - origin.X) * (scale / oldScale);
-                origin.Y = e.Y - (e.Y - origin.Y) * (scale / oldScale);
-                Invalidate();
-            }
-            else
-            {
-                if (GlobalEvent.GetGlobalEvent().WarningEvent != null)
-                {
-                    WarningArgs args = new WarningArgs();
-                    args.WarningMsg = "Ctrlキーを押しながらマウスホイールをスクロールして、ズームインまたはズームアウトします。";
-                    GlobalEvent.GetGlobalEvent().WarningEvent(this, args);
-                }
-            }
+            // 2026年11月23日 Ctrl なしでホイール拡大縮小（カーソル位置を中心に 1.2 倍ずつ）。
+            // 原来要按 Ctrl，而且不按 Ctrl 滚动时每次都会弹出提示
+            ZoomAt(e.Location, e.Delta > 0 ? 1.2f : 1 / 1.2f);
         }
     }
 }

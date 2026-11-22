@@ -108,6 +108,7 @@ namespace RGBJWMain.Forms
                     // 描画オブジェクトとコントロールへの設定は UI スレッドで行う
                     JwCanvasDraw canvasDraw = new JwCanvasDraw(jc);
                     jwCanvasControl1.IsNewCanvas = true;
+                    jwCanvasControl1.ViewKey = "parse"; // 2026年11月23日 解析画面の表示モードを記憶
                     jwCanvasControl1.CanvasDraw = canvasDraw;
                     jwCanvasControl1.SelectBeamEvent -= JwCanvas_Click; // 再解析で二重登録しない
                     jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
