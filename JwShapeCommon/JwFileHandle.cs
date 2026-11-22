@@ -277,6 +277,8 @@ namespace JwShapeCommon
 
         public void ReadJwFile()
         {
+            ReportReadStart();
+            var readWatch = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 if (string.IsNullOrEmpty(_path))
@@ -299,8 +301,10 @@ namespace JwShapeCommon
                 JwLogging.AppLog.Error(ex, "jww読み込み失敗 {Path}", _path);
                 SendMsg($"【エラー】jwファイルの読み込みに失敗しました: {ex.Message}");
             }
-
-
+            finally
+            {
+                ReportReadEnd(readWatch.ElapsedMilliseconds); // 2026年11月22日 进度通知
+            }
         }
 
         private void Completed(JwwReader A_0)
@@ -346,7 +350,10 @@ namespace JwShapeCommon
             var total = System.Diagnostics.Stopwatch.StartNew();
 
             Step("梁線の変換", nameof(ChangeJwXianFromJwwSen), ChangeJwXianFromJwwSen);//jwwSen到jwxian处理
-            Step("梁の識別", nameof(JudgmentJieChu3), JudgmentJieChu3);
+            Step("梁の識別", nameof(JudgmentJieChu3), JudgmentJieChu3,
+                () => (_tempBeams?.Count ?? 0) == 0
+                    ? $"⚠ {JwFileConsts.BeamParseColor?.ColorNumber}番の色では梁を識別できません"
+                    : $"梁 {_tempBeams.Count}本");
 
 
 
@@ -365,11 +372,11 @@ namespace JwShapeCommon
 
             if (JwFileConsts.PillarDrawingMethod == PillarDrawingMethod.Line)
             {
-                Step("柱の識別", nameof(ParsePillarsByXians), ParsePillarsByXians);
+                Step("柱の識別", nameof(ParsePillarsByXians), ParsePillarsByXians, PillarSummary);
             }
             else
             {
-                Step("柱の識別", nameof(ParseSquareCreatePillar), ParseSquareCreatePillar);//对处处理的pillar 精加工
+                Step("柱の識別", nameof(ParseSquareCreatePillar), ParseSquareCreatePillar, PillarSummary);//对处处理的pillar 精加工
             }
 
             Step("柱と梁の関係判定", nameof(judgePillarBeam), judgePillarBeam);
@@ -381,8 +388,8 @@ namespace JwShapeCommon
             Step("文字の識別(3)", nameof(ThirdExtendTextPillar), ThirdExtendTextPillar);
             Step("文字の識別(4)", nameof(LastTextPillar), LastTextPillar);
 
-            Step("切断梁の生成", nameof(CreateQieGeBeams), CreateQieGeBeams);//生成具体的beam
-            Step("B/BG数の集計", nameof(StatisticalBBGquantity), StatisticalBBGquantity);
+            Step("切断梁の生成", nameof(CreateQieGeBeams), CreateQieGeBeams, () => $"梁 {Beams?.Count ?? 0}本");//生成具体的beam
+            Step("B/BG数の集計", nameof(StatisticalBBGquantity), StatisticalBBGquantity, () => $"B {BBCount}・BG {BGCount}");
             if (Pillars==null|| Pillars.Count == 0)
             {
                 var errbeamstr = string.Format("色番号{0}は柱を識別できません", JwFileConsts.BeamPillarParseColor.ColorNumber);
@@ -395,19 +402,21 @@ namespace JwShapeCommon
             //createBeamAbsolutePD();
             Step("追加穴の処理", nameof(ewaikongHandle), ewaikongHandle);
             Step("下階柱の識別", nameof(parseDownPillars), parseDownPillars);
-            Step("連結の識別", nameof(parsenLianjie), parsenLianjie);//寻找连接线
+            Step("連結の識別", nameof(parsenLianjie), parsenLianjie, () => $"連結 {LianjieSingles?.Count ?? 0}件");//寻找连接线
 
             Step("連結間隔の判定", nameof(JudgementSpacing), JudgementSpacing);
 
             //在之前判断链接件之间距离是否
-            Step("最終補正", nameof(Revision), Revision);
+            Step("最終補正", nameof(Revision), Revision, RevisionSummary);
 
             if (HasBeam)
             {
+                // 2026年11月22日 逐根梁的明细只写入日志文件（原来全部输出到解析日志窗口，数百行难以阅读）
                 foreach (var item in Beams)
                 {
-                    SendMsg(item.ToString() + Environment.NewLine);
+                    JwLogging.AppLog.Debug("梁 {Beam}", item.ToString());
                 }
+                SendMsg($"梁 {Beams.Count}本・柱 {Pillars?.Count ?? 0}本・連結 {LianjieSingles?.Count ?? 0}件を識別しました");
             }
 
             ReportSuppressedSummary();
@@ -946,9 +955,9 @@ namespace JwShapeCommon
                 var extractor = new PillarFeatureExtractor(squareSideLength: 1);
                 Pillars = extractor.Extract(PillarXians);
                 SinglePillarCount = Pillars.Where(t => t.BaseType==PillarBaseType.SinglePillar).Count();
-                SendMsg(string.Format("singlepillarcount is {0}{1}", SinglePillarCount, Environment.NewLine));
+                JwLogging.AppLog.Debug("{Msg}", string.Format("singlepillarcount is {0}{1}", SinglePillarCount, Environment.NewLine));
                 KPillarCount = Pillars.Where(t => t.BaseType == PillarBaseType.KPillar).Count();
-                SendMsg(string.Format("KPillarCount is {0}{1}", KPillarCount, Environment.NewLine));
+                JwLogging.AppLog.Debug("{Msg}", string.Format("KPillarCount is {0}{1}", KPillarCount, Environment.NewLine));
             }
         }
 
@@ -1237,9 +1246,9 @@ namespace JwShapeCommon
             }
             
             SinglePillarCount = Pillars.Where(t => t.Blocks.Count(q => q.Iszhengfangxing) == 1).Count();
-            SendMsg(string.Format("singlepillarcount is {0}{1}", SinglePillarCount, Environment.NewLine));
+            JwLogging.AppLog.Debug("{Msg}", string.Format("singlepillarcount is {0}{1}", SinglePillarCount, Environment.NewLine));
             KPillarCount = Pillars.Where(t => t.BaseType== PillarBaseType.KPillar).Count();
-            SendMsg(string.Format("KPillarCount is {0}{1}", KPillarCount, Environment.NewLine));
+            JwLogging.AppLog.Debug("{Msg}", string.Format("KPillarCount is {0}{1}", KPillarCount, Environment.NewLine));
         }
 
         private void judgePillarBeam()
@@ -1705,9 +1714,9 @@ namespace JwShapeCommon
             VerticalBeamsCount = VerticalBeams.Count;
             if (GlobalEvent.GetGlobalEvent().ShowParseLogEvent != null)
             {
-                GlobalEvent.GetGlobalEvent().ShowParseLogEvent(this, new ShowParseLogArgs { Msg = string.Format("HorizontalBeams total:{0}", HorizontalBeams.Count) });
-                GlobalEvent.GetGlobalEvent().ShowParseLogEvent(this, new ShowParseLogArgs { Msg = string.Format("VerticalBeams:{0}", VerticalBeams.Count) });
-                GlobalEvent.GetGlobalEvent().ShowParseLogEvent(this, new ShowParseLogArgs { Msg = string.Format("Beams:{0}", Beams.Count) });
+                JwLogging.AppLog.Debug("{Msg}", string.Format("HorizontalBeams total:{0}", HorizontalBeams.Count));
+                JwLogging.AppLog.Debug("{Msg}", string.Format("VerticalBeams:{0}", VerticalBeams.Count));
+                JwLogging.AppLog.Debug("{Msg}", string.Format("Beams:{0}", Beams.Count));
 
             }
             //RowsPointY = HorizontalBeams.Select(t => t.Center).OrderBy(t => t).ToList();
@@ -3580,12 +3589,12 @@ namespace JwShapeCommon
         {
             GouJianZongshu = AllLinkPart.Count;
             string allgjmsg = string.Format("BBG all count is :{0}{1}", GouJianZongshu, Environment.NewLine);
-            SendMsg(allgjmsg);
-            SendMsg(string.Format("duli bb is {0}{1}", IndependentLinkPart.Count, Environment.NewLine));
+            JwLogging.AppLog.Debug("{Msg}", allgjmsg);
+            JwLogging.AppLog.Debug("{Msg}", string.Format("duli bb is {0}{1}", IndependentLinkPart.Count, Environment.NewLine));
             BBCount = AllLinkPart.Where(t => t.GouJianType == GouJianType.B).Count();
             BGCount = AllLinkPart.Where(t => t.GouJianType == GouJianType.BG).Count();
-            SendMsg(string.Format("bb is {0}{1}", BBCount, Environment.NewLine));
-            SendMsg(string.Format("bg is {0}{1}", BGCount, Environment.NewLine));
+            JwLogging.AppLog.Debug("{Msg}", string.Format("bb is {0}{1}", BBCount, Environment.NewLine));
+            JwLogging.AppLog.Debug("{Msg}", string.Format("bg is {0}{1}", BGCount, Environment.NewLine));
         }
 
         private void Getmian(JwXian xian, JWMian mian)

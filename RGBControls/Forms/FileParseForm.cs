@@ -60,93 +60,107 @@ namespace RGBJWMain.Forms
             }
         }
 
-        private void FileParseForm_Load(object sender, EventArgs e)
+        private async void FileParseForm_Load(object sender, EventArgs e)
         {
-            if (jwProjectPathModel != null)
+            if (jwProjectPathModel != null && !string.IsNullOrEmpty(jwProjectPathModel.Path))
             {
-                if (!string.IsNullOrEmpty(jwProjectPathModel.Path))
-                {
-                    _path = jwProjectPathModel.Path;
-                    this.ShowProcessForm(200);
-                    try
-                    {
-                        readjww();
-                    }
-                    catch (Exception ex)
-                    {
-                        // 2026年11月21日 解析失败：先关进度窗，再提示失败的步骤，然后关闭本窗体
-                        this.HideProcessForm();
-                        var msg = (ex as ParseStepException)?.UserMessage ?? "図面解析中にエラーが発生しました。";
-                        ErrorReporter.Report(ex, msg + "\n" + Path.GetFileName(_path));
-                        this.Close();
-                    }
-
-                    //ThreadStart start = new ThreadStart(readjww);
-                    //Thread thread = new Thread(start);
-                    //thread.Priority = ThreadPriority.Highest;
-                    //thread.IsBackground = true; //关闭窗体继续执行
-                    //thread.Start();
-                }
+                _path = jwProjectPathModel.Path;
+                await ParseAsync();
             }
         }
         JwFileHandle? _jwFileHandle = null!;
 
-        private void readjww()
-        {
-            _jwFileHandle = new JwFileHandle(jwProjectPathModel);
-            _jwFileHandle.ReadJwFile();
+        /// <summary>解析中は閉じられない（中止機能は無いため、完了まで待つ）。</summary>
+        private bool _parsing;
 
-            var bb = JwFileConsts.BeamParseColor;
-            var bc = JwFileConsts.BeamSymbolTextColor;
-            //jwfh.ParseBySetting();
-            //jwfh.ChangeJwXianFromJwwSen();
-            //var sl = jwfh.SenLst;
-            //jwfh.ChangePillarFromJwwSolid();
-            //jwfh.ParseSquareCreatePillar();
-            //jwfh.ChangeJwwEnojiToText();
-            //jwfh.ChangeQieGeSolis();
-            _jwFileHandle.FollowTheStep();
-            var jc = _jwFileHandle.CreateCanvas();
-            if (_jwFileHandle.HasCanvas) {
-                JwCanvasDraw canvasDraw = new JwCanvasDraw(jc);
-                if (jwCanvasControl1.InvokeRequired)
+        /// <summary>
+        /// 2026年11月22日 読み込み・解析をバックグラウンドで実行し、進捗カードに表示する。
+        /// 原来在 UI 线程同步执行，解析期间画面完全卡住，日志也要等到结束才一次性显示。
+        /// 失败时、没有有效数据时窗体保持打开，结果显示在进度卡片中。
+        /// </summary>
+        private async Task ParseAsync()
+        {
+            _parsing = true;
+            uiSymbolButton1.Enabled = false;
+            BeginProgress(Path.GetFileName(_path));
+
+            var handle = new JwFileHandle(jwProjectPathModel)
+            {
+                // UI スレッドで生成した Progress<T> は通知を UI スレッドへ自動で戻す
+                Progress = new Progress<ParseProgress>(OnParseProgress),
+            };
+            _jwFileHandle = handle;
+
+            JwCanvas? jc = null;
+            Exception? error = null;
+            try
+            {
+                jc = await Task.Run(() =>
                 {
-                    this.HideProcessForm();
-                    jwCanvasControl1.Invoke(() =>
-                    {
-                        jwCanvasControl1.IsNewCanvas = true;
-                        jwCanvasControl1.CanvasDraw = canvasDraw;
-                        //jwCanvasControl1.Click += JwCanvasControl1_Click;
-                        jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
-                    });
-                }
-                else
+                    handle.ReadJwFile();
+                    handle.FollowTheStep();
+                    return handle.BuildCanvas();
+                });
+                if (handle.HasCanvas)
                 {
-                    this.HideProcessForm();
+                    // 描画オブジェクトとコントロールへの設定は UI スレッドで行う
+                    JwCanvasDraw canvasDraw = new JwCanvasDraw(jc);
                     jwCanvasControl1.IsNewCanvas = true;
                     jwCanvasControl1.CanvasDraw = canvasDraw;
-                    //jwCanvasControl1.Click += JwCanvasControl1_Click;
                     jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
                 }
-                if (uiSymbolButton1.InvokeRequired)
-                {
-                    uiSymbolButton1.Invoke(() => { uiSymbolButton1.Enabled = true; });
-                }
-                else
-                {
-                    uiSymbolButton1.Enabled = true;
-                }
             }
-            else
+            catch (Exception ex)
             {
-                this.HideProcessForm();
-                UIMessageBox.ShowError("現在の解析設定では有効なデータが検出されません!!");
-                this.Close();
+                error = ex;
             }
+            finally
+            {
+                _parsing = false;
+            }
+
+            if (IsDisposed) return;
+            if (error != null)
+            {
+                // ステップ失敗は Step()、読み込み失敗は ReadJwFile で既にログ済み。それ以外（描画準備など）はここで記録
+                if (error is not ParseStepException)
+                    JwLogging.AppLog.Error(error, "図面解析の後処理で失敗 file={File}", Path.GetFileName(_path));
+                EndProgressFailed(error);
+                return;
+            }
+            if (!handle.HasCanvas)
+            {
+                EndProgressNoData();
+                return;
+            }
+            uiSymbolButton1.Enabled = true;
+            EndProgressSucceeded(handle);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_parsing)
+            {
+                e.Cancel = true;
+                MessageBox.Show(this, "図面を解析中です。完了するまでお待ちください。", "解析中",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            base.OnFormClosing(e); // Cancel を設定したうえで基底にも通知する（購読側から取消が見える）
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            // 2026年11月22日 全局静态事件的订阅原来从不取消：每打开一次就多挂一个处理函数，
+            // 已关闭的窗体也会继续收到其他解析的日志
+            GlobalEvent.GetGlobalEvent().ShowParseLogEvent -= ShowParseLog;
+            GlobalEvent.GetGlobalEvent().DeleteSelectedSquareEvent -= DeleteSelectedSquare;
+            GlobalEvent.GetGlobalEvent().UpdateNewGongQuEvent -= FileParseUpdateNewGongQuEvent;
+            base.OnFormClosed(e);
         }
 
         private void ShowParseLog(object sender, ShowParseLogArgs e)
         {
+            if (IsDisposed || !IsHandleCreated) return; // 閉じた後に他の解析から届いた通知は無視
             string mg = string.Format("{0}{1}", e.Msg, Environment.NewLine);
             if (uiTextBox1.InvokeRequired)
             {
