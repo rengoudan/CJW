@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    開発用の回帰チェックツール（製品には含めない）。
+    コードを変更しても jww の解析結果・CSV 出力が変わっていないことを、実図面と既知の正しい結果で確認する。
+    使い方は Program.cs 冒頭のコメントを参照。図面・DB・CSV はリポジトリに入れず、引数で渡す。
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\JwServices\JwServices.csproj" />
+  </ItemGroup>
+
+</Project>
