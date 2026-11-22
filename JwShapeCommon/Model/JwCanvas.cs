@@ -12,7 +12,7 @@ namespace JwShapeCommon
     /// <summary>
     /// 对应floor
     /// </summary>
-    public class JwCanvas:JwSquareBase, IDrawToJww
+    public partial class JwCanvas:JwSquareBase, IDrawToJww
     {
         /// <summary>
         ///
@@ -280,6 +280,7 @@ namespace JwShapeCommon
                     jd.AddRange(lj.DrawToJww());
                 }
             }
+            jd.AddRange(DrawGridDimensions()); // 2026年11月23日 通り芯の寸法（JwCanvas.GridDimensions.cs）
                 return jd;
         }
 
@@ -307,6 +308,7 @@ namespace JwShapeCommon
                 jd.AddRange(OthersDatas);
             }
             //链接Ten color 9 
+            jd.AddRange(DrawGridDimensions()); // 2026年11月23日 通り芯の寸法（JwCanvas.GridDimensions.cs）
 
             return jd;
         }
