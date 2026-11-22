@@ -48,6 +48,15 @@ namespace RGBJWMain.Forms
             Controls.Add(_excludeDegenerateSwitch);
         }
 
+        /// <summary>
+        /// 2026年11月22日 绝对布局、纵向约 983px：在较小屏幕或较高缩放比例下收进可用区域，放不下的部分可以滚动。
+        /// </summary>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e); // CustomerDesignSetting_Load（包括追加试验选项那一行）在这里先执行
+            RGBControls.Classes.FormLayoutHelper.FitToWorkingArea(this, allowScroll: true);
+        }
+
         /// <summary>确定时调用：写入解析常量并保存到本机配置。</summary>
         private void ApplyExperimentalOptions()
         {
