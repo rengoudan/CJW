@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace JwServices
 {
-    public class JwProjectMainService: BaseService
+    public partial class JwProjectMainService: BaseService
     {
         public JwProjectMainService(IDbContextFactory<JwData.JwDataContext> contextFactory) : base(contextFactory)
         {

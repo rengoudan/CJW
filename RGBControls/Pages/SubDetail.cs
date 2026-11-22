@@ -365,7 +365,7 @@ namespace RGBJWMain.Pages
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void uiButton2_Click(object sender, EventArgs e)
+        private async void uiButton2_Click(object sender, EventArgs e)
         {
             if (canvas != null && canvas.Beams.Count != 0)
             {
@@ -395,6 +395,7 @@ namespace RGBJWMain.Pages
                             CancelText = null,
                             OkText = "YES"
                         });
+                        await RGBControls.Classes.CsvExportRecorder.RecordAsync(_subData); // 2026年11月22日 状態列「CSV出力済」用
                     }
                 }
             }

@@ -673,16 +673,19 @@ namespace RGBControls.Controls
             }
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private async void button9_Click(object sender, EventArgs e)
         {
             if (_subdata != null)
             {
-                ExportCsv(_subdata);
+                if (ExportCsv(_subdata))
+                    await RGBControls.Classes.CsvExportRecorder.RecordAsync(_subdata); // 2026年11月22日 状態列「CSV出力済」用
             }
         }
 
-        private void ExportCsv(JwProjectSubData data)
+        /// <returns>ファイルを書き出したら true（キャンセル・データなしは false）</returns>
+        private bool ExportCsv(JwProjectSubData data)
         {
+            bool written = false;
             var canvas = data.DataToCanvas();
             if (canvas != null && canvas.Beams.Count != 0)
             {
@@ -703,6 +706,7 @@ namespace RGBControls.Controls
                         //bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
                         //string q = Encoding.Default.GetString(bs);
                         System.IO.File.WriteAllText(fName, csvstr, Encoding.GetEncoding(932));   // 向文件中写入内容
+                        written = true;
                         AntdUI.Modal.open(new AntdUI.Modal.Config(this.ParentForm, "完了", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
                         {
                             OnButtonStyle = (id, btn) =>
@@ -715,6 +719,7 @@ namespace RGBControls.Controls
                     }
                 }
             }
+            return written;
         }
 
     }

@@ -56,6 +56,7 @@ namespace RGBControls.Pages
             projectmaintable.Columns = new AntdUI.ColumnCollection
             {
                 new AntdUI.Column("ProjectName", "工事名"),
+                                new AntdUI.Column("Id", "状態") { Render = RenderProjectStatus }, // 2026年11月22日
                                 new AntdUI.Column("Biaochi", "縮尺"),
                                 new AntdUI.Column("BeamsNumber", "梁数"),
                                 new AntdUI.Column("KPillarCount", "K 柱 トータル"),
@@ -70,6 +71,7 @@ namespace RGBControls.Pages
             this.table1.Columns = new AntdUI.ColumnCollection
             {
                 new AntdUI.Column("FloorName", "階"),
+                                new AntdUI.Column("ExportCount", "状態") { Render = RenderFloorStatus }, // 2026年11月22日
                                 new AntdUI.Column("Biaochi", "縮尺"),
                                 new AntdUI.Column("MarkBeam", "符号"),
                                 new AntdUI.Column("LianjieCompentType", "BR8/VPL"),
@@ -294,10 +296,12 @@ namespace RGBControls.Pages
                         {
                             await JwProjectMainService.LoadBeamCollectionAsync(b);
                         }
+                        bool exported = false;
                         await Progress(() =>
                         {
-                            ExportCsv(selectedsubData);
+                            exported = ExportCsv(selectedsubData);
                         });
+                        if (exported) await CsvExportRecorder.RecordAsync(selectedsubData); // 2026年11月22日 状態列「CSV出力済」用
                     }
 
                 }
@@ -477,6 +481,7 @@ namespace RGBControls.Pages
 
         private async Task ReloadData()
         {
+            await RefreshFloorChecksAsync(); // 2026年11月22日 状態列の集計（読み取りのみ）
             this.jwProjectMainDataBindingSource.DataSource = await JwProjectMainService.GetAllAsync();
             this.projectmaintable.DataSource = this.jwProjectMainDataBindingSource;
             this.projectmaintable.Refresh();
@@ -718,8 +723,10 @@ namespace RGBControls.Pages
             }
         }
 
-        private void ExportCsv(JwProjectSubData data)
+        /// <returns>ファイルを書き出したら true（キャンセル・データなしは false）</returns>
+        private bool ExportCsv(JwProjectSubData data)
         {
+            bool written = false;
             var canvas = data.DataToCanvas();
             if (canvas != null && canvas.Beams.Count != 0)
             {
@@ -740,6 +747,7 @@ namespace RGBControls.Pages
                         bs = Encoding.Convert(Encoding.GetEncoding("UTF-8"), Encoding.Default, bs);
                         string q = Encoding.Default.GetString(bs);
                         System.IO.File.WriteAllText(fName, q, Encoding.GetEncoding("Shift-JIS"));   // 向文件中写入内容
+                        written = true;
                         AntdUI.Modal.open(new AntdUI.Modal.Config(this, "完了", "CSVへのエクスポートが完了しました。", AntdUI.TType.Success)
                         {
                             OnButtonStyle = (id, btn) =>
@@ -752,6 +760,7 @@ namespace RGBControls.Pages
                     }
                 }
             }
+            return written;
         }
 
         #endregion
