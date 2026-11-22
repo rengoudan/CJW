@@ -15,6 +15,7 @@ namespace RGBControls.Classes
         public const string Brace = "Brace";                 // ブレース施工図
         public const string BraceExcel = "BraceExcel";       // ブレース寸法 Excel
         public const string Csv = "Csv";                     // 梁製造 CSV
+        public const string BeamListExcel = "BeamListExcel"; // 梁統計の梁リスト Excel
 
         public static string? Get(string key)
         {
