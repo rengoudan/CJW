@@ -22,6 +22,7 @@ namespace RGBControls
     {
         public MainForm()
         {
+            RGBControls.Classes.UiFont.Install(); // 2026年11月22日 画面フォントを Meiryo UI に統一（未インストールなら何もしない）
             InitializeComponent();
             int pageIndex = 1000;
 
