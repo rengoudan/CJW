@@ -284,6 +284,7 @@ namespace RGBJWMain.Forms
                 //}
                 this.switch1.Checked = this._jwbeam.HasCsv;
                 switch1.CheckedChanged += switch1_CheckedChanged;
+                InitGDistanceSwitch(); // 2026年11月23日 29/35 を選んだ時点で反映（NewJwBeamForm.GDistance.cs）
             }
         }
 

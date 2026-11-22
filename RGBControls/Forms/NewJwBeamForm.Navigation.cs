@@ -62,8 +62,8 @@ namespace RGBJWMain.Forms
             if (_navAll == null || _prevButton != null) return;
             _prevButton = new Button { Text = "◀ 前へ", AutoSize = true, Margin = new Padding(0, 2, 4, 0) };
             _nextButton = new Button { Text = "次へ ▶", AutoSize = true, Margin = new Padding(0, 2, 12, 0) };
-            _prevButton.Click += (s, e) => Move(-1);
-            _nextButton.Click += (s, e) => Move(+1);
+            _prevButton.Click += (s, e) => MoveBeam(-1);
+            _nextButton.Click += (s, e) => MoveBeam(+1);
             _navNeedCheckOnly = new CheckBox { Text = "要確認のみ", AutoSize = true, Margin = new Padding(0, 6, 8, 0) };
             _navNeedCheckOnly.CheckedChanged += (s, e) =>
             {
@@ -88,11 +88,11 @@ namespace RGBJWMain.Forms
         {
             // 文字入力中（工区の入力など）は矢印キーを奪わない
             if (ActiveControl is TextBoxBase || ActiveControl is Sunny.UI.UITextBox || ActiveControl is ComboBox) return;
-            if (e.KeyCode == Keys.Left) { Move(-1); e.Handled = true; }
-            else if (e.KeyCode == Keys.Right) { Move(+1); e.Handled = true; }
+            if (e.KeyCode == Keys.Left) { MoveBeam(-1); e.Handled = true; }
+            else if (e.KeyCode == Keys.Right) { MoveBeam(+1); e.Handled = true; }
         }
 
-        private void Move(int delta)
+        private void MoveBeam(int delta)
         {
             var list = NavList();
             if (list.Count == 0) return;
@@ -125,6 +125,18 @@ namespace RGBJWMain.Forms
             if (beam.DirectionType == JwCore.BeamDirectionType.Vertical) beam.AbsolutePD = beam.BottomLeft.Y;
             _jwbeam = beam;
             beamData = _jwProjectMainService.FindBeamDataById(beam.Id);
+            RefreshBeamViews();
+            SyncGDistanceUi(); // G 端の 29/35（NewJwBeamForm.GDistance.cs）をこの梁に合わせる
+            if (!string.IsNullOrEmpty(_jwbeam.GongQu)) select7.SelectedValue = _jwbeam.GongQu;
+            UpdateNavState();
+        }
+
+        /// <summary>
+        /// 表示中の梁の 2D 図・CSV・3D を描き直す（梁の切り替え・29/35 の切り替えで共用）。
+        /// 3D はこの CSV から描くので、CSV を更新すれば 3D も同じ内容になる。
+        /// </summary>
+        private void RefreshBeamViews()
+        {
             try
             {
                 beamShow();
@@ -134,18 +146,16 @@ namespace RGBJWMain.Forms
             catch (Exception ex)
             {
                 // 既知の問題：一部の短い梁は 2D 図の作成（DrawToJwwwSingle）で例外になる（図からクリックしても同じ）。
-                // 切り替えでは止めずに知らせ、CSV・3D は表示する
-                JwLogging.AppLog.Warn(ex, "梁の 2D 図を作成できません {Beam}", beam.BeamCode);
+                // 止めずに知らせ、CSV・3D は表示する
+                JwLogging.AppLog.Warn(ex, "梁の 2D 図を作成できません {Beam}", _jwbeam.BeamCode);
                 if (_singleBeamShow != null) { panel6.Controls.Remove(_singleBeamShow); _singleBeamShow = null!; }
                 _drawError ??= new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.Firebrick };
-                _drawError.Text = $"梁 {beam.BeamCode} の 2D 図を作成できませんでした（CSV・3D 表示は使えます）。";
+                _drawError.Text = $"梁 {_jwbeam.BeamCode} の 2D 図を作成できませんでした（CSV・3D 表示は使えます）。";
                 if (!panel6.Controls.Contains(_drawError)) panel6.Controls.Add(_drawError);
                 _drawError.BringToFront();
             }
             uiTextBox1.Text = _jwbeam.ToProcessCsv(); // 3D はこの CSV から描く
             ApplyViewMode();
-            if (!string.IsNullOrEmpty(_jwbeam.GongQu)) select7.SelectedValue = _jwbeam.GongQu;
-            UpdateNavState();
         }
     }
 }

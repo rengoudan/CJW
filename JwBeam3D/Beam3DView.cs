@@ -28,7 +28,12 @@ namespace JwBeam3D
         private readonly TextBlock _info;
         private readonly TextBlock _hover;
         private readonly CheckBox _machineView;
+        private readonly CheckBox _showDims;
         private readonly Dictionary<GeometryModel3D, PlacedHole> _holeModels = new();
+        private ModelVisual3D? _dims;
+
+        // 2026年11月23日 穴間隔の寸法（鋼材の青・穴の黄・問題の赤と区別できる濃い橙）
+        private static readonly Color DimColor = Color.FromRgb(0xE6, 0x51, 0x00);
 
         public Beam3DView()
         {
@@ -89,6 +94,92 @@ namespace JwBeam3D
             _machineView.Checked += (s, e) => ApplyOrientation(true);
             _machineView.Unchecked += (s, e) => ApplyOrientation(false);
             Children.Add(_machineView);
+
+            // 2026年11月23日 穴間隔の寸法の表示切り替え（既定は表示）
+            _showDims = new CheckBox
+            {
+                Content = "穴間隔の寸法",
+                IsChecked = true,
+                Margin = new Thickness(10, 34, 140, 10),
+                FontSize = 13,
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Padding = new Thickness(4, 0, 0, 0),
+            };
+            _showDims.Checked += (s, e) => ApplyDimsVisibility();
+            _showDims.Unchecked += (s, e) => ApplyDimsVisibility();
+            Children.Add(_showDims);
+        }
+
+        private void ApplyDimsVisibility()
+        {
+            if (_dims == null) return;
+            bool show = _showDims.IsChecked == true;
+            bool shown = _root.Children.Contains(_dims);
+            if (show && !shown) _root.Children.Add(_dims);
+            else if (!show && shown) _root.Children.Remove(_dims);
+        }
+
+        /// <summary>
+        /// 2026年11月23日 穴間隔の寸法（各面ごとに「先端 → 穴の X 位置 → 尾端」の連続寸法）。
+        /// 値は CSV の穴の X（先端からの距離）そのもの＝加工機に渡る値。同じ X の穴（対の穴など）は 1 か所として数える。
+        ///   右面（上フランジ）：梁の上側　左面（下フランジ）：梁の下側　上面（ウェブ）：上面側のフランジ縁の外側
+        /// </summary>
+        private ModelVisual3D BuildDimensions(IReadOnlyList<PlacedHole> holes, double H, double B, double L)
+        {
+            var root = new ModelVisual3D();
+            const double gap = 30;   // 鋼材から寸法線までの距離
+            const double tick = 8;   // 寸法線の端の目印の長さ
+
+            void Chain(CsvFace face, Func<double, Point3D> onLine, Func<double, Point3D> onSteel, Vector3D outward)
+            {
+                var xs = holes.Where(h => h.Source.Face == face)
+                              .Select(h => Math.Round(h.Source.X, 1))
+                              .Distinct().OrderBy(x => x).ToList();
+                if (xs.Count == 0) return;
+                var stations = new List<double> { 0 };
+                stations.AddRange(xs.Where(x => x > 0 && x < L));
+                stations.Add(L);
+
+                var lines = new LinesVisual3D { Color = DimColor, Thickness = 1.2 };
+                // 寸法線
+                lines.Points.Add(onLine(stations[0]));
+                lines.Points.Add(onLine(stations[^1]));
+                foreach (var x in stations)
+                {
+                    // 引出線（鋼材 → 寸法線を少し越える）と端の目印
+                    lines.Points.Add(onSteel(x));
+                    lines.Points.Add(onLine(x) + outward * tick);
+                }
+                root.Children.Add(lines);
+
+                for (int i = 0; i + 1 < stations.Count; i++)
+                {
+                    double d = stations[i + 1] - stations[i];
+                    if (d < 0.05) continue;
+                    // 短い区間が続くと数字が重なるので、短い区間は 1 つおきに外側へずらす
+                    bool shortSeg = d < 150;
+                    double lift = shortSeg && i % 2 == 1 ? 30 : 12;
+                    var mid = onLine((stations[i] + stations[i + 1]) / 2) + outward * lift;
+                    root.Children.Add(new BillboardTextVisual3D
+                    {
+                        Text = d.ToString("0.#"),
+                        Position = mid,
+                        Foreground = new SolidColorBrush(DimColor),
+                        Background = new SolidColorBrush(Color.FromArgb(0xC8, 0xFF, 0xFF, 0xFF)),
+                        FontSize = 11,
+                        FontWeight = FontWeights.SemiBold,
+                    });
+                }
+            }
+
+            // 右面（上フランジ）：梁の上側
+            Chain(CsvFace.Right, x => new Point3D(x, 0, H + gap), x => new Point3D(x, 0, H), new Vector3D(0, 0, 1));
+            // 左面（下フランジ）：梁の下側
+            Chain(CsvFace.Left, x => new Point3D(x, 0, -gap), x => new Point3D(x, 0, 0), new Vector3D(0, 0, -1));
+            // 上面（ウェブ）：上面側（+Y）のフランジ縁の外側、梁せいの中央の高さ
+            Chain(CsvFace.Top, x => new Point3D(x, B / 2 + gap, H / 2), x => new Point3D(x, B / 2, H / 2), new Vector3D(0, 1, 0));
+            return root;
         }
 
         /// <summary>加工機の向き（ウェブ水平）で表示するか。</summary>
@@ -102,6 +193,8 @@ namespace JwBeam3D
         public void ShowMessage(string message)
         {
             _root.Content = null;
+            _root.Children.Clear();
+            _dims = null;
             _holeModels.Clear();
             _info.Text = message;
             _hover.Visibility = Visibility.Collapsed;
@@ -152,9 +245,10 @@ namespace JwBeam3D
             // 面の名称（CSV キーワード）。先端の断面の外側に置き、梁本体と重ならないようにする。
             // 姿勢を切り替えても面に付いて回る
             var faceColor = Color.FromRgb(0x21, 0x21, 0x21); // 鋼材（青）と区別できる濃いグレー
-            _root.Children.Add(Label("上面（ウェブ）", new Point3D(-90, B / 2 + 40, H / 2), faceColor));
-            _root.Children.Add(Label("右面（上フランジ）", new Point3D(-90, 0, H + 40), faceColor));
-            _root.Children.Add(Label("左面（下フランジ）", new Point3D(-90, 0, -40), faceColor));
+            // 2026年11月23日 穴間隔の寸法（材端の外側に並ぶ）と重ならないよう、先端よりさらに外側へ
+            _root.Children.Add(Label("上面（ウェブ）", new Point3D(-160, B / 2 + 40, H / 2), faceColor));
+            _root.Children.Add(Label("右面（上フランジ）", new Point3D(-160, 0, H + 40), faceColor));
+            _root.Children.Add(Label("左面（下フランジ）", new Point3D(-160, 0, -40), faceColor));
 
             // 両端の I 形断面の輪郭線
             var outline = new LinesVisual3D { Color = Colors.Black, Thickness = 1.5 };
@@ -164,6 +258,10 @@ namespace JwBeam3D
                 for (int i = 0; i < p.Count; i++) { outline.Points.Add(p[i]); outline.Points.Add(p[(i + 1) % p.Count]); }
             }
             _root.Children.Add(outline);
+
+            // 2026年11月23日 穴間隔の寸法
+            _dims = BuildDimensions(holes.Where(h => h.Source.Face != CsvFace.Bottom).ToList(), H, B, L);
+            ApplyDimsVisibility();
 
             // 情報パネル
             var sb = new StringBuilder();
