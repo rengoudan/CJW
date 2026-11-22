@@ -82,6 +82,8 @@ namespace RGBJWMain.Forms
         {
             _parsing = true;
             uiSymbolButton1.Enabled = false;
+            InitReparseButton();
+            SetReparseEnabled(false);
             BeginProgress(Path.GetFileName(_path));
 
             var handle = new JwFileHandle(jwProjectPathModel)
@@ -107,6 +109,7 @@ namespace RGBJWMain.Forms
                     JwCanvasDraw canvasDraw = new JwCanvasDraw(jc);
                     jwCanvasControl1.IsNewCanvas = true;
                     jwCanvasControl1.CanvasDraw = canvasDraw;
+                    jwCanvasControl1.SelectBeamEvent -= JwCanvas_Click; // 再解析で二重登録しない
                     jwCanvasControl1.SelectBeamEvent += JwCanvas_Click;
                 }
             }
@@ -117,6 +120,7 @@ namespace RGBJWMain.Forms
             finally
             {
                 _parsing = false;
+                if (!IsDisposed) SetReparseEnabled(true);
             }
 
             if (IsDisposed) return;

@@ -30,6 +30,7 @@ namespace RGBJWMain.Forms
         /// <summary>進捗カードを表示し、全ステップを「待機」で並べる。</summary>
         private void BeginProgress(string fileName)
         {
+            if (_initialLogHeight < 0) _initialLogHeight = uiTextBox1.Height;
             var font = SystemFonts.MessageBoxFont ?? Font;
             var host = uiSplitContainer1.Panel2;
 
@@ -138,6 +139,8 @@ namespace RGBJWMain.Forms
         {
             StopElapsed();
             SetHeader("現在の解析設定では有効なデータが検出されません。色や線種の設定を確認してください。", WarnColor);
+            _progressButtons!.Controls.Add(MakeReparseCardButton());
+            _progressButtons.Visible = true;
         }
 
         /// <summary>失敗：失敗したステップは赤表示、未実行のステップを明示し、カードを開いたまま。</summary>
@@ -164,6 +167,7 @@ namespace RGBJWMain.Forms
                 dlg.ShowDialog(this);
             };
             _progressButtons!.Controls.Add(detail);
+            _progressButtons.Controls.Add(MakeReparseCardButton());
             _progressButtons.Visible = true;
         }
 
