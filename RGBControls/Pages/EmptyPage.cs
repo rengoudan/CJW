@@ -19,6 +19,13 @@ namespace RGBJWMain.Pages
             InitializeComponent();
         }
 
+        /// <summary>2026年11月24日 ワークベンチ（ホーム）として開く（EmptyPage.Workbench.cs）。</summary>
+        public EmptyPage(RGBControls.Pages.IWorkbenchHost host)
+        {
+            InitializeComponent();
+            BuildWorkbench(host);
+        }
+
         string optype = "";
 
 

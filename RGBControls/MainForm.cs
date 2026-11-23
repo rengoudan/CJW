@@ -38,10 +38,12 @@ namespace RGBControls
 
 
             //uiNavBar1.
-            uiNavBar1.CreateNode(AddPage(new EmptyPage(), ++pageIndex));
+            // 2026年11月24日 ワークベンチ（ホーム）から工事一覧の操作を呼べるよう、工事一覧のページを先に作って渡す（MainForm.Workbench.cs）
+            _projectsPage = new NewProjectMainPage(this);
+            uiNavBar1.CreateNode(AddPage(new EmptyPage(this), ++pageIndex));
             //uiNavBar1.CreateNode(AddPage(new TestsPage(), ++pageIndex));
             //uiNavBar1.CreateNode(AddPage(new JwProjectMainPage(), ++pageIndex));
-            uiNavBar1.CreateNode(AddPage(new NewProjectMainPage(this), ++pageIndex));
+            uiNavBar1.CreateNode(AddPage(_projectsPage, ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwBudgePage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new JwCustomerPage(), ++pageIndex));
             uiNavBar1.CreateNode(AddPage(new NewBaseDataPage(), ++pageIndex));

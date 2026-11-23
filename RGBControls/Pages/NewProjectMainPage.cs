@@ -517,7 +517,7 @@ namespace RGBControls.Pages
         private async Task ReloadData()
         {
             await RefreshFloorChecksAsync(); // 2026年11月22日 状態列の集計（読み取りのみ）
-            this.jwProjectMainDataBindingSource.DataSource = await JwProjectMainService.GetAllAsync();
+            this.jwProjectMainDataBindingSource.DataSource = ApplyHomeFilter(await JwProjectMainService.GetAllAsync()); // 2026年11月24日 ワークベンチからの絞り込み
             this.projectmaintable.DataSource = this.jwProjectMainDataBindingSource;
             this.projectmaintable.Refresh();
             if (_selectedMainData != null)
@@ -846,7 +846,10 @@ namespace RGBControls.Pages
 
         #region 新增项目
         public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
-        private async void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e) => await AddProjectAsync();
+
+        /// <summary>工事を追加（ボタン・ワークベンチ共通。2026年11月24日 ワークベンチから完了を待てるよう Task に分離）</summary>
+        private async Task AddProjectAsync()
         {
             UIEditOption option = new UIEditOption();
             option.AutoLabelWidth = true;
