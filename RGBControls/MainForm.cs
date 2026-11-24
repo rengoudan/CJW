@@ -26,6 +26,7 @@ namespace RGBControls
             RGBControls.Classes.UiTableTheme.Install(); // 2026年11月22日 表の配色を窓の配色（青テーマ）にそろえる
             RGBControls.Classes.AntdJapanese.Install(); // 2026年11月22日 AntdUI の組み込み文言（データなし・OK/キャンセル）を日本語に
             InitializeComponent();
+            InstallDatabaseButton(); // 2026年11月24日 データベース設定（MainForm.Database.cs）
             int pageIndex = 1000;
 
             //uiTabControl1 = value;

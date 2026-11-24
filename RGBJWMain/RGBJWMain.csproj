@@ -91,6 +91,7 @@
   <ItemGroup>
     <ProjectReference Include="..\JwCore\JwCore.csproj" />
     <ProjectReference Include="..\JwData\JwData.csproj" />
+    <ProjectReference Include="..\JwData.Migrations.SqlServer\JwData.Migrations.SqlServer.csproj" />
     <ProjectReference Include="..\JwShapeCommon\JwShapeCommon.csproj" />
     <ProjectReference Include="..\RGBControls\RGBControls.csproj" />
   </ItemGroup>

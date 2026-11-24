@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- 2026年11月24日 SQL Server 用マイグレーション（SQLite 用は JwData/Migrations）。実行時は MigrationsAssembly 名で読み込まれる -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.30">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JwData\JwData.csproj" />
+  </ItemGroup>
+
 </Project>

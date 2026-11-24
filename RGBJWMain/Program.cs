@@ -104,6 +104,8 @@ namespace RGBJWMain
             }
 
             // 更新处理完毕后，启动主窗体
+            // 2026-11-24 database: local SQLite or remote SQL Server (RGBControls/Classes/DatabaseStartup.cs)
+            if (!RGBControls.Classes.DatabaseStartup.Initialize()) return;
             Application.Run(new MainForm());
             //Application.Run(new Form123());
         }
