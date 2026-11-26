@@ -111,6 +111,7 @@ namespace RGBControls.Pages
             {
                 new ContextMenuStripItem("梁番号の一括付け直し",""),
                 new ContextMenuStripItem("梁統計",""),
+                new ContextMenuStripItem("3D 表示（建物全体）",""), // 2026年11月27日
                 new ContextMenuStripItem("一括出力",""), // 2026年11月22日
                 new ContextMenuStripItem("階数を変更",""), // 2026年11月22日
                 new ContextMenuStripItem("削除","")
@@ -395,6 +396,14 @@ namespace RGBControls.Pages
                 {
                     ShowAllBeams showAll=new ShowAllBeams(_selectedMainData);
                     showAll.ShowDialog();
+                }
+            }
+            if (e.Text.Equals("3D 表示（建物全体）")) // 2026年11月27日
+            {
+                if (_selectedMainData != null)
+                {
+                    using var f = new Building3DForm(_selectedMainData);
+                    f.ShowDialog(this);
                 }
             }
         }

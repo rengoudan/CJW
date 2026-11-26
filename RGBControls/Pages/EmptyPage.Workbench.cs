@@ -1,6 +1,7 @@
 using JwCore;
 using JwLogging;
 using JwServices;
+using RGBControls.Classes;
 using RGBControls.Forms;
 using RGBControls.Pages;
 using WLabel = System.Windows.Forms.Label;
@@ -31,14 +32,14 @@ namespace RGBJWMain.Pages
         private FlowLayoutPanel _readyPanel = null!;
         private TableLayoutPanel _root = null!;
 
-        private static readonly Color Ink = Color.FromArgb(38, 38, 38);
-        private static readonly Color Muted = Color.FromArgb(110, 110, 110);
-        private static readonly Color CardBorder = Color.FromArgb(222, 226, 232);
-        private static readonly Color PageBack = Color.FromArgb(244, 246, 249);
-        private static readonly Color Blue = Color.FromArgb(22, 119, 255);
-        private static readonly Color Red = Color.FromArgb(220, 53, 69);
-        private static readonly Color Orange = Color.FromArgb(230, 140, 20);
-        private static readonly Color Green = Color.FromArgb(40, 160, 80);
+        // 配色・カード・見出しは顧客管理画面と共通（RGBControls/Classes/WorkbenchTheme.cs）
+        private static readonly Color Ink = WorkbenchTheme.Ink;
+        private static readonly Color Muted = WorkbenchTheme.Muted;
+        private static readonly Color PageBack = WorkbenchTheme.PageBack;
+        private static readonly Color Blue = WorkbenchTheme.Blue;
+        private static readonly Color Red = WorkbenchTheme.Red;
+        private static readonly Color Orange = WorkbenchTheme.Orange;
+        private static readonly Color Green = WorkbenchTheme.Green;
 
         private JwProjectMainService Service => ServiceFactory.GetInstance().CreateJwProjectMainService();
 
@@ -112,16 +113,7 @@ namespace RGBJWMain.Pages
         }
 
         private AntdUI.Button ActionButton(string text, AntdUI.TTypeMini type, Action onClick, bool ghost = false)
-        {
-            var b = new AntdUI.Button
-            {
-                Text = text, Type = type, Ghost = ghost, BorderWidth = type == AntdUI.TTypeMini.Default ? 1 : 0,
-                AutoSizeMode = AntdUI.TAutoSize.Width, Height = S(40), Margin = new Padding(S(6), 0, 0, 0),
-                Font = new Font("Microsoft Sans Serif", 10.5f), Radius = 6,
-            };
-            b.Click += (s, e) => onClick();
-            return b;
-        }
+            => WorkbenchTheme.ActionButton(text, type, onClick, _k, ghost);
 
         // ───────── 数字カード ─────────
 
@@ -151,23 +143,9 @@ namespace RGBJWMain.Pages
             return grid;
         }
 
-        private static Panel Card(Padding margin)
-        {
-            var p = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Margin = margin };
-            p.Paint += (s, e) =>
-            {
-                using var pen = new Pen(CardBorder);
-                e.Graphics.DrawRectangle(pen, 0, 0, p.Width - 1, p.Height - 1);
-            };
-            p.Resize += (s, e) => p.Invalidate();
-            return p;
-        }
+        private static Panel Card(Padding margin) => WorkbenchTheme.Card(margin);
 
-        private WLabel SectionTitle(string text) => new()
-        {
-            Text = text, Dock = DockStyle.Top, Height = S(34), ForeColor = Ink, TextAlign = ContentAlignment.MiddleLeft,
-            Font = new Font("Microsoft Sans Serif", 11.5f, FontStyle.Bold), Padding = new Padding(S(10), 0, 0, 0),
-        };
+        private WLabel SectionTitle(string text) => WorkbenchTheme.SectionTitle(text, _k);
 
         // ───────── 対応が必要なもの／最近の工事 ─────────
 

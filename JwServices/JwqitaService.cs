@@ -101,6 +101,52 @@ namespace JwServices
             await AddAsync(data);
         }
 
+        /// <summary>顧客の基本情報を保存する（顧客管理画面の編集）。</summary>
+        public async Task UpdateJwCustomerDataAsync(JwCustomerData data)
+        {
+            await UpdateAsync(data);
+        }
+
+        /// <summary>
+        /// 顧客を削除する（解析設定も一緒に削除）。
+        /// 工事に使われている顧客は削除せず false を返す。
+        /// </summary>
+        public Task<bool> DeleteJwCustomerDataAsync(long customerId) => WriteAsync(async () =>
+        {
+            if (await context.JwProjectMainDatas.AnyAsync(m => m.JwCustomerDataId == customerId))
+                return false;
+
+            var settings = await context.JwCustDesignConstDatas
+                .Where(c => c.JwCustomerDataId == customerId).ToListAsync();
+            context.JwCustDesignConstDatas.RemoveRange(settings);
+
+            var customer = await context.JwCustomerDatas.FindAsync(customerId);
+            if (customer != null) context.JwCustomerDatas.Remove(customer);
+
+            await context.SaveChangesAsync();
+            return true;
+        }, nameof(DeleteJwCustomerDataAsync));
+
+        /// <summary>顧客管理画面用：工事と顧客の対応（工事を持つ顧客だけ）。</summary>
+        public async Task<List<CustomerProjectItem>> GetCustomerProjectItemsAsync()
+        {
+            var rows = await context.JwProjectMainDatas.AsNoTracking()
+                .Where(m => m.JwCustomerDataId != null)
+                .Select(m => new { CustomerId = m.JwCustomerDataId!.Value, m.Id, m.ProjectName, m.FloorQuantity })
+                .ToListAsync();
+            return rows.Select(r => new CustomerProjectItem(r.CustomerId, r.Id, r.ProjectName ?? "", r.FloorQuantity)).ToList();
+        }
+
+        /// <summary>解析設定（JwCustDesignConstData）を持つ顧客の Id。</summary>
+        public async Task<HashSet<long>> GetCustomerIdsWithSettingsAsync()
+        {
+            var ids = await context.JwCustDesignConstDatas.AsNoTracking()
+                .Where(c => c.JwCustomerDataId != null)
+                .Select(c => c.JwCustomerDataId!.Value)
+                .ToListAsync();
+            return ids.ToHashSet();
+        }
+
         public async Task AddJwMaterialTypeDataAsync(JwMaterialTypeData data)
         {
             await AddAsync(data);
