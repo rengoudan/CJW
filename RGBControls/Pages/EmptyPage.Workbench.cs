@@ -29,6 +29,7 @@ namespace RGBJWMain.Pages
         private AntdUI.Table _todoTable = null!, _recentTable = null!;
         private WLabel _todoTitle = null!, _emptyHint = null!;
         private FlowLayoutPanel _readyPanel = null!;
+        private TableLayoutPanel _root = null!;
 
         private static readonly Color Ink = Color.FromArgb(38, 38, 38);
         private static readonly Color Muted = Color.FromArgb(110, 110, 110);
@@ -50,13 +51,14 @@ namespace RGBJWMain.Pages
             foreach (var l in new Control[] { uiLabel2, uiLabel3, uiLabel4, uiLabel5 }) l.Visible = false; // 旧い案内文
             BackColor = PageBack;
 
-            var root = new TableLayoutPanel
+            // 1920×1080（タスクバーを除く約1040px）より窓が低いときは、下段を潰す代わりに縦スクロールさせる
+            var root = _root = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 4, BackColor = PageBack,
-                Padding = new Padding(S(18), S(12), S(18), S(14)),
+                Padding = new Padding(S(18), S(12), S(18), S(14)), AutoScroll = true,
             };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, S(58)));   // 見出し＋操作
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, S(58)));   // 見出し＋操作（操作が折り返すとき BuildHeader で高さを増やす）
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, S(104)));  // 数字カード
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));      // 対応が必要なもの／最近の工事
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, S(150)));  // 作業の流れ／準備状況
@@ -80,7 +82,8 @@ namespace RGBJWMain.Pages
             panel.Controls.Add(title);
             panel.Controls.Add(_dateLabel);
 
-            var actions = new FlowLayoutPanel { AutoSize = true, WrapContents = false, FlowDirection = FlowDirection.LeftToRight, BackColor = Color.Transparent };
+            // 操作ボタンは幅が足りなければ折り返す（右端から左へはみ出して先頭のボタンが見えなくならないように）
+            var actions = new FlowLayoutPanel { AutoSize = true, WrapContents = true, FlowDirection = FlowDirection.LeftToRight, BackColor = Color.Transparent };
             actions.Controls.Add(ActionButton("＋ 工事を追加", AntdUI.TTypeMini.Primary, async () => await RunAsync(() => _host!.AddProjectAsync())));
             actions.Controls.Add(ActionButton("図面を取り込む", AntdUI.TTypeMini.Default, async () => await PickAndRunAsync("図面を取り込む工事を選択", id => _host!.ImportAsync(id), importable: true)));
             actions.Controls.Add(ActionButton("梁統計", AntdUI.TTypeMini.Default, async () => await PickAndRunAsync("梁統計を表示する工事を選択", id => _host!.BeamStatsAsync(id), parsedOnly: true)));
@@ -91,7 +94,19 @@ namespace RGBJWMain.Pages
             panel.Layout += (s, e) =>
             {
                 _dateLabel.Location = new Point(title.Right + S(12), title.Bottom - _dateLabel.Height - S(3));
-                actions.Location = new Point(panel.ClientSize.Width - actions.Width, (panel.ClientSize.Height - actions.Height) / 2);
+                // 日付の右側に収まる幅で折り返す
+                int left = _dateLabel.Right + S(24);
+                int maxW = Math.Max(S(220), panel.ClientSize.Width - left);
+                if (actions.MaximumSize.Width != maxW) actions.MaximumSize = new Size(maxW, 0);
+
+                // 折り返した分だけ見出し行を高くする（既定 58 を下限にする）
+                if (_root != null && _root.RowStyles.Count > 0)
+                {
+                    int rowH = Math.Max(S(58), actions.Height + S(12));
+                    if (_root.RowStyles[0].Height != rowH) _root.RowStyles[0].Height = rowH;
+                }
+
+                actions.Location = new Point(Math.Max(0, panel.ClientSize.Width - actions.Width), Math.Max(0, (panel.ClientSize.Height - actions.Height) / 2));
             };
             return panel;
         }
