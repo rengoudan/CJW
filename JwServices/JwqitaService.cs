@@ -157,6 +157,32 @@ namespace JwServices
             await AddAsync(data);
         }
 
+        /// <summary>
+        /// 種類（タイプ名・カテゴリー）を保存する。カテゴリーを変えたら、その種類のデータも同じカテゴリーにそろえる。
+        /// </summary>
+        public Task<bool> UpdateJwMaterialTypeDataAsync(string id, string name, MaterialType type) => WriteAsync(async () =>
+        {
+            var t = await context.JwMaterialTypeDatas.FindAsync(id);
+            if (t == null) return false;
+
+            t.MaterialTypeName = name;
+            if (t.MaterialType != type)
+            {
+                t.MaterialType = type;
+                var materials = await context.JwMaterialDatas.Where(m => m.JwMaterialTypeDataId == id).ToListAsync();
+                foreach (var m in materials) m.MaterialType = type;
+            }
+
+            await context.SaveChangesAsync();
+            return true;
+        }, nameof(UpdateJwMaterialTypeDataAsync));
+
+        /// <summary>データ（材料）の内容を保存する（基礎データ画面の編集）。</summary>
+        public async Task UpdateJwMaterialDataAsync(JwMaterialData data)
+        {
+            await UpdateAsync(data);
+        }
+
         public async Task UpdateJwCustDesignConstDataAsync(JwCustDesignConstData data)
         {
             await UpdateAsync<JwCustDesignConstData>(data);

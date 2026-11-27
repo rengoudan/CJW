@@ -1,5 +1,6 @@
 ﻿using JwCore;
 using JwData;
+using JwServices;
 using NPOI.HSSF.Record;
 using Sunny.UI;
 using System;
@@ -23,6 +24,8 @@ namespace RGBJWMain.Forms
 
         private JwBudgetMainData jwBudgetMainData;
 
+        public JwqitaService jwqitaService => ServiceFactory.GetInstance().CreateJwqitaService();
+
         public AddBudget(JwBudgetMainData maindata)
         {
             InitializeComponent();
@@ -36,7 +39,7 @@ namespace RGBJWMain.Forms
 
             
             //this.bindingSource1.DataSource=this.dbContext.JwMaterialDatas.Local.ToBindingList();
-            var lst = this.dbContext.JwMaterialDatas.ToList();
+            var lst = jwqitaService.GetMaterialData();
             lst.Add(new JwMaterialData { Id = "-1", MaterialName = "予算項目を選択", MaterialParameter = "" });
             this.uiComboBox1.DataSource = lst;
             this.uiComboBox1.DisplayMember = "MaterialDescription";

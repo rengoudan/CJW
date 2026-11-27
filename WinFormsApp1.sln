@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwLogging", "JwLogging\JwLo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwBeam3D", "JwBeam3D\JwBeam3D.csproj", "{5B0D6C2A-8E3F-4F7B-9C1D-3A2E4B6F8D10}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupJw", "SetupJw\SetupJw.vdproj", "{4D733F8E-F418-D64B-9F32-5642B690A0AF}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupRGBJW", "SetupRGBJW\SetupRGBJW.vdproj", "{6DF4B79E-9369-F9AC-FC5B-3D3100FFF36E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -216,12 +216,12 @@ Global
 		{5B0D6C2A-8E3F-4F7B-9C1D-3A2E4B6F8D10}.Release|x64.Build.0 = Release|Any CPU
 		{5B0D6C2A-8E3F-4F7B-9C1D-3A2E4B6F8D10}.Release|x86.ActiveCfg = Release|Any CPU
 		{5B0D6C2A-8E3F-4F7B-9C1D-3A2E4B6F8D10}.Release|x86.Build.0 = Release|Any CPU
-		{4D733F8E-F418-D64B-9F32-5642B690A0AF}.Debug|Any CPU.ActiveCfg = Debug
-		{4D733F8E-F418-D64B-9F32-5642B690A0AF}.Debug|x64.ActiveCfg = Debug
-		{4D733F8E-F418-D64B-9F32-5642B690A0AF}.Debug|x86.ActiveCfg = Debug
-		{4D733F8E-F418-D64B-9F32-5642B690A0AF}.Release|Any CPU.ActiveCfg = Release
-		{4D733F8E-F418-D64B-9F32-5642B690A0AF}.Release|x64.ActiveCfg = Release
-		{4D733F8E-F418-D64B-9F32-5642B690A0AF}.Release|x86.ActiveCfg = Release
+		{6DF4B79E-9369-F9AC-FC5B-3D3100FFF36E}.Debug|Any CPU.ActiveCfg = Debug
+		{6DF4B79E-9369-F9AC-FC5B-3D3100FFF36E}.Debug|x64.ActiveCfg = Debug
+		{6DF4B79E-9369-F9AC-FC5B-3D3100FFF36E}.Debug|x86.ActiveCfg = Debug
+		{6DF4B79E-9369-F9AC-FC5B-3D3100FFF36E}.Release|Any CPU.ActiveCfg = Release
+		{6DF4B79E-9369-F9AC-FC5B-3D3100FFF36E}.Release|x64.ActiveCfg = Release
+		{6DF4B79E-9369-F9AC-FC5B-3D3100FFF36E}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
